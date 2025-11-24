@@ -12,202 +12,395 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table"
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select"
 import { Badge } from "@/components/ui/badge"
-import { Star, Filter, ArrowUpDown, ExternalLink, Search } from "lucide-react"
+import { Checkbox } from "@/components/ui/checkbox"
+import { Label } from "@/components/ui/label"
+import {
+  Sheet,
+  SheetContent,
+  SheetDescription,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "@/components/ui/sheet"
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion"
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card"
+import {
+  Filter,
+  ExternalLink,
+  Search,
+  ChevronDown,
+  ChevronUp,
+  ChevronsUpDown,
+  Menu
+} from "lucide-react"
+import { cn } from "@/lib/utils"
+
+// Types
+type Product = {
+  id: number
+  name: string
+  price: number
+  capacity: number // in GB
+  capacityUnit: 'GB' | 'TB'
+  pricePerTB: number
+  warranty: string
+  formFactor: string
+  technology: 'HDD' | 'SSD' | 'SAS'
+  condition: 'New' | 'Used' | 'Renewed'
+  affiliateLink: string
+  brand: string
+}
 
 // Mock Data Generator
-const generateProducts = (count: number) => {
+const generateProducts = (count: number): Product[] => {
+  const formFactors = ["Internal 3.5\"", "Internal 2.5\"", "External 3.5\"", "External 2.5\"", "M.2 NVMe", "M.2 SATA"]
+  const technologies = ["HDD", "SSD", "SAS"] as const
+  const conditions = ["New", "Used", "Renewed"] as const
+  const warranties = ["1 year", "2 years", "3 years", "5 years", "Lifetime"]
+  const brands = ["Seagate", "Western Digital", "Toshiba", "Samsung", "Crucial", "SanDisk", "Kingston"]
+
   return Array.from({ length: count }).map((_, i) => {
-    const price = Math.random() * 200 + 50
-    const unitPrice = price / (Math.random() * 500 + 100)
+    const isTB = Math.random() > 0.3
+    const capacityValue = isTB ? Math.floor(Math.random() * 18) + 1 : [256, 512, 1000][Math.floor(Math.random() * 3)]
+    const capacityGB = isTB ? capacityValue * 1000 : capacityValue
+
+    // Realistic pricing logic
+    const basePricePerTB = Math.random() * 15 + 10 // $10-$25 per TB
+    const price = (capacityGB / 1000) * basePricePerTB * (Math.random() * 0.5 + 0.8)
+
     return {
       id: i,
-      name: `High Performance Product ${i + 1} - ${Math.floor(Math.random() * 1000)}GB`,
-      price: price.toFixed(2),
-      unitPrice: unitPrice.toFixed(3),
-      unit: "GB",
-      rating: (Math.random() * 2 + 3).toFixed(1),
-      reviews: Math.floor(Math.random() * 5000),
-      updated: `${Math.floor(Math.random() * 12)}h ago`,
-      merchant: "Amazon",
-      isBestValue: i === 0 || i === 5,
-      brand: ["Samsung", "Western Digital", "Seagate", "Crucial", "SanDisk"][Math.floor(Math.random() * 5)],
+      name: `${brands[Math.floor(Math.random() * brands.length)]} ${capacityValue}${isTB ? 'TB' : 'GB'} ${formFactors[Math.floor(Math.random() * formFactors.length)]}`,
+      price: parseFloat(price.toFixed(2)),
+      capacity: capacityGB,
+      capacityUnit: isTB ? 'TB' : 'GB',
+      pricePerTB: parseFloat((price / (capacityGB / 1000)).toFixed(3)),
+      warranty: warranties[Math.floor(Math.random() * warranties.length)],
+      formFactor: formFactors[Math.floor(Math.random() * formFactors.length)],
+      technology: technologies[Math.floor(Math.random() * technologies.length)],
+      condition: conditions[Math.floor(Math.random() * conditions.length)],
+      affiliateLink: `https://www.amazon.com/dp/B0${Math.random().toString(36).substring(7).toUpperCase()}?tag=bestprices-20`,
+      brand: brands[Math.floor(Math.random() * brands.length)],
     }
   })
 }
 
-const allProducts = generateProducts(50)
+const allProducts = generateProducts(100)
+
+type SortConfig = {
+  key: keyof Product
+  direction: 'asc' | 'desc'
+}
 
 export default function SubcategoryPage() {
   const params = useParams()
   const slug = params.slug as string
-  const [searchTerm, setSearchTerm] = React.useState("")
-  const [sortBy, setSortBy] = React.useState("price-per-unit")
 
-  // Filter and Sort Logic (Mock)
+  // State
+  const [searchTerm, setSearchTerm] = React.useState("")
+  const [sortConfig, setSortConfig] = React.useState<SortConfig>({ key: 'pricePerTB', direction: 'asc' })
+
+  // Filters
+  const [selectedConditions, setSelectedConditions] = React.useState<string[]>(['New', 'Used', 'Renewed'])
+  const [selectedTechnologies, setSelectedTechnologies] = React.useState<string[]>(['HDD', 'SSD', 'SAS'])
+  const [selectedFormFactors, setSelectedFormFactors] = React.useState<string[]>([])
+  const [minCapacity, setMinCapacity] = React.useState("")
+  const [maxCapacity, setMaxCapacity] = React.useState("")
+
+  // Filter Logic
   const filteredProducts = React.useMemo(() => {
     let data = [...allProducts]
+
     if (searchTerm) {
       data = data.filter(p => p.name.toLowerCase().includes(searchTerm.toLowerCase()))
     }
-    if (sortBy === "price-per-unit") {
-      data.sort((a, b) => parseFloat(a.unitPrice) - parseFloat(b.unitPrice))
-    } else if (sortBy === "price-asc") {
-      data.sort((a, b) => parseFloat(a.price) - parseFloat(b.price))
-    } else if (sortBy === "rating") {
-      data.sort((a, b) => parseFloat(b.rating) - parseFloat(a.rating))
+
+    if (selectedConditions.length > 0) {
+      data = data.filter(p => selectedConditions.includes(p.condition))
     }
+
+    if (selectedTechnologies.length > 0) {
+      data = data.filter(p => selectedTechnologies.includes(p.technology))
+    }
+
+    if (selectedFormFactors.length > 0) {
+      data = data.filter(p => selectedFormFactors.includes(p.formFactor))
+    }
+
+    if (minCapacity) {
+      const min = parseFloat(minCapacity)
+      if (!isNaN(min)) data = data.filter(p => (p.capacity / 1000) >= min)
+    }
+
+    if (maxCapacity) {
+      const max = parseFloat(maxCapacity)
+      if (!isNaN(max)) data = data.filter(p => (p.capacity / 1000) <= max)
+    }
+
+    // Sorting
+    data.sort((a, b) => {
+      const aValue = a[sortConfig.key]
+      const bValue = b[sortConfig.key]
+
+      if (typeof aValue === 'number' && typeof bValue === 'number') {
+        return sortConfig.direction === 'asc' ? aValue - bValue : bValue - aValue
+      }
+
+      if (String(aValue) < String(bValue)) return sortConfig.direction === 'asc' ? -1 : 1
+      if (String(aValue) > String(bValue)) return sortConfig.direction === 'asc' ? 1 : -1
+      return 0
+    })
+
     return data
-  }, [searchTerm, sortBy])
+  }, [searchTerm, sortConfig, selectedConditions, selectedTechnologies, selectedFormFactors, minCapacity, maxCapacity])
+
+  const handleSort = (key: keyof Product) => {
+    setSortConfig(current => ({
+      key,
+      direction: current.key === key && current.direction === 'asc' ? 'desc' : 'asc'
+    }))
+  }
+
+  const toggleFilter = (set: React.Dispatch<React.SetStateAction<string[]>>, value: string) => {
+    set(current =>
+      current.includes(value)
+        ? current.filter(item => item !== value)
+        : [...current, value]
+    )
+  }
+
+  const getSortIcon = (key: keyof Product) => {
+    if (sortConfig.key !== key) return <ChevronsUpDown className="ml-1 h-3 w-3 opacity-50" />
+    return sortConfig.direction === 'asc'
+      ? <ChevronUp className="ml-1 h-3 w-3" />
+      : <ChevronDown className="ml-1 h-3 w-3" />
+  }
+
+  const FilterList = () => (
+    <Accordion type="multiple" defaultValue={["condition", "capacity", "technology", "form-factor"]} className="w-full space-y-6">
+      <AccordionItem value="condition" className="border-b">
+        <AccordionTrigger className="text-sm font-semibold hover:no-underline py-4">Condition</AccordionTrigger>
+        <AccordionContent>
+          <div className="space-y-3 pt-2 pb-4">
+            {["New", "Used", "Renewed"].map((condition) => (
+              <div key={condition} className="flex items-center space-x-3">
+                <Checkbox
+                  id={`condition-${condition}`}
+                  checked={selectedConditions.includes(condition)}
+                  onCheckedChange={() => toggleFilter(setSelectedConditions, condition)}
+                />
+                <Label htmlFor={`condition-${condition}`} className="text-sm font-normal leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 cursor-pointer">{condition}</Label>
+              </div>
+            ))}
+          </div>
+        </AccordionContent>
+      </AccordionItem>
+
+      <AccordionItem value="capacity" className="border-b">
+        <AccordionTrigger className="text-sm font-semibold hover:no-underline py-4">Capacity (TB)</AccordionTrigger>
+        <AccordionContent>
+          <div className="flex items-center gap-3 pt-2 pb-4">
+            <div className="relative flex-1">
+              <Input
+                type="number"
+                placeholder="Min"
+                value={minCapacity}
+                onChange={(e) => setMinCapacity(e.target.value)}
+                className="w-full pr-8"
+              />
+              <span className="absolute right-3 top-2.5 text-xs text-muted-foreground">TB</span>
+            </div>
+            <span className="text-muted-foreground">-</span>
+            <div className="relative flex-1">
+              <Input
+                type="number"
+                placeholder="Max"
+                value={maxCapacity}
+                onChange={(e) => setMaxCapacity(e.target.value)}
+                className="w-full pr-8"
+              />
+              <span className="absolute right-3 top-2.5 text-xs text-muted-foreground">TB</span>
+            </div>
+          </div>
+        </AccordionContent>
+      </AccordionItem>
+
+      <AccordionItem value="technology" className="border-b">
+        <AccordionTrigger className="text-sm font-semibold hover:no-underline py-4">Technology</AccordionTrigger>
+        <AccordionContent>
+          <div className="space-y-3 pt-2 pb-4">
+            {["HDD", "SSD", "SAS"].map((tech) => (
+              <div key={tech} className="flex items-center space-x-3">
+                <Checkbox
+                  id={`tech-${tech}`}
+                  checked={selectedTechnologies.includes(tech)}
+                  onCheckedChange={() => toggleFilter(setSelectedTechnologies, tech)}
+                />
+                <Label htmlFor={`tech-${tech}`} className="text-sm font-normal leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 cursor-pointer">{tech}</Label>
+              </div>
+            ))}
+          </div>
+        </AccordionContent>
+      </AccordionItem>
+
+      <AccordionItem value="form-factor" className="border-none">
+        <AccordionTrigger className="text-sm font-semibold hover:no-underline py-4">Form Factor</AccordionTrigger>
+        <AccordionContent>
+          <div className="space-y-3 pt-2 pb-4">
+            {["Internal 3.5\"", "Internal 2.5\"", "External 3.5\"", "External 2.5\"", "M.2 NVMe", "M.2 SATA"].map((ff) => (
+              <div key={ff} className="flex items-center space-x-3">
+                <Checkbox
+                  id={`ff-${ff}`}
+                  checked={selectedFormFactors.includes(ff)}
+                  onCheckedChange={() => toggleFilter(setSelectedFormFactors, ff)}
+                />
+                <Label htmlFor={`ff-${ff}`} className="text-sm font-normal leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 cursor-pointer">{ff}</Label>
+              </div>
+            ))}
+          </div>
+        </AccordionContent>
+      </AccordionItem>
+    </Accordion>
+  )
+
+  const FilterPanel = () => (
+    <Card>
+      <CardHeader className="pb-4">
+        <CardTitle>Filters</CardTitle>
+      </CardHeader>
+      <CardContent>
+        <FilterList />
+      </CardContent>
+    </Card>
+  )
 
   return (
-    <div className="container mx-auto px-4 py-8">
+    <div className="container mx-auto px-4 py-6">
       <div className="flex flex-col gap-6">
         {/* Header */}
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
           <div>
-            <div className="flex items-center gap-2 text-sm text-muted-foreground mb-1">
-              <span>Categories</span>
-              <span>/</span>
-              <span className="capitalize">{slug?.replace("-", " ")}</span>
-            </div>
-            <h1 className="text-3xl font-bold tracking-tight capitalize">{slug?.replace("-", " ")} Price Comparison</h1>
-            <p className="text-muted-foreground">
-              Comparing {filteredProducts.length} products by price per unit. Updated hourly.
+            <h1 className="text-2xl font-bold tracking-tight">Disk Price Comparison</h1>
+            <p className="text-muted-foreground text-sm">
+              Showing {filteredProducts.length} disks. Updated hourly.
             </p>
           </div>
-          <div className="text-xs text-muted-foreground text-right hidden md:block">
-            <p>Last scan: 12 mins ago</p>
-            <p>Next scan: 48 mins</p>
+
+          <div className="flex items-center gap-2 w-full md:w-auto">
+            <div className="relative flex-1 md:w-64">
+              <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
+              <Input
+                placeholder="Search disks..."
+                className="pl-8"
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+              />
+            </div>
+            <Sheet>
+              <SheetTrigger asChild>
+                <Button variant="outline" size="icon" className="lg:hidden">
+                  <Filter className="h-4 w-4" />
+                </Button>
+              </SheetTrigger>
+              <SheetContent side="left" className="w-[300px] sm:w-[400px] px-4 pb-4 pt-12">
+                <SheetTitle className="sr-only">Filters</SheetTitle>
+                <div className="h-full overflow-y-auto">
+                  <FilterPanel />
+                </div>
+              </SheetContent>
+            </Sheet>
           </div>
         </div>
 
-        {/* Sticky Filter Bar */}
-        <div className="sticky top-14 z-40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 border-y py-4 -mx-4 px-4 md:mx-0 md:px-0 md:rounded-lg md:border shadow-sm">
-          <div className="flex flex-col md:flex-row gap-4 items-center justify-between">
-            <div className="flex items-center gap-2 w-full md:w-auto">
-              <div className="relative w-full md:w-64">
-                <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
-                <Input 
-                  placeholder="Search products..." 
-                  className="pl-8" 
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                />
-              </div>
-              <Button variant="outline" size="icon" className="shrink-0">
-                <Filter className="h-4 w-4" />
-              </Button>
+        <div className="flex gap-8">
+          {/* Desktop Sidebar */}
+          <aside className="hidden lg:block w-72 shrink-0">
+            <div>
+              <FilterPanel />
+            </div>
+          </aside>
+
+          {/* Main Content */}
+          <div className="flex-1 min-w-0">
+            {/* ... (keep table content) */}
+            <div className="rounded-md border bg-card">
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead className="cursor-pointer hover:bg-muted/50" onClick={() => handleSort('pricePerTB')}>
+                      <div className="flex items-center">Price/TB {getSortIcon('pricePerTB')}</div>
+                    </TableHead>
+                    <TableHead className="cursor-pointer hover:bg-muted/50" onClick={() => handleSort('price')}>
+                      <div className="flex items-center">Price {getSortIcon('price')}</div>
+                    </TableHead>
+                    <TableHead className="cursor-pointer hover:bg-muted/50" onClick={() => handleSort('capacity')}>
+                      <div className="flex items-center">Capacity {getSortIcon('capacity')}</div>
+                    </TableHead>
+                    <TableHead className="hidden md:table-cell">Warranty</TableHead>
+                    <TableHead className="hidden sm:table-cell">Form Factor</TableHead>
+                    <TableHead className="hidden sm:table-cell">Tech</TableHead>
+                    <TableHead className="hidden sm:table-cell">Condition</TableHead>
+                    <TableHead>Affiliate Link</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {filteredProducts.map((product) => (
+                    <TableRow key={product.id} className="group">
+                      <TableCell className="font-medium">
+                        ${product.pricePerTB.toFixed(3)}
+                      </TableCell>
+                      <TableCell>
+                        ${product.price.toFixed(2)}
+                      </TableCell>
+                      <TableCell>
+                        {product.capacityUnit === 'TB' ? (product.capacity / 1000).toFixed(1) : product.capacity} {product.capacityUnit}
+                      </TableCell>
+                      <TableCell className="hidden md:table-cell text-muted-foreground text-sm">
+                        {product.warranty}
+                      </TableCell>
+                      <TableCell className="hidden sm:table-cell text-muted-foreground text-sm">
+                        {product.formFactor}
+                      </TableCell>
+                      <TableCell className="hidden sm:table-cell text-muted-foreground text-sm">
+                        {product.technology}
+                      </TableCell>
+                      <TableCell className="hidden sm:table-cell">
+                        <Badge variant={product.condition === 'New' ? 'default' : 'secondary'} className="text-xs font-normal">
+                          {product.condition}
+                        </Badge>
+                      </TableCell>
+                      <TableCell>
+                        <a 
+                          href={product.affiliateLink} 
+                          target="_blank" 
+                          rel="noopener noreferrer"
+                          className="text-primary hover:underline text-sm line-clamp-2 block"
+                        >
+                          {product.name}
+                        </a>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
             </div>
             
-            <div className="flex items-center gap-2 w-full md:w-auto overflow-x-auto pb-2 md:pb-0">
-              <Select value={sortBy} onValueChange={setSortBy}>
-                <SelectTrigger className="w-[180px]">
-                  <SelectValue placeholder="Sort by" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="price-per-unit">Price / Unit (Low to High)</SelectItem>
-                  <SelectItem value="price-asc">Price (Low to High)</SelectItem>
-                  <SelectItem value="rating">Rating (High to Low)</SelectItem>
-                </SelectContent>
-              </Select>
-              
-              <div className="flex gap-2">
-                <Badge variant="outline" className="cursor-pointer hover:bg-muted">Brand</Badge>
-                <Badge variant="outline" className="cursor-pointer hover:bg-muted">Rating</Badge>
-                <Badge variant="outline" className="cursor-pointer hover:bg-muted">Price Range</Badge>
-              </div>
+            <div className="mt-4 text-center text-xs text-muted-foreground">
+              Prices and availability are subject to change.
             </div>
           </div>
-        </div>
-
-        {/* Data Table */}
-        <div className="rounded-md border bg-card">
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead className="w-[80px]">Image</TableHead>
-                <TableHead>Product Name</TableHead>
-                <TableHead className="text-right">Price / Unit</TableHead>
-                <TableHead className="text-right">Price</TableHead>
-                <TableHead className="text-right hidden md:table-cell">Rating</TableHead>
-                <TableHead className="text-right hidden sm:table-cell">Merchant</TableHead>
-                <TableHead className="w-[50px]"></TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {filteredProducts.map((product) => (
-                <TableRow key={product.id} className="group">
-                  <TableCell>
-                    <div className="h-12 w-12 rounded bg-muted flex items-center justify-center text-xs text-muted-foreground">
-                      IMG
-                    </div>
-                  </TableCell>
-                  <TableCell>
-                    <div className="flex flex-col">
-                      <span className="font-medium group-hover:text-primary transition-colors cursor-pointer">
-                        {product.name}
-                      </span>
-                      <div className="flex items-center gap-2 text-xs text-muted-foreground md:hidden">
-                        <div className="flex items-center">
-                          <Star className="h-3 w-3 fill-yellow-400 text-yellow-400 mr-1" />
-                          {product.rating}
-                        </div>
-                        <span>•</span>
-                        <span>{product.merchant}</span>
-                      </div>
-                      {product.isBestValue && (
-                        <Badge variant="secondary" className="w-fit mt-1 text-[10px] h-5 bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-100 hover:bg-green-100">
-                          Best Value
-                        </Badge>
-                      )}
-                    </div>
-                  </TableCell>
-                  <TableCell className="text-right">
-                    <div className="font-bold text-lg text-primary">
-                      ${product.unitPrice}
-                    </div>
-                    <div className="text-xs text-muted-foreground">
-                      per {product.unit}
-                    </div>
-                  </TableCell>
-                  <TableCell className="text-right font-medium">
-                    ${product.price}
-                  </TableCell>
-                  <TableCell className="text-right hidden md:table-cell">
-                    <div className="flex items-center justify-end gap-1">
-                      <span className="font-medium">{product.rating}</span>
-                      <Star className="h-3 w-3 fill-yellow-400 text-yellow-400" />
-                      <span className="text-xs text-muted-foreground">({product.reviews})</span>
-                    </div>
-                  </TableCell>
-                  <TableCell className="text-right hidden sm:table-cell">
-                    {product.merchant}
-                  </TableCell>
-                  <TableCell>
-                    <Button variant="ghost" size="icon" className="opacity-0 group-hover:opacity-100 transition-opacity">
-                      <ExternalLink className="h-4 w-4" />
-                    </Button>
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </div>
-
-        {/* Affiliate Disclosure */}
-        <div className="text-center text-xs text-muted-foreground mt-8 pb-8">
-          <p>
-            Prices and availability are accurate as of the date/time indicated and are subject to change.
-            Any price and availability information displayed on Amazon at the time of purchase will apply to the purchase of this product.
-          </p>
         </div>
       </div>
     </div>

@@ -4,16 +4,16 @@ import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
-import { ArrowRight, TrendingUp, ShoppingCart, Smartphone, HardDrive, Cpu, Usb, Server } from "lucide-react"
+import { ArrowRight, TrendingUp, ShoppingCart, Smartphone, HardDrive, Cpu, Usb, Server, Dumbbell, Droplets, Baby, Battery } from "lucide-react"
 import { Bar, BarChart, ResponsiveContainer, XAxis, YAxis, Tooltip, Rectangle } from "recharts"
 import { Globe } from "@/components/ui/globe"
 
 const categories = [
-  { name: "External HDD", icon: HardDrive, count: "500+", slug: "external-hdd" },
-  { name: "Internal SSD", icon: Cpu, count: "800+", slug: "internal-ssd" },
-  { name: "MicroSD", icon: Smartphone, count: "300+", slug: "microsd" },
-  { name: "USB Drives", icon: Usb, count: "400+", slug: "usb-drive" },
-  { name: "NAS", icon: Server, count: "100+", slug: "nas" },
+  { name: "Hard Drives & SSDs", icon: HardDrive, count: "2000+", slug: "storage" },
+  { name: "Protein Powder", icon: Dumbbell, count: "500+", slug: "protein-powder" },
+  { name: "Laundry Detergent", icon: Droplets, count: "150+", slug: "laundry-detergent" },
+  { name: "Diapers", icon: Baby, count: "200+", slug: "diapers" },
+  { name: "Batteries", icon: Battery, count: "300+", slug: "batteries" },
 ]
 
 const data = [
@@ -132,9 +132,9 @@ export default function HomePage() {
             </Link>
           </Button>
         </div>
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6">
+        <div className="flex flex-wrap justify-center gap-6">
           {categories.map((category) => (
-            <Link key={category.slug} href={`/categories/${category.slug}`}>
+            <Link key={category.slug} href={`/categories/${category.slug}`} className="w-full sm:w-64">
               <Card className="h-full bg-card/50 hover:bg-card/80 backdrop-blur-sm transition-all cursor-pointer border-primary/10 hover:border-primary/30 hover:shadow-lg hover:-translate-y-1 group">
                 <CardHeader className="text-center">
                   <div className="mx-auto bg-primary/5 p-4 rounded-2xl mb-4 group-hover:bg-primary/10 transition-colors">

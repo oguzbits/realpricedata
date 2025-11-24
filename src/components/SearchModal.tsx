@@ -80,15 +80,15 @@ export function SearchModal({ open, onOpenChange }: SearchModalProps) {
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-2xl p-0 gap-0" showCloseButton={false}>
+      <DialogContent className="max-w-2xl p-0 gap-0 bg-card" showCloseButton={false}>
         <DialogHeader className="px-6 pt-6 pb-4 border-b">
           <div className="flex items-center gap-3">
             <Search className="h-5 w-5 text-muted-foreground shrink-0" />
             <Input
-              placeholder="Search categories and products..."
+              placeholder="What are you looking for?"
               value={query}
               onChange={(e) => setQuery(e.target.value)}
-              className="border-0 focus-visible:ring-0 text-base px-2 py-1.5 h-auto flex-1"
+              className="border-0 focus-visible:ring-0 text-base px-2 py-1.5 h-auto flex-1 bg-transparent"
               autoFocus
             />
             {query && (
@@ -101,11 +101,10 @@ export function SearchModal({ open, onOpenChange }: SearchModalProps) {
                 <X className="h-4 w-4" />
               </Button>
             )}
+            <kbd className="hidden sm:inline-flex items-center gap-1 px-2 py-1 text-xs border rounded bg-muted text-muted-foreground">
+              ESC
+            </kbd>
           </div>
-          <p className="text-xs text-muted-foreground mt-2">
-            Press <kbd className="px-1.5 py-0.5 text-xs border rounded bg-muted">⌘K</kbd> or{" "}
-            <kbd className="px-1.5 py-0.5 text-xs border rounded bg-muted">Ctrl+K</kbd> to toggle
-          </p>
         </DialogHeader>
 
         <div className="max-h-[400px] overflow-y-auto p-6 space-y-6">

@@ -13,6 +13,12 @@ import { Moon, Sun, Menu, Search } from "lucide-react"
 import { useTheme } from "next-themes"
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
 import { SearchModal } from "@/components/SearchModal"
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip"
 
 const countries = [
   { code: "US", name: "United States", flag: "🇺🇸", domain: "amazon.com" },
@@ -47,38 +53,58 @@ export function Navbar() {
           </nav>
         </div>
 
-        <div className="flex items-center gap-2">
-          {/* Search Button */}
-          <Button
-            variant="ghost"
-            size="sm"
-            className="gap-2 hidden sm:flex"
-            onClick={() => setSearchOpen(true)}
-          >
-            <Search className="h-4 w-4" />
-            <span className="text-muted-foreground">Search...</span>
-            <kbd className="hidden lg:inline-block px-1.5 py-0.5 text-xs border rounded bg-muted ml-2">
-              ⌘K
-            </kbd>
-          </Button>
+        <TooltipProvider>
+          <div className="flex items-center gap-2">
+            {/* Search Input (MUI Style) */}
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <button
+                  onClick={() => setSearchOpen(true)}
+                  className="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-md border border-border bg-muted/50 hover:bg-muted transition-colors cursor-pointer min-w-[240px]"
+                >
+                  <Search className="h-4 w-4 text-muted-foreground" />
+                  <span className="text-sm text-muted-foreground flex-1 text-left">Search...</span>
+                  <kbd className="hidden lg:inline-flex items-center gap-1 px-2 py-0.5 text-xs border rounded bg-background">
+                    ⌘K
+                  </kbd>
+                </button>
+              </TooltipTrigger>
+              <TooltipContent>
+                <p>Search products</p>
+              </TooltipContent>
+            </Tooltip>
 
-          {/* Mobile Search Button */}
-          <Button
-            variant="ghost"
-            size="icon"
-            className="sm:hidden"
-            onClick={() => setSearchOpen(true)}
-          >
-            <Search className="h-5 w-5" />
-          </Button>
+            {/* Mobile Search Button */}
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="sm:hidden cursor-pointer"
+                  onClick={() => setSearchOpen(true)}
+                >
+                  <Search className="h-5 w-5" />
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent>
+                <p>Search products</p>
+              </TooltipContent>
+            </Tooltip>
 
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="ghost" size="sm" className="gap-2">
-                <span className="text-lg">{country.flag}</span>
-                <span className="hidden sm:inline-block">{country.code}</span>
-              </Button>
-            </DropdownMenuTrigger>
+            <DropdownMenu>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <DropdownMenuTrigger asChild>
+                    <Button variant="ghost" size="sm" className="gap-2 cursor-pointer">
+                      <span className="text-lg">{country.flag}</span>
+                      <span className="hidden sm:inline-block">{country.code}</span>
+                    </Button>
+                  </DropdownMenuTrigger>
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p>Select region</p>
+                </TooltipContent>
+              </Tooltip>
             <DropdownMenuContent align="end" className="w-[200px]">
               {countries.map((c) => (
                 <DropdownMenuItem key={c.code} onClick={() => setCountry(c)} className="flex items-start gap-3 py-2">
@@ -92,23 +118,31 @@ export function Navbar() {
             </DropdownMenuContent>
           </DropdownMenu>
 
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={() => setTheme(theme === "light" ? "dark" : "light")}
-          >
-            <Sun className="h-[1.2rem] w-[1.2rem] rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
-            <Moon className="absolute h-[1.2rem] w-[1.2rem] rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
-            <span className="sr-only">Toggle theme</span>
-          </Button>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="cursor-pointer"
+                  onClick={() => setTheme(theme === "light" ? "dark" : "light")}
+                >
+                  <Sun className="h-[1.2rem] w-[1.2rem] rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
+                  <Moon className="absolute h-[1.2rem] w-[1.2rem] rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
+                  <span className="sr-only">Toggle theme</span>
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent>
+                <p>Toggle theme</p>
+              </TooltipContent>
+            </Tooltip>
           
-          {/* Mobile Menu */}
-          <Sheet>
-            <SheetTrigger asChild>
-              <Button variant="ghost" size="icon" className="md:hidden">
-                <Menu className="h-5 w-5" />
-              </Button>
-            </SheetTrigger>
+            {/* Mobile Menu */}
+            <Sheet>
+              <SheetTrigger asChild>
+                <Button variant="ghost" size="icon" className="md:hidden cursor-pointer">
+                  <Menu className="h-5 w-5" />
+                </Button>
+              </SheetTrigger>
             <SheetContent side="right">
               <nav className="flex flex-col gap-4 mt-8">
                 <Link href="/" className="text-lg font-medium">Home</Link>
@@ -116,7 +150,8 @@ export function Navbar() {
               </nav>
             </SheetContent>
           </Sheet>
-        </div>
+          </div>
+        </TooltipProvider>
       </div>
 
       {/* Search Modal */}

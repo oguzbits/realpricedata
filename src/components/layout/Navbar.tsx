@@ -15,17 +15,17 @@ import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
 import { SearchModal } from "@/components/SearchModal"
 
 const countries = [
-  { code: "US", name: "United States", flag: "🇺🇸" },
-  { code: "UK", name: "United Kingdom", flag: "🇬🇧" },
-  { code: "CA", name: "Canada", flag: "🇨🇦" },
-  { code: "DE", name: "Germany", flag: "🇩🇪" },
-  { code: "ES", name: "Spain", flag: "🇪🇸" },
-  { code: "IT", name: "Italy", flag: "🇮🇹" },
-  { code: "FR", name: "France", flag: "🇫🇷" },
-  { code: "AU", name: "Australia", flag: "🇦🇺" },
-  { code: "SE", name: "Sweden", flag: "🇸🇪" },
-  { code: "IE", name: "Ireland", flag: "🇮🇪" },
-  { code: "IN", name: "India", flag: "🇮🇳" },
+  { code: "US", name: "United States", flag: "🇺🇸", domain: "amazon.com" },
+  { code: "UK", name: "United Kingdom", flag: "🇬🇧", domain: "amazon.co.uk" },
+  { code: "CA", name: "Canada", flag: "🇨🇦", domain: "amazon.ca" },
+  { code: "DE", name: "Germany", flag: "🇩🇪", domain: "amazon.de" },
+  { code: "ES", name: "Spain", flag: "🇪🇸", domain: "amazon.es" },
+  { code: "IT", name: "Italy", flag: "🇮🇹", domain: "amazon.it" },
+  { code: "FR", name: "France", flag: "🇫🇷", domain: "amazon.fr" },
+  { code: "AU", name: "Australia", flag: "🇦🇺", domain: "amazon.com.au" },
+  { code: "SE", name: "Sweden", flag: "🇸🇪", domain: "amazon.se" },
+  { code: "IE", name: "Ireland", flag: "🇮🇪", domain: "amazon.co.uk" },
+  { code: "IN", name: "India", flag: "🇮🇳", domain: "amazon.in" },
 ]
 
 export function Navbar() {
@@ -79,11 +79,14 @@ export function Navbar() {
                 <span className="hidden sm:inline-block">{country.code}</span>
               </Button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
+            <DropdownMenuContent align="end" className="w-[200px]">
               {countries.map((c) => (
-                <DropdownMenuItem key={c.code} onClick={() => setCountry(c)}>
-                  <span className="mr-2">{c.flag}</span>
-                  {c.name}
+                <DropdownMenuItem key={c.code} onClick={() => setCountry(c)} className="flex items-start gap-3 py-2">
+                  <span className="text-xl mt-0.5">{c.flag}</span>
+                  <div className="flex flex-col gap-0.5">
+                    <span className="font-medium">{c.name}</span>
+                    <span className="text-xs text-muted-foreground">{c.domain}</span>
+                  </div>
                 </DropdownMenuItem>
               ))}
             </DropdownMenuContent>

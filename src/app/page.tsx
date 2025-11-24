@@ -4,9 +4,13 @@ import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
-import { ArrowRight, TrendingUp, ShoppingCart, Smartphone, HardDrive, Cpu, Usb, Server, Dumbbell, Droplets, Baby, Battery } from "lucide-react"
+import { ArrowRight, TrendingUp, ShoppingCart, Smartphone, HardDrive, Dumbbell, Droplets, Baby, Battery } from "lucide-react"
 import { Bar, BarChart, ResponsiveContainer, XAxis, YAxis, Tooltip, Rectangle } from "recharts"
 import { Globe } from "@/components/ui/globe"
+import { FeaturedDeals } from "@/components/ui/featured-deals"
+import { SavingsCalculator } from "@/components/ui/savings-calculator"
+import { PriceComparison } from "@/components/ui/price-comparison"
+import { AnimatedCounter } from "@/components/ui/animated-counter"
 
 const categories = [
   { name: "Hard Drives & SSDs", icon: HardDrive, count: "2000+", slug: "storage" },
@@ -46,30 +50,42 @@ export default function HomePage() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
       {/* Hero Section */}
-      {/* Hero Section */}
       <section className="relative py-24 md:py-32 overflow-hidden">
         <div className="absolute inset-0 bg-linear-to-b from-primary/5 to-background z-0" />
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[1000px] h-[500px] bg-primary/20 rounded-full blur-[120px] -z-10 opacity-50" />
         
         <div className="container relative z-10 px-4 mx-auto text-center">
-          <Badge variant="secondary" className="mb-6 px-4 py-1.5 text-sm border-primary/20 bg-primary/10 text-primary hover:bg-primary/20 transition-colors">
-            New: Historical Price Tracking
+          <Badge variant="outline" className="mb-6 px-5 py-2 text-sm border-border bg-muted/30 text-foreground hover:bg-muted/50 transition-colors shadow-sm">
+            <span className="font-mono text-xs mr-2">⚡️</span>
+            Real-time price tracking across 11 Amazon marketplaces
           </Badge>
           <h1 className="text-5xl md:text-7xl font-bold tracking-tight mb-8 bg-clip-text text-transparent bg-linear-to-r from-foreground via-foreground to-foreground/70 drop-shadow-sm">
-            Compare products by <br className="hidden md:block" />
-            <span className="bg-clip-text text-transparent bg-linear-to-r from-primary to-purple-600">price per unit.</span>
+            Never overpay again.<br className="hidden md:block" />
+            <span className="bg-clip-text text-transparent bg-linear-to-r from-primary to-purple-600">Shop by price per unit.</span>
           </h1>
-          <p className="text-xl md:text-2xl text-muted-foreground max-w-2xl mx-auto mb-10 leading-relaxed">
-            Stop overpaying. We track millions of products across major retailers to find you the absolute best value per unit.
+          <p className="text-xl md:text-2xl text-muted-foreground max-w-2xl mx-auto mb-4 leading-relaxed">
+            The cheaper product isn't always the better value. Compare unit prices across millions of products to find the real deals.
           </p>
+          <div className="flex items-center justify-center gap-6 mb-10">
+            <div className="text-center">
+              <p className="text-3xl font-bold text-foreground">11 Countries</p>
+              <p className="text-sm text-muted-foreground">Supported Marketplaces</p>
+            </div>
+            <div className="h-12 w-px bg-border" />
+            <div className="text-center">
+              <p className="text-3xl font-bold text-foreground">24/7</p>
+              <p className="text-sm text-muted-foreground">Real-time Price Updates</p>
+            </div>
+          </div>
           <div className="flex flex-col sm:flex-row justify-center gap-4">
-            <Button size="lg" className="text-lg px-8 h-14 rounded-full shadow-lg shadow-primary/20 hover:shadow-primary/40 transition-all" asChild>
+            <Button size="lg" className="text-lg px-8 h-14 rounded-full shadow-lg shadow-primary/20 hover:shadow-primary/40 hover:scale-105 transition-all group" asChild>
               <Link href="/categories">
-                Start Comparing <ArrowRight className="ml-2 h-5 w-5" />
+                Start Saving Now 
+                <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
               </Link>
             </Button>
-            <Button size="lg" variant="outline" className="text-lg px-8 h-14 rounded-full border-primary/20 hover:bg-primary/5 transition-all">
-              Learn More
+            <Button size="lg" variant="outline" className="text-lg px-8 h-14 rounded-full border-primary/20 hover:bg-primary/5 hover:border-primary/40 transition-all">
+              See How It Works
             </Button>
           </div>
         </div>
@@ -78,46 +94,56 @@ export default function HomePage() {
       {/* Trending Stats */}
       <section className="container px-4 mx-auto -mt-10 relative z-20">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <Card className="bg-background/60 dark:bg-background/60 backdrop-blur-xl border-primary/20 dark:border-primary/10 shadow-lg">
+          <Card className="bg-background/60 dark:bg-background/60 backdrop-blur-xl border-border shadow-lg hover:shadow-xl hover:border-primary/20 transition-all group">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium text-muted-foreground">Most Viewed Today</CardTitle>
-              <div className="p-2 bg-primary/10 rounded-full">
-                <Smartphone className="h-4 w-4 text-primary" />
+              <div className="p-2 bg-muted/50 rounded-lg group-hover:bg-muted transition-colors">
+                <Smartphone className="h-4 w-4 text-muted-foreground" />
               </div>
             </CardHeader>
             <CardContent>
               <div className="text-3xl font-bold text-foreground">SSD Storage</div>
-              <p className="text-xs text-emerald-500 font-medium flex items-center mt-1">
+              <p className="text-xs text-muted-foreground font-medium flex items-center mt-1">
                 <TrendingUp className="h-3 w-3 mr-1" /> +20.1% from yesterday
               </p>
             </CardContent>
           </Card>
-          <Card className="bg-background/60 dark:bg-background/60 backdrop-blur-xl border-primary/20 dark:border-primary/10 shadow-lg">
+          <Card className="bg-background/60 dark:bg-background/60 backdrop-blur-xl border-border shadow-lg hover:shadow-xl hover:border-primary/20 transition-all group">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium text-muted-foreground">Biggest Price Drop</CardTitle>
-              <div className="p-2 bg-primary/10 rounded-full">
-                <TrendingUp className="h-4 w-4 text-primary" />
+              <CardTitle className="text-sm font-medium text-muted-foreground">Smart Analysis</CardTitle>
+              <div className="p-2 bg-muted/50 rounded-lg group-hover:bg-muted transition-colors">
+                <span className="text-sm font-mono text-muted-foreground">$</span>
               </div>
             </CardHeader>
             <CardContent>
-              <div className="text-3xl font-bold text-foreground">-15%</div>
-              <p className="text-xs text-muted-foreground mt-1">Protein Powder (5kg)</p>
+              <div className="text-3xl font-bold text-foreground">
+                Unit Pricing
+              </div>
+              <p className="text-xs text-muted-foreground mt-1">Automatic price-per-unit calculation</p>
             </CardContent>
           </Card>
-          <Card className="bg-background/60 dark:bg-background/60 backdrop-blur-xl border-primary/20 dark:border-primary/10 shadow-lg">
+          <Card className="bg-background/60 dark:bg-background/60 backdrop-blur-xl border-border shadow-lg hover:shadow-xl hover:border-primary/20 transition-all group">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium text-muted-foreground">Items Tracked</CardTitle>
-              <div className="p-2 bg-primary/10 rounded-full">
-                <ShoppingCart className="h-4 w-4 text-primary" />
+              <CardTitle className="text-sm font-medium text-muted-foreground">Global Coverage</CardTitle>
+              <div className="p-2 bg-muted/50 rounded-lg group-hover:bg-muted transition-colors">
+                <Globe className="h-4 w-4 text-muted-foreground" />
               </div>
             </CardHeader>
             <CardContent>
-              <div className="text-3xl font-bold text-foreground">12,345,678</div>
-              <p className="text-xs text-muted-foreground mt-1">Across 11 countries</p>
+              <div className="text-3xl font-bold text-foreground">
+                11 Regions
+              </div>
+              <p className="text-xs text-muted-foreground mt-1">Unified search across borders</p>
             </CardContent>
           </Card>
         </div>
       </section>
+
+      {/* Featured Deals Carousel */}
+      <FeaturedDeals />
+
+      {/* Before/After Comparison */}
+      <PriceComparison />
 
       {/* Categories */}
       <section className="container px-4 mx-auto py-12">
@@ -133,14 +159,21 @@ export default function HomePage() {
           </Button>
         </div>
         <div className="flex flex-wrap justify-center gap-6">
-          {categories.map((category) => (
+          {categories.map((category, idx) => (
             <Link key={category.slug} href={`/categories/${category.slug}`} className="w-full sm:w-64">
-              <Card className="h-full bg-card/50 hover:bg-card/80 backdrop-blur-sm transition-all cursor-pointer border-primary/10 hover:border-primary/30 hover:shadow-lg hover:-translate-y-1 group">
+              <Card className="relative h-full bg-card/50 hover:bg-card/80 backdrop-blur-sm transition-all duration-300 cursor-pointer border-primary/10 hover:border-primary/30 hover:shadow-xl hover:shadow-primary/10 hover:-translate-y-2 hover:scale-105 group">
+                {idx === 0 && (
+                  <div className="absolute -top-2 -right-2 z-10">
+                    <Badge className="bg-linear-to-r from-primary to-purple-600 border-0 shadow-lg">
+                      🔥 Hot
+                    </Badge>
+                  </div>
+                )}
                 <CardHeader className="text-center">
-                  <div className="mx-auto bg-primary/5 p-4 rounded-2xl mb-4 group-hover:bg-primary/10 transition-colors">
+                  <div className="mx-auto bg-primary/5 p-4 rounded-2xl mb-4 group-hover:bg-primary/10 group-hover:scale-110 transition-all duration-300">
                     <category.icon className="h-8 w-8 text-primary" />
                   </div>
-                  <CardTitle className="mb-1">{category.name}</CardTitle>
+                  <CardTitle className="mb-1 group-hover:text-primary transition-colors">{category.name}</CardTitle>
                   <CardDescription>{category.count} items</CardDescription>
                 </CardHeader>
               </Card>
@@ -149,94 +182,8 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Dashboard Preview */}
-      <section className="container px-4 mx-auto py-12">
-        <div className="rounded-2xl border border-primary/20 dark:border-primary/10 bg-background/50 backdrop-blur-xl shadow-2xl overflow-hidden relative">
-          <div className="absolute inset-0 bg-linear-to-br from-primary/5 via-transparent to-primary/5 opacity-50" />
-          <div className="p-8 flex flex-col md:flex-row gap-12 items-center relative z-10">
-            <div className="flex-1 space-y-6">
-              <div>
-                <Badge variant="outline" className="mb-4 border-primary/20 text-primary">Analytics</Badge>
-                <h2 className="text-3xl font-bold mb-4">Data Driven Savings</h2>
-                <p className="text-muted-foreground text-lg">
-                  Our algorithms analyze price history to predict the best time to buy. 
-                  Visualize trends and make informed decisions.
-                </p>
-              </div>
-              <ul className="space-y-4">
-                <li className="flex items-center gap-3 p-3 rounded-lg bg-background/50 border border-primary/5">
-                  <div className="h-2 w-2 rounded-full bg-primary shadow-[0_0_8px_rgba(var(--primary),0.5)]" />
-                  <span className="font-medium">Real-time price updates</span>
-                </li>
-                <li className="flex items-center gap-3 p-3 rounded-lg bg-background/50 border border-primary/5">
-                  <div className="h-2 w-2 rounded-full bg-primary shadow-[0_0_8px_rgba(var(--primary),0.5)]" />
-                  <span className="font-medium">Unit price calculation</span>
-                </li>
-                <li className="flex items-center gap-3 p-3 rounded-lg bg-background/50 border border-primary/5">
-                  <div className="h-2 w-2 rounded-full bg-primary shadow-[0_0_8px_rgba(var(--primary),0.5)]" />
-                  <span className="font-medium">Historical data analysis</span>
-                </li>
-              </ul>
-            </div>
-            <div className="flex-1 w-full h-[400px] bg-linear-to-b from-background/50 to-background/20 rounded-xl p-6 border border-primary/10 shadow-inner">
-               <ResponsiveContainer width="100%" height="100%">
-                <BarChart data={data}>
-                  <defs>
-                    <linearGradient id="colorValue" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="5%" stopColor="var(--primary)" stopOpacity={0.8}/>
-                      <stop offset="95%" stopColor="var(--primary)" stopOpacity={0.3}/>
-                    </linearGradient>
-                    <linearGradient id="colorValueHover" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="5%" stopColor="var(--primary)" stopOpacity={1}/>
-                      <stop offset="95%" stopColor="var(--primary)" stopOpacity={0.6}/>
-                    </linearGradient>
-                  </defs>
-                  <XAxis 
-                    dataKey="name" 
-                    stroke="var(--muted-foreground)" 
-                    fontSize={12} 
-                    tickLine={false} 
-                    axisLine={false} 
-                    dy={10}
-                  />
-                  <YAxis 
-                    stroke="var(--muted-foreground)" 
-                    fontSize={12} 
-                    tickLine={false} 
-                    axisLine={false} 
-                    tickFormatter={(value) => `$${value}`} 
-                    dx={-10}
-                  />
-                  <Tooltip 
-                    cursor={{ fill: 'var(--muted)', opacity: 0.2 }}
-                    content={({ active, payload, label }) => {
-                      if (active && payload && payload.length) {
-                        return (
-                          <div className="rounded-lg border bg-background/95 backdrop-blur-sm p-3 shadow-xl ring-1 ring-black/5 dark:ring-white/10">
-                            <p className="mb-1 text-xs font-medium text-muted-foreground">{label}</p>
-                            <p className="text-lg font-bold text-foreground">
-                              ${payload[0].value}
-                              <span className="ml-1 text-xs font-normal text-muted-foreground">/ unit</span>
-                            </p>
-                          </div>
-                        )
-                      }
-                      return null
-                    }}
-                  />
-                  <Bar 
-                    dataKey="value" 
-                    fill="url(#colorValue)" 
-                    radius={[6, 6, 0, 0]}
-                    maxBarSize={50}
-                    activeBar={<Rectangle fill="url(#colorValueHover)" stroke="none" />}
-                  />
-                </BarChart>
-              </ResponsiveContainer>
-            </div>
-          </div>
-        </div>
-      </section>
+      {/* Interactive Savings Calculator */}
+      <SavingsCalculator />
 
       {/* Supported Countries */}
       <section className="container px-4 mx-auto py-24">

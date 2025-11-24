@@ -30,7 +30,7 @@ export default function ImpressumPage() {
               <h2 className="text-2xl font-semibold mb-4">Kontakt</h2>
               <div className="bg-card/50 p-6 rounded-lg border border-primary/20">
                 <p className="mb-2">Telefon: +49 176 34842764</p>
-                <p className="mb-2">E-Mail: oguz.oeztuerk@outlook.de</p>
+                <p className="mb-2">E-Mail: oguz.oeztuerk.bd@gmail.com</p>
               </div>
             </section>
 
@@ -109,7 +109,7 @@ export default function ImpressumPage() {
               <h2 className="text-2xl font-semibold mb-4">Contact</h2>
               <div className="bg-card/50 p-6 rounded-lg border border-primary/20">
                 <p className="mb-2">Phone: +49 176 34842764</p>
-                <p className="mb-2">Email: oguz.oeztuerk@outlook.de</p>
+                <p className="mb-2">Email: oguz.oeztuerk.bd@gmail.com</p>
               </div>
             </section>
 

@@ -33,7 +33,7 @@ export default function DatenschutzPage() {
                 <p className="mb-4"><strong>Oguz Öztürk</strong></p>
                 <p className="mb-2">Boberger Anger 87</p>
                 <p className="mb-2">21031 Hamburg</p>
-                <p className="mb-4">E-Mail: oguz.oeztuerk@outlook.de</p>
+                <p className="mb-4">E-Mail: oguz.oeztuerk.bd@gmail.com</p>
               </div>
 
               <h3 className="text-xl font-semibold mb-3">Welche Rechte haben Sie?</h3>
@@ -135,7 +135,7 @@ export default function DatenschutzPage() {
                 <p className="mb-4"><strong>Oguz Öztürk</strong></p>
                 <p className="mb-2">Boberger Anger 87</p>
                 <p className="mb-2">21031 Hamburg</p>
-                <p className="mb-4">Email: oguz.oeztuerk@outlook.de</p>
+                <p className="mb-4">Email: oguz.oeztuerk.bd@gmail.com</p>
               </div>
 
               <h3 className="text-xl font-semibold mb-3">What rights do you have?</h3>

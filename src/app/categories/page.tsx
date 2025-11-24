@@ -3,7 +3,7 @@
 import Link from "next/link"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
-import { Smartphone, Coffee, Home, ShoppingCart, Dog, HardDrive, Monitor, Cpu, Zap, Utensils, Wheat, Milk } from "lucide-react"
+import { Smartphone, Coffee, Home, ShoppingCart, Dog, HardDrive, Usb, Battery, Utensils, Wheat, Milk, Trash2, Droplets } from "lucide-react"
 
 const categoryGroups = [
   {
@@ -11,9 +11,9 @@ const categoryGroups = [
     icon: Smartphone,
     subcategories: [
       { name: "Hard Drives", description: "HDD and SSD storage solutions", count: "1,240", slug: "hard-drives", icon: HardDrive },
-      { name: "Monitors", description: "4K, 1440p, and 1080p displays", count: "850", slug: "monitors", icon: Monitor },
-      { name: "Processors", description: "CPUs from Intel and AMD", count: "120", slug: "processors", icon: Cpu },
-      { name: "Graphics Cards", description: "GPUs for gaming and work", count: "340", slug: "graphics-cards", icon: Zap },
+      { name: "MicroSD Cards", description: "Expandable storage for devices", count: "320", slug: "microsd-cards", icon: Smartphone },
+      { name: "USB Drives", description: "Portable file storage", count: "450", slug: "usb-drives", icon: Usb },
+      { name: "Batteries", description: "AA, AAA, and coin cells", count: "890", slug: "batteries", icon: Battery },
     ]
   },
   {
@@ -32,6 +32,8 @@ const categoryGroups = [
     subcategories: [
       { name: "Detergent", description: "Liquid, powder, and pods", count: "450", slug: "detergent", icon: Home },
       { name: "Paper Products", description: "Toilet paper and paper towels", count: "320", slug: "paper-products", icon: Home },
+      { name: "Trash Bags", description: "Kitchen and outdoor bags", count: "210", slug: "trash-bags", icon: Trash2 },
+      { name: "Dishwasher Tabs", description: "Pods and tablets", count: "180", slug: "dishwasher-tabs", icon: Droplets },
     ]
   },
 ]

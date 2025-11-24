@@ -9,9 +9,10 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-import { Moon, Sun, Menu } from "lucide-react"
+import { Moon, Sun, Menu, Search } from "lucide-react"
 import { useTheme } from "next-themes"
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
+import { SearchModal } from "@/components/SearchModal"
 
 const countries = [
   { code: "US", name: "United States", flag: "🇺🇸" },
@@ -30,6 +31,7 @@ const countries = [
 export function Navbar() {
   const { setTheme, theme } = useTheme()
   const [country, setCountry] = React.useState(countries[0])
+  const [searchOpen, setSearchOpen] = React.useState(false)
 
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
@@ -46,7 +48,31 @@ export function Navbar() {
         </div>
 
         <div className="flex items-center gap-2">
-           <DropdownMenu>
+          {/* Search Button */}
+          <Button
+            variant="ghost"
+            size="sm"
+            className="gap-2 hidden sm:flex"
+            onClick={() => setSearchOpen(true)}
+          >
+            <Search className="h-4 w-4" />
+            <span className="text-muted-foreground">Search...</span>
+            <kbd className="hidden lg:inline-block px-1.5 py-0.5 text-xs border rounded bg-muted ml-2">
+              ⌘K
+            </kbd>
+          </Button>
+
+          {/* Mobile Search Button */}
+          <Button
+            variant="ghost"
+            size="icon"
+            className="sm:hidden"
+            onClick={() => setSearchOpen(true)}
+          >
+            <Search className="h-5 w-5" />
+          </Button>
+
+          <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="ghost" size="sm" className="gap-2">
                 <span className="text-lg">{country.flag}</span>
@@ -89,6 +115,9 @@ export function Navbar() {
           </Sheet>
         </div>
       </div>
+
+      {/* Search Modal */}
+      <SearchModal open={searchOpen} onOpenChange={setSearchOpen} />
     </header>
   )
 }

@@ -35,7 +35,7 @@ export function Globe({ className }: { className?: string }) {
       mapSamples: 16000,
       mapBrightness: 1.2,
       baseColor: [1, 1, 1],
-      markerColor: [251 / 255, 100 / 255, 21 / 255],
+      markerColor: [16 / 255, 185 / 255, 129 / 255],
       glowColor: [1.2, 1.2, 1.2],
       markers: [
         // US
@@ -83,8 +83,6 @@ export function Globe({ className }: { className?: string }) {
   return (
     <div
       style={{
-        width: "100%",
-        maxWidth: "100%",
         aspectRatio: 1,
         margin: "auto",
         position: "relative",

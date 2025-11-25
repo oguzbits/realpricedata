@@ -123,7 +123,7 @@ export default function HomePage() {
               <div className="flex flex-col sm:flex-row gap-4 mb-10">
                 <Button
                   size="lg"
-                  className="text-lg px-8 h-14 rounded-full shadow-lg shadow-primary/20 hover:shadow-primary/40 hover:scale-105 transition-all group"
+                  className="text-lg px-8 h-14 rounded-full shadow-lg shadow-primary/20 hover:brightness-110 transition-all group"
                   asChild
                 >
                   <Link href="/categories">

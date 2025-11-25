@@ -192,7 +192,7 @@ export function HeroTableDemo() {
                       <div className="col-span-2 font-mono font-medium text-primary flex items-center gap-2">
                         ${product.pricePerTB?.toFixed(3) || "0.000"}
                         {idx === 0 && (
-                          <Badge className="bg-emerald-500/20 text-emerald-400 border-0 h-4 px-1 text-[8px] animate-in zoom-in">
+                          <Badge className="bg-emerald-500/20 text-emerald-700 dark:text-emerald-400 border-0 h-4 px-1.5 text-[8px] animate-in zoom-in">
                             Best
                           </Badge>
                         )}
@@ -211,10 +211,10 @@ export function HeroTableDemo() {
                       </div>
                       <div className="col-span-1">
                         <Badge variant="secondary" className={cn(
-                          "h-4 px-1 text-[9px] border-0",
-                          product.condition === "New" ? "bg-emerald-500/20 text-emerald-400" :  
-                          product.condition === "Used" ? "bg-orange-500/20 text-orange-400" :
-                          "bg-blue-500/20 text-blue-400"
+                          "h-4 px-1.5 text-[9px] border-0",
+                          product.condition === "New" ? "bg-emerald-500/20 text-emerald-700 dark:text-emerald-400" :  
+                          product.condition === "Used" ? "bg-orange-500/20 text-orange-700 dark:text-orange-400" :
+                          "bg-blue-500/20 text-blue-700 dark:text-blue-400"
                         )}>
                           {product.condition}
                         </Badge>

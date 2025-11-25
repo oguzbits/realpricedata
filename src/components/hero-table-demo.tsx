@@ -30,7 +30,7 @@ const products: Product[] = [
     warranty: "2 years",
     formFactor: "External 2.5\"",
     technology: "HDD",
-    condition: "Used",
+    condition: "Used" as const,
     brand: "Seagate"
   },
   {
@@ -43,7 +43,7 @@ const products: Product[] = [
     warranty: "5 years",
     formFactor: "Internal 3.5\"",
     technology: "HDD",
-    condition: "New",
+    condition: "New" as const,
     brand: "Toshiba"
   },
   {
@@ -56,7 +56,7 @@ const products: Product[] = [
     warranty: "5 years",
     formFactor: "Internal 3.5\"",
     technology: "HDD",
-    condition: "New",
+    condition: "New" as const,
     brand: "Western Digital"
   },
   {
@@ -69,7 +69,7 @@ const products: Product[] = [
     warranty: "3 years",
     formFactor: "Internal 2.5\"",
     technology: "SSD",
-    condition: "New",
+    condition: "New" as const,
     brand: "Samsung"
   },
   {
@@ -82,7 +82,7 @@ const products: Product[] = [
     warranty: "5 years",
     formFactor: "Internal 2.5\"",
     technology: "SSD",
-    condition: "New",
+    condition: "New" as const,
     brand: "Crucial"
   }
 ].sort((a, b) => a.pricePerTB - b.pricePerTB) // Pre-sorted by unit price

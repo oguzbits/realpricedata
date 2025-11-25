@@ -35,7 +35,7 @@ import {
 import { Globe as InteractiveGlobe } from "@/components/ui/globe";
 import { FeaturedDeals } from "@/components/ui/featured-deals";
 import { HeroTableDemo } from "@/components/hero-table-demo";
-import { SavingsCalculator } from "@/components/ui/savings-calculator";
+
 import { PriceComparison } from "@/components/ui/price-comparison";
 import { AnimatedCounter } from "@/components/ui/animated-counter";
 
@@ -223,8 +223,7 @@ export default function HomePage() {
       {/* Featured Deals Carousel */}
       <FeaturedDeals />
 
-      {/* Before/After Comparison */}
-      <PriceComparison />
+
 
       {/* Categories */}
       <section className="container px-4 mx-auto py-12">
@@ -277,8 +276,11 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Interactive Savings Calculator */}
-      <SavingsCalculator />
+
+
+
+      {/* Before/After Comparison */}
+      <PriceComparison />
 
       {/* Supported Countries */}
       <section className="container px-4 mx-auto py-24">

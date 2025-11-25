@@ -78,7 +78,7 @@ export function PriceComparison() {
           {/* After - Smart Shopping with BestPrices */}
           <div className="bg-linear-to-br from-primary/5 to-background p-8 relative">
             <div className="absolute top-4 right-4">
-              <Badge className="bg-linear-to-r from-primary to-purple-600 border-0">
+              <Badge className="bg-linear-to-r from-primary to-blue-600 border-0">
                 <Check className="h-3 w-3 mr-1" />
                 Smart Way
               </Badge>
@@ -135,7 +135,7 @@ export function PriceComparison() {
         </div>
 
         {/* Mobile-friendly summary */}
-        <div className="bg-linear-to-r from-primary/10 to-purple-500/10 p-6 border-t border-primary/20 md:hidden">
+        <div className="bg-linear-to-r from-primary/10 to-blue-500/10 p-6 border-t border-primary/20 md:hidden">
           <div className="flex items-center justify-center gap-2 text-sm font-medium">
             <span>Traditional Shopping</span>
             <ArrowRight className="h-4 w-4 text-primary" />

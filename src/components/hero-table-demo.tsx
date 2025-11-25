@@ -212,7 +212,7 @@ export function HeroTableDemo() {
                       <div className="col-span-1">
                         <Badge variant="secondary" className={cn(
                           "h-4 px-1 text-[9px] border-0",
-                          product.condition === "New" ? "bg-purple-500/20 text-purple-400" : 
+                          product.condition === "New" ? "bg-emerald-500/20 text-emerald-400" :  
                           product.condition === "Used" ? "bg-orange-500/20 text-orange-400" :
                           "bg-blue-500/20 text-blue-400"
                         )}>

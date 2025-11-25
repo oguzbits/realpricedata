@@ -206,7 +206,7 @@ export function SavingsCalculator() {
             </div>
 
             {/* Savings Summary */}
-            <Card className="bg-linear-to-r from-primary/10 via-purple-500/10 to-primary/10 border-primary/20">
+            <Card className="bg-linear-to-r from-primary/10 via-blue-500/10 to-primary/10 border-primary/20">
               <CardContent className="p-6">
                 <div className="flex flex-col md:flex-row items-center justify-between gap-4">
                   <div className="flex items-center gap-3">

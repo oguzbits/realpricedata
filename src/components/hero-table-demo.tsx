@@ -69,7 +69,7 @@ const products: Product[] = [
     warranty: "3 years",
     formFactor: "Internal 2.5\"",
     technology: "SSD",
-    condition: "New" as const,
+    condition: "Used" as const,
     brand: "Samsung"
   },
   {
@@ -192,7 +192,7 @@ export function HeroTableDemo() {
                       <div className="col-span-2 font-mono font-medium text-primary flex items-center gap-2">
                         ${product.pricePerTB?.toFixed(3) || "0.000"}
                         {idx === 0 && (
-                          <Badge className="bg-emerald-500 text-white border-0 h-4 px-1 text-[8px] animate-in zoom-in">
+                          <Badge className="bg-emerald-500/20 text-emerald-400 border-0 h-4 px-1 text-[8px] animate-in zoom-in">
                             Best
                           </Badge>
                         )}

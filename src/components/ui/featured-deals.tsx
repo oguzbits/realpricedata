@@ -121,14 +121,14 @@ export function FeaturedDeals() {
             <Card className="group relative overflow-hidden bg-card/40 backdrop-blur-xl border-primary/20 hover:border-primary/30 transition-all duration-300 hover:shadow-lg hover:shadow-primary/10 cursor-pointer h-full">
               {deal.badge && (
                 <div className="absolute top-3 right-3 z-10">
-                  <Badge className="bg-linear-to-r from-primary to-blue-600 border-0 text-primary-foreground shadow-lg text-xs">
+                  <Badge className="bg-primary border-0 text-primary-foreground shadow-lg text-xs">
                     {deal.badge}
                   </Badge>
                 </div>
               )}
               
               <CardContent className="p-6">
-                <div className={`w-12 h-12 mb-4 rounded-lg bg-linear-to-br ${deal.iconColor} border border-border flex items-center justify-center`}>
+                <div className="w-12 h-12 mb-4 rounded-lg bg-muted border border-border flex items-center justify-center">
                   <deal.icon className="h-6 w-6 text-foreground/70" />
                 </div>
                 

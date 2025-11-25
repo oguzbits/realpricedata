@@ -36,7 +36,6 @@ import { Globe as InteractiveGlobe } from "@/components/ui/globe";
 import { FeaturedDeals } from "@/components/ui/featured-deals";
 import { HeroTableDemo } from "@/components/hero-table-demo";
 
-import { PriceComparison } from "@/components/ui/price-comparison";
 import { AnimatedCounter } from "@/components/ui/animated-counter";
 
 const categories = [
@@ -94,7 +93,7 @@ export default function HomePage() {
       {/* Hero Section */}
       {/* Hero Section */}
       <section className="relative py-20 md:py-32 overflow-hidden">
-        <div className="absolute inset-0 bg-linear-to-b from-primary/5 to-background z-0" />
+        <div className="absolute inset-0 bg-primary/5 z-0" />
         <div className="absolute top-0 left-0 w-[1000px] h-[500px] bg-primary/20 rounded-full blur-[120px] -z-10 opacity-30" />
 
         <div className="container relative z-10 px-4 mx-auto">
@@ -109,8 +108,8 @@ export default function HomePage() {
                 Advanced Unit Price Analysis Engine
               </Badge>
 
-              <h1 className="text-5xl md:text-7xl font-bold tracking-tight mb-6 bg-clip-text text-transparent bg-linear-to-r from-foreground via-foreground to-foreground/70 drop-shadow-sm leading-[1.1]">
-                <span className="bg-clip-text text-transparent bg-linear-to-r from-primary to-blue-600">
+              <h1 className="text-5xl md:text-7xl font-bold tracking-tight mb-6 drop-shadow-sm leading-[1.1]">
+                <span className="text-primary">
                   Shop by Unit Price.
                 </span>
               </h1>
@@ -256,7 +255,7 @@ export default function HomePage() {
               <Card className="relative h-full bg-card/50 hover:bg-card/80 backdrop-blur-sm transition-all duration-300 cursor-pointer border-primary/10 hover:border-primary/30 hover:shadow-xl hover:shadow-primary/10 hover:-translate-y-2 hover:scale-105 group">
                 {idx === 0 && (
                   <div className="absolute -top-2 -right-2 z-10">
-                    <Badge className="bg-linear-to-r from-primary to-blue-600 border-0 shadow-lg">
+                    <Badge className="bg-primary border-0 shadow-lg">
                       🔥 Hot
                     </Badge>
                   </div>
@@ -275,12 +274,6 @@ export default function HomePage() {
           ))}
         </div>
       </section>
-
-
-
-
-      {/* Before/After Comparison */}
-      <PriceComparison />
 
       {/* Supported Countries */}
       <section className="container px-4 mx-auto py-24">
@@ -401,7 +394,7 @@ export default function HomePage() {
                 </div>
               ))}
             </div>
-            <div className="p-6 rounded-2xl bg-linear-to-r from-primary/10 to-blue-500/10 border border-primary/20 dark:border-primary/10 mt-6">
+            <div className="p-6 rounded-2xl bg-primary/10 border border-primary/20 dark:border-primary/10 mt-6">
               <h3 className="text-lg font-bold mb-2">
                 Real-time Global Tracking
               </h3>

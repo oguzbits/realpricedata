@@ -10,7 +10,7 @@ import {
   Baby,
   Coffee,
 } from "lucide-react";
-import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
@@ -68,17 +68,17 @@ export function SearchModal({ open, onOpenChange }: SearchModalProps) {
       if (e.key === "Escape") {
         onOpenChange(false);
       }
-      if (e.key === "ArrowDown") {
+      if (e.key === "ArrowDown" && availableItems.length > 0) {
         e.preventDefault();
         setSelectedIndex((prev) => (prev + 1) % availableItems.length);
       }
-      if (e.key === "ArrowUp") {
+      if (e.key === "ArrowUp" && availableItems.length > 0) {
         e.preventDefault();
         setSelectedIndex(
           (prev) => (prev - 1 + availableItems.length) % availableItems.length
         );
       }
-      if (e.key === "Enter" && selectedIndex >= 0 && availableItems.length > 0) {
+      if (e.key === "Enter" && selectedIndex >= 0 && availableItems.length > 0 && availableItems[selectedIndex]) {
         e.preventDefault();
         handleLinkClick(availableItems[selectedIndex].slug);
       }
@@ -113,20 +113,27 @@ export function SearchModal({ open, onOpenChange }: SearchModalProps) {
       >
         <VisuallyHidden>
           <DialogTitle>Search categories and products</DialogTitle>
+          <DialogDescription>
+            Search for categories and products to find the best unit prices
+          </DialogDescription>
         </VisuallyHidden>
 
         {/* Search Input Header */}
         <div className="px-6 pt-6 pb-4 border-b border-border/40">
-          <div className="flex items-center gap-3 relative px-4 py-3 rounded-xl border border-border bg-secondary">
+          <div className="flex items-center gap-3 px-4 py-3 rounded-xl border border-border bg-background">
             <Search className="h-5 w-5 text-muted-foreground shrink-0" />
             <Input
               placeholder="What are you looking for?"
               value={query}
               onChange={(e) => setQuery(e.target.value)}
-              className="border-0 focus-visible:ring-0 text-base px-0 h-6 flex-1 placeholder:text-muted-foreground/50 bg-transparent shadow-none font-medium"
+              className="border-0 focus-visible:ring-0 text-base h-auto py-0 flex-1 placeholder:text-muted-foreground/50 bg-transparent shadow-none font-medium"
               autoFocus
+              autoComplete="off"
+              data-form-type="other"
+              data-lpignore="true"
+              data-1p-ignore="true"
             />
-            <kbd className="px-2 py-1 text-xs border border-border/60 rounded-md bg-background/50 text-muted-foreground font-mono shrink-0 font-medium opacity-70">
+            <kbd className="px-2 py-1 text-xs border border-border/60 rounded-md bg-muted/50 text-muted-foreground font-mono shrink-0 font-medium">
               esc
             </kbd>
           </div>

@@ -73,6 +73,32 @@ export default function ImpressumPage() {
             </p>
           </div>
         </section>
+
+        <section>
+          <h2 className="text-2xl font-semibold mb-4">Nutzungsbedingungen & Haftungsausschluss</h2>
+          <div className="bg-card/50 p-6 rounded-lg border border-primary/20 space-y-4">
+            <h3 className="text-lg font-semibold">Leistungsbeschreibung</h3>
+            <p>
+              bestprices.today ist ein Preisvergleichsportal, das es Nutzern ermöglicht, Preise verschiedener Produkte 
+              zu vergleichen. Wir verkaufen selbst keine Produkte, sondern verweisen auf Angebote Dritter (z.B. Amazon).
+            </p>
+
+            <h3 className="text-lg font-semibold">Haftung für Inhalte und Preise</h3>
+            <p>
+              Wir bemühen uns um Aktualität und Richtigkeit der dargestellten Informationen und Preise. Da diese Daten 
+              jedoch von Dritten stammen und sich kurzfristig ändern können, können wir keine Gewähr für die Richtigkeit, 
+              Vollständigkeit und Aktualität der Inhalte übernehmen. Maßgeblich ist immer der Preis, der zum Zeitpunkt 
+              des Kaufs auf der Website des Verkäufers angezeigt wird.
+            </p>
+
+            <h3 className="text-lg font-semibold">Urheberrecht</h3>
+            <p>
+              Die durch die Seitenbetreiber erstellten Inhalte und Werke auf diesen Seiten unterliegen dem deutschen 
+              Urheberrecht. Die Vervielfältigung, Bearbeitung, Verbreitung und jede Art der Verwertung außerhalb der 
+              Grenzen des Urheberrechtes bedürfen der schriftlichen Zustimmung des jeweiligen Autors bzw. Erstellers.
+            </p>
+          </div>
+        </section>
       </div>
     </div>
   )

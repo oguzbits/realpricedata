@@ -71,10 +71,35 @@ export default function DatenschutzPage() {
 
         <section>
           <h2 className="text-2xl font-semibold mb-4">3. Cookies</h2>
-          <div className="bg-card/50 p-6 rounded-lg border border-primary/20">
-            <p className="mb-4">
+          <div className="bg-card/50 p-6 rounded-lg border border-primary/20 space-y-4">
+            <p>
               Diese Website verwendet Cookies. Cookies sind kleine Textdateien, die auf Ihrem Endgerät gespeichert werden. 
-              Sie können Ihre Cookie-Einstellungen jederzeit anpassen.
+              Sie werden häufig verwendet, um Websites funktionsfähig zu machen oder effizienter zu gestalten, sowie um 
+              Informationen für die Betreiber der Website bereitzustellen.
+            </p>
+            
+            <h3 className="text-lg font-semibold">Wie wir Cookies verwenden</h3>
+            <ul className="list-disc list-inside space-y-2">
+              <li>
+                <strong>Notwendige Cookies:</strong> Diese Cookies sind für den Betrieb der Website erforderlich. 
+                Dazu gehört beispielsweise das Speichern Ihrer Cookie-Einstellungen.
+              </li>
+              <li>
+                <strong>Affiliate-Cookies:</strong> Als Teilnehmer am Amazon-Partnerprogramm verwenden wir Cookies, 
+                um die Herkunft von Bestellungen nachzuvollziehen. Wenn Sie auf einen Amazon-Link auf unserer Website 
+                klicken, wird ein Cookie gesetzt, damit Amazon zuordnen kann, dass Sie von unserer Seite kamen. 
+                Dies ermöglicht uns, eine Werbekostenerstattung zu erhalten.
+              </li>
+            </ul>
+
+            <h3 className="text-lg font-semibold">Ihre Cookie-Einstellungen</h3>
+            <p>
+              Sie können Ihre Cookie-Einstellungen jederzeit ändern, indem Sie die Einstellungen Ihres Browsers anpassen. 
+              Die meisten Webbrowser erlauben eine gewisse Kontrolle über die meisten Cookies über die Browsereinstellungen.
+            </p>
+            <p>
+              Um mehr über Cookies zu erfahren, einschließlich wie Sie sehen können, welche Cookies gesetzt wurden und 
+              wie Sie diese verwalten und löschen können, besuchen Sie <a href="https://www.allaboutcookies.org" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">www.allaboutcookies.org</a>.
             </p>
             <p>Rechtsgrundlage: Art. 6 Abs. 1 lit. a DSGVO (Einwilligung)</p>
           </div>

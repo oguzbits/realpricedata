@@ -91,13 +91,18 @@ export default function HomePage() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
       {/* Hero Section */}
-      {/* Hero Section */}
-      <section className="relative py-20 md:py-32 overflow-hidden">
-        <div className="absolute inset-0 bg-primary/5 z-0" />
-        <div className="absolute top-0 left-0 w-[1000px] h-[500px] bg-primary/20 rounded-full blur-[120px] -z-10 opacity-30" />
+      <section className="relative overflow-hidden">
+        {/* Left side background */}
+        <div className="absolute inset-0 bg-background z-0" />
+        
+        {/* Right side background - MUI-inspired gradient */}
+        <div className="absolute top-0 right-0 bottom-0 w-1/2 bg-blue-50 dark:bg-[#050810] border-l border-slate-200 dark:border-[hsl(210,14%,13%)] z-0 rounded-bl-xl" />
+        
+        {/* Subtle gradient overlays */}
+        <div className="absolute top-0 left-0 w-[800px] h-[500px] bg-primary/10 rounded-full blur-[120px] -z-10 opacity-30" />
 
-        <div className="container relative z-10 px-4 mx-auto">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center">
+        <div className="container relative z-10 px-4 mx-auto py-16 md:py-24">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
             {/* Left Column: Content */}
             <div className="text-left">
               <Badge
@@ -150,7 +155,7 @@ export default function HomePage() {
             </div>
 
             {/* Right Column: Interactive Demo */}
-            <div className="relative mx-auto w-full max-w-lg lg:max-w-none">
+            <div className="relative">
               <HeroTableDemo />
             </div>
           </div>
@@ -158,7 +163,7 @@ export default function HomePage() {
       </section>
 
       {/* Trending Stats */}
-      <section className="container px-4 mx-auto -mt-10 relative z-20">
+      <section className="container px-4 mx-auto mt-12 relative z-20">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           <Card className="bg-background/60 dark:bg-background/60 backdrop-blur-xl border-border shadow-lg hover:shadow-xl hover:border-primary/20 transition-all group">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">

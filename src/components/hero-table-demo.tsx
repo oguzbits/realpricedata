@@ -121,30 +121,36 @@ export function HeroTableDemo() {
           <div className="w-32 sm:w-48 border-r border-border bg-muted/20 p-2 sm:p-4 hidden sm:block">
             <div className="space-y-6">
               <div>
-                <h3 className="text-xs font-semibold text-foreground mb-3">Filters</h3>
-                <div className="space-y-2">
-                  <div className="flex items-center gap-2">
-                    <div className="w-3 h-3 rounded-[3px] bg-primary" />
-                    <span className="text-[11px] text-muted-foreground">Condition</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <div className="w-3 h-3 rounded-[3px] border border-border" />
-                    <span className="text-[11px] text-muted-foreground">Capacity</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <div className="w-3 h-3 rounded-[3px] border border-border" />
-                    <span className="text-[11px] text-muted-foreground">Technology</span>
-                  </div>
-                </div>
-              </div>
-              
-              <div>
                 <h3 className="text-xs font-semibold text-foreground mb-3">Condition</h3>
                 <div className="space-y-2">
                   {["New", "Used", "Renewed"].map((c) => (
                     <div key={c} className="flex items-center gap-2">
                       <div className="w-3 h-3 rounded-[3px] bg-primary/80" />
                       <span className="text-[11px] text-muted-foreground">{c}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              <div>
+                <h3 className="text-xs font-semibold text-foreground mb-3">Capacity</h3>
+                <div className="space-y-2">
+                  {["18 TB", "14 TB", "8 TB", "4 TB"].map((c) => (
+                    <div key={c} className="flex items-center gap-2">
+                      <div className="w-3 h-3 rounded-[3px] border border-muted-foreground/30" />
+                      <span className="text-[11px] text-muted-foreground">{c}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              <div>
+                <h3 className="text-xs font-semibold text-foreground mb-3">Technology</h3>
+                <div className="space-y-2">
+                  {["HDD", "SSD"].map((t) => (
+                    <div key={t} className="flex items-center gap-2">
+                      <div className="w-3 h-3 rounded-[3px] border border-muted-foreground/30" />
+                      <span className="text-[11px] text-muted-foreground">{t}</span>
                     </div>
                   ))}
                 </div>

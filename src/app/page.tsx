@@ -119,7 +119,7 @@ export default function HomePage() {
 
               <p className="text-xl text-muted-foreground max-w-xl mb-8 leading-relaxed">
                 We reveal the true cost per liter, kilogram, or item. Spot the
-                hidden deals Amazon doesn&apos;t show you.
+                hidden deals in your region.
               </p>
 
               <div className="flex flex-col sm:flex-row gap-4 mb-10">

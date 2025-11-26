@@ -189,11 +189,11 @@ export default function SubcategoryPage() {
   }
 
   const FilterList = () => (
-    <Accordion type="multiple" defaultValue={["condition", "capacity", "technology", "form-factor"]} className="w-full space-y-6">
+    <Accordion type="multiple" defaultValue={["condition", "capacity", "technology", "form-factor"]} className="w-full">
       <AccordionItem value="condition" className="border-b">
-        <AccordionTrigger className="text-sm font-semibold hover:no-underline py-4">Condition</AccordionTrigger>
+        <AccordionTrigger className="text-sm font-semibold hover:no-underline pb-3 pt-0">Condition</AccordionTrigger>
         <AccordionContent>
-          <div className="space-y-3 pt-2 pb-4">
+          <div className="space-y-1.5 pt-1 pb-3">
             {["New", "Used", "Renewed"].map((condition) => (
               <div key={condition} className="flex items-center space-x-3">
                 <Checkbox
@@ -209,9 +209,9 @@ export default function SubcategoryPage() {
       </AccordionItem>
 
       <AccordionItem value="capacity" className="border-b">
-        <AccordionTrigger className="text-sm font-semibold hover:no-underline py-4">Capacity (TB)</AccordionTrigger>
+        <AccordionTrigger className="text-sm font-semibold hover:no-underline py-3">Capacity (TB)</AccordionTrigger>
         <AccordionContent>
-          <div className="flex items-center gap-3 pt-2 pb-4">
+          <div className="flex items-center gap-2 pt-1 pb-3">
             <div className="relative flex-1">
               <Input
                 type="number"
@@ -238,9 +238,9 @@ export default function SubcategoryPage() {
       </AccordionItem>
 
       <AccordionItem value="technology" className="border-b">
-        <AccordionTrigger className="text-sm font-semibold hover:no-underline py-4">Technology</AccordionTrigger>
+        <AccordionTrigger className="text-sm font-semibold hover:no-underline py-3">Technology</AccordionTrigger>
         <AccordionContent>
-          <div className="space-y-3 pt-2 pb-4">
+          <div className="space-y-1.5 pt-1 pb-3">
             {["HDD", "SSD", "SAS"].map((tech) => (
               <div key={tech} className="flex items-center space-x-3">
                 <Checkbox
@@ -256,9 +256,9 @@ export default function SubcategoryPage() {
       </AccordionItem>
 
       <AccordionItem value="form-factor" className="border-none">
-        <AccordionTrigger className="text-sm font-semibold hover:no-underline py-4">Form Factor</AccordionTrigger>
+        <AccordionTrigger className="text-sm font-semibold hover:no-underline py-3">Form Factor</AccordionTrigger>
         <AccordionContent>
-          <div className="space-y-3 pt-2 pb-4">
+          <div className="space-y-1.5 pt-1 pb-3">
             {["Internal 3.5\"", "Internal 2.5\"", "External 3.5\"", "External 2.5\"", "M.2 NVMe", "M.2 SATA"].map((ff) => (
               <div key={ff} className="flex items-center space-x-3">
                 <Checkbox
@@ -276,11 +276,8 @@ export default function SubcategoryPage() {
   )
 
   const FilterPanel = () => (
-    <Card>
-      <CardHeader className="pb-4">
-        <CardTitle>Filters</CardTitle>
-      </CardHeader>
-      <CardContent>
+    <Card className="p-4">
+      <CardContent className="p-0">
         <FilterList />
       </CardContent>
     </Card>

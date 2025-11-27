@@ -110,16 +110,16 @@ export default function HomePage() {
                 className="mb-6 px-4 py-1.5 text-sm border-border bg-muted/30 text-foreground hover:bg-muted/50 transition-colors shadow-sm w-fit"
               >
                 <span className="font-mono text-xs mr-2">⚡️</span>
-                Advanced Unit Price Analysis Engine
+                Automated Price Analysis
               </Badge>
 
               <h1 className="text-5xl md:text-7xl font-bold tracking-tight mb-6 drop-shadow-sm leading-[1.1]">
-                <span className="text-primary">Shop by Unit Price.</span>
+                <span className="text-primary">See the Real Value.</span>
               </h1>
 
               <p className="text-xl text-muted-foreground max-w-xl mb-8 leading-relaxed">
-                We reveal the true cost per liter, kilogram, or item. Spot the
-                hidden deals in your region.
+                Compare Amazon products in your region by their true cost per
+                liter, kilogram, or item. Find the best deals instantly.
               </p>
 
               <div className="flex flex-col sm:flex-row gap-4 mb-10">

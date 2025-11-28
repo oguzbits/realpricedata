@@ -152,10 +152,13 @@ export function SearchModal({ open, onOpenChange }: SearchModalProps) {
                   <div className="space-y-3">
                     {links.map((link, idx) => {
                       const IconComponent = link.icon;
-                      const globalIndex = Object.values(QUICK_LINKS)
-                        .flat()
-                        .findIndex((l) => l.slug === link.slug);
-                      const isSelected = globalIndex === selectedIndex;
+                      // Only calculate selection when in quick links mode (query is empty)
+                      const globalIndex = query === "" 
+                        ? Object.values(QUICK_LINKS)
+                            .flat()
+                            .findIndex((l) => l.slug === link.slug)
+                        : -1;
+                      const isSelected = query === "" && globalIndex === selectedIndex;
                       return (
                         <button
                           key={link.slug}

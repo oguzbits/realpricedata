@@ -307,7 +307,7 @@ export function HeroTableDemo() {
         })
         setFadeOut(false)
       }, 300) // Half of transition duration
-    }, 8000) // Increased from 5000ms to 8000ms
+    }, 5000)
 
     return () => clearInterval(interval)
   }, [])

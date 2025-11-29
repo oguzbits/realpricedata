@@ -286,11 +286,12 @@ const categoryConfig = {
   }
 }
 
+const categories: ProductCategory[] = ["harddrives", "batteries", "dogfood"]
+
 export function HeroTableDemo() {
   const [currentCategoryIndex, setCurrentCategoryIndex] = useState(0)
   const [fadeOut, setFadeOut] = useState(false)
   
-  const categories: ProductCategory[] = ["harddrives", "batteries", "dogfood"]
   const currentCategory = categories[currentCategoryIndex]
   const config = categoryConfig[currentCategory]
 

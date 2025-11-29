@@ -2,10 +2,9 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@/components/theme-provider";
-// Temporarily disabled for TBT testing
 import { Navbar } from "@/components/layout/Navbar";
-// import { Footer } from "@/components/layout/Footer";
-// import { LazyCookieConsent } from "@/components/LazyCookieConsent";
+import { Footer } from "@/components/layout/Footer";
+import { LazyCookieConsent } from "@/components/LazyCookieConsent";
 import Link from "next/link";
 
 const inter = Inter({ 
@@ -110,23 +109,10 @@ export default function RootLayout({
         >
           <div className="flex min-h-screen flex-col">
             <Navbar />
-            <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur">
-              <div className="container flex h-14 items-center justify-between mx-auto px-4">
-                <Link href="/" className="font-bold text-xl tracking-tight">bestprices.today</Link>
-                <div className="text-sm text-muted-foreground">Navbar (Temporarily Disabled)</div>
-              </div>
-            </header>
             <main className="flex-1">{children}</main>
-            {/* Temporarily disabled for TBT testing */}
-            {/* <Footer /> */}
-            <footer className="border-t bg-muted/40 py-8">
-              <div className="container mx-auto px-4 text-center text-sm text-muted-foreground">
-                Footer (Temporarily Disabled)
-              </div>
-            </footer>
+            <Footer />
           </div>
-          {/* Temporarily disabled for TBT testing */}
-          {/* <LazyCookieConsent /> */}
+          <LazyCookieConsent />
         </ThemeProvider>
       </body>
     </html>

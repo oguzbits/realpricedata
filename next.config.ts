@@ -2,9 +2,6 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   reactCompiler: true,
-  // Optimize bundle size and performance
-  swcMinify: true,
-  compress: true,
   // Enable experimental features for better performance
   experimental: {
     optimizePackageImports: [

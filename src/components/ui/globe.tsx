@@ -1,14 +1,15 @@
 "use client";
 
 import createGlobe from "cobe";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useSpring } from "react-spring";
 
 export function Globe({ className }: { className?: string }) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const pointerInteracting = useRef<number | null>(null);
   const pointerInteractionMovement = useRef(0);
-  const isInView = useRef(true); // Start as true to avoid initial flicker
+  const isInView = useRef(false);
+  const [shouldInitialize, setShouldInitialize] = useState(false);
   const [{ r }, api] = useSpring(() => ({
     r: 0,
     config: {
@@ -20,6 +21,33 @@ export function Globe({ className }: { className?: string }) {
   }));
 
   useEffect(() => {
+    // Intersection Observer to detect when globe is in viewport
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          isInView.current = entry.isIntersecting;
+          // Only initialize globe when it becomes visible for the first time
+          if (entry.isIntersecting && !shouldInitialize) {
+            setShouldInitialize(true);
+          }
+        });
+      },
+      { threshold: 0.1, rootMargin: "50px" } // Start loading slightly before visible
+    );
+    
+    if (canvasRef.current) {
+      observer.observe(canvasRef.current);
+    }
+    
+    return () => {
+      observer.disconnect();
+    };
+  }, [shouldInitialize]);
+
+  useEffect(() => {
+    // Don't initialize until the globe is in view
+    if (!shouldInitialize || !canvasRef.current) return;
+
     let phi = 0;
     let width = 0;
     let frameCount = 0;
@@ -27,21 +55,7 @@ export function Globe({ className }: { className?: string }) {
     window.addEventListener("resize", onResize);
     onResize();
     
-    // Intersection Observer to detect when globe is in viewport
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          isInView.current = entry.isIntersecting;
-        });
-      },
-      { threshold: 0.1 }
-    );
-    
-    if (canvasRef.current) {
-      observer.observe(canvasRef.current);
-    }
-    
-    const globe = createGlobe(canvasRef.current!, {
+    const globe = createGlobe(canvasRef.current, {
       devicePixelRatio: 2,
       width: width * 2,
       height: width * 2,
@@ -78,13 +92,16 @@ export function Globe({ className }: { className?: string }) {
         // India
         { location: [20.5937, 78.9629], size: 0.05 },
       ],
-        onRender: (state) => {
+      onRender: (state) => {
+        // Skip rendering entirely when not in view
+        if (!isInView.current) return;
+        
         // Reduce frame rate to ~30fps for better performance
         frameCount++;
         if (frameCount % 2 !== 0) return; // Skip every other frame
         
         // This prevents rotation while dragging
-        if (!pointerInteracting.current && isInView.current) {
+        if (!pointerInteracting.current) {
           // Called on every animation frame.
           // `state` will be an empty object, return updated params.
           phi += 0.003;
@@ -94,13 +111,18 @@ export function Globe({ className }: { className?: string }) {
         state.height = width * 2;
       },
     });
-    setTimeout(() => (canvasRef.current!.style.opacity = "1"));
+    
+    setTimeout(() => {
+      if (canvasRef.current) {
+        canvasRef.current.style.opacity = "1";
+      }
+    }, 100);
+    
     return () => {
       globe.destroy();
-      observer.disconnect();
       window.removeEventListener("resize", onResize);
     };
-  }, []);
+  }, [shouldInitialize, r]);
 
   return (
     <div

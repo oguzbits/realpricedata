@@ -110,7 +110,8 @@ export default function HomePage() {
               </p>
 
               <div className="flex flex-col sm:flex-row gap-4 mb-10">
-                <Button
+                {/* Temporarily disabled for TBT testing - Button component */}
+                {/* <Button
                   size="lg"
                   className="text-lg px-8 h-14 rounded-full shadow-lg shadow-primary/20 hover:brightness-110 transition-all group"
                   asChild
@@ -119,7 +120,14 @@ export default function HomePage() {
                     Start Saving Now
                     <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
                   </Link>
-                </Button>
+                </Button> */}
+                <Link 
+                  href="/categories"
+                  className="inline-flex items-center justify-center text-lg px-8 h-14 rounded-full bg-primary text-primary-foreground hover:opacity-90 transition-opacity"
+                >
+                  Start Saving Now
+                  <ArrowRight className="ml-2 h-5 w-5" />
+                </Link>
               </div>
 
               <div className="flex items-center gap-8 border-t border-border/50 pt-8">
@@ -154,71 +162,38 @@ export default function HomePage() {
       </section>
 
       {/* Trending Stats */}
+      {/* Temporarily disabled for TBT testing - Card components */}
+      {/* <section className="container px-4 mx-auto mt-12 relative z-20">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <Card>...</Card>
+        </div>
+      </section> */}
       <section className="container px-4 mx-auto mt-12 relative z-20">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <Card className="bg-card dark:bg-card backdrop-blur-xl border-border shadow-lg hover:shadow-xl hover:border-primary/20 transition-all group">
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium text-muted-foreground">
-                Most Viewed Today
-              </CardTitle>
-              <div className="p-2 bg-muted/50 rounded-lg group-hover:bg-muted transition-colors">
-                <Smartphone className="h-4 w-4 text-muted-foreground" />
-              </div>
-            </CardHeader>
-            <CardContent>
-              <div className="text-3xl font-bold text-foreground">
-                SSD Storage
-              </div>
-              <p className="text-xs text-muted-foreground font-medium flex items-center mt-1">
-                <TrendingUp className="h-3 w-3 mr-1" /> +20.1% from yesterday
-              </p>
-            </CardContent>
-          </Card>
-          <Card className="bg-card dark:bg-card backdrop-blur-xl border-border shadow-lg hover:shadow-xl hover:border-primary/20 transition-all group">
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium text-muted-foreground">
-                Smart Analysis
-              </CardTitle>
-              <div className="p-2 bg-muted/50 rounded-lg group-hover:bg-muted transition-colors">
-                <span className="text-sm font-mono text-muted-foreground">
-                  $
-                </span>
-              </div>
-            </CardHeader>
-            <CardContent>
-              <div className="text-3xl font-bold text-foreground">
-                True Value
-              </div>
-              <p className="text-xs text-muted-foreground mt-1">
-                Automatic price-per-unit calculation
-              </p>
-            </CardContent>
-          </Card>
-          <Card className="bg-card dark:bg-card backdrop-blur-xl border-border shadow-lg hover:shadow-xl hover:border-primary/20 transition-all group">
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium text-muted-foreground">
-                Global Coverage
-              </CardTitle>
-              <div className="p-2 bg-muted/50 rounded-lg group-hover:bg-muted transition-colors">
-                <Globe className="h-4 w-4 text-muted-foreground" />
-              </div>
-            </CardHeader>
-            <CardContent>
-              <div className="text-3xl font-bold text-foreground">
-                Worldwide
-              </div>
-              <p className="text-xs text-muted-foreground mt-1">
-                Unified search across borders
-              </p>
-            </CardContent>
-          </Card>
+          <div className="p-6 border rounded-lg">
+            <p className="text-sm text-muted-foreground mb-2">Most Viewed Today</p>
+            <p className="text-3xl font-bold">SSD Storage</p>
+          </div>
+          <div className="p-6 border rounded-lg">
+            <p className="text-sm text-muted-foreground mb-2">Smart Analysis</p>
+            <p className="text-3xl font-bold">True Value</p>
+          </div>
+          <div className="p-6 border rounded-lg">
+            <p className="text-sm text-muted-foreground mb-2">Global Coverage</p>
+            <p className="text-3xl font-bold">Worldwide</p>
+          </div>
         </div>
+        <p className="text-xs text-muted-foreground text-center mt-4">Card Components (Temporarily Disabled for Testing)</p>
       </section>
 
       {/* Featured Deals Carousel */}
-      <Suspense fallback={<div className="container px-4 mx-auto py-12 h-64" />}>
+      {/* Temporarily disabled for TBT testing */}
+      {/* <Suspense fallback={<div className="container px-4 mx-auto py-12 h-64" />}>
         <ClientFeaturedDeals />
-      </Suspense>
+      </Suspense> */}
+      <div className="container px-4 mx-auto py-12 h-64 flex items-center justify-center">
+        <p className="text-muted-foreground">Featured Deals (Temporarily Disabled for Testing)</p>
+      </div>
 
       {/* Categories */}
       <section className="container px-4 mx-auto py-12">
@@ -231,7 +206,8 @@ export default function HomePage() {
               Find the best deals across our most popular categories.
             </p>
           </div>
-          <Button
+          {/* Temporarily disabled for TBT testing - Button component */}
+          {/* <Button
             variant="ghost"
             className="text-primary hover:text-primary/80"
             asChild
@@ -239,8 +215,12 @@ export default function HomePage() {
             <Link href="/categories">
               View all <ArrowRight className="ml-2 h-4 w-4" />
             </Link>
-          </Button>
+          </Button> */}
+          <Link href="/categories" className="text-primary hover:text-primary/80 text-sm">
+            View all <ArrowRight className="ml-2 h-4 w-4 inline" />
+          </Link>
         </div>
+        {/* Temporarily disabled for TBT testing - Card components */}
         <div className="flex flex-wrap justify-center gap-6">
           {categories.map((category, idx) => (
             <Link
@@ -248,27 +228,24 @@ export default function HomePage() {
               href={`/categories/${category.slug}`}
               className="w-full sm:w-64 no-underline"
             >
-              <Card className="relative h-full bg-card/50 hover:bg-card/80 backdrop-blur-sm transition-all duration-300 cursor-pointer border-primary/10 hover:border-primary/30 hover:shadow-xl hover:shadow-primary/10 group">
+              <div className="relative h-full p-6 border rounded-lg hover:border-primary/30 transition-all cursor-pointer">
                 {idx === 0 && (
-                  <div className="absolute -top-2 -right-2 z-10">
-                    <Badge className="bg-primary border-0 shadow-lg">
-                      🔥 Hot
-                    </Badge>
+                  <div className="absolute -top-2 -right-2 z-10 px-2 py-1 bg-primary text-primary-foreground text-xs rounded">
+                    🔥 Hot
                   </div>
                 )}
-                <CardHeader className="text-center">
-                  <div className="mx-auto bg-primary/5 p-4 rounded-2xl mb-4 group-hover:bg-primary/10 transition-all duration-300">
+                <div className="text-center">
+                  <div className="mx-auto bg-primary/5 p-4 rounded-2xl mb-4 w-fit">
                     <category.icon className="h-8 w-8 text-primary" />
                   </div>
-                  <CardTitle className="mb-1 group-hover:text-primary transition-colors">
-                    {category.name}
-                  </CardTitle>
-                  <CardDescription>{category.count} items</CardDescription>
-                </CardHeader>
-              </Card>
+                  <h3 className="font-semibold mb-1">{category.name}</h3>
+                  <p className="text-sm text-muted-foreground">{category.count} items</p>
+                </div>
+              </div>
             </Link>
           ))}
         </div>
+        <p className="text-xs text-muted-foreground text-center mt-4">Card Components (Temporarily Disabled for Testing)</p>
       </section>
 
       {/* Supported Countries */}
@@ -280,9 +257,13 @@ export default function HomePage() {
           {/* Globe Container */}
           <div className="relative flex w-full items-center justify-center overflow-hidden rounded-[2.5rem] border border-primary/20 dark:border-primary/10 bg-background/40 backdrop-blur-2xl px-4 py-20 shadow-2xl min-h-[500px] lg:h-[700px] group order-2 lg:order-2">
             <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-size-[24px_24px] mask-[radial-gradient(ellipse_60%_50%_at_50%_0%,#000_70%,transparent_100%)] pointer-events-none" />
-            <Suspense fallback={<div className="w-full max-w-[500px] aspect-square mx-auto" />}>
+            {/* Temporarily disabled for TBT testing */}
+            {/* <Suspense fallback={<div className="w-full max-w-[500px] aspect-square mx-auto" />}>
               <ClientGlobe className="w-full max-w-[500px] aspect-square mx-auto z-10" />
-            </Suspense>
+            </Suspense> */}
+            <div className="w-full max-w-[500px] aspect-square mx-auto flex items-center justify-center">
+              <p className="text-muted-foreground">Globe (Temporarily Disabled for Testing)</p>
+            </div>
             <div className="pointer-events-none absolute inset-0 h-full bg-[radial-gradient(circle_at_50%_50%,rgba(var(--primary),0.1),rgba(255,255,255,0))]" />
           </div>
 

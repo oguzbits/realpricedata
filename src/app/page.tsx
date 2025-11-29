@@ -272,13 +272,9 @@ export default function HomePage() {
           {/* Globe Container */}
           <div className="relative flex w-full items-center justify-center overflow-hidden rounded-[2.5rem] border border-primary/20 dark:border-primary/10 bg-background/40 backdrop-blur-2xl px-4 py-20 shadow-2xl min-h-[500px] lg:h-[700px] group order-2 lg:order-2">
             <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-size-[24px_24px] mask-[radial-gradient(ellipse_60%_50%_at_50%_0%,#000_70%,transparent_100%)] pointer-events-none" />
-            {/* Temporarily disabled for TBT testing */}
-            {/* <Suspense fallback={<div className="w-full max-w-[500px] aspect-square mx-auto" />}>
+            <Suspense fallback={<div className="w-full max-w-[500px] aspect-square mx-auto" />}>
               <ClientGlobe className="w-full max-w-[500px] aspect-square mx-auto z-10" />
-            </Suspense> */}
-            <div className="w-full max-w-[500px] aspect-square mx-auto flex items-center justify-center">
-              <p className="text-muted-foreground">Globe (Temporarily Disabled for Testing)</p>
-            </div>
+            </Suspense>
             <div className="pointer-events-none absolute inset-0 h-full bg-[radial-gradient(circle_at_50%_50%,rgba(var(--primary),0.1),rgba(255,255,255,0))]" />
           </div>
 

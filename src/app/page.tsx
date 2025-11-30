@@ -353,7 +353,7 @@ export default function HomePage() {
               ].map((country) => (
                 <li
                   key={country.name}
-                  className="flex items-center p-3 rounded-xl border border-primary/20 bg-card shadow-sm dark:bg-card/50 dark:backdrop-blur-md cursor-default group hover:border-primary/40 transition-all"
+                  className="flex items-center p-3 rounded-xl border border-primary/20 bg-card shadow-sm dark:bg-white/5 dark:border-white/10 dark:backdrop-blur-md cursor-default group hover:border-primary/40 transition-all"
                 >
                   <span className="text-3xl mr-3 transition-all">
                     {country.flag}
@@ -365,7 +365,7 @@ export default function HomePage() {
                       </h3>
                       <Badge
                         variant="secondary"
-                        className="text-[10px] h-4 px-1 bg-primary/20 text-primary dark:text-primary border-primary/30 font-semibold"
+                        className="text-[10px] h-4 px-1 bg-blue-100 text-blue-700 dark:bg-blue-500/20 dark:text-blue-200 border-blue-200 dark:border-blue-500/30 font-semibold"
                       >
                         {country.currency}
                       </Badge>

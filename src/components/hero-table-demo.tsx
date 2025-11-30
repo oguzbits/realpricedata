@@ -555,7 +555,7 @@ export function HeroTableDemo() {
                         </Badge>
                       </div>
                       <div className="col-span-2">
-                        <span className="text-blue-400 hover:underline cursor-pointer truncate block">
+                        <span className="text-primary hover:underline cursor-pointer truncate block">
                           {product.name}
                         </span>
                       </div>

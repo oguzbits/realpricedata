@@ -1,53 +1,53 @@
-"use client"
+"use client";
 
-import { useState, useEffect, startTransition } from "react"
-import { Card } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
-import { Check, Search, TrendingUp, Sparkles } from "lucide-react"
-import { cn } from "@/lib/utils"
+import { useState, useEffect, startTransition } from "react";
+import { Card } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Check, Search, TrendingUp, Sparkles } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 // Product Type Definitions
 type HardDriveProduct = {
-  id: string
-  name: string
-  price: number
-  capacity: number
-  capacityUnit: string
-  pricePerTB: number
-  warranty: string
-  formFactor: string
-  technology: string
-  condition: "New" | "Used" | "Renewed"
-  brand: string
-}
+  id: string;
+  name: string;
+  price: number;
+  capacity: number;
+  capacityUnit: string;
+  pricePerTB: number;
+  warranty: string;
+  formFactor: string;
+  technology: string;
+  condition: "New" | "Used" | "Renewed";
+  brand: string;
+};
 
 type BatteryProduct = {
-  id: string
-  name: string
-  price: number
-  packSize: number
-  pricePerUnit: number
-  batteryType: "AA" | "AAA" | "C" | "D"
-  condition: "New" | "Used" | "Renewed"
-  brand: string
-  warranty: string
-}
+  id: string;
+  name: string;
+  price: number;
+  packSize: number;
+  pricePerUnit: number;
+  batteryType: "AA" | "AAA" | "C" | "D";
+  condition: "New" | "Used" | "Renewed";
+  brand: string;
+  warranty: string;
+};
 
 type DogFoodProduct = {
-  id: string
-  name: string
-  price: number
-  weight: number
-  weightUnit: string
-  pricePerLb: number
-  size: "Small Breed" | "Medium Breed" | "Large Breed"
-  type: "Dry" | "Wet"
-  ageGroup: "Puppy" | "Adult" | "Senior"
-  condition: "New" | "Used" | "Renewed"
-  brand: string
-}
+  id: string;
+  name: string;
+  price: number;
+  weight: number;
+  weightUnit: string;
+  pricePerLb: number;
+  size: "Small Breed" | "Medium Breed" | "Large Breed";
+  type: "Dry" | "Wet";
+  ageGroup: "Puppy" | "Adult" | "Senior";
+  condition: "New" | "Used" | "Renewed";
+  brand: string;
+};
 
-type ProductCategory = "harddrives" | "batteries" | "dogfood"
+type ProductCategory = "harddrives" | "batteries" | "dogfood";
 
 // Hard Drive Products
 const hardDriveProducts: HardDriveProduct[] = [
@@ -59,23 +59,23 @@ const hardDriveProducts: HardDriveProduct[] = [
     capacityUnit: "TB",
     pricePerTB: 11.229,
     warranty: "2 years",
-    formFactor: "External 2.5\"",
+    formFactor: 'External 2.5"',
     technology: "HDD",
     condition: "Used" as const,
-    brand: "Seagate"
+    brand: "Seagate",
   },
   {
     id: "2",
     name: "Toshiba MG09 18TB",
-    price: 215.50,
+    price: 215.5,
     capacity: 18.0,
     capacityUnit: "TB",
     pricePerTB: 11.972,
     warranty: "5 years",
-    formFactor: "Internal 3.5\"",
+    formFactor: 'Internal 3.5"',
     technology: "HDD",
     condition: "New" as const,
-    brand: "Toshiba"
+    brand: "Toshiba",
   },
   {
     id: "3",
@@ -85,23 +85,23 @@ const hardDriveProducts: HardDriveProduct[] = [
     capacityUnit: "TB",
     pricePerTB: 17.142,
     warranty: "5 years",
-    formFactor: "Internal 3.5\"",
+    formFactor: 'Internal 3.5"',
     technology: "HDD",
     condition: "New" as const,
-    brand: "Western Digital"
+    brand: "Western Digital",
   },
   {
     id: "4",
     name: "Samsung 870 QVO 8TB",
-    price: 349.00,
+    price: 349.0,
     capacity: 8.0,
     capacityUnit: "TB",
     pricePerTB: 43.625,
     warranty: "3 years",
-    formFactor: "Internal 2.5\"",
+    formFactor: 'Internal 2.5"',
     technology: "SSD",
     condition: "Used" as const,
-    brand: "Samsung"
+    brand: "Samsung",
   },
   {
     id: "5",
@@ -111,12 +111,12 @@ const hardDriveProducts: HardDriveProduct[] = [
     capacityUnit: "TB",
     pricePerTB: 44.997,
     warranty: "5 years",
-    formFactor: "Internal 2.5\"",
+    formFactor: 'Internal 2.5"',
     technology: "SSD",
     condition: "New" as const,
-    brand: "Crucial"
-  }
-].sort((a, b) => a.pricePerTB - b.pricePerTB)
+    brand: "Crucial",
+  },
+].sort((a, b) => a.pricePerTB - b.pricePerTB);
 
 // Battery Products
 const batteryProducts: BatteryProduct[] = [
@@ -125,11 +125,11 @@ const batteryProducts: BatteryProduct[] = [
     name: "AmazonBasics AA 48-Pack",
     price: 11.99,
     packSize: 48,
-    pricePerUnit: 0.250,
+    pricePerUnit: 0.25,
     batteryType: "AA" as const,
     condition: "New" as const,
     brand: "AmazonBasics",
-    warranty: "1 year"
+    warranty: "1 year",
   },
   {
     id: "2",
@@ -140,18 +140,18 @@ const batteryProducts: BatteryProduct[] = [
     batteryType: "AAA" as const,
     condition: "New" as const,
     brand: "Energizer",
-    warranty: "2 years"
+    warranty: "2 years",
   },
   {
     id: "3",
     name: "Duracell AA 20-Pack",
     price: 12.99,
     packSize: 20,
-    pricePerUnit: 0.650,
+    pricePerUnit: 0.65,
     batteryType: "AA" as const,
     condition: "New" as const,
     brand: "Duracell",
-    warranty: "5 years"
+    warranty: "5 years",
   },
   {
     id: "4",
@@ -162,7 +162,7 @@ const batteryProducts: BatteryProduct[] = [
     batteryType: "C" as const,
     condition: "New" as const,
     brand: "Rayovac",
-    warranty: "3 years"
+    warranty: "3 years",
   },
   {
     id: "5",
@@ -173,9 +173,9 @@ const batteryProducts: BatteryProduct[] = [
     batteryType: "D" as const,
     condition: "New" as const,
     brand: "Duracell",
-    warranty: "5 years"
-  }
-].sort((a, b) => a.pricePerUnit - b.pricePerUnit)
+    warranty: "5 years",
+  },
+].sort((a, b) => a.pricePerUnit - b.pricePerUnit);
 
 // Dog Food Products
 const dogFoodProducts: DogFoodProduct[] = [
@@ -190,7 +190,7 @@ const dogFoodProducts: DogFoodProduct[] = [
     type: "Dry" as const,
     ageGroup: "Adult" as const,
     condition: "New" as const,
-    brand: "Purina"
+    brand: "Purina",
   },
   {
     id: "2",
@@ -203,7 +203,7 @@ const dogFoodProducts: DogFoodProduct[] = [
     type: "Dry" as const,
     ageGroup: "Senior" as const,
     condition: "New" as const,
-    brand: "Blue Buffalo"
+    brand: "Blue Buffalo",
   },
   {
     id: "3",
@@ -211,12 +211,12 @@ const dogFoodProducts: DogFoodProduct[] = [
     price: 59.99,
     weight: 30,
     weightUnit: "lbs",
-    pricePerLb: 2.000,
+    pricePerLb: 2.0,
     size: "Small Breed" as const,
     type: "Dry" as const,
     ageGroup: "Puppy" as const,
     condition: "New" as const,
-    brand: "Royal Canin"
+    brand: "Royal Canin",
   },
   {
     id: "4",
@@ -229,7 +229,7 @@ const dogFoodProducts: DogFoodProduct[] = [
     type: "Dry" as const,
     ageGroup: "Adult" as const,
     condition: "New" as const,
-    brand: "Hill's"
+    brand: "Hill's",
   },
   {
     id: "5",
@@ -242,9 +242,9 @@ const dogFoodProducts: DogFoodProduct[] = [
     type: "Dry" as const,
     ageGroup: "Adult" as const,
     condition: "New" as const,
-    brand: "Wellness"
-  }
-].sort((a, b) => a.pricePerLb - b.pricePerLb)
+    brand: "Wellness",
+  },
+].sort((a, b) => a.pricePerLb - b.pricePerLb);
 
 // Category Configuration
 const categoryConfig = {
@@ -256,21 +256,28 @@ const categoryConfig = {
     insightText: "The 18TB drive is 4x cheaper per TB than the 8TB SSD!",
     filters: {
       filter1: { title: "Condition", options: ["New", "Used", "Renewed"] },
-      filter2: { title: "Capacity", options: ["18 TB", "14 TB", "8 TB", "4 TB"] },
-      filter3: { title: "Technology", options: ["HDD", "SSD"] }
-    }
+      filter2: {
+        title: "Capacity",
+        options: ["18 TB", "14 TB", "8 TB", "4 TB"],
+      },
+      filter3: { title: "Technology", options: ["HDD", "SSD"] },
+    },
   },
   batteries: {
     title: "Battery Price Comparison",
     count: "50 packs",
     url: "bestprices.today/categories/batteries",
     unitLabel: "Price/Unit",
-    insightText: "AmazonBasics 48-pack is 6x cheaper per battery than Duracell D 8-pack!",
+    insightText:
+      "AmazonBasics 48-pack is 6x cheaper per battery than Duracell D 8-pack!",
     filters: {
       filter1: { title: "Condition", options: ["New", "Used", "Renewed"] },
       filter2: { title: "Battery Type", options: ["AA", "AAA", "C", "D"] },
-      filter3: { title: "Pack Size", options: ["48 pack", "24 pack", "20 pack", "12 pack"] }
-    }
+      filter3: {
+        title: "Pack Size",
+        options: ["48 pack", "24 pack", "20 pack", "12 pack"],
+      },
+    },
   },
   dogfood: {
     title: "Dog Food Price Comparison",
@@ -279,52 +286,57 @@ const categoryConfig = {
     unitLabel: "Price/lb",
     insightText: "Purina Pro Plan is 2x cheaper per pound than premium brands!",
     filters: {
-      filter1: { title: "Size", options: ["Small Breed", "Medium Breed", "Large Breed"] },
+      filter1: {
+        title: "Size",
+        options: ["Small Breed", "Medium Breed", "Large Breed"],
+      },
       filter2: { title: "Type", options: ["Dry", "Wet"] },
-      filter3: { title: "Age Group", options: ["Puppy", "Adult", "Senior"] }
-    }
-  }
-}
+      filter3: { title: "Age Group", options: ["Puppy", "Adult", "Senior"] },
+    },
+  },
+};
 
-const categories: ProductCategory[] = ["harddrives", "batteries", "dogfood"]
+const categories: ProductCategory[] = ["harddrives", "batteries", "dogfood"];
 
 export function HeroTableDemo() {
-  const [currentCategoryIndex, setCurrentCategoryIndex] = useState(0)
-  const [fadeOut, setFadeOut] = useState(false)
-  const [isHovered, setIsHovered] = useState(false)
-  
+  const [currentCategoryIndex, setCurrentCategoryIndex] = useState(0);
+  const [fadeOut, setFadeOut] = useState(false);
+  const [isHovered, setIsHovered] = useState(false);
+
   // React Compiler automatically memoizes these - no need for useMemo
-  const currentCategory = categories[currentCategoryIndex]
-  const config = categoryConfig[currentCategory]
+  const currentCategory = categories[currentCategoryIndex];
+  const config = categoryConfig[currentCategory];
 
   // Rotation logic - pauses on hover/focus for accessibility
   useEffect(() => {
-    if (isHovered) return
+    if (isHovered) return;
     const interval = setInterval(() => {
-      setFadeOut(true)
+      setFadeOut(true);
       setTimeout(() => {
         // Use startTransition for non-urgent state updates
         startTransition(() => {
-          setCurrentCategoryIndex((prev) => (prev + 1) % categories.length)
-        })
-        setFadeOut(false)
-      }, 300) // Half of transition duration
-    }, 5000)
+          setCurrentCategoryIndex((prev) => (prev + 1) % categories.length);
+        });
+        setFadeOut(false);
+      }, 300); // Half of transition duration
+    }, 5000);
 
-    return () => clearInterval(interval)
-  }, [isHovered])
+    return () => clearInterval(interval);
+  }, [isHovered]);
 
   // React Compiler automatically memoizes this - no need for useMemo
-  const products = 
-    currentCategory === "harddrives" ? hardDriveProducts :
-    currentCategory === "batteries" ? batteryProducts :
-    dogFoodProducts;
+  const products =
+    currentCategory === "harddrives"
+      ? hardDriveProducts
+      : currentCategory === "batteries"
+      ? batteryProducts
+      : dogFoodProducts;
 
   return (
-    <div 
-      className="relative w-full max-w-5xl mx-auto perspective-1000" 
-      role="region" 
-      aria-label="Interactive product comparison demo" 
+    <div
+      className="relative w-full max-w-5xl mx-auto perspective-1000"
+      role="region"
+      aria-label="Interactive product comparison demo"
       aria-live="polite"
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
@@ -332,7 +344,10 @@ export function HeroTableDemo() {
       onBlur={() => setIsHovered(false)}
     >
       {/* Background Glow */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[110%] h-[110%] bg-primary/10 rounded-full blur-[120px] -z-10" aria-hidden="true" />
+      <div
+        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[110%] h-[110%] bg-primary/10 rounded-full blur-[120px] -z-10"
+        aria-hidden="true"
+      />
 
       <Card className="border-border/50 bg-card shadow-2xl overflow-hidden ring-1 ring-border">
         {/* Top Bar (Browser/App Header) */}
@@ -349,7 +364,7 @@ export function HeroTableDemo() {
               <span className="truncate">{config.url}</span>
             </div>
           </div>
-          
+
           {/* Value Proposition Badge */}
           <Badge className="bg-primary/20 text-primary border-primary/30 text-[10px] animate-pulse shrink-0">
             <Sparkles className="w-3 h-3 mr-1" />
@@ -357,41 +372,68 @@ export function HeroTableDemo() {
           </Badge>
         </div>
 
-        <div className={cn("flex h-[400px] transition-opacity duration-300", fadeOut && "opacity-50")} style={{ willChange: fadeOut ? 'opacity' : 'auto' }}>
+        <div
+          className={cn(
+            "flex h-[400px] transition-opacity duration-300",
+            fadeOut && "opacity-50"
+          )}
+          style={{ willChange: fadeOut ? "opacity" : "auto" }}
+        >
           {/* Sidebar */}
           <div className="w-32 sm:w-48 border-r border-border bg-muted/20 p-2 sm:p-4 hidden sm:block">
             <div className="space-y-6">
               <div>
-                <div className="text-xs font-semibold text-foreground mb-3">{config.filters.filter1.title}</div>
+                <div className="text-xs font-semibold text-foreground mb-3">
+                  {config.filters.filter1.title}
+                </div>
                 <div className="space-y-2">
                   {config.filters.filter1.options.map((option) => (
                     <div key={option} className="flex items-center gap-2">
-                      <div className="w-3 h-3 rounded-[3px] bg-primary/80" aria-hidden="true" />
-                      <span className="text-[11px] text-muted-foreground">{option}</span>
+                      <div
+                        className="w-3 h-3 rounded-[3px] bg-primary/80"
+                        aria-hidden="true"
+                      />
+                      <span className="text-[11px] text-muted-foreground">
+                        {option}
+                      </span>
                     </div>
                   ))}
                 </div>
               </div>
 
               <div>
-                <div className="text-xs font-semibold text-foreground mb-3">{config.filters.filter2.title}</div>
+                <div className="text-xs font-semibold text-foreground mb-3">
+                  {config.filters.filter2.title}
+                </div>
                 <div className="space-y-2">
                   {config.filters.filter2.options.map((option) => (
                     <div key={option} className="flex items-center gap-2">
-                      <div className="w-3 h-3 rounded-[3px] border border-muted-foreground/30" aria-hidden="true" />
-                      <span className="text-[11px] text-muted-foreground">{option}</span>
+                      <div
+                        className="w-3 h-3 rounded-[3px] border border-muted-foreground/30"
+                        aria-hidden="true"
+                      />
+                      <span className="text-[11px] text-muted-foreground">
+                        {option}
+                      </span>
                     </div>
                   ))}
                 </div>
               </div>
 
               <div>
-                <div className="text-xs font-semibold text-foreground mb-3">{config.filters.filter3.title}</div>
+                <div className="text-xs font-semibold text-foreground mb-3">
+                  {config.filters.filter3.title}
+                </div>
                 <div className="space-y-2">
                   {config.filters.filter3.options.map((option) => (
                     <div key={option} className="flex items-center gap-2">
-                      <div className="w-3 h-3 rounded-[3px] border border-muted-foreground/30" aria-hidden="true" />
-                      <span className="text-[11px] text-muted-foreground">{option}</span>
+                      <div
+                        className="w-3 h-3 rounded-[3px] border border-muted-foreground/30"
+                        aria-hidden="true"
+                      />
+                      <span className="text-[11px] text-muted-foreground">
+                        {option}
+                      </span>
                     </div>
                   ))}
                 </div>
@@ -404,8 +446,12 @@ export function HeroTableDemo() {
             {/* Page Header */}
             <div className="px-3 py-2 border-b border-border">
               <div className="flex items-center gap-2">
-                <h2 className="text-sm font-bold text-foreground">{config.title}</h2>
-                <span className="text-[10px] text-muted-foreground">· {config.count}</span>
+                <h2 className="text-sm font-bold text-foreground">
+                  {config.title}
+                </h2>
+                <span className="text-[10px] text-muted-foreground">
+                  · {config.count}
+                </span>
               </div>
             </div>
 
@@ -441,21 +487,21 @@ export function HeroTableDemo() {
                 {/* Table Body */}
                 <div className="divide-y divide-border">
                   {products.map((product: any, idx) => (
-                    <div 
+                    <div
                       key={product.id}
                       className={cn(
                         "grid grid-cols-12 gap-2 px-4 py-2.5 items-center text-[11px] transition-colors hover:bg-muted/50",
-                        idx === 0 && "bg-blue-50 dark:bg-blue-950/60 ring-1 ring-blue-200 dark:ring-blue-800"
+                        idx === 0 &&
+                          "bg-blue-50 dark:bg-blue-950/60 ring-1 ring-blue-200 dark:ring-blue-800"
                       )}
                     >
                       <div className="col-span-2 font-mono font-medium text-primary flex items-center gap-2">
-                        ${
-                          currentCategory === "harddrives" 
-                            ? (product as HardDriveProduct).pricePerTB.toFixed(3)
-                            : currentCategory === "batteries"
-                            ? (product as BatteryProduct).pricePerUnit.toFixed(3)
-                            : (product as DogFoodProduct).pricePerLb.toFixed(3)
-                        }
+                        $
+                        {currentCategory === "harddrives"
+                          ? (product as HardDriveProduct).pricePerTB.toFixed(3)
+                          : currentCategory === "batteries"
+                          ? (product as BatteryProduct).pricePerUnit.toFixed(3)
+                          : (product as DogFoodProduct).pricePerLb.toFixed(3)}
                         {idx === 0 && (
                           <Badge className="bg-emerald-100 text-emerald-950 dark:bg-emerald-900 dark:text-emerald-50 border-0 h-4 px-1.5 text-[8px] animate-in zoom-in font-semibold">
                             Best
@@ -466,27 +512,45 @@ export function HeroTableDemo() {
                         ${product.price.toFixed(2)}
                       </div>
                       <div className="col-span-2 text-muted-foreground">
-                        {currentCategory === "harddrives" && `${(product as HardDriveProduct).capacity} ${(product as HardDriveProduct).capacityUnit}`}
-                        {currentCategory === "batteries" && `${(product as BatteryProduct).packSize} pack`}
-                        {currentCategory === "dogfood" && `${(product as DogFoodProduct).weight} ${(product as DogFoodProduct).weightUnit}`}
+                        {currentCategory === "harddrives" &&
+                          `${(product as HardDriveProduct).capacity} ${
+                            (product as HardDriveProduct).capacityUnit
+                          }`}
+                        {currentCategory === "batteries" &&
+                          `${(product as BatteryProduct).packSize} pack`}
+                        {currentCategory === "dogfood" &&
+                          `${(product as DogFoodProduct).weight} ${
+                            (product as DogFoodProduct).weightUnit
+                          }`}
                       </div>
                       <div className="col-span-2 text-muted-foreground">
-                        {currentCategory === "harddrives" && (product as HardDriveProduct).warranty}
-                        {currentCategory === "batteries" && (product as BatteryProduct).warranty}
-                        {currentCategory === "dogfood" && (product as DogFoodProduct).size}
+                        {currentCategory === "harddrives" &&
+                          (product as HardDriveProduct).warranty}
+                        {currentCategory === "batteries" &&
+                          (product as BatteryProduct).warranty}
+                        {currentCategory === "dogfood" &&
+                          (product as DogFoodProduct).size}
                       </div>
                       <div className="col-span-1 text-muted-foreground">
-                        {currentCategory === "harddrives" && (product as HardDriveProduct).technology}
-                        {currentCategory === "batteries" && (product as BatteryProduct).batteryType}
-                        {currentCategory === "dogfood" && (product as DogFoodProduct).type}
+                        {currentCategory === "harddrives" &&
+                          (product as HardDriveProduct).technology}
+                        {currentCategory === "batteries" &&
+                          (product as BatteryProduct).batteryType}
+                        {currentCategory === "dogfood" &&
+                          (product as DogFoodProduct).type}
                       </div>
                       <div className="col-span-1">
-                        <Badge variant="secondary" className={cn(
-                          "h-4 px-1.5 text-[9px] border-0 font-medium",
-                          product.condition === "New" ? "bg-emerald-100 text-emerald-950 dark:bg-emerald-900 dark:text-emerald-50" :  
-                          product.condition === "Used" ? "bg-orange-100 text-orange-950 dark:bg-orange-900 dark:text-orange-50" :
-                          "bg-blue-100 text-blue-950 dark:bg-blue-900 dark:text-blue-50"
-                        )}>
+                        <Badge
+                          variant="secondary"
+                          className={cn(
+                            "h-4 px-1.5 text-[9px] border-0 font-medium",
+                            product.condition === "New"
+                              ? "bg-emerald-100 text-emerald-800 dark:bg-emerald-500/20 dark:text-emerald-300"
+                              : product.condition === "Used"
+                              ? "bg-amber-100 text-amber-800 dark:bg-amber-500/20 dark:text-amber-300"
+                              : "bg-blue-100 text-blue-800 dark:bg-blue-500/20 dark:text-blue-300"
+                          )}
+                        >
                           {product.condition}
                         </Badge>
                       </div>
@@ -503,7 +567,7 @@ export function HeroTableDemo() {
           </div>
         </div>
       </Card>
-      
+
       {/* Floating Insight - Always visible */}
       <div className="absolute -right-6 top-1/3 bg-background/90 backdrop-blur-md p-3 rounded-xl border border-primary/30 shadow-xl max-w-[180px] animate-in fade-in slide-in-from-right-4 duration-700">
         <div className="flex items-start gap-2">
@@ -511,7 +575,9 @@ export function HeroTableDemo() {
             <Check className="w-3 h-3 text-primary" />
           </div>
           <div>
-            <p className="text-[10px] font-bold text-black dark:text-white mb-0.5">Hidden Value Found</p>
+            <p className="text-[10px] font-bold text-black dark:text-white mb-0.5">
+              Hidden Value Found
+            </p>
             <p className="text-[10px] text-muted-foreground leading-tight">
               {config.insightText}
             </p>
@@ -519,5 +585,5 @@ export function HeroTableDemo() {
         </div>
       </div>
     </div>
-  )
+  );
 }

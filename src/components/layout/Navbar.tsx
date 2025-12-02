@@ -2,6 +2,7 @@
 
 import * as React from "react"
 import Link from "next/link"
+import Image from "next/image"
 import { Button } from "@/components/ui/button"
 import {
   DropdownMenu,
@@ -54,7 +55,14 @@ export function Navbar() {
       <div className="container flex h-14 items-center justify-between mx-auto px-4">
         <div className="flex items-center gap-6">
           <Link href="/" className="flex items-center space-x-2 no-underline">
-            <span className="font-bold text-xl tracking-tight">realpricedata.com</span>
+            <Image 
+              src="/icon-192.png" 
+              alt="Real Price Data Logo" 
+              width={28} 
+              height={28}
+              className="w-7 h-7"
+            />
+            <span className="font-bold text-xl tracking-tight">Real Price Data</span>
           </Link>
         </div>
 

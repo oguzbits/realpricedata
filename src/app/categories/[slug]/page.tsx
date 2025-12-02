@@ -43,7 +43,8 @@ import {
   ChevronDown,
   ChevronUp,
   ChevronsUpDown,
-  Menu
+  Menu,
+  Info
 } from "lucide-react"
 import { cn } from "@/lib/utils"
 
@@ -104,7 +105,80 @@ const generateProducts = (count: number): Product[] => {
   })
 }
 
-const allProducts = generateProducts(100)
+const authenticStorageProducts: Product[] = [
+  {
+    id: 101,
+    name: "SAMSUNG 990 PRO SSD 2TB NVMe M.2 PCIe Gen4",
+    price: 189.99,
+    capacity: 2000,
+    capacityUnit: 'TB',
+    pricePerTB: 94.995,
+    warranty: "5 years",
+    formFactor: "M.2 NVMe",
+    technology: "SSD",
+    condition: "New",
+    affiliateLink: "https://www.amazon.com/SAMSUNG-Internal-Expansion-MZ-V9P2T0B-AM/dp/B0BHJJ9Y77?_encoding=UTF8&pf_rd_r=8RW5ZQHVDEMVZYN3DV84&pf_rd_p=4e1b46a8-daf9-4433-b97e-d6df97cf3699&pd_rd_i=B0BHJJ9Y77&pd_rd_w=TGoZk&pd_rd_wg=vgfV0&pd_rd_r=9b70e2b3-98b0-4579-ac1c-fdba45c66fff&content-id=amzn1.sym.4e1b46a8-daf9-4433-b97e-d6df97cf3699&th=1",
+    brand: "Samsung"
+  },
+  {
+    id: 102,
+    name: "Seagate Exos X18 18TB Enterprise HDD",
+    price: 249.99,
+    capacity: 18000,
+    capacityUnit: 'TB',
+    pricePerTB: 13.89,
+    warranty: "5 years",
+    formFactor: "Internal 3.5\"",
+    technology: "HDD",
+    condition: "Renewed",
+    affiliateLink: "https://www.amazon.com/Seagate-ST18000NM000J-Internal-Drive-7200RPM/dp/B08L5GQR5V?dib=eyJ2IjoiMSJ9.HStqLltVfroQv5S02r6rJ4Zh7a28_EPWbdPk3teR1ux_ReoDsvzRZ3reYDyhllExSZatn972TwRfVo_WXJUkcMckEbiUzezGASy5Oza0l4iwVhr5kmEhMotQosqE7o8KdKP59H4gl-p3__TgQPbt9dcKPlgZl0rrQhdH54ZU9lheEXhpTrDtTc0R5zwcP_ff_2wszycvxarKHdDFmIgpv0sVcs_PPXTbkKAcW_tKz40.oSjhdbUp95Y47EqamjbBfstTcwqoR9Z7CPGMhsUqYQI&dib_tag=se&keywords=Seagate+Exos+X18+18TB+Enterprise+HDD&qid=1764701501&sr=8-1",
+    brand: "Seagate"
+  },
+  {
+    id: 103,
+    name: "WD_BLACK 2TB SN850X NVMe Internal Gaming SSD",
+    price: 189.99,
+    capacity: 2000,
+    capacityUnit: 'TB',
+    pricePerTB: 94.995,
+    warranty: "5 years",
+    formFactor: "M.2 NVMe",
+    technology: "SSD",
+    condition: "New",
+    affiliateLink: "https://www.amazon.com/dp/B0B7CMZ3QH",
+    brand: "Western Digital"
+  },
+  {
+    id: 104,
+    name: "Crucial MX500 2TB 3D NAND SATA 2.5 Inch Internal SSD",
+    price: 179.99,
+    capacity: 2000,
+    capacityUnit: 'TB',
+    pricePerTB: 89.995,
+    warranty: "5 years",
+    formFactor: "Internal 2.5\"",
+    technology: "SSD",
+    condition: "Used",
+    affiliateLink: "https://www.amazon.com/dp/B003J5JB12",
+    brand: "Crucial"
+  },
+  {
+    id: 105,
+    name: "SanDisk 1TB Extreme Portable SSD",
+    price: 119.99,
+    capacity: 1000,
+    capacityUnit: 'TB',
+    pricePerTB: 119.99,
+    warranty: "3 years",
+    formFactor: "External 2.5\"",
+    technology: "SSD",
+    condition: "New",
+    affiliateLink: "https://www.amazon.com/dp/B08GTYFC37",
+    brand: "SanDisk"
+  }
+];
+
+const fakeProducts = generateProducts(100)
 
 type SortConfig = {
   key: keyof Product
@@ -127,8 +201,10 @@ export default function SubcategoryPage() {
   const [maxCapacity, setMaxCapacity] = React.useState("")
 
   // Filter Logic
-  // Filter Logic
-  let filteredProducts = [...allProducts]
+  const isStorage = slug === 'storage'
+  const currentProducts = isStorage ? authenticStorageProducts : []
+  
+  let filteredProducts = [...currentProducts]
 
   if (searchTerm) {
     filteredProducts = filteredProducts.filter(p => p.name.toLowerCase().includes(searchTerm.toLowerCase()))
@@ -200,7 +276,7 @@ export default function SubcategoryPage() {
           <div>
             <h1 className="text-2xl font-bold tracking-tight">Disk Price Comparison</h1>
             <p className="text-muted-foreground text-sm">
-              Showing {filteredProducts.length} disks. Updated hourly.
+              Showing {filteredProducts.length} disks.
             </p>
           </div>
 
@@ -244,137 +320,151 @@ export default function SubcategoryPage() {
         </div>
 
         <div className="flex gap-8">
-          {/* Desktop Sidebar */}
-          <aside className="hidden lg:block w-72 shrink-0">
-            <div>
-              <FilterPanel 
-                selectedConditions={selectedConditions}
-                setSelectedConditions={setSelectedConditions}
-                selectedTechnologies={selectedTechnologies}
-                setSelectedTechnologies={setSelectedTechnologies}
-                selectedFormFactors={selectedFormFactors}
-                setSelectedFormFactors={setSelectedFormFactors}
-                minCapacity={minCapacity}
-                setMinCapacity={setMinCapacity}
-                maxCapacity={maxCapacity}
-                setMaxCapacity={setMaxCapacity}
-                toggleFilter={toggleFilter}
-              />
-            </div>
-          </aside>
+          {isStorage ? (
+            <>
+              {/* Desktop Sidebar */}
+              <aside className="hidden lg:block w-72 shrink-0">
+                <div>
+                  <FilterPanel 
+                    selectedConditions={selectedConditions}
+                    setSelectedConditions={setSelectedConditions}
+                    selectedTechnologies={selectedTechnologies}
+                    setSelectedTechnologies={setSelectedTechnologies}
+                    selectedFormFactors={selectedFormFactors}
+                    setSelectedFormFactors={setSelectedFormFactors}
+                    minCapacity={minCapacity}
+                    setMinCapacity={setMinCapacity}
+                    maxCapacity={maxCapacity}
+                    setMaxCapacity={setMaxCapacity}
+                    toggleFilter={toggleFilter}
+                  />
+                </div>
+              </aside>
 
-          {/* Main Content */}
-          <div className="flex-1 min-w-0">
-            {/* ... (keep table content) */}
-            <div className="rounded-md border bg-card">
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead 
-                      className="cursor-pointer hover:bg-muted/50 focus-visible:bg-muted/50 outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-inset" 
-                      onClick={() => handleSort('pricePerTB')}
-                      onKeyDown={(e) => {
-                        if (e.key === 'Enter' || e.key === ' ') {
-                          e.preventDefault()
-                          handleSort('pricePerTB')
-                        }
-                      }}
-                      tabIndex={0}
-                      aria-sort={sortConfig.key === 'pricePerTB' ? (sortConfig.direction === 'asc' ? 'ascending' : 'descending') : 'none'}
-                      role="columnheader"
-                    >
-                      <div className="flex items-center">Price/TB {getSortIcon('pricePerTB')}</div>
-                    </TableHead>
-                    <TableHead 
-                      className="cursor-pointer hover:bg-muted/50 focus-visible:bg-muted/50 outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-inset" 
-                      onClick={() => handleSort('price')}
-                      onKeyDown={(e) => {
-                        if (e.key === 'Enter' || e.key === ' ') {
-                          e.preventDefault()
-                          handleSort('price')
-                        }
-                      }}
-                      tabIndex={0}
-                      aria-sort={sortConfig.key === 'price' ? (sortConfig.direction === 'asc' ? 'ascending' : 'descending') : 'none'}
-                      role="columnheader"
-                    >
-                      <div className="flex items-center">Price {getSortIcon('price')}</div>
-                    </TableHead>
-                    <TableHead 
-                      className="cursor-pointer hover:bg-muted/50 focus-visible:bg-muted/50 outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-inset" 
-                      onClick={() => handleSort('capacity')}
-                      onKeyDown={(e) => {
-                        if (e.key === 'Enter' || e.key === ' ') {
-                          e.preventDefault()
-                          handleSort('capacity')
-                        }
-                      }}
-                      tabIndex={0}
-                      aria-sort={sortConfig.key === 'capacity' ? (sortConfig.direction === 'asc' ? 'ascending' : 'descending') : 'none'}
-                      role="columnheader"
-                    >
-                      <div className="flex items-center">Capacity {getSortIcon('capacity')}</div>
-                    </TableHead>
-                    <TableHead className="hidden md:table-cell">Warranty</TableHead>
-                    <TableHead className="hidden sm:table-cell">Form Factor</TableHead>
-                    <TableHead className="hidden sm:table-cell">Tech</TableHead>
-                    <TableHead className="hidden sm:table-cell">Condition</TableHead>
-                    <TableHead>Affiliate Link</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {filteredProducts.map((product) => (
-                    <TableRow key={product.id} className="group">
-                      <TableCell className="font-medium">
-                        ${product.pricePerTB.toFixed(3)}
-                      </TableCell>
-                      <TableCell>
-                        ${product.price.toFixed(2)}
-                      </TableCell>
-                      <TableCell>
-                        {product.capacityUnit === 'TB' ? (product.capacity / 1000).toFixed(1) : product.capacity} {product.capacityUnit}
-                      </TableCell>
-                      <TableCell className="hidden md:table-cell text-muted-foreground text-sm">
-                        {product.warranty}
-                      </TableCell>
-                      <TableCell className="hidden sm:table-cell text-muted-foreground text-sm">
-                        {product.formFactor}
-                      </TableCell>
-                      <TableCell className="hidden sm:table-cell text-muted-foreground text-sm">
-                        {product.technology}
-                      </TableCell>
-                      <TableCell className="hidden sm:table-cell">
-                        <Badge 
-                          className={cn(
-                            "text-xs font-medium border-0 px-2 py-0.5",
-                            product.condition === 'New' && "bg-emerald-100 text-emerald-800 dark:bg-emerald-500/20 dark:text-emerald-300 hover:bg-emerald-200 dark:hover:bg-emerald-500/30",
-                            product.condition === 'Renewed' && "bg-blue-100 text-blue-800 dark:bg-blue-500/20 dark:text-blue-300 hover:bg-blue-200 dark:hover:bg-blue-500/30",
-                            product.condition === 'Used' && "bg-amber-100 text-amber-800 dark:bg-amber-500/20 dark:text-amber-300 hover:bg-amber-200 dark:hover:bg-amber-500/30"
-                          )}
+              {/* Main Content */}
+              <div className="flex-1 min-w-0">
+                <div className="rounded-md border bg-card">
+                  <Table>
+                    <TableHeader>
+                      <TableRow>
+                        <TableHead 
+                          className="cursor-pointer hover:bg-muted/50 focus-visible:bg-muted/50 outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-inset" 
+                          onClick={() => handleSort('pricePerTB')}
+                          onKeyDown={(e) => {
+                            if (e.key === 'Enter' || e.key === ' ') {
+                              e.preventDefault()
+                              handleSort('pricePerTB')
+                            }
+                          }}
+                          tabIndex={0}
+                          aria-sort={sortConfig.key === 'pricePerTB' ? (sortConfig.direction === 'asc' ? 'ascending' : 'descending') : 'none'}
+                          role="columnheader"
                         >
-                          {product.condition}
-                        </Badge>
-                      </TableCell>
-                      <TableCell>
-                        <a 
-                          href={product.affiliateLink} 
-                          target="_blank" 
-                          rel="noopener noreferrer"
-                          className="text-primary underline text-sm line-clamp-2 block"
+                          <div className="flex items-center">Price/TB {getSortIcon('pricePerTB')}</div>
+                        </TableHead>
+                        <TableHead 
+                          className="cursor-pointer hover:bg-muted/50 focus-visible:bg-muted/50 outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-inset" 
+                          onClick={() => handleSort('price')}
+                          onKeyDown={(e) => {
+                            if (e.key === 'Enter' || e.key === ' ') {
+                              e.preventDefault()
+                              handleSort('price')
+                            }
+                          }}
+                          tabIndex={0}
+                          aria-sort={sortConfig.key === 'price' ? (sortConfig.direction === 'asc' ? 'ascending' : 'descending') : 'none'}
+                          role="columnheader"
                         >
-                          {product.name}
-                        </a>
-                      </TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
+                          <div className="flex items-center">Price {getSortIcon('price')}</div>
+                        </TableHead>
+                        <TableHead 
+                          className="cursor-pointer hover:bg-muted/50 focus-visible:bg-muted/50 outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-inset" 
+                          onClick={() => handleSort('capacity')}
+                          onKeyDown={(e) => {
+                            if (e.key === 'Enter' || e.key === ' ') {
+                              e.preventDefault()
+                              handleSort('capacity')
+                            }
+                          }}
+                          tabIndex={0}
+                          aria-sort={sortConfig.key === 'capacity' ? (sortConfig.direction === 'asc' ? 'ascending' : 'descending') : 'none'}
+                          role="columnheader"
+                        >
+                          <div className="flex items-center">Capacity {getSortIcon('capacity')}</div>
+                        </TableHead>
+                        <TableHead className="hidden md:table-cell">Warranty</TableHead>
+                        <TableHead className="hidden sm:table-cell">Form Factor</TableHead>
+                        <TableHead className="hidden sm:table-cell">Tech</TableHead>
+                        <TableHead className="hidden sm:table-cell">Condition</TableHead>
+                        <TableHead>Affiliate Link</TableHead>
+                      </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                      {filteredProducts.map((product) => (
+                        <TableRow key={product.id} className="group">
+                          <TableCell className="font-medium">
+                            ${product.pricePerTB.toFixed(3)}
+                          </TableCell>
+                          <TableCell>
+                            ${product.price.toFixed(2)}
+                          </TableCell>
+                          <TableCell>
+                            {product.capacityUnit === 'TB' ? (product.capacity / 1000).toFixed(1) : product.capacity} {product.capacityUnit}
+                          </TableCell>
+                          <TableCell className="hidden md:table-cell text-muted-foreground text-sm">
+                            {product.warranty}
+                          </TableCell>
+                          <TableCell className="hidden sm:table-cell text-muted-foreground text-sm">
+                            {product.formFactor}
+                          </TableCell>
+                          <TableCell className="hidden sm:table-cell text-muted-foreground text-sm">
+                            {product.technology}
+                          </TableCell>
+                          <TableCell className="hidden sm:table-cell">
+                            <Badge 
+                              className={cn(
+                                "text-xs font-medium border-0 px-2 py-0.5",
+                                product.condition === 'New' && "bg-emerald-100 text-emerald-800 dark:bg-emerald-500/20 dark:text-emerald-300 hover:bg-emerald-200 dark:hover:bg-emerald-500/30",
+                                product.condition === 'Renewed' && "bg-blue-100 text-blue-800 dark:bg-blue-500/20 dark:text-blue-300 hover:bg-blue-200 dark:hover:bg-blue-500/30",
+                                product.condition === 'Used' && "bg-amber-100 text-amber-800 dark:bg-amber-500/20 dark:text-amber-300 hover:bg-amber-200 dark:hover:bg-amber-500/30"
+                              )}
+                            >
+                              {product.condition}
+                            </Badge>
+                          </TableCell>
+                          <TableCell>
+                            <a 
+                              href={product.affiliateLink} 
+                              target="_blank" 
+                              rel="noopener noreferrer"
+                              className="text-primary underline text-sm line-clamp-2 block"
+                            >
+                              {product.name}
+                            </a>
+                          </TableCell>
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  </Table>
+                </div>
+                
+                <div className="mt-4 text-center text-xs text-muted-foreground">
+                  Prices and availability are subject to change.
+                </div>
+              </div>
+            </>
+          ) : (
+            <div className="flex-1 flex flex-col items-center justify-center py-24 text-center">
+              <div className="bg-muted/30 p-6 rounded-full mb-6">
+                <Info className="h-12 w-12 text-muted-foreground" />
+              </div>
+              <h2 className="text-2xl font-bold mb-3">Data Coming Soon</h2>
+              <p className="text-muted-foreground max-w-md text-lg">
+                We are currently aggregating real-time price data for this category. 
+                Please check back shortly for the best deals on <span className="font-medium text-foreground">{slug.split('-').map(s => s.charAt(0).toUpperCase() + s.slice(1)).join(' ')}</span>.
+              </p>
             </div>
-            
-            <div className="mt-4 text-center text-xs text-muted-foreground">
-              Prices and availability are subject to change.
-            </div>
-          </div>
+          )}
         </div>
       </div>
     </div>

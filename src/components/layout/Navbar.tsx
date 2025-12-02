@@ -26,17 +26,17 @@ const SearchModal = dynamic(
 )
 
 const countries = [
-  { code: "US", name: "United States", flag: "🇺🇸", domain: "amazon.com" },
-  { code: "UK", name: "United Kingdom", flag: "🇬🇧", domain: "amazon.co.uk" },
-  { code: "CA", name: "Canada", flag: "🇨🇦", domain: "amazon.ca" },
-  { code: "DE", name: "Germany", flag: "🇩🇪", domain: "amazon.de" },
-  { code: "ES", name: "Spain", flag: "🇪🇸", domain: "amazon.es" },
-  { code: "IT", name: "Italy", flag: "🇮🇹", domain: "amazon.it" },
-  { code: "FR", name: "France", flag: "🇫🇷", domain: "amazon.fr" },
-  { code: "AU", name: "Australia", flag: "🇦🇺", domain: "amazon.com.au" },
-  { code: "SE", name: "Sweden", flag: "🇸🇪", domain: "amazon.se" },
-  { code: "IE", name: "Ireland", flag: "🇮🇪", domain: "amazon.co.uk" },
-  { code: "IN", name: "India", flag: "🇮🇳", domain: "amazon.in" },
+  { code: "US", name: "United States", flag: "🇺🇸", domain: "amazon.com", supported: true },
+  { code: "UK", name: "United Kingdom", flag: "🇬🇧", domain: "amazon.co.uk", supported: false },
+  { code: "CA", name: "Canada", flag: "🇨🇦", domain: "amazon.ca", supported: false },
+  { code: "DE", name: "Germany", flag: "🇩🇪", domain: "amazon.de", supported: false },
+  { code: "ES", name: "Spain", flag: "🇪🇸", domain: "amazon.es", supported: false },
+  { code: "IT", name: "Italy", flag: "🇮🇹", domain: "amazon.it", supported: false },
+  { code: "FR", name: "France", flag: "🇫🇷", domain: "amazon.fr", supported: false },
+  { code: "AU", name: "Australia", flag: "🇦🇺", domain: "amazon.com.au", supported: false },
+  { code: "SE", name: "Sweden", flag: "🇸🇪", domain: "amazon.se", supported: false },
+  { code: "IE", name: "Ireland", flag: "🇮🇪", domain: "amazon.co.uk", supported: false },
+  { code: "IN", name: "India", flag: "🇮🇳", domain: "amazon.in", supported: false },
 ]
 
 export function Navbar() {
@@ -115,10 +115,20 @@ export function Navbar() {
               </Tooltip>
             <DropdownMenuContent align="end" className="w-[200px]">
               {countries.map((c) => (
-                <DropdownMenuItem key={c.code} onClick={() => setCountry(c)} className="flex items-start gap-3 py-2">
-                  <span className="text-xl mt-0.5">{c.flag}</span>
+                <DropdownMenuItem 
+                  key={c.code} 
+                  onClick={() => c.supported && setCountry(c)} 
+                  disabled={!c.supported}
+                  className="flex items-start gap-3 py-2 cursor-pointer data-disabled:cursor-not-allowed data-disabled:opacity-50"
+                >
+                  <span className={`text-xl mt-0.5 ${!c.supported ? 'grayscale' : ''}`}>{c.flag}</span>
                   <div className="flex flex-col gap-0.5">
-                    <span className="font-medium">{c.name}</span>
+                    <div className="flex items-center gap-2">
+                      <span className="font-medium">{c.name}</span>
+                      {!c.supported && (
+                        <span className="text-[10px] px-1.5 py-0.5 rounded bg-muted text-muted-foreground">Coming Soon</span>
+                      )}
+                    </div>
                     <span className="text-xs text-muted-foreground">{c.domain}</span>
                   </div>
                 </DropdownMenuItem>

@@ -269,7 +269,7 @@ const categoryConfig = {
     url: "realpricedata.com/categories/batteries",
     unitLabel: "Price/Unit",
     insightText:
-      "AmazonBasics 48-pack is 6x cheaper per battery than Duracell D 8-pack!",
+      "The 48-pack is 6x cheaper per battery than the 8-pack!",
     filters: {
       filter1: { title: "Condition", options: ["New", "Used", "Renewed"] },
       filter2: { title: "Battery Type", options: ["AA", "AAA", "C", "D"] },
@@ -284,7 +284,7 @@ const categoryConfig = {
     count: "75 products",
     url: "realpricedata.com/categories/pet-supplies",
     unitLabel: "Price/lb",
-    insightText: "Purina Pro Plan is 2x cheaper per pound than premium brands!",
+    insightText: "Buying in bulk is 2x cheaper per pound than smaller bags!",
     filters: {
       filter1: {
         title: "Size",
@@ -555,7 +555,7 @@ export function HeroTableDemo() {
                         </Badge>
                       </div>
                       <div className="col-span-2">
-                        <span className="text-primary hover:underline cursor-pointer truncate block">
+                        <span className="text-primary hover:underline truncate block">
                           {product.name}
                         </span>
                       </div>

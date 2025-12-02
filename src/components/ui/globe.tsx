@@ -66,31 +66,31 @@ export function Globe({ className }: { className?: string }) {
       mapSamples: 16000,
       mapBrightness: 1.2,
       baseColor: [1, 1, 1],
-      markerColor: [16 / 255, 185 / 255, 129 / 255],
+      markerColor: [249 / 255, 115 / 255, 22 / 255],
       glowColor: [1.2, 1.2, 1.2],
       markers: [
-        // US
-        { location: [37.0902, -95.7129], size: 0.05 },
-        // UK
-        { location: [55.3781, -3.4360], size: 0.05 },
+        // US (Green - Live)
+        { location: [37.0902, -95.7129], size: 0.08, color: [0.06, 0.72, 0.5] },
+        // UK (Orange - Coming Soon)
+        { location: [55.3781, -3.4360], size: 0.05, color: [0.98, 0.45, 0.08] },
         // Canada
-        { location: [56.1304, -106.3468], size: 0.05 },
+        { location: [56.1304, -106.3468], size: 0.05, color: [0.98, 0.45, 0.08] },
         // Germany
-        { location: [51.1657, 10.4515], size: 0.05 },
+        { location: [51.1657, 10.4515], size: 0.05, color: [0.98, 0.45, 0.08] },
         // Spain
-        { location: [40.4637, -3.7492], size: 0.05 },
+        { location: [40.4637, -3.7492], size: 0.05, color: [0.98, 0.45, 0.08] },
         // Italy
-        { location: [41.8719, 12.5674], size: 0.05 },
+        { location: [41.8719, 12.5674], size: 0.05, color: [0.98, 0.45, 0.08] },
         // France
-        { location: [46.2276, 2.2137], size: 0.05 },
+        { location: [46.2276, 2.2137], size: 0.05, color: [0.98, 0.45, 0.08] },
         // Australia
-        { location: [-25.2744, 133.7751], size: 0.05 },
+        { location: [-25.2744, 133.7751], size: 0.05, color: [0.98, 0.45, 0.08] },
         // Sweden
-        { location: [60.1282, 18.6435], size: 0.05 },
+        { location: [60.1282, 18.6435], size: 0.05, color: [0.98, 0.45, 0.08] },
         // Ireland
-        { location: [53.1424, -7.6921], size: 0.05 },
+        { location: [53.1424, -7.6921], size: 0.05, color: [0.98, 0.45, 0.08] },
         // India
-        { location: [20.5937, 78.9629], size: 0.05 },
+        { location: [20.5937, 78.9629], size: 0.05, color: [0.98, 0.45, 0.08] },
       ],
       onRender: (state) => {
         // Skip rendering entirely when not in view

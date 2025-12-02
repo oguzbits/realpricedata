@@ -22,67 +22,65 @@ interface Deal {
 
 const deals: Deal[] = [
   {
-    id: "1",
-    name: "Samsung 870 EVO 4TB SSD",
+    id: "101",
+    name: "SAMSUNG 990 PRO SSD 2TB NVMe M.2 PCIe Gen4",
     category: "Storage",
     categorySlug: "storage",
-    originalPrice: 349.99,
-    bestUnitPrice: 87.50,
+    originalPrice: 189.99,
+    bestUnitPrice: 94.99,
     unitLabel: "TB",
-    savings: 42,
+    savings: 0,
     icon: HardDrive,
     iconColor: "from-muted/50 to-muted",
-    badge: "Lowest in 30 days"
+    badge: "Best Seller"
   },
   {
-    id: "2",
-    name: "Optimum Nutrition Whey 5kg",
-    category: "Protein Powder",
-    categorySlug: "protein-powder",
-    originalPrice: 89.99,
-    bestUnitPrice: 17.99,
-    unitLabel: "kg",
-    savings: 35,
-    icon: Dumbbell,
+    id: "102",
+    name: "Seagate Exos X18 18TB Enterprise HDD",
+    category: "Storage",
+    categorySlug: "storage",
+    originalPrice: 249.99,
+    bestUnitPrice: 13.89,
+    unitLabel: "TB",
+    savings: 0,
+    icon: HardDrive,
     iconColor: "from-muted/50 to-muted"
   },
   {
-    id: "3",
-    name: "Tide Pods Laundry Detergent",
-    category: "Household",
-    categorySlug: "laundry-detergent",
-    originalPrice: 45.99,
-    bestUnitPrice: 0.23,
-    unitLabel: "load",
-    savings: 28,
-    icon: Droplets,
-    iconColor: "from-muted/50 to-muted",
-    badge: "Hot Deal"
-  },
-  {
-    id: "4",
-    name: "Pampers Swaddlers Size 3",
-    category: "Baby Care",
-    categorySlug: "diapers",
-    originalPrice: 54.99,
-    bestUnitPrice: 0.18,
-    unitLabel: "diaper",
-    savings: 31,
-    icon: Baby,
+    id: "103",
+    name: "WD_BLACK 2TB SN850X NVMe Internal Gaming SSD",
+    category: "Storage",
+    categorySlug: "storage",
+    originalPrice: 189.99,
+    bestUnitPrice: 94.99,
+    unitLabel: "TB",
+    savings: 0,
+    icon: HardDrive,
     iconColor: "from-muted/50 to-muted"
   },
   {
-    id: "5",
-    name: "Duracell AA Batteries 48-Pack",
-    category: "Batteries",
-    categorySlug: "batteries",
-    originalPrice: 29.99,
-    bestUnitPrice: 0.42,
-    unitLabel: "battery",
-    savings: 45,
-    icon: Battery,
-    iconColor: "from-muted/50 to-muted",
-    badge: "Best Value"
+    id: "104",
+    name: "Crucial MX500 2TB 3D NAND SATA 2.5 Inch Internal SSD",
+    category: "Storage",
+    categorySlug: "storage",
+    originalPrice: 179.99,
+    bestUnitPrice: 89.99,
+    unitLabel: "TB",
+    savings: 0,
+    icon: HardDrive,
+    iconColor: "from-muted/50 to-muted"
+  },
+  {
+    id: "105",
+    name: "SanDisk 1TB Extreme Portable SSD",
+    category: "Storage",
+    categorySlug: "storage",
+    originalPrice: 119.99,
+    bestUnitPrice: 119.99,
+    unitLabel: "TB",
+    savings: 0,
+    icon: HardDrive,
+    iconColor: "from-muted/50 to-muted"
   }
 ]
 
@@ -120,7 +118,7 @@ export function FeaturedDeals() {
           Live Data
         </Badge>
         <h2 className="text-3xl font-bold tracking-tight mb-2">Top Value Opportunities</h2>
-        <p className="text-muted-foreground">Highest savings by unit price analysis • Updated hourly</p>
+        <p className="text-muted-foreground">Highest savings by unit price analysis</p>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6" role="region" aria-live="polite" aria-atomic="true">
@@ -164,10 +162,12 @@ export function FeaturedDeals() {
                       </p>
                     </div>
                     
-                    <Badge variant="secondary" className="bg-emerald-100 text-emerald-950 dark:bg-emerald-900 dark:text-emerald-50 border-emerald-200 dark:border-emerald-800 px-3 py-1">
-                      <TrendingDown className="h-3 w-3 mr-1" />
-                      {deal.savings}%
-                    </Badge>
+                    {deal.savings > 0 && (
+                      <Badge variant="secondary" className="bg-emerald-100 text-emerald-950 dark:bg-emerald-900 dark:text-emerald-50 border-emerald-200 dark:border-emerald-800 px-3 py-1">
+                        <TrendingDown className="h-3 w-3 mr-1" />
+                        {deal.savings}%
+                      </Badge>
+                    )}
                   </div>
 
                   <div className="pt-2 border-t border-border/50">

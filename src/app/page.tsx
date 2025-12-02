@@ -38,23 +38,20 @@ const categories = [
   {
     name: "Hard Drives & SSDs",
     icon: HardDrive,
-    count: "2000+",
     slug: "storage",
   },
   {
     name: "Protein Powder",
     icon: Dumbbell,
-    count: "500+",
     slug: "protein-powder",
   },
   {
     name: "Laundry Detergent",
     icon: Droplets,
-    count: "150+",
     slug: "laundry-detergent",
   },
-  { name: "Diapers", icon: Baby, count: "200+", slug: "diapers" },
-  { name: "Batteries", icon: Battery, count: "300+", slug: "batteries" },
+  { name: "Diapers", icon: Baby, slug: "diapers" },
+  { name: "Batteries", icon: Battery, slug: "batteries" },
 ];
 
 export default function HomePage() {
@@ -124,7 +121,7 @@ export default function HomePage() {
 
               <div className="flex items-center gap-8 border-t border-border/50 pt-8">
                 <div>
-                  <p className="text-3xl font-bold text-foreground">2M+</p>
+                  <p className="text-3xl font-bold text-foreground">Thousands</p>
                   <p className="text-sm text-muted-foreground">
                     Products Tracked
                   </p>
@@ -167,7 +164,7 @@ export default function HomePage() {
                 SSD Storage
               </div>
               <p className="text-xs text-muted-foreground font-medium flex items-center mt-1">
-                <TrendingUp className="h-3 w-3 mr-1" /> +20.1% from yesterday
+                <TrendingUp className="h-3 w-3 mr-1" /> High demand category
               </p>
             </CardContent>
           </Card>
@@ -244,7 +241,7 @@ export default function HomePage() {
               key={category.slug}
               href={`/categories/${category.slug}`}
               className="w-full sm:w-64 no-underline"
-              aria-label={`Browse ${category.name} category with ${category.count} items`}
+              aria-label={`Browse ${category.name} category`}
             >
               <div className="relative h-full p-6 border rounded-lg bg-card hover:border-primary/30 transition-all cursor-pointer">
                 {idx === 0 && (
@@ -257,7 +254,6 @@ export default function HomePage() {
                     <category.icon className="h-8 w-8 text-primary" aria-hidden="true" />
                   </div>
                   <h3 className="font-semibold mb-1">{category.name}</h3>
-                  <p className="text-sm text-muted-foreground">{category.count} items</p>
                 </div>
               </div>
             </Link>
@@ -370,18 +366,24 @@ export default function HomePage() {
                         {country.currency}
                       </Badge>
                     </div>
-                    <div className="flex items-center justify-between">
-                      <p className="text-xs text-muted-foreground font-mono">
-                        {country.domain}
-                      </p>
-                      <div className="flex items-center text-[10px] text-emerald-700 dark:text-emerald-400 font-semibold">
-                        <span className="relative flex h-1.5 w-1.5 mr-1.5">
-                          <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-                          <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-emerald-500"></span>
-                        </span>
-                        Live
+                      <div className="flex items-center justify-between">
+                        <p className="text-xs text-muted-foreground font-mono">
+                          {country.domain}
+                        </p>
+                        {country.name === "United States" ? (
+                          <div className="flex items-center text-[10px] text-emerald-700 dark:text-emerald-400 font-semibold">
+                            <span className="relative flex h-1.5 w-1.5 mr-1.5">
+                              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                              <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-emerald-500"></span>
+                            </span>
+                            Live
+                          </div>
+                        ) : (
+                          <div className="flex items-center text-[10px] text-muted-foreground font-semibold">
+                            Coming Soon
+                          </div>
+                        )}
                       </div>
-                    </div>
                   </div>
                 </li>
               ))}

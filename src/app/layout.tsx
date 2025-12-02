@@ -22,8 +22,8 @@ export const metadata: Metadata = {
   },
   description: "Compare Amazon products in your region by their true cost per liter, kilogram, or item. Find the best deals instantly.",
   keywords: ["price comparison", "price per unit", "best deals", "HDD prices", "SSD prices", "storage deals"],
-  authors: [{ name: "BestPrices Team" }],
-  creator: "BestPrices Team",
+  authors: [{ name: "RealPriceData Team" }],
+  creator: "RealPriceData Team",
   applicationName: "realpricedata.com",
   manifest: "/site.webmanifest",
   icons: {
@@ -65,12 +65,12 @@ export const metadata: Metadata = {
     title: "realpricedata.com - See the Real Value",
     description: "Compare Amazon products in your region by their true cost per liter, kilogram, or item. Find the best deals instantly.",
     images: ["/og-image.png"],
-    creator: "@bestprices",
+    creator: "@realpricedata",
   },
   appleWebApp: {
     capable: true,
     statusBarStyle: "default",
-    title: "bestprices",
+    title: "realpricedata",
   },
   formatDetection: {
     telephone: false,

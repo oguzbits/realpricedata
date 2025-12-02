@@ -99,7 +99,7 @@ const generateProducts = (count: number): Product[] => {
       formFactor: formFactors[Math.floor(random() * formFactors.length)],
       technology: technologies[Math.floor(random() * technologies.length)],
       condition: conditions[Math.floor(random() * conditions.length)],
-      affiliateLink: `https://www.amazon.com/dp/B0${Math.floor(random() * 1000000).toString(36).toUpperCase()}?tag=bestprices-20`,
+      affiliateLink: `https://www.amazon.com/dp/B0${Math.floor(random() * 1000000).toString(36).toUpperCase()}?tag=realpricedata-21`,
       brand: brands[Math.floor(random() * brands.length)],
     }
   })

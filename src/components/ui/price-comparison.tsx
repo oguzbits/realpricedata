@@ -82,7 +82,7 @@ export function PriceComparison() {
           <div className="bg-primary/10 p-5 border-t border-primary/20">
             <p className="text-center text-sm font-medium">
               <span className="text-primary font-bold">Save 17%</span> per TB by choosing the right product — 
-              <span className="text-muted-foreground"> BestPrices shows you this automatically</span>
+              <span className="text-muted-foreground"> Real Price Data shows you this automatically</span>
             </p>
           </div>
         </Card>

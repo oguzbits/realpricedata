@@ -1,6 +1,6 @@
 {
   "name": "realpricedata.com - Compare Price Per Unit",
-  "short_name": "bestprices",
+  "short_name": "realpricedata",
   "description": "Find the best value by comparing price per unit across thousands of products",
   "start_url": "/",
   "display": "standalone",

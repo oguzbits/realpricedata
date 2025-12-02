@@ -1,8 +1,8 @@
-# BestPrices.today - Project Context
+# RealPriceData - Project Context
 
 ## Project Overview
 
-**BestPrices.today** is a price comparison platform focused on the **"Price per Unit"** metric. Unlike traditional price trackers that focus on the total price, this project aims to help users find the best value by calculating and sorting products based on their unit price (e.g., $ per TB for hard drives, $ per load for detergent).
+**RealPriceData** is a price comparison platform focused on the **"Price per Unit"** metric. Unlike traditional price trackers that focus on the total price, this project aims to help users find the best value by calculating and sorting products based on their unit price (e.g., $ per TB for hard drives, $ per load for detergent).
 
 ## Technology Stack
 

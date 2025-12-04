@@ -259,7 +259,7 @@ export default function CategoryProductsPage() {
             </li>
             <li>/</li>
             <li>
-              <Link href={`/${validCountry}`} className="hover:text-foreground transition-colors">
+              <Link href={`/${validCountry}/categories`} className="hover:text-foreground transition-colors">
                 Categories
               </Link>
             </li>

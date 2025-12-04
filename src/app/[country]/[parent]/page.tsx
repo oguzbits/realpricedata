@@ -53,7 +53,7 @@ export default function ParentCategoryPageWithCountry() {
           </li>
           <li>/</li>
           <li>
-            <Link href={`/${validCountry}`} className="hover:text-foreground transition-colors">
+            <Link href={`/${validCountry}/categories`} className="hover:text-foreground transition-colors">
               Categories
             </Link>
           </li>
@@ -115,7 +115,7 @@ export default function ParentCategoryPageWithCountry() {
       {/* Back to Categories */}
       <div className="mt-12 text-center">
         <Button variant="outline" asChild>
-          <Link href={`/${validCountry}`}>
+          <Link href={`/${validCountry}/categories`}>
             <ArrowLeft className="mr-2 h-4 w-4" />
             Back to All Categories
           </Link>

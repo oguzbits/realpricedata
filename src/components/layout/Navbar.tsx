@@ -19,6 +19,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip"
+import { useRouter, usePathname } from "next/navigation"
 
 // Lazy load SearchModal - only needed when user clicks search
 const SearchModal = dynamic(
@@ -40,8 +41,18 @@ const countries = [
   { code: "IN", name: "India", flag: "🇮🇳", domain: "amazon.in", supported: false },
 ]
 
+type Country = {
+  code: string;
+  name: string;
+  flag: string;
+  domain: string;
+  supported: boolean;
+};
+
 export function Navbar() {
   const { setTheme, theme } = useTheme()
+  const router = useRouter()
+  const pathname = usePathname()
   const [country, setCountry] = React.useState(countries[0])
   const [searchOpen, setSearchOpen] = React.useState(false)
   const [mounted, setMounted] = React.useState(false)
@@ -49,6 +60,22 @@ export function Navbar() {
   React.useEffect(() => {
     setMounted(true)
   }, [])
+
+  function handleCountryChange(selectedCountry: Country) {
+    setCountry(selectedCountry)
+    // Extract path after country
+    // Supported url patterns: /[country], /[country]/categories, /[country]/... etc.
+    let segments = pathname.split("/").filter(Boolean)
+    // Replace the first segment if it matches a country code
+    const supportedCodes = countries.filter(x => x.supported).map(x => x.code.toLowerCase())
+    if (segments.length && supportedCodes.includes(segments[0].toLowerCase())) {
+      segments[0] = selectedCountry.code.toLowerCase()
+    } else {
+      segments.unshift(selectedCountry.code.toLowerCase())
+    }
+    const newPath = "/" + segments.join("/")
+    router.push(newPath)
+  }
 
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-backdrop-filter:bg-background/60">
@@ -125,7 +152,7 @@ export function Navbar() {
               {countries.map((c) => (
                 <DropdownMenuItem 
                   key={c.code} 
-                  onClick={() => c.supported && setCountry(c)} 
+                  onClick={() => c.supported && handleCountryChange(c)} 
                   disabled={!c.supported}
                   className="flex items-start gap-3 py-2 cursor-pointer data-disabled:cursor-not-allowed data-disabled:opacity-50"
                 >

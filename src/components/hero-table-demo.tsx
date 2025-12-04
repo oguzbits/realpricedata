@@ -118,14 +118,14 @@ const hardDriveProducts: HardDriveProduct[] = [
   },
 ].sort((a, b) => a.pricePerTB - b.pricePerTB);
 
-// Battery Products
+// Battery Products (Germany - EUR)
 const batteryProducts: BatteryProduct[] = [
   {
     id: "1",
     name: "AmazonBasics AA 48-Pack",
-    price: 11.99,
+    price: 10.99,
     packSize: 48,
-    pricePerUnit: 0.25,
+    pricePerUnit: 0.23,
     batteryType: "AA" as const,
     condition: "New" as const,
     brand: "AmazonBasics",
@@ -134,9 +134,9 @@ const batteryProducts: BatteryProduct[] = [
   {
     id: "2",
     name: "Energizer AAA 24-Pack",
-    price: 8.99,
+    price: 8.29,
     packSize: 24,
-    pricePerUnit: 0.375,
+    pricePerUnit: 0.35,
     batteryType: "AAA" as const,
     condition: "New" as const,
     brand: "Energizer",
@@ -145,9 +145,9 @@ const batteryProducts: BatteryProduct[] = [
   {
     id: "3",
     name: "Duracell AA 20-Pack",
-    price: 12.99,
+    price: 11.99,
     packSize: 20,
-    pricePerUnit: 0.65,
+    pricePerUnit: 0.60,
     batteryType: "AA" as const,
     condition: "New" as const,
     brand: "Duracell",
@@ -156,9 +156,9 @@ const batteryProducts: BatteryProduct[] = [
   {
     id: "4",
     name: "Rayovac C 12-Pack",
-    price: 9.99,
+    price: 9.19,
     packSize: 12,
-    pricePerUnit: 0.833,
+    pricePerUnit: 0.77,
     batteryType: "C" as const,
     condition: "New" as const,
     brand: "Rayovac",
@@ -167,9 +167,9 @@ const batteryProducts: BatteryProduct[] = [
   {
     id: "5",
     name: "Duracell D 8-Pack",
-    price: 11.99,
+    price: 10.99,
     packSize: 8,
-    pricePerUnit: 1.499,
+    pricePerUnit: 1.37,
     batteryType: "D" as const,
     condition: "New" as const,
     brand: "Duracell",
@@ -177,15 +177,15 @@ const batteryProducts: BatteryProduct[] = [
   },
 ].sort((a, b) => a.pricePerUnit - b.pricePerUnit);
 
-// Dog Food Products
+// Dog Food Products (India - INR, kg)
 const dogFoodProducts: DogFoodProduct[] = [
   {
     id: "1",
     name: "Purina Pro Plan Adult",
-    price: 47.99,
-    weight: 35,
-    weightUnit: "lbs",
-    pricePerLb: 1.371,
+    price: 3999,
+    weight: 15.9,
+    weightUnit: "kg",
+    pricePerLb: 251.5,
     size: "Large Breed" as const,
     type: "Dry" as const,
     ageGroup: "Adult" as const,
@@ -195,10 +195,10 @@ const dogFoodProducts: DogFoodProduct[] = [
   {
     id: "2",
     name: "Blue Buffalo Senior",
-    price: 54.99,
-    weight: 30,
-    weightUnit: "lbs",
-    pricePerLb: 1.833,
+    price: 4599,
+    weight: 13.6,
+    weightUnit: "kg",
+    pricePerLb: 338.2,
     size: "Medium Breed" as const,
     type: "Dry" as const,
     ageGroup: "Senior" as const,
@@ -208,10 +208,10 @@ const dogFoodProducts: DogFoodProduct[] = [
   {
     id: "3",
     name: "Royal Canin Puppy",
-    price: 59.99,
-    weight: 30,
-    weightUnit: "lbs",
-    pricePerLb: 2.0,
+    price: 4999,
+    weight: 13.6,
+    weightUnit: "kg",
+    pricePerLb: 367.6,
     size: "Small Breed" as const,
     type: "Dry" as const,
     ageGroup: "Puppy" as const,
@@ -221,10 +221,10 @@ const dogFoodProducts: DogFoodProduct[] = [
   {
     id: "4",
     name: "Hill's Science Diet Adult",
-    price: 64.99,
-    weight: 30,
-    weightUnit: "lbs",
-    pricePerLb: 2.166,
+    price: 5399,
+    weight: 13.6,
+    weightUnit: "kg",
+    pricePerLb: 397.0,
     size: "Medium Breed" as const,
     type: "Dry" as const,
     ageGroup: "Adult" as const,
@@ -234,10 +234,10 @@ const dogFoodProducts: DogFoodProduct[] = [
   {
     id: "5",
     name: "Wellness CORE Grain-Free",
-    price: 69.99,
-    weight: 26,
-    weightUnit: "lbs",
-    pricePerLb: 2.692,
+    price: 5799,
+    weight: 11.8,
+    weightUnit: "kg",
+    pricePerLb: 491.4,
     size: "Large Breed" as const,
     type: "Dry" as const,
     ageGroup: "Adult" as const,
@@ -251,8 +251,9 @@ const categoryConfig = {
   harddrives: {
     title: "Disk Price Comparison",
     count: "100 disks",
-    url: "realpricedata.com/categories/storage",
+    url: "realpricedata.com/us/electronics/hard-drives",
     unitLabel: "Price/TB",
+    currency: "$",
     insightText: "The 18TB drive is 4x cheaper per TB than the 8TB SSD!",
     filters: {
       filter1: { title: "Condition", options: ["New", "Used", "Renewed"] },
@@ -266,8 +267,9 @@ const categoryConfig = {
   batteries: {
     title: "Battery Price Comparison",
     count: "50 packs",
-    url: "realpricedata.com/categories/batteries",
+    url: "realpricedata.com/de/electronics/batteries",
     unitLabel: "Price/Unit",
+    currency: "€",
     insightText:
       "The 48-pack is 6x cheaper per battery than the 8-pack!",
     filters: {
@@ -282,9 +284,10 @@ const categoryConfig = {
   dogfood: {
     title: "Dog Food Price Comparison",
     count: "75 products",
-    url: "realpricedata.com/categories/pet-supplies",
-    unitLabel: "Price/lb",
-    insightText: "Buying in bulk is 2x cheaper per pound than smaller bags!",
+    url: "realpricedata.com/in/groceries/pet-food",
+    unitLabel: "Price/kg",
+    currency: "₹",
+    insightText: "Buying in bulk is 2x cheaper per kg than smaller bags!",
     filters: {
       filter1: {
         title: "Size",
@@ -496,12 +499,12 @@ export function HeroTableDemo() {
                       )}
                     >
                       <div className="col-span-2 font-mono font-medium text-primary flex items-center gap-2">
-                        $
+                        {config.currency}
                         {currentCategory === "harddrives"
                           ? (product as HardDriveProduct).pricePerTB.toFixed(3)
                           : currentCategory === "batteries"
-                          ? (product as BatteryProduct).pricePerUnit.toFixed(3)
-                          : (product as DogFoodProduct).pricePerLb.toFixed(3)}
+                          ? (product as BatteryProduct).pricePerUnit.toFixed(2)
+                          : (product as DogFoodProduct).pricePerLb.toFixed(1)}
                         {idx === 0 && (
                           <Badge className="bg-emerald-100 text-emerald-950 dark:bg-emerald-900 dark:text-emerald-50 border-0 h-4 px-1.5 text-[8px] animate-in zoom-in font-semibold">
                             Best
@@ -509,7 +512,7 @@ export function HeroTableDemo() {
                         )}
                       </div>
                       <div className="col-span-2 font-medium text-foreground">
-                        ${product.price.toFixed(2)}
+                        {config.currency}{currentCategory === "dogfood" ? product.price.toFixed(0) : product.price.toFixed(2)}
                       </div>
                       <div className="col-span-2 text-muted-foreground">
                         {currentCategory === "harddrives" &&

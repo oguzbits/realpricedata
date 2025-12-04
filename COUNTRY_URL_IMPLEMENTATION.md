@@ -6,6 +6,9 @@ Successfully implemented country-based URL structure with automatic detection an
 
 ## 🌍 New URL Structure
 
+- The homepage for each country is `/[country]` (e.g., `/us`)
+- The **categories browser for each country is** `/[country]/categories` (e.g., `/us/categories`)
+
 ### Pattern:
 
 ```

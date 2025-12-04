@@ -1,5 +1,7 @@
 # RealPriceData - URL Structure Overview
 
+> Note: For every country, /[country] is the country-specific homepage, and /[country]/categories is the full categories browser for that country (not /[country]).
+
 ## 🌳 URL Hierarchy Tree
 
 ```

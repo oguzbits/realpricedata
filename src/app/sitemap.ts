@@ -26,9 +26,17 @@ export default function sitemap(): MetadataRoute.Sitemap {
   const countryRoutes: MetadataRoute.Sitemap = []
 
   countries.forEach(country => {
-    // Country root (categories page)
+    // Country home page
     countryRoutes.push({
       url: `${baseUrl}/${country}`,
+      lastModified: new Date(),
+      changeFrequency: 'daily' as const,
+      priority: 0.9,
+    })
+
+    // Country categories page
+    countryRoutes.push({
+      url: `${baseUrl}/${country}/categories`,
       lastModified: new Date(),
       changeFrequency: 'daily' as const,
       priority: 0.9,

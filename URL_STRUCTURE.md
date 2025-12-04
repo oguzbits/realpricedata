@@ -258,3 +258,8 @@ Visit:
 - All new links use the hierarchical structure
 - Breadcrumbs include structured data for rich snippets
 - URLs are optimized for both SEO and UX
+
+## 🔍 SEO Structure
+
+Country homepage: /[country] (e.g., /us, /de)
+Country category hub: /[country]/categories (e.g., /us/categories)

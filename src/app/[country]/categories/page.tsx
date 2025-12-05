@@ -4,6 +4,7 @@ import Link from "next/link"
 import { useParams } from "next/navigation"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
+import { ArrowRight } from "lucide-react"
 import { getCategoryHierarchy, getCategoryPath } from "@/lib/categories"
 import { isValidCountryCode, DEFAULT_COUNTRY } from "@/lib/countries"
 
@@ -14,7 +15,7 @@ export default function CategoriesPageWithCountry() {
   const categoryHierarchy = getCategoryHierarchy()
 
   return (
-    <div className="container py-6 mx-auto px-4">
+    <div className="container pt-6 pb-16 mx-auto px-4">
       {/* Breadcrumb */}
       <nav className="mb-8" aria-label="Breadcrumb">
         <ol className="flex items-center gap-2 text-sm text-muted-foreground">
@@ -43,33 +44,34 @@ export default function CategoriesPageWithCountry() {
                 {hierarchy.children.length} {hierarchy.children.length === 1 ? 'category' : 'categories'}
               </Badge>
             </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
               {hierarchy.children.map((category) => (
                 <Link 
                   key={category.slug} 
-                  className="no-underline" 
+                  className="no-underline group" 
                   href={getCategoryPath(category.slug, validCountry)} 
-                  aria-label={`Browse ${category.name}: ${category.description}`}
                 >
-                  <Card className="relative h-full bg-card/50 hover:bg-card/80 backdrop-blur-sm transition-all duration-300 cursor-pointer border-primary/10 hover:border-primary/30 hover:shadow-xl hover:shadow-primary/10 group">
-                    <CardHeader>
-                      <div className="flex justify-between items-start mb-2">
-                        <category.icon className="h-6 w-6 text-muted-foreground group-hover:text-primary transition-colors" aria-hidden="true" />
-                        {category.unitType && (
-                          <Badge variant="secondary" className="text-xs">
-                            Per {category.unitType}
-                          </Badge>
-                        )}
+                  <div className="flex items-center p-3 rounded-lg border border-border/50 bg-card/40 hover:bg-muted/40 hover:border-primary/30 transition-all">
+                    <div className="flex-shrink-0 w-10 h-10 rounded-md bg-muted/50 flex items-center justify-center text-muted-foreground group-hover:text-primary transition-colors">
+                      <category.icon className="h-5 w-5" />
+                    </div>
+                    <div className="ml-3 flex-1 min-w-0">
+                      <div className="flex items-center gap-2">
+                         <h3 className="font-medium text-sm text-foreground group-hover:text-primary transition-colors truncate">
+                            {category.name}
+                         </h3>
+                         {category.unitType && (
+                           <span className="inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-medium bg-muted text-muted-foreground uppercase tracking-wider">
+                             /{category.unitType}
+                           </span>
+                         )}
                       </div>
-                      <CardTitle className="group-hover:text-primary transition-colors">{category.name}</CardTitle>
-                      <CardDescription>{category.description}</CardDescription>
-                    </CardHeader>
-                    <CardContent>
-                      <p className="text-sm text-muted-foreground">
-                        Compare by {category.unitType || 'unit'}
+                      <p className="text-xs text-muted-foreground truncate mt-0.5">
+                        {category.description}
                       </p>
-                    </CardContent>
-                  </Card>
+                    </div>
+                    <ArrowRight className="h-4 w-4 text-muted-foreground/30 group-hover:text-primary group-hover:translate-x-0.5 transition-all ml-2" />
+                  </div>
                 </Link>
               ))}
             </div>

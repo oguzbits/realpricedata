@@ -3,18 +3,9 @@ import { Suspense } from "react";
 import dynamic from "next/dynamic";
 import Script from "next/script";
 import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import {
   ArrowRight,
-  TrendingUp,
-  Smartphone,
   HardDrive,
   Dumbbell,
   Droplets,
@@ -25,7 +16,6 @@ import {
 import { ClientGlobe } from "@/components/client/ClientGlobe";
 import { ClientFeaturedDeals } from "@/components/client/ClientFeaturedDeals";
 import { getCategoryPath } from "@/lib/categories";
-import React from "react";
 
 const HeroTableDemo = dynamic(
   () => import("@/components/hero-table-demo").then((mod) => ({ default: mod.HeroTableDemo })),
@@ -53,21 +43,21 @@ export function HomeContent({ country }: { country: string }) {
     },
   };
   return (
-    <div className="flex flex-col gap-12 pb-12">
+    <div className="flex flex-col gap-8 pb-16">
       <Script
         id="json-ld"
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
       {/* Hero Section */}
-      <section className="relative overflow-hidden" aria-labelledby="hero-heading">
+      <section className="relative overflow-hidden mb-20" aria-labelledby="hero-heading">
         {/* Left side background */}
         <div className="absolute inset-0 bg-background z-0" aria-hidden="true" />
         {/* Right side background - MUI-inspired gradient */}
         <div className="hidden lg:block absolute top-0 right-0 bottom-0 w-1/2 bg-blue-50 dark:bg-[#050810] border-l border-slate-200 dark:border-[hsl(210,14%,13%)] z-0 rounded-bl-xl" aria-hidden="true" />
         {/* Subtle gradient overlays */}
         <div className="absolute top-0 left-0 w-[800px] h-[500px] bg-primary/10 rounded-full blur-[120px] -z-10 opacity-30" aria-hidden="true" />
-        <div className="container relative z-10 px-4 mx-auto py-16 md:py-24">
+        <div className="container relative z-10 px-4 mx-auto py-12 md:py-20">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
             {/* Left Column: Content */}
             <div className="text-left">
@@ -123,57 +113,52 @@ export function HomeContent({ country }: { country: string }) {
       </section>
 
       {/* Featured Deals - Top Value Opportunities */}
-      <ClientFeaturedDeals country={country} />
+      <div className="scroll-mt-24" id="top-value-opportunities">
+         <ClientFeaturedDeals country={country} />
+      </div>
 
       {/* Categories */}
-      <section className="container px-4 mx-auto py-12" aria-labelledby="categories-heading">
-        <div className="flex justify-between items-end mb-8">
-          <div>
-            <h2 className="text-3xl font-bold tracking-tight mb-2">
-              Explore Categories
-            </h2>
-            <p className="text-muted-foreground">
-              Find the best deals across our most popular categories.
-            </p>
-          </div>
-          <Button
-            variant="ghost"
-            className="text-foreground font-bold hover:text-foreground/80 hover:bg-transparent p-0"
-            asChild
-          >
-            <Link href={`/${country}/categories`}>
-              View all <ArrowRight className="ml-2 h-4 w-4" />
-            </Link>
-          </Button>
+      <section className="container px-4 mx-auto py-10" aria-labelledby="categories-heading">
+        <div className="flex justify-between items-end mb-4 border-b border-border pb-2">
+          <h2 id="categories-heading" className="text-lg font-bold tracking-tight flex items-center gap-2">
+            Browse Categories
+          </h2>
+          <Link href={`/${country}/categories`} className="text-xs font-medium text-primary hover:underline">
+            View All
+          </Link>
         </div>
-        <div className="flex flex-wrap justify-center gap-6">
-          {categories.map((category, idx) => (
-            <Link
-              key={category.slug}
-              href={getCategoryPath(category.slug, country)}
-              className="w-full sm:w-64 no-underline"
-              aria-label={`Browse ${category.name} category`}
-            >
-              <div className="relative h-full p-6 border rounded-lg bg-card hover:border-primary/30 transition-all cursor-pointer">
-                {idx === 0 && (
-                  <div className="absolute -top-2 -right-2 z-10 px-2 py-1 bg-blue-700 dark:bg-blue-600 text-white text-[10px] font-bold uppercase tracking-wider rounded-full shadow-lg animate-pulse-slow">
-                    🔥 Hot
-                  </div>
-                )}
-                <div className="text-center">
-                  <div className="mx-auto bg-primary/5 p-4 rounded-2xl mb-4 w-fit">
-                    <category.icon className="h-8 w-8 text-primary" aria-hidden="true" />
-                  </div>
-                  <h3 className="font-semibold mb-1">{category.name}</h3>
+        
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3">
+            {categories.map((category, idx) => (
+              <Link
+                key={category.slug}
+                href={getCategoryPath(category.slug, country)}
+                className="group flex items-center gap-3 p-3 rounded-md border border-border/50 bg-card/50 hover:bg-muted/50 hover:border-primary/30 transition-all no-underline"
+                aria-label={`Browse ${category.name} category`}
+              >
+                <div className="flex-shrink-0 w-8 h-8 rounded bg-primary/10 flex items-center justify-center text-primary group-hover:scale-105 transition-transform">
+                  <category.icon className="h-4 w-4" aria-hidden="true" />
                 </div>
-              </div>
-            </Link>
-          ))}
+                <div className="flex-1 min-w-0">
+                   <div className="flex items-center justify-between">
+                     <span className="font-medium text-sm text-foreground group-hover:text-primary transition-colors">{category.name}</span>
+                     {idx === 0 && (
+                       <Badge variant="secondary" className="px-1.5 py-0 h-4 text-[10px] bg-amber-500/10 text-amber-600 border-0">
+                         Hot
+                       </Badge>
+                     )}
+                   </div>
+                </div>
+                <div className="text-muted-foreground/30 group-hover:text-primary group-hover:translate-x-0.5 transition-transform">
+                  <ArrowRight className="h-4 w-4" />
+                </div>
+              </Link>
+            ))}
         </div>
       </section>
 
       {/* Supported Countries */}
-      <section className="container px-4 mx-auto py-24" aria-labelledby="global-heading">
+      <section className="container px-4 mx-auto py-16" aria-labelledby="global-heading">
         <h2 id="global-heading" className="text-4xl font-bold mb-12 tracking-tight text-center">
           Global Availability
         </h2>

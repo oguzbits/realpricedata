@@ -64,7 +64,7 @@ export function useProductFilters() {
       minCapacity: null,
       maxCapacity: null,
       sortBy: 'pricePerTB',
-      sortOrder: 'asc',
+      sortOrder: 'asc', // Always enforce Value Sorting on reset
     })
   }
 

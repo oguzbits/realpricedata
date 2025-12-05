@@ -90,8 +90,8 @@ export function HomeContent({ country }: { country: string }) {
                   className="text-lg px-8 h-14 rounded-full shadow-lg shadow-blue-600/20 bg-blue-700 hover:bg-blue-800 dark:bg-blue-600 dark:hover:bg-blue-700 text-white hover:brightness-110 transition-all group"
                   asChild
                 >
-                  <Link className="no-underline" href={`/${country}/categories`}>
-                    Start Saving Now
+                  <Link className="no-underline" href="#top-value-opportunities">
+                    View Top Deals
                     <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
                   </Link>
                 </Button>
@@ -122,71 +122,8 @@ export function HomeContent({ country }: { country: string }) {
         </div>
       </section>
 
-      {/* Trending Stats */}
-      <section className="container px-4 mx-auto mt-12 relative z-20" aria-labelledby="stats-heading">
-        <h2 id="stats-heading" className="sr-only">Platform Statistics</h2>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <Card className="bg-card dark:bg-card backdrop-blur-xl border-border shadow-lg hover:shadow-xl hover:border-primary/20 transition-all group">
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium text-muted-foreground">
-                Most Viewed Today
-              </CardTitle>
-              <div className="p-2 bg-muted/50 rounded-lg group-hover:bg-muted transition-colors">
-                <Smartphone className="h-4 w-4 text-muted-foreground" />
-              </div>
-            </CardHeader>
-            <CardContent>
-              <div className="text-3xl font-bold text-foreground">
-                SSD Storage
-              </div>
-              <p className="text-xs text-muted-foreground font-medium flex items-center mt-1">
-                <TrendingUp className="h-3 w-3 mr-1" /> High demand category
-              </p>
-            </CardContent>
-          </Card>
-          <Card className="bg-card dark:bg-card backdrop-blur-xl border-border shadow-lg hover:shadow-xl hover:border-primary/20 transition-all group">
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium text-muted-foreground">
-                Smart Analysis
-              </CardTitle>
-              <div className="p-2 bg-muted/50 rounded-lg group-hover:bg-muted transition-colors">
-                <span className="text-sm font-mono text-muted-foreground">$</span>
-              </div>
-            </CardHeader>
-            <CardContent>
-              <div className="text-3xl font-bold text-foreground">
-                True Value
-              </div>
-              <p className="text-xs text-muted-foreground mt-1">
-                Automatic price-per-unit calculation
-              </p>
-            </CardContent>
-          </Card>
-          <Card className="bg-card dark:bg-card backdrop-blur-xl border-border shadow-lg hover:shadow-xl hover:border-primary/20 transition-all group">
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium text-muted-foreground">
-                Global Coverage
-              </CardTitle>
-              <div className="p-2 bg-muted/50 rounded-lg group-hover:bg-muted transition-colors">
-                <Globe className="h-4 w-4 text-muted-foreground" />
-              </div>
-            </CardHeader>
-            <CardContent>
-              <div className="text-3xl font-bold text-foreground">
-                Worldwide
-              </div>
-              <p className="text-xs text-muted-foreground mt-1">
-                Unified search across borders
-              </p>
-            </CardContent>
-          </Card>
-        </div>
-      </section>
-
-      {/* Featured Deals Carousel */}
-      <Suspense fallback={<div className="container px-4 mx-auto py-12 h-64" />}>
-        <ClientFeaturedDeals />
-      </Suspense>
+      {/* Featured Deals - Top Value Opportunities */}
+      <ClientFeaturedDeals country={country} />
 
       {/* Categories */}
       <section className="container px-4 mx-auto py-12" aria-labelledby="categories-heading">

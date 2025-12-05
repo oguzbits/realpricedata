@@ -7,7 +7,6 @@ const FeaturedDeals = dynamic(
   { ssr: false }
 );
 
-export function ClientFeaturedDeals() {
-  return <FeaturedDeals />;
+export function ClientFeaturedDeals({ country }: { country: string }) {
+  return <FeaturedDeals country={country} />;
 }
-

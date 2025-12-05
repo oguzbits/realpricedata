@@ -31,13 +31,13 @@ export function CountrySelector() {
         <Button 
           variant="outline" 
           size="sm" 
-          className="gap-2 min-w-[140px]"
+          className="gap-1 sm:gap-2 px-2 sm:px-3 min-w-[auto] sm:min-w-[140px]"
           aria-label="Select country"
         >
           <Globe className="h-4 w-4" />
           <span className="hidden sm:inline">{currentCountry?.flag}</span>
           <span className="hidden md:inline">{currentCountry?.name}</span>
-          <span className="md:hidden">{currentCountry?.code.toUpperCase()}</span>
+          <span className="md:hidden font-semibold">{currentCountry?.code.toUpperCase()}</span>
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-[280px]">

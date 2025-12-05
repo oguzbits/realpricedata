@@ -1,5 +1,6 @@
 import { MetadataRoute } from 'next'
 import { getCategoryHierarchy, getCategoryPath, allCategories } from '@/lib/categories'
+import { getAllCountries } from '@/lib/countries'
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const baseUrl = 'https://realpricedata.com'
@@ -21,7 +22,8 @@ export default function sitemap(): MetadataRoute.Sitemap {
   const categoryHierarchy = getCategoryHierarchy()
   
   // Generate URLs for all supported countries
-  const countries = ['us', 'uk', 'ca', 'de', 'es', 'it', 'fr', 'au', 'se', 'ie', 'in']
+  // Generate URLs for all live countries
+  const countries = getAllCountries().filter(c => c.isLive).map(c => c.code)
   
   const countryRoutes: MetadataRoute.Sitemap = []
 

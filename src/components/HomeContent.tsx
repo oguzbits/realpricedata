@@ -16,6 +16,7 @@ import {
 import { ClientGlobe } from "@/components/client/ClientGlobe";
 import { ClientFeaturedDeals } from "@/components/client/ClientFeaturedDeals";
 import { getCategoryPath } from "@/lib/categories";
+import { getAllCountries } from "@/lib/countries";
 
 const HeroTableDemo = dynamic(
   () => import("@/components/hero-table-demo").then((mod) => ({ default: mod.HeroTableDemo })),
@@ -43,21 +44,21 @@ export function HomeContent({ country }: { country: string }) {
     },
   };
   return (
-    <div className="flex flex-col gap-8 pb-16">
+    <div className="flex flex-col gap-2 sm:gap-4 md:gap-8 pb-8 md:pb-16">
       <Script
         id="json-ld"
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
       {/* Hero Section */}
-      <section className="relative overflow-hidden mb-20" aria-labelledby="hero-heading">
+      <section className="relative overflow-hidden mb-2 sm:mb-8 md:mb-20" aria-labelledby="hero-heading">
         {/* Left side background */}
         <div className="absolute inset-0 bg-background z-0" aria-hidden="true" />
         {/* Right side background - MUI-inspired gradient */}
         <div className="hidden lg:block absolute top-0 right-0 bottom-0 w-1/2 bg-blue-50 dark:bg-[#050810] border-l border-slate-200 dark:border-[hsl(210,14%,13%)] z-0 rounded-bl-xl" aria-hidden="true" />
         {/* Subtle gradient overlays */}
         <div className="absolute top-0 left-0 w-[800px] h-[500px] bg-primary/10 rounded-full blur-[120px] -z-10 opacity-30" aria-hidden="true" />
-        <div className="container relative z-10 px-4 mx-auto py-12 md:py-20">
+        <div className="container relative z-10 px-4 mx-auto py-4 sm:py-8 md:py-20">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
             {/* Left Column: Content */}
             <div className="text-left">
@@ -118,7 +119,7 @@ export function HomeContent({ country }: { country: string }) {
       </div>
 
       {/* Categories */}
-      <section className="container px-4 mx-auto py-10" aria-labelledby="categories-heading">
+      <section className="container px-4 mx-auto py-4 sm:py-6 md:py-10" aria-labelledby="categories-heading">
         <div className="flex justify-between items-end mb-4 border-b border-border pb-2">
           <h2 id="categories-heading" className="text-lg font-bold tracking-tight flex items-center gap-2">
             Browse Categories
@@ -158,7 +159,7 @@ export function HomeContent({ country }: { country: string }) {
       </section>
 
       {/* Supported Countries */}
-      <section className="container px-4 mx-auto py-16" aria-labelledby="global-heading">
+      <section className="container px-4 mx-auto py-8 sm:py-12 md:py-16" aria-labelledby="global-heading">
         <h2 id="global-heading" className="text-4xl font-bold mb-12 tracking-tight text-center">
           Global Availability
         </h2>
@@ -175,19 +176,7 @@ export function HomeContent({ country }: { country: string }) {
           {/* Country Insights List */}
           <div className="space-y-4 order-1 lg:order-1">
             <ul className="grid grid-cols-1 sm:grid-cols-2 gap-4" role="list" aria-label="Supported countries and regions">
-              {[
-                { name: "United States", flag: "🇺🇸", domain: "amazon.com", currency: "USD" },
-                { name: "United Kingdom", flag: "🇬🇧", domain: "amazon.co.uk", currency: "GBP" },
-                { name: "Canada", flag: "🇨🇦", domain: "amazon.ca", currency: "CAD" },
-                { name: "Germany", flag: "🇩🇪", domain: "amazon.de", currency: "EUR" },
-                { name: "Spain", flag: "🇪🇸", domain: "amazon.es", currency: "EUR" },
-                { name: "Italy", flag: "🇮🇹", domain: "amazon.it", currency: "EUR" },
-                { name: "France", flag: "🇫🇷", domain: "amazon.fr", currency: "EUR" },
-                { name: "Australia", flag: "🇦🇺", domain: "amazon.com.au", currency: "AUD" },
-                { name: "Sweden", flag: "🇸🇪", domain: "amazon.se", currency: "SEK" },
-                { name: "Ireland", flag: "🇮🇪", domain: "amazon.co.uk", currency: "GBP" },
-                { name: "India", flag: "🇮🇳", domain: "amazon.in", currency: "INR" },
-              ].map((country) => (
+              {getAllCountries().map((country) => (
                 <li
                   key={country.name}
                   className="flex items-center p-3 rounded-xl border border-primary/20 bg-card shadow-sm dark:bg-white/5 dark:border-white/10 dark:backdrop-blur-md cursor-default group hover:border-primary/40 transition-all"
@@ -211,7 +200,7 @@ export function HomeContent({ country }: { country: string }) {
                       <p className="text-xs text-muted-foreground font-mono">
                         {country.domain}
                       </p>
-                      {country.name === "United States" ? (
+                      {country.isLive ? (
                         <div className="flex items-center text-[10px] text-emerald-700 dark:text-emerald-400 font-semibold">
                           <span className="relative flex h-1.5 w-1.5 mr-1.5">
                             <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>

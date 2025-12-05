@@ -69,14 +69,14 @@ export function Globe({ className }: { className?: string }) {
       markerColor: [249 / 255, 115 / 255, 22 / 255],
       glowColor: [1.2, 1.2, 1.2],
       markers: [
-        // US (Green - Live)
-        { location: [37.0902, -95.7129], size: 0.08, color: [0.06, 0.72, 0.5] },
+        // US (Orange - Coming Soon)
+        { location: [37.0902, -95.7129], size: 0.05, color: [0.98, 0.45, 0.08] },
         // UK (Orange - Coming Soon)
         { location: [55.3781, -3.4360], size: 0.05, color: [0.98, 0.45, 0.08] },
         // Canada
         { location: [56.1304, -106.3468], size: 0.05, color: [0.98, 0.45, 0.08] },
-        // Germany
-        { location: [51.1657, 10.4515], size: 0.05, color: [0.98, 0.45, 0.08] },
+        // Germany (Green - Live)
+        { location: [51.1657, 10.4515], size: 0.08, color: [0.06, 0.72, 0.5] },
         // Spain
         { location: [40.4637, -3.7492], size: 0.05, color: [0.98, 0.45, 0.08] },
         // Italy

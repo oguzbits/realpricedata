@@ -16,7 +16,7 @@ export const countries: Record<string, Country> = {
     domain: 'amazon.com',
     currency: 'USD',
     locale: 'en-US',
-    isLive: true,
+    isLive: false,
   },
   uk: {
     code: 'uk',
@@ -43,7 +43,7 @@ export const countries: Record<string, Country> = {
     domain: 'amazon.de',
     currency: 'EUR',
     locale: 'de-DE',
-    isLive: false,
+    isLive: true,
   },
   es: {
     code: 'es',
@@ -110,7 +110,7 @@ export const countries: Record<string, Country> = {
   },
 }
 
-export const DEFAULT_COUNTRY = 'us'
+export const DEFAULT_COUNTRY = 'de'
 
 // Get all countries as array
 export function getAllCountries(): Country[] {
@@ -181,13 +181,13 @@ export function saveCountryPreference(countryCode: string): void {
 export function getUserCountry(): string {
   // 1. Check saved preference
   const saved = getSavedCountry()
-  if (saved && countries[saved]) {
+  if (saved && countries[saved] && countries[saved].isLive) {
     return saved
   }
   
   // 2. Detect from browser
   const detected = detectCountryFromLocale()
-  if (detected && countries[detected]) {
+  if (detected && countries[detected] && countries[detected].isLive) {
     return detected
   }
   

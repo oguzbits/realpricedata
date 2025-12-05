@@ -114,7 +114,7 @@ export function FeaturedDeals({ country = "us" }: { country?: string }) {
   return (
     <section 
       id="top-value-opportunities"
-      className="container px-4 mx-auto py-10 scroll-mt-32"
+      className="container px-4 mx-auto py-4 sm:py-10 scroll-mt-20 sm:scroll-mt-32"
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
       onFocus={() => setIsHovered(true)}
@@ -122,16 +122,16 @@ export function FeaturedDeals({ country = "us" }: { country?: string }) {
     >
       <div className="flex justify-between items-end mb-4 border-b border-border pb-2">
          <h2 className="text-lg font-bold tracking-tight flex items-center gap-2">
-            Top Value <span className="text-muted-foreground font-normal text-sm">/ Low Unit Price</span>
+            Top Value <span className="text-muted-foreground font-normal text-sm hidden xs:inline">/ Low Unit Price</span>
          </h2>
-         <Link href={`/${country}/categories`} className="text-xs font-medium text-primary hover:underline">
+         <Link href={`/${country}/categories`} className="text-xs font-medium text-primary hover:underline whitespace-nowrap">
           View All
         </Link>
       </div>
 
-      <div className="w-full text-sm">
+      <div className="w-full text-sm overflow-hidden rounded-lg border border-border/50">
         {/* Table Header */}
-        <div className="grid grid-cols-[3rem_1fr_6rem_6rem] sm:grid-cols-[3rem_1fr_8rem_6rem_6rem] gap-4 px-3 py-2 text-xs font-medium text-muted-foreground border-b border-border/50 bg-muted/20">
+        <div className="grid grid-cols-[1.5rem_1fr_5rem_3.5rem] sm:grid-cols-[3rem_1fr_8rem_6rem_6rem] gap-2 sm:gap-4 px-2 sm:px-3 py-2 text-xs font-medium text-muted-foreground bg-muted/20 border-b border-border/50">
            <div className="text-center">#</div>
            <div>Product</div>
            <div className="hidden sm:block">Category</div>
@@ -144,25 +144,25 @@ export function FeaturedDeals({ country = "us" }: { country?: string }) {
           {getVisibleDeals().map((deal, idx) => (
             <Link 
               key={`${deal.id}-${idx}`} 
-              className="grid grid-cols-[3rem_1fr_6rem_6rem] sm:grid-cols-[3rem_1fr_8rem_6rem_6rem] gap-4 px-3 py-2.5 items-center hover:bg-muted/30 transition-colors group no-underline text-foreground"
+              className="grid grid-cols-[1.5rem_1fr_5rem_3.5rem] sm:grid-cols-[3rem_1fr_8rem_6rem_6rem] gap-2 sm:gap-4 px-2 sm:px-3 py-3 items-center hover:bg-muted/30 transition-colors group no-underline text-foreground"
               href={`/${country}/${deal.parentSlug}/${deal.categorySlug}`}
             >
               {/* Rank */}
-              <div className="text-center font-mono font-medium text-muted-foreground group-hover:text-primary">
+              <div className="text-center font-mono font-medium text-muted-foreground group-hover:text-primary text-xs sm:text-sm">
                 {idx + 1}
               </div>
 
               {/* Product */}
-              <div className="flex items-center gap-3 min-w-0">
-                <div className="flex-shrink-0 w-6 h-6 rounded bg-muted flex items-center justify-center text-muted-foreground">
+              <div className="flex items-center gap-2 sm:gap-3 min-w-0 overflow-hidden">
+                <div className="flex-shrink-0 w-6 h-6 rounded bg-muted flex items-center justify-center text-muted-foreground hidden xs:flex">
                    <deal.icon className="h-3.5 w-3.5" />
                 </div>
-                <div className="truncate font-medium group-hover:text-primary transition-colors">
+                <div className="truncate font-medium group-hover:text-primary transition-colors text-sm">
                   {deal.name}
-                  <div className="sm:hidden text-[10px] text-muted-foreground font-normal">{deal.category}</div>
+                  <div className="sm:hidden text-[10px] text-muted-foreground font-normal truncate">{deal.category}</div>
                 </div>
                 {idx === 0 && (
-                   <span className="flex-shrink-0 h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                   <span className="flex-shrink-0 h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse hidden sm:block" />
                 )}
               </div>
 
@@ -172,16 +172,16 @@ export function FeaturedDeals({ country = "us" }: { country?: string }) {
               </div>
 
               {/* Price */}
-              <div className="text-right font-mono font-bold tracking-tight text-foreground">
+              <div className="text-right font-mono font-bold tracking-tight text-foreground text-xs sm:text-sm">
                 ${deal.bestUnitPrice}
-                <span className="text-[10px] text-muted-foreground font-sans ml-0.5 text-normal">/{deal.unitLabel}</span>
+                <span className="text-[10px] text-muted-foreground font-sans ml-0.5 text-normal block sm:inline">/{deal.unitLabel}</span>
               </div>
 
               {/* Trend */}
               <div className="text-right text-xs">
                 {deal.savings > 0 ? (
-                  <span className="text-emerald-600 font-medium inline-flex items-center justify-end gap-1">
-                    Drop
+                  <span className="text-emerald-600 font-medium inline-flex items-center justify-end gap-0.5 sm:gap-1">
+                    <span className="hidden sm:inline">Drop</span>
                     <TrendingDown className="h-3 w-3" />
                   </span>
                 ) : (

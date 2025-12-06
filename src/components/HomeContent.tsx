@@ -124,7 +124,7 @@ export function HomeContent({ country }: { country: string }) {
           <h2 id="categories-heading" className="text-lg font-bold tracking-tight flex items-center gap-2">
             Browse Categories
           </h2>
-          <Link href={`/${country}/categories`} className="text-xs font-medium text-primary hover:underline">
+          <Link href={`/${country}/categories`} className="text-xs font-semibold px-3 py-1.5 rounded-full border border-primary/20 bg-primary/5 text-primary hover:bg-primary/10 transition-colors no-underline hover:no-underline">
             View All
           </Link>
         </div>
@@ -137,7 +137,7 @@ export function HomeContent({ country }: { country: string }) {
                 className="group flex items-center gap-3 p-3 rounded-md border border-border/50 bg-card/50 hover:bg-muted/50 hover:border-primary/30 transition-all no-underline"
                 aria-label={`Browse ${category.name} category`}
               >
-                <div className="flex-shrink-0 w-8 h-8 rounded bg-primary/10 flex items-center justify-center text-primary group-hover:scale-105 transition-transform">
+                <div className="shrink-0 w-8 h-8 rounded bg-primary/10 flex items-center justify-center text-primary group-hover:scale-105 transition-transform">
                   <category.icon className="h-4 w-4" aria-hidden="true" />
                 </div>
                 <div className="flex-1 min-w-0">

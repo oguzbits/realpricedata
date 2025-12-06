@@ -135,7 +135,7 @@ export function FeaturedDeals({ country = "us" }: { country?: string }) {
          <h2 className="text-lg font-bold tracking-tight flex items-center gap-2">
             Top Value <span className="text-muted-foreground font-normal text-sm hidden xs:inline">/ Low Unit Price</span>
          </h2>
-         <Link href={`/${country}/categories`} className="text-xs font-medium text-primary hover:underline whitespace-nowrap">
+         <Link href={`/${country}/categories`} className="text-xs font-semibold px-3 py-1.5 rounded-full border border-primary/20 bg-primary/5 text-primary hover:bg-primary/10 transition-colors whitespace-nowrap no-underline hover:no-underline">
           View All
         </Link>
       </div>
@@ -165,7 +165,7 @@ export function FeaturedDeals({ country = "us" }: { country?: string }) {
 
               {/* Product */}
               <div className="flex items-center gap-2 sm:gap-3 min-w-0 overflow-hidden">
-                <div className="flex-shrink-0 w-6 h-6 rounded bg-muted flex items-center justify-center text-muted-foreground hidden xs:flex">
+                <div className="shrink-0 w-6 h-6 rounded bg-muted flex items-center justify-center text-muted-foreground hidden xs:flex">
                    <deal.icon className="h-3.5 w-3.5" />
                 </div>
                 <div className="truncate font-medium group-hover:text-primary transition-colors text-sm">
@@ -173,7 +173,7 @@ export function FeaturedDeals({ country = "us" }: { country?: string }) {
                   <div className="sm:hidden text-[10px] text-muted-foreground font-normal truncate">{deal.category}</div>
                 </div>
                 {idx === 0 && (
-                   <span className="flex-shrink-0 h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse hidden sm:block" />
+                   <span className="shrink-0 h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse hidden sm:block" />
                 )}
               </div>
 

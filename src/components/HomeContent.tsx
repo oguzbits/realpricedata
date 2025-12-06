@@ -124,8 +124,9 @@ export function HomeContent({ country }: { country: string }) {
           <h2 id="categories-heading" className="text-lg font-bold tracking-tight flex items-center gap-2">
             Browse Categories
           </h2>
-          <Link href={`/${country}/categories`} className="text-xs font-semibold px-3 py-1.5 rounded-full border border-primary/40 bg-primary/10 text-primary hover:bg-primary/20 transition-colors no-underline hover:no-underline">
+          <Link href={`/${country}/categories`} className="font-semibold px-3 py-1.5 rounded-full text-foreground flex items-center gap-1">
             View All
+            <ArrowRight className="h-4 w-4" />
           </Link>
         </div>
         

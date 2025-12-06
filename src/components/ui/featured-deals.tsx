@@ -1,6 +1,6 @@
 "use client"
 
-import { TrendingDown, HardDrive } from "lucide-react"
+import { TrendingDown, HardDrive, ArrowRight } from "lucide-react"
 import Link from "next/link"
 import { useState } from "react"
 import { getCountryByCode } from "@/lib/countries"
@@ -135,9 +135,10 @@ export function FeaturedDeals({ country = "us" }: { country?: string }) {
          <h2 className="text-lg font-bold tracking-tight flex items-center gap-2">
             Top Value <span className="text-muted-foreground font-normal text-sm hidden xs:inline">/ Low Unit Price</span>
          </h2>
-         <Link href={`/${country}/categories`} className="text-xs font-semibold px-3 py-1.5 rounded-full border border-primary/40 bg-primary/10 text-primary hover:bg-primary/20 transition-colors whitespace-nowrap no-underline hover:no-underline">
+         <Link href={`/${country}/categories`} className="font-semibold px-3 py-1.5 rounded-full text-foreground flex items-center gap-1">
           View All
-        </Link>
+          <ArrowRight className="h-4 w-4" />
+         </Link>
       </div>
 
       <div className="w-full text-sm overflow-hidden rounded-lg border border-border/50">

@@ -114,13 +114,16 @@
 }
 
 @layer base {
+  html {
+    scroll-behavior: smooth;
+  }
   * {
     @apply border-border outline-ring/50;
   }
   body {
     @apply bg-background text-foreground;
   }
-  
+
   /* Accessibility: Links should have underline on hover/focus, not just color */
   a:not(.no-underline):hover,
   a:not(.no-underline):focus-visible {
@@ -128,7 +131,7 @@
     text-decoration-thickness: 1px;
     text-underline-offset: 2px;
   }
-  
+
   /* Improved focus indicators for keyboard navigation */
   *:focus-visible {
     outline: 2px solid hsl(var(--ring));

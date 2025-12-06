@@ -383,7 +383,7 @@ export function HeroTableDemo() {
           style={{ willChange: fadeOut ? "opacity" : "auto" }}
         >
           {/* Sidebar */}
-          <div className="w-32 sm:w-48 border-r border-border bg-muted/20 p-2 sm:p-4 hidden sm:block">
+          <div className="w-28 sm:w-40 border-r border-border bg-muted/20 p-2 sm:p-4 hidden sm:block">
             <div className="space-y-6">
               <div>
                 <div className="text-xs font-semibold text-foreground mb-3">

@@ -198,17 +198,6 @@ export const allCategories: Record<string, Category> = {
     metaDescription:
       "Compare dishwasher tab prices by count. Find the best bulk deals on pods and tablets.",
   },
-
-  // Legacy mappings for backward compatibility
-  storage: {
-    name: "Hard Drives & SSDs",
-    slug: "hard-drives",
-    description: "HDD and SSD storage solutions",
-    icon: HardDrive,
-    parent: "electronics",
-    unitType: "TB",
-    hidden: true,
-  },
   diapers: {
     name: "Diapers",
     slug: "diapers",

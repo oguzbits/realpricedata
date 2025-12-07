@@ -102,13 +102,13 @@ export function SearchModal({ open, onOpenChange }: SearchModalProps) {
 
   const handleLinkClick = (slug: string) => {
     router.push(`/categories/${slug}`);
-    onOpenChange(false);
+    // Don't close modal immediately - let navigation happen smoothly
   };
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent
-        className="max-w-3xl p-0 gap-0 bg-card"
+        className="w-full h-full max-w-full md:h-auto md:max-w-3xl p-0 gap-0 bg-card border-0 md:border rounded-none md:rounded-lg fixed inset-0 md:inset-auto translate-x-0 translate-y-0 md:translate-x-[-50%] md:translate-y-[-50%] md:top-[50%] md:left-[50%]"
         showCloseButton={false}
       >
         <VisuallyHidden>
@@ -119,14 +119,14 @@ export function SearchModal({ open, onOpenChange }: SearchModalProps) {
         </VisuallyHidden>
 
         {/* Search Input Header */}
-        <div className="px-6 pt-6 pb-4 border-b border-border/40">
-          <div className="flex items-center gap-3 px-4 py-3 rounded-xl border border-border bg-background">
-            <Search className="h-5 w-5 text-muted-foreground shrink-0" />
+        <div className="px-4 py-4 md:px-6 md:pt-6 md:pb-4 border-b border-border/40">
+          <div className="flex items-center gap-2 md:gap-3 px-3 py-2.5 md:px-4 md:py-3 rounded-xl border border-border bg-background">
+            <Search className="h-4 w-4 md:h-5 md:w-5 text-muted-foreground shrink-0" />
             <Input
-              placeholder="What are you looking for?"
+              placeholder="Search categories..."
               value={query}
               onChange={(e) => setQuery(e.target.value)}
-              className="border-0 focus-visible:ring-0 text-base h-auto py-0 flex-1 placeholder:text-muted-foreground/50 bg-transparent shadow-none font-medium"
+              className="border-0 focus-visible:ring-0 text-sm md:text-base h-auto py-0 flex-1 placeholder:text-muted-foreground/50 bg-transparent shadow-none font-medium"
               autoFocus
               autoComplete="off"
               data-form-type="other"
@@ -134,23 +134,27 @@ export function SearchModal({ open, onOpenChange }: SearchModalProps) {
               data-1p-ignore="true"
               aria-label="Search for categories and products"
             />
-            <kbd className="px-2 py-1 text-xs border border-border/60 rounded-md bg-muted/50 text-muted-foreground font-mono shrink-0 font-medium">
+            <button
+              onClick={() => onOpenChange(false)}
+              className="px-1.5 py-1 md:px-2 text-[10px] md:text-xs border border-border/60 rounded-md bg-muted/50 text-muted-foreground font-mono shrink-0 font-medium hover:bg-muted hover:text-foreground transition-colors cursor-pointer"
+              aria-label="Close search modal"
+            >
               esc
-            </kbd>
+            </button>
           </div>
         </div>
 
         {/* Content Area */}
-        <div className="max-h-[500px] overflow-y-auto px-6 pb-6 pt-3" role="region" aria-live="polite">
+        <div className="max-h-[500px] overflow-y-auto px-4 pb-4 pt-3 md:px-6 md:pb-6" role="region" aria-live="polite">
           {query === "" ? (
             // Show quick links when no search query
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
               {Object.entries(QUICK_LINKS).map(([section, links]) => (
                 <div key={section}>
                   <h3 className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wider mb-3">
                     {section}
                   </h3>
-                  <div className="space-y-3">
+                  <div className="space-y-2.5 md:space-y-3">
                     {links.map((link, idx) => {
                       const IconComponent = link.icon;
                       // Only calculate selection when in quick links mode (query is empty)
@@ -164,7 +168,7 @@ export function SearchModal({ open, onOpenChange }: SearchModalProps) {
                         <button
                           key={link.slug}
                           onClick={() => handleLinkClick(link.slug)}
-                          className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl border transition-all text-left group cursor-pointer ${
+                          className={`w-full flex items-center gap-2.5 md:gap-3 px-3 py-2.5 md:px-4 md:py-3 rounded-xl border transition-all text-left group cursor-pointer ${
                             isSelected 
                               ? 'border-primary bg-primary/15 shadow-sm' 
                               : 'border-border bg-secondary hover:border-primary hover:bg-primary/10'
@@ -172,7 +176,7 @@ export function SearchModal({ open, onOpenChange }: SearchModalProps) {
                           aria-label={`Navigate to ${link.name} category`}
                         >
                           <IconComponent className="h-4 w-4 shrink-0 text-primary" />
-                          <span className="text-xs font-medium text-primary">
+                          <span className="text-xs md:text-sm font-medium text-primary">
                             {link.name}
                           </span>
                         </button>
@@ -190,7 +194,7 @@ export function SearchModal({ open, onOpenChange }: SearchModalProps) {
                   <h3 className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wider mb-3">
                     Categories
                   </h3>
-                  <div className="space-y-3">
+                  <div className="space-y-2.5 md:space-y-3">
                     {filteredCategories.map((category, idx) => {
                       const IconComponent = category.icon;
                       const isSelected = idx === selectedIndex;
@@ -198,7 +202,7 @@ export function SearchModal({ open, onOpenChange }: SearchModalProps) {
                         <button
                           key={category.slug}
                           onClick={() => handleLinkClick(category.slug)}
-                          className={`w-full flex items-center gap-3 px-4 py-3.5 rounded-xl border transition-all text-left group cursor-pointer ${
+                          className={`w-full flex items-center gap-2.5 md:gap-3 px-3 py-2.5 md:px-4 md:py-3.5 rounded-xl border transition-all text-left group cursor-pointer ${
                             isSelected 
                               ? 'border-primary bg-primary/15 shadow-sm' 
                               : 'border-border bg-secondary hover:border-primary hover:bg-primary/10'
@@ -207,7 +211,7 @@ export function SearchModal({ open, onOpenChange }: SearchModalProps) {
                         >
                           <IconComponent className="h-4 w-4 shrink-0 text-primary" />
                           <div className="flex-1">
-                            <p className="text-sm font-medium text-primary">
+                            <p className="text-xs md:text-sm font-medium text-primary">
                               {category.name}
                             </p>
                             <p className="text-[10px] text-muted-foreground/80 uppercase tracking-wider">
@@ -234,27 +238,6 @@ export function SearchModal({ open, onOpenChange }: SearchModalProps) {
               )}
             </>
           )}
-        </div>
-
-        {/* Footer */}
-        <div className="px-6 py-3 border-t border-border/50 flex items-center justify-between text-xs text-muted-foreground">
-          <div className="flex items-center gap-4">
-            <kbd className="px-1.5 py-0.5 border rounded bg-muted/50 font-mono">
-              ↑↓
-            </kbd>
-            <span>Navigate</span>
-            <kbd className="px-1.5 py-0.5 border rounded bg-muted/50 font-mono">
-              ↵
-            </kbd>
-            <span>Select</span>
-          </div>
-          <div className="flex items-center gap-1">
-            <span>Press</span>
-            <kbd className="px-1.5 py-0.5 border rounded bg-muted/50 font-mono">
-              ⌘K
-            </kbd>
-            <span>to toggle</span>
-          </div>
         </div>
       </DialogContent>
     </Dialog>

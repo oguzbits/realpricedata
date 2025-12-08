@@ -21,7 +21,6 @@
 - **Styling**: [Tailwind CSS](https://tailwindcss.com/)
 - **UI Components**: [shadcn/ui](https://ui.shadcn.com/) (based on Radix UI)
 - **Icons**: [Lucide React](https://lucide.dev/)
-- **Charts**: [Recharts](https://recharts.org/)
 - **Package Manager**: `npm`
 
 ## Architecture & File Structure

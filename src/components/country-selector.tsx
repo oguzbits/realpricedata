@@ -82,8 +82,8 @@ export function CountrySelector() {
             {comingSoonCountries.map((c) => (
               <DropdownMenuItem
                 key={c.code}
-                onClick={() => changeCountry(c.code)}
-                className="cursor-pointer opacity-75"
+                disabled
+                className="cursor-not-allowed opacity-60"
               >
                 <div className="flex items-center justify-between w-full">
                   <div className="flex items-center gap-3">
@@ -97,9 +97,6 @@ export function CountrySelector() {
                     <Badge variant="outline" className="text-xs">
                       Soon
                     </Badge>
-                    {country === c.code && (
-                      <Check className="h-4 w-4 text-primary" />
-                    )}
                   </div>
                 </div>
               </DropdownMenuItem>

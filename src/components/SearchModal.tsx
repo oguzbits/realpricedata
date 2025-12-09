@@ -119,7 +119,7 @@ export function SearchModal({ open, onOpenChange }: SearchModalProps) {
 
   const handleLinkClick = (slug: string) => {
     router.push(`/categories/${slug}`);
-    // Don't close modal immediately - let navigation happen smoothly
+    onOpenChange(false);
   };
 
   return (
@@ -143,7 +143,7 @@ export function SearchModal({ open, onOpenChange }: SearchModalProps) {
               placeholder="Search categories..."
               value={query}
               onChange={(e) => setQuery(e.target.value)}
-              className="border-0 focus-visible:ring-0 text-sm md:text-base h-auto py-0 flex-1 placeholder:text-muted-foreground/50 bg-transparent shadow-none font-medium"
+              className="border-0 focus-visible:ring-0 text-base h-auto py-0 flex-1 placeholder:text-muted-foreground/50 bg-transparent shadow-none font-medium"
               autoFocus
               autoComplete="off"
               data-form-type="other"

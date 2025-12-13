@@ -2,7 +2,6 @@
 
 # dependencies
 /node_modules
-.next
 /.pnp
 .pnp.*
 .yarn/*
@@ -11,16 +10,12 @@
 !.yarn/releases
 !.yarn/versions
 
-# bun
-bun.lockb
-
 # testing
 /coverage
 
 # next.js
 /.next/
 /out/
-next-env.d.ts
 
 # production
 /build

@@ -8,29 +8,15 @@ export function HeroSearch({ isSticky = false }: { isSticky?: boolean }) {
   const [searchOpen, setSearchOpen] = useState(false)
 
   useEffect(() => {
-    // Inject styles on client side only to avoid hydration mismatch
-    const styleId = 'hero-search-styles'
-    if (!document.getElementById(styleId)) {
+    // Only inject styles once on client side
+    if (!document.getElementById('hero-search-animation')) {
       const style = document.createElement('style')
-      style.id = styleId
+      style.id = 'hero-search-animation'
       style.textContent = `
         @keyframes border-flow {
           0%, 100% { border-color: hsl(220, 100%, 60%); }
           33% { border-color: hsl(280, 100%, 65%); }
           66% { border-color: hsl(320, 100%, 65%); }
-        }
-        
-        .search-with-animated-border {
-          border: 2px solid hsl(220, 100%, 60%);
-          border-radius: 1rem;
-          background: hsl(var(--card));
-          animation: border-flow 4s ease-in-out infinite;
-        }
-        
-        .search-with-animated-border:hover {
-          box-shadow: 
-            0 0 20px hsla(220, 100%, 60%, 0.2),
-            0 0 40px hsla(280, 100%, 65%, 0.1);
         }
       `
       document.head.appendChild(style)
@@ -41,7 +27,11 @@ export function HeroSearch({ isSticky = false }: { isSticky?: boolean }) {
     <>
       <button
         onClick={() => setSearchOpen(true)}
-        className="search-with-animated-border group w-full flex items-center gap-3 sm:gap-4 px-4 sm:px-6 py-3 sm:py-4 transition-all cursor-text"
+        className="search-with-animated-border group w-full flex items-center gap-3 sm:gap-4 px-4 sm:px-6 py-3 sm:py-4 transition-all cursor-text rounded-2xl bg-card border-2 shadow-sm hover:shadow-lg"
+        style={{
+          borderColor: 'hsl(220, 100%, 60%)',
+          animation: 'border-flow 4s ease-in-out infinite'
+        }}
         aria-label="Open search"
       >
         <Search className="h-5 w-5 sm:h-6 sm:w-6 text-primary shrink-0" />

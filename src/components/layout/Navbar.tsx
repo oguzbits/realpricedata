@@ -3,6 +3,7 @@
 import * as React from "react"
 import Link from "next/link"
 import Image from "next/image"
+import { usePathname } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { Moon, Sun, Search } from "lucide-react"
 import { useTheme } from "next-themes"
@@ -19,6 +20,7 @@ import { SearchModal } from "@/components/SearchModal"
 
 export function Navbar() {
   const { setTheme, theme } = useTheme()
+  const pathname = usePathname()
   const [mounted, setMounted] = React.useState(false)
   const [searchOpen, setSearchOpen] = React.useState(false)
   const [showSearch, setShowSearch] = React.useState(false)
@@ -43,6 +45,11 @@ export function Navbar() {
       const heroSearchElement = document.querySelector('.search-with-animated-border')
       if (heroSearchElement) {
         observer.observe(heroSearchElement)
+        // Check initial state
+        setShowSearch(!heroSearchElement.getBoundingClientRect().top || heroSearchElement.getBoundingClientRect().top < 0)
+      } else {
+        // No hero element found - show navbar search by default
+        setShowSearch(true)
       }
     }, 100)
 
@@ -53,12 +60,13 @@ export function Navbar() {
         observer.unobserve(heroSearchElement)
       }
     }
-  }, [])
+  }, [pathname]) // Re-run when route changes
 
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-backdrop-filter:bg-background/60">
-      <div className="container flex h-14 items-center justify-between mx-auto px-2 sm:px-4">
-        <div className="flex items-center gap-2 sm:gap-6">
+      <div className="container flex h-16 items-center mx-auto px-2 sm:px-4">
+        {/* Left: Logo */}
+        <div className="flex items-center gap-2 sm:gap-6 shrink-0">
           <Link href="/" className="flex items-center space-x-2 no-underline">
             <Image 
               src="/icon-192.png" 
@@ -71,41 +79,47 @@ export function Navbar() {
           </Link>
         </div>
 
-        <TooltipProvider>
-          <div className="flex items-center gap-1 sm:gap-2">
-            {/* Conditional Search Button - shows when hero is scrolled out */}
-            <div className={`transition-all duration-300 ${showSearch ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-2 pointer-events-none'}`}>
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <button
-                    type="button"
-                    onClick={() => setSearchOpen(true)}
-                    className="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-md border border-border bg-muted/50 hover:bg-muted transition-colors cursor-pointer min-w-[240px]"
-                    aria-label="Open search"
-                  >
-                    <Search className="h-4 w-4 text-muted-foreground" />
-                    <span className="text-sm text-muted-foreground flex-1 text-left">Search...</span>
-                    <kbd className="hidden lg:inline-flex items-center gap-1 px-2 py-0.5 text-xs border rounded bg-background">
-                      ⌘K
-                    </kbd>
-                  </button>
-                </TooltipTrigger>
-                <TooltipContent>
-                  <p>Search products</p>
-                </TooltipContent>
-              </Tooltip>
+        {/* Center: Global Search Button - shows when hero is scrolled out */}
+        <div className={`flex-1 flex justify-center px-4 transition-all duration-300 ${showSearch ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-2 pointer-events-none'}`}>
+          <TooltipProvider>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <button
+                  type="button"
+                  onClick={() => setSearchOpen(true)}
+                  className="hidden sm:flex items-center gap-3 px-4 py-2 rounded-md border border-border bg-card hover:bg-card/80 hover:border-primary/50 transition-all duration-200 cursor-pointer w-full max-w-[320px] lg:max-w-[400px] shadow-sm"
+                  aria-label="Search all products"
+                >
+                  <Search className="h-4 w-4 text-muted-foreground" />
+                  <span className="text-sm text-muted-foreground flex-1 text-left">Search all products...</span>
+                  <kbd className="hidden lg:inline-flex items-center gap-1 px-2 py-0.5 text-xs border rounded bg-background/80 text-muted-foreground font-medium">
+                    ⌘K
+                  </kbd>
+                </button>
+              </TooltipTrigger>
+              <TooltipContent>
+                <p>Search all products</p>
+              </TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
+        </div>
 
-              {/* Mobile Search Button */}
+        {/* Right: Controls */}
+        <TooltipProvider>
+          <div className="flex items-center gap-1 sm:gap-2 shrink-0">
+            {/* Mobile Search Button */}
+            <div className={`transition-all duration-300 ${showSearch ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-2 pointer-events-none'}`}>
               <Tooltip>
                 <TooltipTrigger asChild>
                   <Button
                     variant="ghost"
                     size="icon"
-                    className="sm:hidden cursor-pointer"
+                    className="sm:hidden cursor-pointer relative"
                     onClick={() => setSearchOpen(true)}
                     aria-label="Open search"
                   >
-                    <Search className="h-5 w-5" />
+                    <div className="absolute inset-0 rounded-md bg-primary/10 blur-sm" />
+                    <Search className="h-5 w-5 text-primary relative z-10" />
                   </Button>
                 </TooltipTrigger>
                 <TooltipContent>

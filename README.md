@@ -165,14 +165,24 @@ Analytics and Speed Insights automatically activate on Vercel deployment.
 
 ## License
 
-Private project.
+Private project – see the [LICENSE](LICENSE) file for details.
 
 ---
 
-## Resources
+## About this repository
 
-- [Next.js Documentation](https://nextjs.org/docs)
-- [Tailwind CSS Documentation](https://tailwindcss.com/docs)
-- [shadcn/ui Documentation](https://ui.shadcn.com)
-- [nuqs Documentation](https://nuqs.47ng.com/)
-- [Vercel Analytics Documentation](https://vercel.com/docs/analytics)
+This project powers **realpricedata.com** and is published publicly as a
+professional portfolio project.
+
+The source code is available for:
+
+- Code review
+- Architectural evaluation
+- Learning and discussion
+
+The source code is **not licensed** for:
+
+- Commercial use
+- Redistribution
+- Deployment
+- Derivative works

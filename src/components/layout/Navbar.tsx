@@ -84,14 +84,14 @@ export function Navbar() {
         </div>
 
         {/* Center: Global Search Button - shows when hero is scrolled out */}
-        <div className={`flex-1 flex justify-center px-4 transition-all duration-300 ${showSearch ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-2 pointer-events-none'}`}>
+        <div className={`flex-1 flex justify-center px-4 ${showSearch ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-2 pointer-events-none'}`}>
           <TooltipProvider>
             <Tooltip>
               <TooltipTrigger asChild>
                 <button
                   type="button"
                   onClick={() => setSearchOpen(true)}
-                  className="hidden sm:flex items-center gap-3 px-4 py-2 rounded-md border border-border bg-card hover:bg-card/80 hover:border-primary/50 transition-all duration-200 cursor-pointer w-full max-w-[320px] lg:max-w-[400px] shadow-sm"
+                  className="hidden sm:flex items-center gap-3 px-4 py-2 rounded-md border border-border bg-card hover:bg-card/80 hover:border-primary/50 cursor-pointer w-full max-w-[320px] lg:max-w-[400px] shadow-sm"
                   aria-label="Search all products"
                 >
                   <Search className="h-4 w-4 text-muted-foreground" />
@@ -112,25 +112,23 @@ export function Navbar() {
         <TooltipProvider>
           <div className="flex items-center gap-1 sm:gap-2 shrink-0">
             {/* Mobile Search Button */}
-            <div className={`transition-all duration-300 ${showSearch ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-2 pointer-events-none'}`}>
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    className="sm:hidden cursor-pointer relative"
-                    onClick={() => setSearchOpen(true)}
-                    aria-label="Open search"
-                  >
-                    <div className="absolute inset-0 rounded-md bg-primary/10 blur-sm" />
-                    <Search className="h-5 w-5 text-primary relative z-10" />
-                  </Button>
-                </TooltipTrigger>
-                <TooltipContent>
-                  <p>Search products</p>
-                </TooltipContent>
-              </Tooltip>
-            </div>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="sm:hidden cursor-pointer relative"
+                  onClick={() => setSearchOpen(true)}
+                  aria-label="Open search"
+                >
+                  <div className="absolute inset-0 rounded-md bg-primary/10 blur-sm" />
+                  <Search className="h-5 w-5 text-primary relative z-10" />
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent>
+                <p>Search products</p>
+              </TooltipContent>
+            </Tooltip>
 
             <CountrySelector />
 

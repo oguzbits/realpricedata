@@ -45,96 +45,9 @@ import { getCategoryBySlug, getBreadcrumbs, getCategoryPath } from "@/lib/catego
 import { isValidCountryCode, DEFAULT_COUNTRY, getCountryByCode } from "@/lib/countries"
 import { useProductFilters } from "@/hooks/use-product-filters"
 import { trackSEO } from "@/lib/analytics"
+import { getProductsByCategory, getAffiliateRedirectPath, type Product } from "@/lib/product-registry"
 
-// Types
-type Product = {
-  id: number
-  name: string
-  price: number
-  capacity: number // in GB
-  capacityUnit: 'GB' | 'TB'
-  pricePerTB: number
-  warranty: string
-  formFactor: string
-  technology: 'HDD' | 'SSD' | 'SAS'
-  condition: 'New' | 'Used' | 'Renewed'
-  affiliateLink: string
-  brand: string
-}
 
-// Authentic storage products data
-const authenticStorageProducts: Product[] = [
-  {
-    id: 101,
-    name: "SAMSUNG 990 PRO SSD 2TB NVMe M.2 PCIe Gen4",
-    price: 197.99,
-    capacity: 2000,
-    capacityUnit: 'TB',
-    pricePerTB: 98.995,
-    warranty: "5 years",
-    formFactor: "M.2 NVMe",
-    technology: "SSD",
-    condition: "New",
-    affiliateLink: "https://amzn.to/48yJXRZ",
-    brand: "Samsung"
-  },
-  {
-    id: 102,
-    name: "Seagate Exos X18 18TB Enterprise HDD",
-    price: 319.99,
-    capacity: 18000,
-    capacityUnit: 'TB',
-    pricePerTB: 17.77,
-    warranty: "5 years",
-    formFactor: "Internal 3.5\"",
-    technology: "HDD",
-    condition: "Used",
-    affiliateLink: "https://amzn.to/4a1mQ50",
-    brand: "Seagate"
-  },
-  {
-    id: 103,
-    name: "WD_BLACK 2TB SN850X NVMe Internal Gaming SSD",
-    price: 176.90,
-    capacity: 2000,
-    capacityUnit: 'TB',
-    pricePerTB: 88.45,
-    warranty: "5 years",
-    formFactor: "M.2 NVMe",
-    technology: "SSD",
-    condition: "New",
-    affiliateLink: "https://amzn.to/4oFAfUa",
-    brand: "Western Digital"
-  },
-  {
-    id: 104,
-    name: "Crucial MX500 2TB 3D NAND SATA 2.5 Inch Internal SSD",
-    price: 134.99,
-    capacity: 2000,
-    capacityUnit: 'TB',
-    pricePerTB: 67.495,
-    warranty: "5 years",
-    formFactor: "Internal 2.5\"",
-    technology: "SSD",
-    condition: "New",
-    affiliateLink: "https://amzn.to/4pQefqv",
-    brand: "Crucial"
-  },
-  {
-    id: 105,
-    name: "SanDisk 1TB Extreme Portable SSD",
-    price: 109.99,
-    capacity: 1000,
-    capacityUnit: 'TB',
-    pricePerTB: 109.99,
-    warranty: "3 years",
-    formFactor: "External 2.5\"",
-    technology: "SSD",
-    condition: "New",
-    affiliateLink: "https://amzn.to/3KGJYeO",
-    brand: "SanDisk"
-  }
-];
 
 export default function CategoryProductsPage() {
   const params = useParams()
@@ -163,15 +76,14 @@ export default function CategoryProductsPage() {
   // Use nuqs for URL-synchronized filters
   const { filters, setSearch, toggleArrayFilter, setCapacityRange, setSort, clearAllFilters } = useProductFilters()
 
-  // Determine if this category has products (for now, only hard-drives)
-  const hasProducts = categorySlug === 'hard-drives' || categorySlug === 'storage'
-  const currentProducts = hasProducts ? authenticStorageProducts : []
+  // Load products from Product Registry
+  const currentProducts = getProductsByCategory(categorySlug)
   
   // Apply filters
   let filteredProducts = [...currentProducts]
 
   if (filters.search) {
-    filteredProducts = filteredProducts.filter(p => p.name.toLowerCase().includes(filters.search.toLowerCase()))
+    filteredProducts = filteredProducts.filter(p => p.title.toLowerCase().includes(filters.search.toLowerCase()))
   }
 
   if (filters.condition && filters.condition.length > 0) {
@@ -232,7 +144,7 @@ export default function CategoryProductsPage() {
   // Vercel Analytics is cookieless - no consent needed!
   const handleAffiliateClick = (product: Product, index: number) => {
     trackSEO.affiliateClick({
-      productName: product.name,
+      productName: product.title,
       category: categorySlug,
       country: validCountry,
       price: product.price,
@@ -315,7 +227,7 @@ export default function CategoryProductsPage() {
               <h1 className="text-xl sm:text-2xl font-bold tracking-tight">{category.name}</h1>
             </div>
             <p className="text-muted-foreground text-xs sm:text-sm">
-              {hasProducts ? `Showing ${filteredProducts.length} products` : category.description}
+              {currentProducts.length > 0 ? `Showing ${filteredProducts.length} products` : category.description}
             </p>
           </div>
 
@@ -351,7 +263,7 @@ export default function CategoryProductsPage() {
         </div>
 
         <div className="flex gap-6">
-          {hasProducts ? (
+          {currentProducts.length > 0 ? (
             <>
               {/* Desktop Sidebar */}
               <aside className="hidden lg:block w-60 shrink-0">
@@ -458,13 +370,13 @@ export default function CategoryProductsPage() {
                             </TableCell>
                             <TableCell>
                               <a 
-                                href={product.affiliateLink}
+                                href={getAffiliateRedirectPath(product.slug)}
                                 onClick={() => handleAffiliateClick(product, filteredProducts.indexOf(product))}
                                 target="_blank" 
                                 rel="noopener noreferrer"
                                 className="text-primary underline text-sm line-clamp-2 block"
                               >
-                                {product.name}
+                                {product.title}
                               </a>
                             </TableCell>
                           </TableRow>

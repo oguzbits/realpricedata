@@ -50,8 +50,8 @@ export async function HomeContent({ country }: { country: string }) {
       {/* Top Banner */}
       <div className="w-full bg-[#B22222] py-2 px-4 flex items-center justify-center gap-3 text-white text-center">
         <Image src="/icon-192.png" alt="Promo" width={24} height={24} className="invert hidden sm:block" />
-        <p className="text-sm font-bold tracking-tight">Track prices and save on your holiday shopping! 🎁</p>
-        <Link href={`/${country}/categories`} className="text-xs underline font-bold ml-2 whitespace-nowrap">Shop Now →</Link>
+        <p className="text-sm font-bold tracking-tight">Compare real-time deals and save big this holiday! 🎁</p>
+<Link href={`/${country}/categories`} className="text-xs underline font-bold ml-2 whitespace-nowrap">Shop Now →</Link>
       </div>
 
       <div className="flex flex-col gap-2 sm:gap-4 md:gap-8 pt-4">

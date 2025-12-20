@@ -15,10 +15,10 @@ export function Footer() {
                 height={24}
                 className="w-6 h-6"
               />
-              <h3 className="text-lg font-semibold">
-                <span className="text-[#E53935] dark:text-[#EF5350]">Real</span>
-                <span className="text-[#FB8C00] dark:text-[#FFA726]">Price</span>
-                <span className="text-[#FBC02D] dark:text-[#FDD835]">Data</span>
+              <h3 className="text-lg font-black tracking-tight">
+                <span className="text-(--ccc-red)">Real</span>
+                <span className="text-(--ccc-orange)">Price</span>
+                <span className="text-(--ccc-yellow)">Data</span>
               </h3>
             </div>
             <p className="text-sm text-muted-foreground max-w-xs">

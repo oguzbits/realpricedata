@@ -76,17 +76,17 @@ export async function HomeContent({ country }: { country: string }) {
         <section className="container px-4 mx-auto pt-4 sm:pt-8 md:pt-12 pb-10">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center mb-16">
             <div className="max-w-2xl text-left order-1 lg:order-1">
-              <h1 className="text-4xl sm:text-5xl md:text-6xl font-black tracking-tighter mb-6 leading-[1.05] text-foreground">
+              <h1 className="text-4xl sm:text-5xl md:text-6xl font-black tracking-tighter mb-6 leading-[1.05] text-[#1a1a1a] dark:text-foreground">
                 Save money on your <br />
-                <span className="text-primary">next Amazon purchase.</span>
+                <span className="text-(--hero-emphasis)">next Amazon purchase.</span>
               </h1>
               <p className="text-lg md:text-xl text-muted-foreground mb-8 leading-relaxed max-w-xl">
                 <strong className="font-black tracking-tight">
-                  <span className="text-brand-real">real</span>
-                  <span className="text-brand-price">price</span>
-                  <span className="text-brand-data">data</span>
+                  <span className="text-(--ccc-red)">Real</span>
+                  <span className="text-(--ccc-orange)">Price</span>
+                  <span className="text-(--ccc-yellow)">Data</span>
                   <span className="text-muted-foreground/60">.com</span>
-                </strong> is a premium Amazon price tracker and unit-price calculator to ensure you never overpay again.
+                </strong> is an Amazon price tracker and unit-price calculator to ensure you never overpay again.
               </p>
 
               <div className="flex flex-col gap-6">
@@ -125,23 +125,12 @@ export async function HomeContent({ country }: { country: string }) {
           </div>
 
           {/* Highlighted Deals Section */}
-          <div className="mb-16">
-            <div className="mb-6 border-b border-border pb-2">
-              <Link href={`/${country}/categories`} className="group">
-                <h2 className="text-xl sm:text-2xl font-black tracking-tight text-primary transition-all inline-flex items-center gap-2">
-                  Highlighted Deals <span className="text-foreground transition-transform group-hover:translate-x-1">→</span>
-                </h2>
-              </Link>
-              <p className="text-sm text-muted-foreground mt-1">These are outstanding deals we've found and feel are worth sharing.</p>
-            </div>
-            <HeroDealCards />
+          <HeroDealCards />
+
+          <div className="container px-4 mx-auto pb-6 sm:pb-12">
+            <PopularProducts products={uiProducts} />
+            <PriceDrops products={mockPriceDrops} />
           </div>
-
-          {/* Popular Products Section */}
-          <PopularProducts products={mockPopularProducts} />
-
-          {/* Price Drops Section */}
-          <PriceDrops products={mockPriceDrops} />
 
         </section>
       </div>

@@ -46,9 +46,14 @@ const getTopDeals = (): ProductWithDiscount[] => {
     .slice(0, 3)
 }
 
+import React, { useRef } from "react";
+import { SectionHeader } from "@/components/SectionHeader";
+import { Carousel, CarouselRef } from "@/components/Carousel";
+
 export function HeroDealCards() {
   const { country } = useCountry();
   const countryConfig = getCountryByCode(country);
+  const carouselRef = useRef<CarouselRef>(null);
 
   const highlightedDeals = getTopDeals();
 
@@ -67,7 +72,16 @@ export function HeroDealCards() {
   const avgUnitValue = productsWithUnitValue.reduce((acc, p) => acc + p.unitValue, 0) / (productsWithUnitValue.length || 1);
 
   return (
-    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
+    <section className="mb-16">
+      <SectionHeader 
+        title="Highlighted Deals"
+        description="These are outstanding deals we've found and feel are worth sharing."
+        href={`/${country}/categories`}
+        onScrollLeft={() => carouselRef.current?.scrollLeft()}
+        onScrollRight={() => carouselRef.current?.scrollRight()}
+      />
+
+      <Carousel ref={carouselRef}>
         {productsWithUnitValue.map((product) => {
           let badgeText = undefined;
           if (product.unitValue === minUnitValue && minUnitValue !== Infinity) {
@@ -90,6 +104,7 @@ export function HeroDealCards() {
             />
           );
         })}
-      </div>
+      </Carousel>
+    </section>
   );
 }

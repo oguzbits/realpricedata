@@ -1,29 +1,29 @@
-"use client"
+"use client";
 
-import Link from "next/link"
-import { Badge } from "@/components/ui/badge"
-import { useCountry } from "@/hooks/use-country"
-import { getCountryByCode } from "@/lib/countries"
-import { ProductCard } from "@/components/product-card"
-import { ProductUIModel } from "@/lib/amazon-api"
+import React from "react";
+import { useCountry } from "@/hooks/use-country";
+import { getCountryByCode } from "@/lib/countries";
+import { ProductCard } from "@/components/product-card";
+import { ProductUIModel } from "@/lib/amazon-api";
+import { SectionHeader } from "@/components/SectionHeader";
+import { Carousel, CarouselRef } from "@/components/Carousel";
 
 interface PopularProductsProps {
-  products: ProductUIModel[]
+  products: ProductUIModel[];
 }
 
 export function PopularProducts({ products }: PopularProductsProps) {
   const { country } = useCountry()
   const countryConfig = getCountryByCode(country)
+  const [category, setCategory] = React.useState("all");
+  const carouselRef = React.useRef<CarouselRef>(null);
 
-  const formatCurrency = (value: number) => {
-    return new Intl.NumberFormat(countryConfig?.locale || "en-US", {
-      style: "currency",
-      currency: countryConfig?.currency || "USD",
-    }).format(value)
-  }
+  const filteredProducts = category === "all" 
+    ? products 
+    : products.filter(p => p.category.toLowerCase() === category.toLowerCase());
 
   // Extract numeric price per unit for comparison
-  const productsWithUnitValue = products.map(p => {
+  const productsWithUnitValue = filteredProducts.map(p => {
     const match = p.pricePerUnit?.match(/[\d.]+/);
     return {
       ...p,
@@ -32,22 +32,29 @@ export function PopularProducts({ products }: PopularProductsProps) {
   });
 
   const minUnitValue = Math.min(...productsWithUnitValue.map(p => p.unitValue));
-  const avgUnitValue = productsWithUnitValue.reduce((acc, p) => acc + p.unitValue, 0) / productsWithUnitValue.length;
+  const avgUnitValue = productsWithUnitValue.reduce((acc: number, p: { unitValue: number }) => acc + p.unitValue, 0) / (productsWithUnitValue.length || 1);
+
+  const categories = [
+    { label: "All Products", value: "all" },
+    { label: "Hard Drives", value: "harddrives" },
+    { label: "SSD", value: "ssd" },
+    { label: "RAM", value: "ram" }
+  ];
 
   return (
-    <section className="mb-12">
-      <div className="mb-6 border-b border-border pb-2">
-        <Link href={`/${country}/categories`} className="group">
-          <h2 className="text-xl sm:text-2xl font-black tracking-tight text-primary transition-all inline-flex items-center gap-2">
-            Popular Products <span className="text-foreground transition-transform group-hover:translate-x-1">→</span>
-          </h2>
-        </Link>
-        <p className="text-sm text-muted-foreground mt-1">
-          Check out these recently popular deals. See what other informed users have been buying recently!
-        </p>
-      </div>
+    <section className="mb-16">
+      <SectionHeader 
+        title="Popular Products"
+        description="The most-viewed products right now, analyzed and compared for total value."
+        href={`/${country}/categories`}
+        onScrollLeft={() => carouselRef.current?.scrollLeft()}
+        onScrollRight={() => carouselRef.current?.scrollRight()}
+        categories={categories}
+        selectedCategory={category}
+        onCategoryChange={setCategory}
+      />
 
-      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
+      <Carousel ref={carouselRef}>
         {productsWithUnitValue.map((product) => {
           let badgeText = undefined;
           if (product.unitValue === minUnitValue && minUnitValue !== Infinity) {
@@ -70,7 +77,7 @@ export function PopularProducts({ products }: PopularProductsProps) {
             />
           );
         })}
-      </div>
+      </Carousel>
     </section>
   );
 }

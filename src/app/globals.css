@@ -52,7 +52,7 @@
   --radius: 0.75rem;
 
   /* Light Mode - Refined Neutrals */
-  --background: oklch(0.98 0.005 240);
+  --background: #FEFEFE;
   --foreground: oklch(0.2 0.02 240);
   --card: oklch(1 0 0);
   --card-foreground: oklch(0.2 0.02 240);
@@ -64,12 +64,12 @@
   --primary-foreground: oklch(0.985 0 0);
 
   /* Secondary - Soft Slate */
-  --secondary: oklch(0.92 0.01 240);
-  --secondary-foreground: oklch(0.3 0.02 240);
+  --secondary: oklch(0.94 0.005 240);
+  --secondary-foreground: oklch(0.3 0.01 240);
 
-  /* Muted - Soft Grey-Blue */
-  --muted: oklch(0.96 0.01 240);
-  --muted-foreground: oklch(0.45 0.02 240);
+  /* Muted - Soft Grey */
+  --muted: oklch(0.97 0.005 240);
+  --muted-foreground: oklch(0.45 0.01 240);
 
   /* Accent */
   --accent: oklch(0.92 0.01 240);
@@ -78,8 +78,8 @@
   --destructive: oklch(0.55 0.22 25);
   --destructive-foreground: oklch(1 0 0);
 
-  --border: oklch(0.9 0.01 240);
-  --input: oklch(0.9 0.01 240);
+  --border: oklch(0.92 0.005 240);
+  --input: oklch(0.92 0.005 240);
   --ring: oklch(0.55 0.2 260);
 
   /* Brand Constants */
@@ -93,13 +93,13 @@
   --chart-4: oklch(0.6 0.2 170);
   --chart-5: oklch(0.5 0.25 140);
 
-  --sidebar: oklch(0.99 0.005 240);
-  --sidebar-foreground: oklch(0.2 0.02 240);
+  --sidebar: oklch(0.995 0.002 240);
+  --sidebar-foreground: oklch(0.2 0.01 240);
   --sidebar-primary: oklch(0.55 0.2 260);
   --sidebar-primary-foreground: oklch(1 0 0);
-  --sidebar-accent: oklch(0.94 0.01 240);
-  --sidebar-accent-foreground: oklch(0.2 0.02 240);
-  --sidebar-border: oklch(0.9 0.01 240);
+  --sidebar-accent: oklch(0.96 0.005 240);
+  --sidebar-accent-foreground: oklch(0.2 0.01 240);
+  --sidebar-border: oklch(0.92 0.005 240);
   --sidebar-ring: oklch(0.55 0.22 255);
 
   /* CamelCamelCamel Branding */
@@ -161,6 +161,7 @@
   }
   body {
     @apply bg-background text-foreground;
+    overflow-x: clip;
   }
 
   /* Accessibility: Links should have underline on hover/focus, not just color */

@@ -63,7 +63,7 @@ export function HeroTableDemo() {
     >
       {/* Background Glow */}
       <div
-        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[110%] h-[110%] bg-primary/10 rounded-full blur-[120px] -z-10"
+        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full bg-primary/10 rounded-full blur-[120px] -z-10"
         aria-hidden="true"
       />
 
@@ -287,7 +287,7 @@ export function HeroTableDemo() {
       </Card>
 
       {/* Floating Insight - Always visible */}
-      <div className="absolute -right-6 top-1/3 bg-background/90 backdrop-blur-md p-3 rounded-xl border border-primary/30 shadow-xl max-w-[180px] animate-in fade-in slide-in-from-right-4 duration-700">
+      <div className="absolute -right-2 sm:-right-6 top-1/3 bg-background/90 backdrop-blur-md p-3 rounded-xl border border-primary/30 shadow-xl max-w-[180px] animate-in fade-in slide-in-from-right-4 duration-700">
         <div className="flex items-start gap-2">
           <div className="p-1.5 bg-primary/10 rounded-full shrink-0">
             <Check className="w-3 h-3 text-primary" />

@@ -63,7 +63,7 @@ export function ProductCard({
       href={url}
       target="_blank"
       rel="noopener noreferrer"
-      className="group relative flex flex-col p-4 rounded-2xl border border-border/60 bg-card hover:border-primary/50 hover:bg-accent/5 transition-all shadow-sm hover:shadow-xl no-underline w-[280px] sm:w-[300px] shrink-0 h-full"
+      className="group relative flex flex-col p-4 rounded-2xl border border-border/60 bg-card no-underline w-[280px] sm:w-[300px] shrink-0 h-full shadow-sm"
     >
       <div className="absolute top-3 left-3 z-10">
         {badgeText && (badgeText === "Best Price" || badgeText === "Good Deal") && (
@@ -76,14 +76,13 @@ export function ProductCard({
       </div>
 
       {/* Image Placeholder with Icon */}
-      <div className="relative aspect-square bg-muted/20 dark:bg-muted/10 rounded-xl mb-4 overflow-hidden flex items-center justify-center p-5 transition-all duration-500 group-hover:bg-primary/5">
-        <Package className="w-16 h-16 text-muted-foreground/10 stroke-1 group-hover:text-primary/20 transition-colors" />
-        <div className="absolute inset-0 bg-linear-to-tr from-primary/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+      <div className="relative aspect-square bg-muted/20 dark:bg-muted/10 rounded-xl mb-4 overflow-hidden flex items-center justify-center p-5">
+        <Package className="w-16 h-16 text-muted-foreground/10 stroke-1" />
       </div>
 
       {/* Title - Improved Readability based on CCC */}
       <div className="h-[3.2rem] mb-4 overflow-hidden">
-        <h3 className="text-base font-bold text-foreground leading-[1.6] group-hover:text-primary transition-colors line-clamp-2">
+        <h3 className="text-base font-bold text-foreground leading-[1.6] line-clamp-2">
           {title}
         </h3>
       </div>
@@ -113,7 +112,6 @@ export function ProductCard({
 
         {/* CTA Button */}
         <div className="relative pt-0.5">
-          <div className="absolute -inset-0.5 bg-linear-to-r from-[#FFD814] to-[#F7CA00] rounded-xl blur opacity-0 group-hover:opacity-40 transition-opacity" />
           <button className="relative w-full py-2.5 bg-[#FFD814] hover:bg-[#F7CA00] text-black font-black text-sm rounded-xl shadow-sm border border-[#FCD200]/50 transition-all cursor-pointer overflow-hidden active:scale-[0.98]">
             <span className="relative z-10">View on Amazon</span>
           </button>

@@ -116,7 +116,7 @@ export function SearchModal({ open, onOpenChange }: SearchModalProps) {
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent
-        className="w-[calc(100%-2rem)] max-w-3xl p-0 gap-0 bg-card border-border rounded-[2rem] shadow-2xl overflow-hidden focus:outline-none"
+        className="w-[calc(100%-2rem)] max-w-3xl p-0 gap-0 bg-card border-border rounded-4xl shadow-2xl overflow-hidden focus:outline-none"
       >
         {/* Search Input Header */}
         <div className="relative px-6 py-10 md:px-12 md:py-16 border-b border-border/10 flex flex-col items-center gap-10 bg-linear-to-b from-primary/10 via-primary/5 to-transparent">
@@ -178,10 +178,10 @@ export function SearchModal({ open, onOpenChange }: SearchModalProps) {
                         <button
                           key={link.slug}
                           onClick={() => handleLinkClick(link.slug)}
-                          className={`w-full flex items-center gap-4 px-5 py-4 rounded-2xl border transition-all text-left group cursor-pointer ${
+                          className={`w-full flex items-center gap-4 px-5 py-4 rounded-2xl border text-left group cursor-pointer ${
                             isSelected 
                               ? 'border-primary bg-primary/10 shadow-sm ring-1 ring-primary/20' 
-                              : 'border-border bg-secondary/50 hover:border-primary/30 hover:bg-primary/5'
+                              : 'border-border bg-secondary/50'
                           }`}
                           aria-label={`Navigate to ${link.name} category`}
                         >
@@ -214,10 +214,10 @@ export function SearchModal({ open, onOpenChange }: SearchModalProps) {
                         <button
                           key={category.slug}
                           onClick={() => handleLinkClick(category.slug)}
-                          className={`w-full flex items-center gap-4 px-5 py-4 rounded-2xl border transition-all text-left group cursor-pointer ${
+                          className={`w-full flex items-center gap-4 px-5 py-4 rounded-2xl border text-left group cursor-pointer ${
                             isSelected 
                               ? 'border-primary bg-primary/10 shadow-sm ring-1 ring-primary/20' 
-                              : 'border-border bg-secondary/50 hover:border-primary/30 hover:bg-primary/5'
+                              : 'border-border bg-secondary/50'
                           }`}
                           aria-label={`Navigate to ${category.name} category`}
                         >

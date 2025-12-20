@@ -82,9 +82,9 @@ export async function HomeContent({ country }: { country: string }) {
               </h1>
               <p className="text-lg md:text-xl text-muted-foreground mb-8 leading-relaxed max-w-xl">
                 <strong className="font-black tracking-tight">
-                  <span className="text-(--ccc-red)">Real</span>
-                  <span className="text-(--ccc-orange)">Price</span>
-                  <span className="text-(--ccc-yellow)">Data</span>
+                  <span className="text-(--ccc-red)">real</span>
+                  <span className="text-(--ccc-orange)">price</span>
+                  <span className="text-(--ccc-yellow)">data</span>
                   <span className="text-muted-foreground/60">.com</span>
                 </strong> is an Amazon price tracker and unit-price calculator to ensure you never overpay again.
               </p>

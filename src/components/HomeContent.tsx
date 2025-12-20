@@ -3,23 +3,40 @@ import { HeroDealCards } from "@/components/hero-deal-cards";
 import { HeroTableDemo } from "@/components/hero-table-demo";
 import { PopularProducts } from "@/components/PopularProducts";
 import { PriceDrops } from "@/components/PriceDrops";
-import { MockAmazonAPI } from "@/lib/amazon-api";
-import { getAllCountries } from "@/lib/countries";
+import { getAllProducts, getAffiliateRedirectPath } from "@/lib/product-registry";
+import { getCountryByCode, getAllCountries } from "@/lib/countries";
 import Image from "next/image";
 import Link from "next/link";
 import Script from "next/script";
 
 export async function HomeContent({ country }: { country: string }) {
-  const allProducts = await MockAmazonAPI.searchProducts("");
+  const countryConfig = getCountryByCode(country);
+  const allProducts = getAllProducts();
   
-  // Create mock data for sections
-  const mockPopularProducts = allProducts.slice(0, 5).map(p => ({
+  // Adapt products to UI model
+  const uiProducts = allProducts.map(p => ({
+    asin: p.asin,
+    title: p.title,
+    price: { 
+      amount: p.price, 
+      currency: countryConfig?.currency || "EUR", 
+      displayAmount: `${p.price} ${countryConfig?.currency || "€"}` 
+    },
+    image: "", // Placeholder used in ProductCard anyway
+    url: getAffiliateRedirectPath(p.slug),
+    category: p.category,
+    capacity: `${p.capacity}${p.capacityUnit}`,
+    pricePerUnit: p.category === 'ram' ? (p.pricePerGB ? `${p.pricePerGB} ${countryConfig?.currency || "€"}/GB` : undefined) : (p.pricePerTB ? `${p.pricePerTB} ${countryConfig?.currency || "€"}/TB` : undefined)
+  }));
+
+  // Create mock data for sections using real products
+  const mockPopularProducts = uiProducts.slice(0, 5).map(p => ({
     ...p,
     rating: 4.5 + Math.random() * 0.5,
     reviewCount: Math.floor(Math.random() * 1000) + 50
   }));
 
-  const mockPriceDrops = allProducts.slice(2, 6).map(p => {
+  const mockPriceDrops = uiProducts.slice(2, 6).map(p => {
     const dropPercentage = Math.floor(Math.random() * 20) + 10;
     const oldPrice = p.price.amount / (1 - dropPercentage / 100);
     return {
@@ -89,7 +106,7 @@ export async function HomeContent({ country }: { country: string }) {
           <div className="flex flex-col items-center justify-center py-10 border-y border-border mb-16">
             <p className="text-xs text-muted-foreground mb-6 uppercase tracking-widest font-bold">Supported Marketplaces</p>
             <div className="flex flex-wrap justify-center gap-6 sm:gap-10">
-              {getAllCountries().map((c) => (
+              {getAllCountries().map((c: any) => (
                 <Link 
                   key={c.code} 
                   href={c.isLive ? `/${c.code}` : "#"}
@@ -110,9 +127,11 @@ export async function HomeContent({ country }: { country: string }) {
           {/* Highlighted Deals Section */}
           <div className="mb-16">
             <div className="mb-6 border-b border-border pb-2">
-              <h2 className="text-xl sm:text-2xl font-bold tracking-tight text-[#0066CC] dark:text-blue-400 hover:underline cursor-pointer inline-flex items-center gap-2">
-                Highlighted Deals <span className="text-foreground no-underline">→</span>
-              </h2>
+              <Link href={`/${country}/categories`}>
+                <h2 className="text-xl sm:text-2xl font-bold tracking-tight text-[#0066CC] dark:text-blue-400 hover:underline cursor-pointer inline-flex items-center gap-2">
+                  Highlighted Deals <span className="text-foreground no-underline">→</span>
+                </h2>
+              </Link>
               <p className="text-sm text-muted-foreground mt-1">These are outstanding deals we've found and feel are worth sharing.</p>
             </div>
             <HeroDealCards />

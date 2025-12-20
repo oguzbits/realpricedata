@@ -9,29 +9,7 @@ import type { NextRequest } from 'next/server'
  * which redirects to the affiliate URL stored in the Product Registry.
  */
 
-// Inline product data to avoid import issues during build
-const products = [
-  {
-    slug: "samsung-990-pro-2tb",
-    affiliateUrl: "https://amzn.to/48yJXRZ"
-  },
-  {
-    slug: "seagate-exos-x18-18tb",
-    affiliateUrl: "https://amzn.to/4a1mQ50"
-  },
-  {
-    slug: "wd-black-sn850x-2tb",
-    affiliateUrl: "https://amzn.to/4oFAfUa"
-  },
-  {
-    slug: "crucial-mx500-2tb",
-    affiliateUrl: "https://amzn.to/4pQefqv"
-  },
-  {
-    slug: "sandisk-extreme-portable-1tb",
-    affiliateUrl: "https://amzn.to/3KGJYeO"
-  }
-]
+import { getAllProducts } from '@/lib/product-registry'
 
 export async function GET(
   request: NextRequest,
@@ -40,12 +18,13 @@ export async function GET(
   const params = await props.params
   const { slug } = params
 
-  // Look up product
+  // Look up product from the registry (single source of truth)
+  const products = getAllProducts()
   const product = products.find(p => p.slug === slug)
 
   if (!product) {
-    // Product not found - redirect to hard drives page
-    const url = new URL('/de/electronics/hard drives', request.url)
+    // Product not found - redirect to hard-drives page
+    const url = new URL('/de/electronics/hard-drives', request.url)
     return NextResponse.redirect(url, 307)
   }
 

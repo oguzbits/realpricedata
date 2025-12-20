@@ -1,5 +1,6 @@
 "use client"
 
+import Link from "next/link"
 import { Badge } from "@/components/ui/badge"
 import { useCountry } from "@/hooks/use-country"
 import { getCountryByCode } from "@/lib/countries"
@@ -24,9 +25,11 @@ export function PopularProducts({ products }: PopularProductsProps) {
   return (
     <section className="mb-12">
       <div className="mb-4">
-        <h2 className="text-xl sm:text-2xl font-bold tracking-tight text-[#0066CC] dark:text-blue-400 hover:underline cursor-pointer flex items-center gap-1">
-          Popular Products <span className="text-foreground no-underline">→</span>
-        </h2>
+        <Link href={`/${country}/categories`}>
+          <h2 className="text-xl sm:text-2xl font-bold tracking-tight text-[#0066CC] dark:text-blue-400 hover:underline cursor-pointer flex items-center gap-1">
+            Popular Products <span className="text-foreground no-underline">→</span>
+          </h2>
+        </Link>
         <p className="text-sm text-gray-500 mt-1">
           Check out these recently popular deals on realpricedata. See what other informed users have been buying lately!
         </p>
@@ -41,7 +44,7 @@ export function PopularProducts({ products }: PopularProductsProps) {
             oldPrice={product.price.amount * 1.15}
             currency={countryConfig?.currency || "USD"}
             url={product.url}
-            pricePerUnit={product.pricePerUnit ? product.pricePerUnit.split('/')[0] : undefined}
+            pricePerUnit={product.pricePerUnit}
             countryCode={country}
             badgeText="Good Deal"
             badgeColor="blue"

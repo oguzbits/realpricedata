@@ -1,5 +1,6 @@
 "use client"
 
+import Link from "next/link"
 import { useState } from "react"
 import { ProductUIModel } from "@/lib/amazon-api"
 import { useCountry } from "@/hooks/use-country"
@@ -24,9 +25,11 @@ export function PriceDrops({ products }: PriceDropsProps) {
     <section className="mb-12">
       <div className="mb-6">
         <div className="mb-2">
-          <h2 className="text-xl sm:text-2xl font-bold tracking-tight text-[#0066CC] dark:text-blue-400 hover:underline cursor-pointer flex items-center gap-1">
-            Top Amazon Price Drops <span className="text-foreground no-underline">→</span>
-          </h2>
+          <Link href={`/${country}/categories`}>
+            <h2 className="text-xl sm:text-2xl font-bold tracking-tight text-[#0066CC] dark:text-blue-400 hover:underline cursor-pointer flex items-center gap-1">
+              Top Amazon Price Drops <span className="text-foreground no-underline">→</span>
+            </h2>
+          </Link>
           <p className="text-sm text-gray-500 mt-1">
             Big price drops. The products below are selected from categories that you frequently track products in and have had large price drops since the last price update.
           </p>

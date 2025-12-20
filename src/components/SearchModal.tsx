@@ -6,9 +6,10 @@ import { Dialog, DialogContent, DialogTitle, DialogDescription } from "@/compone
 import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
-import { useRouter } from "next/navigation";
-import { getCategoryBySlug } from "@/lib/categories";
-import { QUICK_ACCESS_CATEGORIES } from "@/lib/constants";
+import { useRouter, useParams } from "next/navigation";
+import { getCategoryBySlug, getCategoryPath } from "@/lib/categories";
+import { QUICK_ACCESS_CATEGORIES, FEATURED_CATEGORIES } from "@/lib/constants";
+import { DEFAULT_COUNTRY } from "@/lib/countries";
 import type { LucideIcon } from "lucide-react";
 
 interface CategoryLink {
@@ -19,22 +20,8 @@ interface CategoryLink {
 
 // Build quick links from our centralized category data
 const QUICK_LINKS: Record<string, CategoryLink[]> = {
-  "POPULAR CATEGORIES": [
-    getCategoryBySlug("hard-drives"),
-    getCategoryBySlug("protein-powder"),
-    getCategoryBySlug("batteries"),
-  ]
-    .filter(Boolean)
-    .map((cat) => ({
-      name: cat!.name,
-      slug: cat!.slug,
-      icon: cat!.icon,
-    })),
-  "TRENDING NOW": [
-    getCategoryBySlug("laundry-detergent"),
-    getCategoryBySlug("diapers"),
-    getCategoryBySlug("coffee"),
-  ]
+  "FEATURED CATEGORIES": (FEATURED_CATEGORIES as unknown as string[])
+    .map((slug) => getCategoryBySlug(slug))
     .filter(Boolean)
     .map((cat) => ({
       name: cat!.name,
@@ -117,66 +104,72 @@ export function SearchModal({ open, onOpenChange }: SearchModalProps) {
     setSelectedIndex(-1);
   }, [query]);
 
+  const params = useParams();
+  const country = (params?.country as string) || DEFAULT_COUNTRY;
+
   const handleLinkClick = (slug: string) => {
-    router.push(`/categories/${slug}`);
+    const path = getCategoryPath(slug, country);
+    router.push(path);
     onOpenChange(false);
   };
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent
-        className="w-full h-full max-w-full md:h-auto md:max-w-3xl p-0 gap-0 bg-card border-0 md:border rounded-none md:rounded-lg fixed inset-0 md:inset-auto translate-x-0 translate-y-0 md:translate-x-[-50%] md:translate-y-[-50%] md:top-[50%] md:left-[50%]"
-        showCloseButton={false}
+        className="w-[calc(100%-2rem)] max-w-3xl p-0 gap-0 bg-card border-border rounded-[2rem] shadow-2xl overflow-hidden focus:outline-none"
       >
-        <VisuallyHidden>
-          <DialogTitle>Search categories and products</DialogTitle>
-          <DialogDescription>
-            Search for categories and products to find the best unit prices
-          </DialogDescription>
-        </VisuallyHidden>
-
         {/* Search Input Header */}
-        <div className="px-4 py-4 md:px-6 md:pt-6 md:pb-4 border-b border-border/40">
-          <div className="flex items-center gap-2 md:gap-3 px-3 py-2.5 md:px-4 md:py-3 rounded-xl border border-border bg-background">
-            <Search className="h-4 w-4 md:h-5 md:w-5 text-muted-foreground shrink-0" />
-            <Input
-              placeholder="Search categories..."
-              value={query}
-              onChange={(e) => setQuery(e.target.value)}
-              className="border-0 focus-visible:ring-0 text-base h-auto py-0 flex-1 placeholder:text-muted-foreground/50 bg-transparent shadow-none font-medium"
-              autoFocus
-              autoComplete="off"
-              data-form-type="other"
-              data-lpignore="true"
-              data-1p-ignore="true"
-              aria-label="Search for categories and products"
-            />
-            <button
-              onClick={() => onOpenChange(false)}
-              className="px-1.5 py-1 md:px-2 text-[10px] md:text-xs border border-border/60 rounded-md bg-muted/50 text-muted-foreground font-mono shrink-0 font-medium hover:bg-muted hover:text-foreground transition-colors cursor-pointer"
-              aria-label="Close search modal"
-            >
-              esc
-            </button>
+        <div className="relative px-6 py-10 md:px-12 md:py-12 border-b border-border/10 flex flex-col items-center gap-8 bg-gradient-to-b from-primary/5 to-transparent">
+          <div className="flex flex-col items-center gap-4">
+            <div className="p-5 rounded-full bg-primary/10 border border-primary/20 shadow-[0_0_20px_-5px_rgba(var(--primary),0.3)] animate-in fade-in zoom-in duration-500">
+              <Search className="h-10 w-10 text-primary" />
+            </div>
+            <div className="text-center space-y-1.5">
+              <DialogTitle className="text-2xl md:text-3xl font-black tracking-tight text-foreground">
+                Search Categories
+              </DialogTitle>
+              <DialogDescription className="text-muted-foreground text-sm md:text-base max-w-[280px] md:max-w-md mx-auto leading-relaxed">
+                Compare and find the best unit prices across all available categories.
+              </DialogDescription>
+            </div>
+          </div>
+
+          <div className="w-full max-w-xl relative">
+            <div className="absolute -inset-1 bg-gradient-to-r from-primary/20 to-blue-500/20 rounded-2xl blur opacity-25 group-focus-within:opacity-50 transition-opacity" />
+            <div className="relative flex items-center gap-3 px-5 py-4 md:px-6 md:py-5 rounded-2xl border border-border bg-background shadow-xl focus-within:border-primary/50 focus-within:ring-4 focus-within:ring-primary/5 transition-all">
+              <Search className="h-5 w-5 text-muted-foreground/40 shrink-0" />
+              <Input
+                placeholder="What are you looking for?"
+                value={query}
+                onChange={(e) => setQuery(e.target.value)}
+                className="border-0 focus-visible:ring-0 text-lg md:text-xl h-auto py-0 flex-1 placeholder:text-muted-foreground/30 bg-transparent shadow-none font-medium p-0"
+                autoFocus
+                autoComplete="off"
+                data-form-type="other"
+                data-lpignore="true"
+                data-1p-ignore="true"
+                aria-label="Search for categories and products"
+              />
+            </div>
           </div>
         </div>
 
         {/* Content Area */}
-        <div className="max-h-[500px] overflow-y-auto px-4 pb-4 pt-3 md:px-6 md:pb-6" role="region" aria-live="polite">
+        <div className="max-h-[60vh] overflow-y-auto px-6 pb-10 pt-8 md:px-12 md:pb-12" role="region" aria-live="polite">
           {query === "" ? (
             // Show quick links when no search query
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
               {Object.entries(QUICK_LINKS).map(([section, links]) => (
-                <div key={section}>
-                  <h3 className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wider mb-3">
+                <div key={section} className="flex flex-col gap-4">
+                  <h3 className="text-[10px] font-bold text-muted-foreground uppercase tracking-[0.2em] px-1">
                     {section}
                   </h3>
-                  <div className="space-y-2.5 md:space-y-3">
+                  <div className="flex flex-col gap-2.5">
                     {links.map((link, idx) => {
                       const IconComponent = link.icon;
                       // Only calculate selection when in quick links mode (query is empty)
                       const globalIndex = query === "" 
-                        ? Object.values(QUICK_LINKS)
+                         ? Object.values(QUICK_LINKS)
                             .flat()
                             .findIndex((l) => l.slug === link.slug)
                         : -1;
@@ -185,15 +178,17 @@ export function SearchModal({ open, onOpenChange }: SearchModalProps) {
                         <button
                           key={link.slug}
                           onClick={() => handleLinkClick(link.slug)}
-                          className={`w-full flex items-center gap-2.5 md:gap-3 px-3 py-2.5 md:px-4 md:py-3 rounded-xl border transition-all text-left group cursor-pointer ${
+                          className={`w-full flex items-center gap-4 px-5 py-4 rounded-2xl border transition-all text-left group cursor-pointer ${
                             isSelected 
-                              ? 'border-primary bg-primary/15 shadow-sm' 
-                              : 'border-border bg-secondary hover:border-primary hover:bg-primary/10'
+                              ? 'border-primary bg-primary/10 shadow-sm ring-1 ring-primary/20' 
+                              : 'border-border bg-secondary/50 hover:border-primary/30 hover:bg-primary/5'
                           }`}
                           aria-label={`Navigate to ${link.name} category`}
                         >
-                          <IconComponent className="h-4 w-4 shrink-0 text-primary" />
-                          <span className="text-xs md:text-sm font-medium text-primary">
+                          <div className="p-2.5 rounded-xl bg-background border border-border group-hover:border-primary/20 transition-colors">
+                            <IconComponent className="h-5 w-5 shrink-0 text-primary" />
+                          </div>
+                          <span className="text-sm md:text-base font-semibold text-foreground group-hover:text-primary transition-colors">
                             {link.name}
                           </span>
                         </button>
@@ -205,13 +200,13 @@ export function SearchModal({ open, onOpenChange }: SearchModalProps) {
             </div>
           ) : (
             // Show search results
-            <>
+            <div className="flex flex-col gap-8">
               {filteredCategories.length > 0 ? (
-                <div>
-                  <h3 className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wider mb-3">
-                    Categories
+                <div className="flex flex-col gap-4">
+                  <h3 className="text-[10px] font-bold text-muted-foreground uppercase tracking-[0.2em] px-1">
+                    Search Results
                   </h3>
-                  <div className="space-y-2.5 md:space-y-3">
+                  <div className="flex flex-col gap-2.5">
                     {filteredCategories.map((category, idx) => {
                       const IconComponent = category.icon;
                       const isSelected = idx === selectedIndex;
@@ -219,24 +214,26 @@ export function SearchModal({ open, onOpenChange }: SearchModalProps) {
                         <button
                           key={category.slug}
                           onClick={() => handleLinkClick(category.slug)}
-                          className={`w-full flex items-center gap-2.5 md:gap-3 px-3 py-2.5 md:px-4 md:py-3.5 rounded-xl border transition-all text-left group cursor-pointer ${
+                          className={`w-full flex items-center gap-4 px-5 py-4 rounded-2xl border transition-all text-left group cursor-pointer ${
                             isSelected 
-                              ? 'border-primary bg-primary/15 shadow-sm' 
-                              : 'border-border bg-secondary hover:border-primary hover:bg-primary/10'
+                              ? 'border-primary bg-primary/10 shadow-sm ring-1 ring-primary/20' 
+                              : 'border-border bg-secondary/50 hover:border-primary/30 hover:bg-primary/5'
                           }`}
                           aria-label={`Navigate to ${category.name} category`}
                         >
-                          <IconComponent className="h-4 w-4 shrink-0 text-primary" />
+                          <div className="p-2.5 rounded-xl bg-background border border-border group-hover:border-primary/20 transition-colors">
+                            <IconComponent className="h-5 w-5 shrink-0 text-primary" />
+                          </div>
                           <div className="flex-1">
-                            <p className="text-xs md:text-sm font-medium text-primary">
+                            <p className="text-sm md:text-base font-semibold text-foreground group-hover:text-primary transition-colors">
                               {category.name}
                             </p>
-                            <p className="text-[10px] text-muted-foreground/80 uppercase tracking-wider">
+                            <p className="text-[10px] text-muted-foreground font-bold uppercase tracking-wider mt-0.5">
                               Category
                             </p>
                           </div>
-                          <Badge variant="outline" className="ml-auto shrink-0 border-border/50 text-muted-foreground text-[10px] px-1.5 py-0">
-                            View
+                          <Badge variant="outline" className="ml-auto shrink-0 border-border/50 text-muted-foreground group-hover:border-primary/30 group-hover:text-primary transition-all text-[10px] px-2 py-0.5 rounded-full">
+                            Explore
                           </Badge>
                         </button>
                       );
@@ -244,16 +241,21 @@ export function SearchModal({ open, onOpenChange }: SearchModalProps) {
                   </div>
                 </div>
               ) : (
-                <div className="text-center py-12">
-                  <p className="text-muted-foreground">
-                    No results found for "{query}"
-                  </p>
-                  <p className="text-sm text-muted-foreground mt-2">
-                    Try searching for categories like "batteries" or "protein"
-                  </p>
+                <div className="text-center py-20 flex flex-col items-center gap-4">
+                  <div className="p-6 rounded-full bg-secondary w-fit">
+                    <Search className="h-10 w-10 text-muted-foreground/20" />
+                  </div>
+                  <div>
+                    <p className="text-xl font-bold text-foreground">
+                      No categories found
+                    </p>
+                    <p className="text-muted-foreground mt-2 max-w-xs mx-auto">
+                      We couldn't find anything matching "{query}". Try another keyword like "hard drives".
+                    </p>
+                  </div>
                 </div>
               )}
-            </>
+            </div>
           )}
         </div>
       </DialogContent>

@@ -4,12 +4,9 @@
  */
 
 export const QUICK_ACCESS_CATEGORIES = [
-  "hard-drives", // Maps to storage in old system
-  "protein-powder",
-  "laundry-detergent",
-  "diapers",
-  "batteries",
-  "coffee",
+  "electronics",
+  "hard-drives",
+  "ram",
 ] as const;
 
 export type QuickAccessCategory = (typeof QUICK_ACCESS_CATEGORIES)[number];
@@ -19,8 +16,7 @@ export type QuickAccessCategory = (typeof QUICK_ACCESS_CATEGORIES)[number];
  */
 export const FEATURED_CATEGORIES = [
   "hard-drives",
-  "protein-powder",
-  "laundry-detergent",
+  "ram",
 ] as const;
 
 /**

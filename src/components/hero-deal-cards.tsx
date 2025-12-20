@@ -47,34 +47,49 @@ const getTopDeals = (): ProductWithDiscount[] => {
 }
 
 export function HeroDealCards() {
-  const { country } = useCountry()
-  const countryConfig = getCountryByCode(country)
+  const { country } = useCountry();
+  const countryConfig = getCountryByCode(country);
 
-  const highlightedDeals = getTopDeals()
+  const highlightedDeals = getTopDeals();
+
+  // Products already come with discount info, but we also want unit price badges
+  const productsWithUnitValue = highlightedDeals.map(p => {
+    const isRAM = p.category === 'ram';
+    const val = isRAM ? p.pricePerGB : p.pricePerTB;
+    return {
+      ...p,
+      unitValue: val || Infinity,
+      unitLabel: isRAM ? 'GB' : 'TB'
+    };
+  });
+
+  const minUnitValue = Math.min(...productsWithUnitValue.map(p => p.unitValue));
+  const avgUnitValue = productsWithUnitValue.reduce((acc, p) => acc + p.unitValue, 0) / (productsWithUnitValue.length || 1);
 
   return (
     <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
-        {highlightedDeals.map((product) => {
-          const isRAM = product.category === 'ram'
-          const pricePerUnitValue = isRAM ? product.pricePerGB : product.pricePerTB
-          const unit = isRAM ? 'GB' : 'TB'
+        {productsWithUnitValue.map((product) => {
+          let badgeText = undefined;
+          if (product.unitValue === minUnitValue && minUnitValue !== Infinity) {
+            badgeText = "Best Price";
+          } else if (product.unitValue < avgUnitValue * 0.85 && product.unitValue !== Infinity) {
+            badgeText = "Good Deal";
+          }
           
           return (
             <ProductCard
-              key={product.id}
+              key={product.id || product.asin}
               title={product.title}
               price={product.price}
               oldPrice={product.price * (1 + product.discount / 100)}
               currency={countryConfig?.currency || "USD"}
               url={getAffiliateRedirectPath(product.slug)}
-              pricePerUnit={pricePerUnitValue ? `${countryConfig?.currency || "$"}${pricePerUnitValue.toFixed(2)}/${unit}` : undefined}
+              pricePerUnit={product.unitValue !== Infinity ? `${countryConfig?.currency || "$"}${product.unitValue.toFixed(2)}/${product.unitLabel}` : undefined}
               countryCode={country}
-              badgeText={product.condition === 'New' ? "Good Deal" : product.condition}
-              badgeColor={product.condition === 'New' ? "blue" : "amber"}
-              discountPercentage={product.discount}
+              badgeText={badgeText}
             />
-          )
+          );
         })}
       </div>
-  )
+  );
 }

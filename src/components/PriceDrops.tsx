@@ -21,37 +21,49 @@ export function PriceDrops({ products }: PriceDropsProps) {
     period === "daily" ? b.dropPercentage - a.dropPercentage : a.dropPercentage - b.dropPercentage
   ).slice(0, 5)
 
+  // Extract numeric price per unit for comparison
+  const productsWithUnitValue = filteredProducts.map(p => {
+    const match = p.pricePerUnit?.match(/[\d.]+/);
+    return {
+      ...p,
+      unitValue: match ? parseFloat(match[0]) : Infinity
+    };
+  });
+
+  const minUnitValue = Math.min(...productsWithUnitValue.map(p => p.unitValue));
+  const avgUnitValue = productsWithUnitValue.reduce((acc, p) => acc + p.unitValue, 0) / productsWithUnitValue.length;
+
   return (
     <section className="mb-12">
-      <div className="mb-6">
-        <div className="mb-2">
-          <Link href={`/${country}/categories`}>
-            <h2 className="text-xl sm:text-2xl font-bold tracking-tight text-[#0066CC] dark:text-blue-400 hover:underline cursor-pointer flex items-center gap-1">
-              Top Amazon Price Drops <span className="text-foreground no-underline">→</span>
+      <div className="mb-6 border-b border-border pb-4">
+        <div className="mb-4">
+          <Link href={`/${country}/categories`} className="group">
+            <h2 className="text-xl sm:text-2xl font-black tracking-tight text-primary transition-all inline-flex items-center gap-2">
+              Top Amazon Price Drops <span className="text-foreground transition-transform group-hover:translate-x-1">→</span>
             </h2>
           </Link>
-          <p className="text-sm text-gray-500 mt-1">
-            Big price drops. The products below are selected from categories that you frequently track products in and have had large price drops since the last price update.
+          <p className="text-sm text-muted-foreground mt-1 max-w-2xl leading-relaxed">
+            The products below have seen significant price drops since the last update. Save big by choosing these vetted deals.
           </p>
         </div>
 
-        <div className="flex gap-2 mt-4">
+        <div className="flex gap-3">
           <button
             onClick={() => setPeriod("daily")}
-            className={`px-4 py-1.5 text-xs font-bold rounded-full border transition-all ${
+            className={`px-5 py-2 text-xs font-black rounded-xl border transition-all duration-300 cursor-pointer ${
               period === "daily" 
-                ? "bg-gray-800 text-white border-gray-800 dark:bg-gray-200 dark:text-black dark:border-gray-200" 
-                : "bg-white text-gray-600 border-gray-300 hover:bg-gray-50 dark:bg-card dark:text-gray-300 dark:border-border dark:hover:bg-muted"
+                ? "bg-primary text-primary-foreground border-primary shadow-[0_0_15px_-3px_rgba(var(--primary),0.4)]" 
+                : "bg-background text-muted-foreground border-border hover:border-primary/30 hover:bg-primary/5"
             }`}
           >
             Daily Drops
           </button>
           <button
             onClick={() => setPeriod("weekly")}
-            className={`px-4 py-1.5 text-xs font-bold rounded-full border transition-all ${
+            className={`px-5 py-2 text-xs font-black rounded-xl border transition-all duration-300 cursor-pointer ${
               period === "weekly" 
-                ? "bg-gray-800 text-white border-gray-800 dark:bg-gray-200 dark:text-black dark:border-gray-200" 
-                : "bg-white text-gray-600 border-gray-300 hover:bg-gray-50 dark:bg-card dark:text-gray-300 dark:border-border dark:hover:bg-muted"
+                ? "bg-primary text-primary-foreground border-primary shadow-[0_0_15px_-3px_rgba(var(--primary),0.4)]" 
+                : "bg-background text-muted-foreground border-border hover:border-primary/30 hover:bg-primary/5"
             }`}
           >
             Weekly Drops
@@ -60,23 +72,30 @@ export function PriceDrops({ products }: PriceDropsProps) {
       </div>
 
       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
-        {filteredProducts.map((product) => (
-          <ProductCard
-            key={product.asin}
-            title={product.title}
-            price={product.price.amount}
-            oldPrice={product.oldPrice}
-            currency={countryConfig?.currency || "USD"}
-            url={product.url}
-            pricePerUnit={product.pricePerUnit}
-            countryCode={country}
-            badgeText="Best Price"
-            badgeColor="green"
-            discountPercentage={product.dropPercentage}
-            condition="New"
-          />
-        ))}
+        {productsWithUnitValue.map((product) => {
+          let badgeText = undefined;
+          if (product.unitValue === minUnitValue && minUnitValue !== Infinity) {
+            badgeText = "Best Price";
+          } else if (product.unitValue < avgUnitValue * 0.85 && product.unitValue !== Infinity) {
+            badgeText = "Good Deal";
+          }
+          
+          return (
+            <ProductCard
+              key={product.asin}
+              title={product.title}
+              price={product.price.amount}
+              oldPrice={product.oldPrice}
+              currency={countryConfig?.currency || "USD"}
+              url={product.url}
+              pricePerUnit={product.pricePerUnit}
+              countryCode={country}
+              badgeText={badgeText}
+              condition="New"
+            />
+          );
+        })}
       </div>
     </section>
-  )
+  );
 }

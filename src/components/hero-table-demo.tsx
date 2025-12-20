@@ -67,7 +67,7 @@ export function HeroTableDemo() {
         aria-hidden="true"
       />
 
-      <Card className="border-border/50 bg-card shadow-2xl overflow-hidden ring-1 ring-border">
+      <Card className="border-border/40 bg-card/80 backdrop-blur-xl shadow-2xl overflow-hidden ring-1 ring-border/50 rounded-3xl">
         {/* Top Bar (Browser/App Header) */}
         <div className="flex items-center justify-between gap-3 px-4 py-3 border-b border-border bg-muted/40">
           <div className="flex items-center gap-2 sm:gap-4 min-w-0 flex-1">
@@ -208,12 +208,12 @@ export function HeroTableDemo() {
                     <div
                       key={product.id}
                       className={cn(
-                        "grid grid-cols-12 gap-2 px-4 py-2.5 items-center text-[11px] transition-colors hover:bg-muted/50",
+                        "grid grid-cols-12 gap-2 px-4 py-3 items-center text-[11px] transition-all hover:bg-muted/50",
                         idx === 0 &&
                           "bg-blue-50 dark:bg-blue-950/60 ring-1 ring-blue-200 dark:ring-blue-800"
                       )}
                     >
-                      <div className="col-span-2 font-mono font-medium text-primary flex items-center gap-2">
+                      <div className="col-span-2 font-mono font-bold text-primary flex items-center gap-2">
                         {config.currency}
                         {currentCategory === "harddrives"
                           ? (product as HardDriveProduct).pricePerTB.toFixed(3)
@@ -221,7 +221,7 @@ export function HeroTableDemo() {
                           ? (product as BatteryProduct).pricePerUnit.toFixed(2)
                           : (product as DogFoodProduct).pricePerLb.toFixed(1)}
                         {idx === 0 && (
-                          <Badge className="bg-emerald-100 text-emerald-950 dark:bg-emerald-900 dark:text-emerald-50 border-0 h-4 px-1.5 text-[8px] animate-in zoom-in font-semibold">
+                          <Badge className="bg-emerald-100 text-emerald-800 dark:bg-emerald-500/20 dark:text-emerald-300 border-0 h-4 px-2 text-[8px] animate-in zoom-in font-bold capitalize tracking-wide">
                             Best
                           </Badge>
                         )}

@@ -119,30 +119,30 @@ export function SearchModal({ open, onOpenChange }: SearchModalProps) {
         className="w-[calc(100%-2rem)] max-w-3xl p-0 gap-0 bg-card border-border rounded-[2rem] shadow-2xl overflow-hidden focus:outline-none"
       >
         {/* Search Input Header */}
-        <div className="relative px-6 py-10 md:px-12 md:py-12 border-b border-border/10 flex flex-col items-center gap-8 bg-gradient-to-b from-primary/5 to-transparent">
-          <div className="flex flex-col items-center gap-4">
-            <div className="p-5 rounded-full bg-primary/10 border border-primary/20 shadow-[0_0_20px_-5px_rgba(var(--primary),0.3)] animate-in fade-in zoom-in duration-500">
-              <Search className="h-10 w-10 text-primary" />
+        <div className="relative px-6 py-10 md:px-12 md:py-16 border-b border-border/10 flex flex-col items-center gap-10 bg-linear-to-b from-primary/10 via-primary/5 to-transparent">
+          <div className="flex flex-col items-center gap-6">
+            <div className="p-6 rounded-3xl bg-primary/10 border border-primary/20 shadow-[0_0_40px_-10px_rgba(var(--primary),0.3)] animate-in fade-in zoom-in duration-700">
+              <Search className="h-12 w-12 text-primary stroke-[1.5]" />
             </div>
-            <div className="text-center space-y-1.5">
-              <DialogTitle className="text-2xl md:text-3xl font-black tracking-tight text-foreground">
+            <div className="text-center space-y-2">
+              <DialogTitle className="text-3xl md:text-4xl font-black tracking-tighter text-foreground">
                 Search Categories
               </DialogTitle>
-              <DialogDescription className="text-muted-foreground text-sm md:text-base max-w-[280px] md:max-w-md mx-auto leading-relaxed">
+              <DialogDescription className="text-muted-foreground text-sm md:text-lg max-w-[280px] md:max-w-md mx-auto leading-relaxed font-medium">
                 Compare and find the best unit prices across all available categories.
               </DialogDescription>
             </div>
           </div>
 
-          <div className="w-full max-w-xl relative">
-            <div className="absolute -inset-1 bg-gradient-to-r from-primary/20 to-blue-500/20 rounded-2xl blur opacity-25 group-focus-within:opacity-50 transition-opacity" />
-            <div className="relative flex items-center gap-3 px-5 py-4 md:px-6 md:py-5 rounded-2xl border border-border bg-background shadow-xl focus-within:border-primary/50 focus-within:ring-4 focus-within:ring-primary/5 transition-all">
-              <Search className="h-5 w-5 text-muted-foreground/40 shrink-0" />
+          <div className="w-full max-w-xl relative group">
+            <div className="absolute -inset-1.5 bg-linear-to-r from-primary/30 to-blue-500/30 rounded-2xl blur-lg opacity-20 group-focus-within:opacity-50 transition-opacity duration-500" />
+            <div className="relative flex items-center gap-4 px-6 py-5 md:px-8 md:py-6 rounded-2xl border border-border bg-background shadow-2xl focus-within:border-primary/50 focus-within:ring-8 focus-within:ring-primary/5 transition-all duration-300">
+              <Search className="h-6 w-6 text-muted-foreground/30 shrink-0" />
               <Input
                 placeholder="What are you looking for?"
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
-                className="border-0 focus-visible:ring-0 text-lg md:text-xl h-auto py-0 flex-1 placeholder:text-muted-foreground/30 bg-transparent shadow-none font-medium p-0"
+                className="border-0 focus-visible:ring-0 text-xl md:text-2xl h-auto py-0 flex-1 placeholder:text-muted-foreground/20 bg-transparent shadow-none font-bold p-0 tracking-tight"
                 autoFocus
                 autoComplete="off"
                 data-form-type="other"

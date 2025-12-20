@@ -57,7 +57,7 @@ export async function HomeContent({ country }: { country: string }) {
     },
   };
   return (
-    <div className="flex flex-col gap-0 pb-8 md:pb-16 bg-[#F8F9FA] dark:bg-background">
+    <div className="flex flex-col gap-0 pb-8 md:pb-16 bg-background">
       <Script
         id="json-ld"
         type="application/ld+json"
@@ -65,10 +65,10 @@ export async function HomeContent({ country }: { country: string }) {
       />
 
       {/* Top Banner */}
-      <div className="w-full bg-[#B22222] py-2 px-4 flex items-center justify-center gap-3 text-white text-center">
-        <Image src="/icon-192.png" alt="Promo" width={24} height={24} className="invert hidden sm:block" />
+      <div className="w-full bg-destructive py-2 px-4 flex items-center justify-center gap-3 text-destructive-foreground text-center shadow-sm">
+        <Image src="/icon-192.png" alt="Promo" width={24} height={24} className="invert hidden sm:block opacity-90" />
         <p className="text-sm font-bold tracking-tight">Compare real-time deals and save big this holiday! 🎁</p>
-<Link href={`/${country}/categories`} className="text-xs underline font-bold ml-2 whitespace-nowrap">Shop Now →</Link>
+        <Link href={`/${country}/categories`} className="text-xs underline font-bold ml-2 whitespace-nowrap hover:opacity-80 transition-opacity">Shop Now →</Link>
       </div>
 
       <div className="flex flex-col gap-2 sm:gap-4 md:gap-8 pt-4">
@@ -76,17 +76,17 @@ export async function HomeContent({ country }: { country: string }) {
         <section className="container px-4 mx-auto pt-4 sm:pt-8 md:pt-12 pb-10">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center mb-16">
             <div className="max-w-2xl text-left order-1 lg:order-1">
-              <h1 className="text-3xl sm:text-4xl md:text-5xl font-black tracking-tight mb-6 leading-[1.1] text-foreground">
+              <h1 className="text-4xl sm:text-5xl md:text-6xl font-black tracking-tighter mb-6 leading-[1.05] text-foreground">
                 Save money on your <br />
-                <span className="text-[rgb(0,102,204)] dark:text-blue-400">next Amazon purchase.</span>
+                <span className="text-primary">next Amazon purchase.</span>
               </h1>
-              <p className="text-lg text-muted-foreground mb-4 leading-relaxed max-w-xl">
-                <strong className="font-black">
-                  <span className="text-[#E53935] dark:text-[#EF5350]">real</span>
-                  <span className="text-[#FB8C00] dark:text-[#FFA726]">price</span>
-                  <span className="text-[#FBC02D] dark:text-[#FDD835]">data</span>
-                  <span className="text-muted-foreground">.com</span>
-                </strong> is a free Amazon price tracker and unit-price calculator to ensure you never overpay again.
+              <p className="text-lg md:text-xl text-muted-foreground mb-8 leading-relaxed max-w-xl">
+                <strong className="font-black tracking-tight">
+                  <span className="text-brand-real">real</span>
+                  <span className="text-brand-price">price</span>
+                  <span className="text-brand-data">data</span>
+                  <span className="text-muted-foreground/60">.com</span>
+                </strong> is a premium Amazon price tracker and unit-price calculator to ensure you never overpay again.
               </p>
 
               <div className="flex flex-col gap-6">
@@ -127,9 +127,9 @@ export async function HomeContent({ country }: { country: string }) {
           {/* Highlighted Deals Section */}
           <div className="mb-16">
             <div className="mb-6 border-b border-border pb-2">
-              <Link href={`/${country}/categories`}>
-                <h2 className="text-xl sm:text-2xl font-bold tracking-tight text-[#0066CC] dark:text-blue-400 hover:underline cursor-pointer inline-flex items-center gap-2">
-                  Highlighted Deals <span className="text-foreground no-underline">→</span>
+              <Link href={`/${country}/categories`} className="group">
+                <h2 className="text-xl sm:text-2xl font-black tracking-tight text-primary transition-all inline-flex items-center gap-2">
+                  Highlighted Deals <span className="text-foreground transition-transform group-hover:translate-x-1">→</span>
                 </h2>
               </Link>
               <p className="text-sm text-muted-foreground mt-1">These are outstanding deals we've found and feel are worth sharing.</p>

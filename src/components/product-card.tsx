@@ -39,14 +39,19 @@ export function ProductCard({
   };
 
   const getBadgeStyle = () => {
-    switch (badgeColor) {
+    // Map specific badge text to colors if needed, otherwise use badgeColor
+    const color = badgeText === "Best Price" ? "green" : 
+                  badgeText === "Good Deal" ? "blue" : 
+                  badgeColor;
+
+    switch (color) {
       case "green":
-        return "bg-[#46a61a] dark:bg-green-600";
+        return "bg-emerald-100 text-emerald-800 dark:bg-emerald-500/20 dark:text-emerald-300 border-transparent";
       case "amber":
-        return "bg-amber-500";
+        return "bg-amber-100 text-amber-800 dark:bg-amber-500/20 dark:text-amber-300 border-transparent";
       case "blue":
       default:
-        return "bg-[#0066CC] dark:bg-blue-600";
+        return "bg-blue-100 text-blue-800 dark:bg-blue-500/20 dark:text-blue-300 border-transparent";
     }
   };
 
@@ -55,63 +60,56 @@ export function ProductCard({
       href={url}
       target="_blank"
       rel="noopener noreferrer"
-      className="group relative flex flex-col p-3 rounded-xl border border-border/50 bg-card hover:border-[#0066CC]/50 dark:hover:border-blue-400/50 transition-all shadow-sm hover:shadow-md no-underline h-full"
+      className="group relative flex flex-col p-4 rounded-2xl border border-border/60 bg-card hover:border-primary/50 hover:bg-accent/5 transition-all shadow-sm hover:shadow-xl no-underline h-full"
     >
-      {/* Discount Badge */}
-      {discountPercentage && (
-        <div className="absolute -top-2 -right-2 z-10">
-          <Badge className="bg-emerald-500 hover:bg-emerald-600 text-white border-0 shadow-lg px-2 py-1 text-xs font-bold">
-            <TrendingDown className="h-3 w-3 mr-1" />
-            -{discountPercentage}%
+      <div className="absolute top-3 left-3 z-10">
+        {badgeText && (badgeText === "Best Price" || badgeText === "Good Deal") && (
+          <Badge
+            className={`${getBadgeStyle()} border text-xs font-bold py-1 px-2.5 rounded-lg capitalize shadow-md`}
+          >
+            {badgeText}
           </Badge>
-        </div>
-      )}
-
-      {/* Status/Condition Badge */}
-      <div className="absolute top-2 left-2 z-10">
-        <Badge
-          className={`${getBadgeStyle()} text-white border-0 text-[10px] font-bold py-0 h-5 px-2 rounded-sm uppercase tracking-wide shadow-sm`}
-        >
-          {badgeText || (condition === "New" ? "Good Deal" : condition)}
-        </Badge>
+        )}
       </div>
 
       {/* Image Placeholder with Icon */}
-      <div className="relative aspect-square bg-muted/20 dark:bg-muted/10 rounded-lg mb-3 overflow-hidden flex items-center justify-center p-4 group-hover:scale-[1.02] transition-transform duration-300">
-        <Package className="w-16 h-16 text-muted-foreground/30 stroke-1" />
+      <div className="relative aspect-square bg-muted/30 dark:bg-muted/10 rounded-xl mb-4 overflow-hidden flex items-center justify-center p-4 transition-all duration-500 group-hover:bg-primary/5">
+        <Package className="w-16 h-16 text-muted-foreground/20 stroke-[1.5] group-hover:text-primary/30 transition-colors" />
+        <div className="absolute inset-0 bg-linear-to-tr from-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
       </div>
 
       {/* Title */}
-      <h3 className="text-[11px] font-bold text-[#0066CC] dark:text-blue-400 mb-1.5 line-clamp-2 group-hover:underline h-8 leading-tight">
+      <h3 className="text-xs font-bold text-foreground mb-2 line-clamp-2 h-9 leading-tight group-hover:text-primary transition-colors">
         {title}
       </h3>
 
       {/* Price Section */}
       <div className="mt-auto">
-        <div className="text-center mb-3">
-          <span className="text-lg font-black text-foreground block">
-            {formatCurrency(price)}
-          </span>
-          {oldPrice && (
-            <div className="text-[10px] text-muted-foreground mt-0.5">
-              Avg: <span className="line-through">{formatCurrency(oldPrice)}</span>
-            </div>
+        <div className="flex items-baseline justify-between mb-4">
+          <div className="flex flex-col">
+            <span className="text-xl font-black tracking-tight text-foreground">
+              {formatCurrency(price)}
+            </span>
+            {oldPrice && (
+              <span className="text-[10px] text-muted-foreground/60 line-through">
+                {formatCurrency(oldPrice)}
+              </span>
+            )}
+          </div>
+          {pricePerUnit && (
+            <span className="text-[9px] font-mono text-muted-foreground bg-muted/50 px-1.5 py-0.5 rounded border border-border/40">
+              {pricePerUnit}
+            </span>
           )}
         </div>
 
         {/* CTA Button */}
-        <div className="px-2 pb-1">
-          <button className="w-full py-1.5 bg-[#FFD814] hover:bg-[#F7CA00] text-black font-medium text-xs rounded-full shadow-sm border border-[#FCD200] transition-colors cursor-pointer">
-            View on Amazon
+        <div className="relative">
+          <div className="absolute -inset-0.5 bg-linear-to-r from-[#FFD814] to-[#F7CA00] rounded-xl blur opacity-0 group-hover:opacity-30 transition-opacity" />
+          <button className="relative w-full py-2 bg-[#FFD814] hover:bg-[#F7CA00] text-black font-bold text-xs rounded-xl shadow-sm border border-[#FCD200]/50 transition-all cursor-pointer overflow-hidden active:scale-95">
+            <span className="relative z-10">View on Amazon</span>
           </button>
         </div>
-
-        {/* Unit Price */}
-        {pricePerUnit && (
-          <div className="text-[10px] text-center text-muted-foreground/70 mt-2 font-mono">
-            {pricePerUnit}
-          </div>
-        )}
       </div>
     </a>
   );

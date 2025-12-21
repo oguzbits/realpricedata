@@ -27,76 +27,94 @@ export default function FAQPage() {
 
       <Accordion type="single" collapsible className="w-full">
         <AccordionItem value="item-1">
-          <AccordionTrigger>What is realpricedata.com?</AccordionTrigger>
-          <AccordionContent>
+          <AccordionTrigger className="text-left font-semibold">What is realpricedata.com?</AccordionTrigger>
+          <AccordionContent className="text-muted-foreground leading-relaxed">
             realpricedata.com is a specialized price comparison engine that focuses on the "price per unit" 
-            (e.g., price per Terabyte, price per Liter, price per Kilogram). Unlike standard price comparison 
-            sites that just show the total price, we help you find the true best value by standardizing the cost.
+            (e.g., price per Terabyte, price per Gigabyte, or price per item). Unlike standard price comparison 
+            sites that just show the total price, we help you find the true best value by standardizing the cost across different package sizes and capacities.
           </AccordionContent>
         </AccordionItem>
 
         <AccordionItem value="item-2">
-          <AccordionTrigger>How is the "price per unit" calculated?</AccordionTrigger>
-          <AccordionContent>
-            We automatically extract the quantity information (capacity, weight, volume, or count) from product 
-            listings and divide the current price by this amount. This gives you a comparable metric (like €/TB or €/kg) 
-            to easily spot which product offers the most for your money, regardless of package size.
+          <AccordionTrigger className="text-left font-semibold">How is the "price per unit" calculated for RAM and SSDs?</AccordionTrigger>
+          <AccordionContent className="text-muted-foreground leading-relaxed">
+            We automatically extract quantity information (like 2TB for an SSD or 32GB for a RAM kit) 
+            and divide the current market price by this amount. This gives you a comparable metric (like €/TB or €/GB) 
+            to easily spot which product offers the most value. We track these metrics in real-time to ensure you find the best deals.
           </AccordionContent>
         </AccordionItem>
 
         <AccordionItem value="item-3">
-          <AccordionTrigger>Where do these prices come from?</AccordionTrigger>
-          <AccordionContent>
-            We use Amazon's Product Advertising API to retrieve product information directly from Amazon. 
-            This ensures that the data we display is legitimate and sourced directly from the retailer.
+          <AccordionTrigger className="text-left font-semibold">Where does the price data come from?</AccordionTrigger>
+          <AccordionContent className="text-muted-foreground leading-relaxed">
+            We use official APIs (like Amazon's Product Advertising API) to retrieve live pricing and availability directly from major retailers. 
+            This ensures that the data we display is accurate and sourced directly from the merchant.
           </AccordionContent>
         </AccordionItem>
 
         <AccordionItem value="item-4">
-          <AccordionTrigger>How often is this site updated?</AccordionTrigger>
-          <AccordionContent>
-            Prices are updated regularly throughout the day. However, Amazon prices can change at any moment. 
-            We always recommend verifying the final price on the Amazon product page before making a purchase.
+          <AccordionTrigger className="text-left font-semibold">How often are hardware prices updated?</AccordionTrigger>
+          <AccordionContent className="text-muted-foreground leading-relaxed">
+            Pricing feeds are updated multiple times per day. However, because hardware markets (especially memory and storage) can be extremely volatile, 
+            we always recommend clicking through to the retailer to verify the final price before checking out.
           </AccordionContent>
         </AccordionItem>
 
         <AccordionItem value="item-5">
-          <AccordionTrigger>Why doesn't this product appear on your site?</AccordionTrigger>
-          <AccordionContent>
-            We aggressively filter our product list to remove duplicates, spam, and out-of-stock listings. 
-            In some cases, our algorithms might not correctly classify a product, leading to its exclusion. 
-            We also have limits on how many items we can retrieve via the API. If you think a product is missing, 
-            it might have been filtered out for quality control or API limitation reasons.
+          <AccordionTrigger className="text-left font-semibold">Why are RAM and SSD prices rising in 2025?</AccordionTrigger>
+          <AccordionContent className="text-muted-foreground leading-relaxed">
+            The global memory market is currently undergoing a structural shift driven by the explosion of AI. 
+            Manufacturers are redirecting production capacity toward high-margin enterprise memory, reducing 
+            the supply for consumer-grade DDR4, DDR5, and SSDs. Read our full analysis on 
+            <a href="/blog/ram-ssd-price-trends-2025" className="text-primary hover:underline ml-1">
+              Why RAM and SSD Prices Are Rising in 2025
+            </a>.
           </AccordionContent>
         </AccordionItem>
 
         <AccordionItem value="item-6">
-          <AccordionTrigger>Why shouldn't I buy the cheapest product?</AccordionTrigger>
-          <AccordionContent>
-            Price is a major factor, but it isn't everything. The cheapest product per unit might have a shorter warranty, 
-            lower build quality, or come from a less known brand. For example, with hard drives, a cheaper drive might be 
-            slower or less reliable. We provide the data to help you compare, but we recommend considering factors like 
-            reviews, warranty, and brand reputation alongside the price per unit.
+          <AccordionTrigger className="text-left font-semibold">How can I find the best Price per Terabyte (TB)?</AccordionTrigger>
+          <AccordionContent className="text-muted-foreground leading-relaxed">
+            You can use our <a href="/de/electronics/hard-drives" className="text-primary hover:underline">Hard Drive & SSD</a> comparison pages 
+            and sort by "Value (Price per Unit)". This will instantly rank all available storage products by their actual cost per TB, 
+            allowing you to save money regardless of the total drive capacity.
           </AccordionContent>
         </AccordionItem>
 
         <AccordionItem value="item-7">
-          <AccordionTrigger>What about shipping?</AccordionTrigger>
-          <AccordionContent>
-            The prices listed here do not include shipping costs or potential taxes, as these depend on your location 
-            and the specific seller. Many items may qualify for free shipping (especially with Amazon Prime), but you 
-            should always check the final total including shipping on Amazon before ordering.
+          <AccordionTrigger className="text-left font-semibold">Do you provide market analysis and buying guides?</AccordionTrigger>
+          <AccordionContent className="text-muted-foreground leading-relaxed">
+            Yes! Our <a href="/blog" className="text-primary hover:underline">Blog</a> features in-depth articles on hardware market trends, 
+            pricing predictions, and evergreen tips on how to optimize your PC builds for the best value. We focus on data-driven 
+            insights for storage, memory, and other high-volatility hardware.
           </AccordionContent>
         </AccordionItem>
 
-
-
         <AccordionItem value="item-8">
-          <AccordionTrigger>Is this an ad?</AccordionTrigger>
-          <AccordionContent>
-            We participate in the Amazon Associates Program. This means we earn commissions for qualifying purchases 
-            made through the links on this site. This revenue supports the server costs and development of the project 
-            at no extra cost to you.
+          <AccordionTrigger className="text-left font-semibold">Why shouldn't I just buy the cheapest product on the list?</AccordionTrigger>
+          <AccordionContent className="text-muted-foreground leading-relaxed">
+            The "Best Price per Unit" is a powerful value indicator, but you should also consider brand reputation, 
+            warranty length, and performance specs (like NVMe speeds vs SATA). Our data helps you find the most efficient 
+            deals, but we always encourage checking user reviews for reliability before making a final decision.
+          </AccordionContent>
+        </AccordionItem>
+
+        <AccordionItem value="item-9">
+          <AccordionTrigger className="text-left font-semibold">How do I filter for specific hardware like DDR5 or NVMe?</AccordionTrigger>
+          <AccordionContent className="text-muted-foreground leading-relaxed">
+            On any category page, use the side filters (or the filter icon on mobile) to narrow down by technology 
+            (e.g., <a href="/de/electronics/ram?technology=DDR5" className="text-primary hover:underline">DDR5</a>) or 
+            form factor (e.g., <a href="/de/electronics/hard-drives?formFactor=M.2+NVMe" className="text-primary hover:underline">M.2 NVMe</a>). 
+            Our engine will keep calculating the unit price even as you apply multiple filters.
+          </AccordionContent>
+        </AccordionItem>
+
+        <AccordionItem value="item-10">
+          <AccordionTrigger className="text-left font-semibold">Is realpricedata.com free to use?</AccordionTrigger>
+          <AccordionContent className="text-muted-foreground leading-relaxed">
+            Yes, it is completely free for users. We are supported by the Amazon Associates Program, earning a small 
+            commission on qualifying purchases made through our links. This revenue allows us to maintain the data infrastructure 
+            and keep provide unbiased value metrics to the community.
           </AccordionContent>
         </AccordionItem>
       </Accordion>

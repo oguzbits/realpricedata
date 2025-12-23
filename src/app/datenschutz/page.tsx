@@ -70,38 +70,29 @@ export default function DatenschutzPage() {
         </section>
 
         <section>
-          <h2 className="text-2xl font-semibold mb-4">3. Cookies</h2>
+          <h2 className="text-2xl font-semibold mb-4">3. Cookies & Analyse-Tools</h2>
           <div className="bg-card/50 p-6 rounded-lg border border-primary/20 space-y-4">
             <p>
-              Diese Website verwendet Cookies. Cookies sind kleine Textdateien, die auf Ihrem Endgerät gespeichert werden. 
-              Sie werden häufig verwendet, um Websites funktionsfähig zu machen oder effizienter zu gestalten, sowie um 
-              Informationen für die Betreiber der Website bereitzustellen.
+              Diese Website ist so konzipiert, dass sie **keine eigenen Cookies** für das Tracking oder die 
+              Funktionalität auf Ihrem Endgerät speichert. Wir legen großen Wert auf Datenschutz und nutzen daher 
+              moderne, datenschutzfreundliche Alternativen zu herkömmlichen Analyse-Tools.
             </p>
             
-            <h3 className="text-lg font-semibold">Wie wir Cookies verwenden</h3>
-            <ul className="list-disc list-inside space-y-2">
-              <li>
-                <strong>Notwendige Cookies:</strong> Diese Cookies sind für den Betrieb der Website erforderlich. 
-                Dazu gehört beispielsweise das Speichern Ihrer Cookie-Einstellungen.
-              </li>
-              <li>
-                <strong>Affiliate-Cookies:</strong> Als Teilnehmer am Amazon-Partnerprogramm verwenden wir Cookies, 
-                um die Herkunft von Bestellungen nachzuvollziehen. Wenn Sie auf einen Amazon-Link auf unserer Website 
-                klicken, wird ein Cookie gesetzt, damit Amazon zuordnen kann, dass Sie von unserer Seite kamen. 
-                Dies ermöglicht uns, eine Werbekostenerstattung zu erhalten.
-              </li>
-            </ul>
+            <h3 className="text-lg font-semibold">Vercel Analytics & Speed Insights (Cookieless)</h3>
+            <p>
+              Wir nutzen Vercel Analytics und Speed Insights, um die technische Performance und Nutzung unserer Website 
+              anonym zu analysieren. Dabei werden **keine Cookies gesetzt**. Die Daten werden vollständig 
+              anonymisiert erhoben und dienen ausschließlich der Verbesserung der Website-Geschwindigkeit und 
+              Nutzererfahrung.
+            </p>
 
-            <h3 className="text-lg font-semibold">Ihre Cookie-Einstellungen</h3>
+            <h3 className="text-lg font-semibold">Affiliate-Links (Amazon)</h3>
             <p>
-              Sie können Ihre Cookie-Einstellungen jederzeit ändern, indem Sie die Einstellungen Ihres Browsers anpassen. 
-              Die meisten Webbrowser erlauben eine gewisse Kontrolle über die meisten Cookies über die Browsereinstellungen.
+              Obwohl diese Website selbst keine Cookies setzt, führt das Anklicken eines Affiliate-Links (z. B. zu Amazon) 
+              dazu, dass Sie auf die Website des Anbieters weitergeleitet werden. In diesem Moment können vom jeweiligen 
+              Anbieter (z. B. Amazon) Cookies auf dessen Domain gesetzt werden, um die Herkunft der Bestellung 
+              nachzuvollziehen. Details dazu finden Sie im Abschnitt "Amazon Partnerprogramm".
             </p>
-            <p>
-              Um mehr über Cookies zu erfahren, einschließlich wie Sie sehen können, welche Cookies gesetzt wurden und 
-              wie Sie diese verwalten und löschen können, besuchen Sie <a href="https://www.allaboutcookies.org" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">www.allaboutcookies.org</a>.
-            </p>
-            <p>Rechtsgrundlage: Art. 6 Abs. 1 lit. a DSGVO (Einwilligung)</p>
           </div>
         </section>
 

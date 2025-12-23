@@ -68,13 +68,26 @@ export default function DatenschutzEnPage() {
         </section>
 
         <section>
-          <h2 className="text-2xl font-semibold mb-4">3. Cookies</h2>
-          <div className="bg-card/50 p-6 rounded-lg border border-primary/20">
-            <p className="mb-4">
-              This website uses cookies. Cookies are small text files stored on your device. You can adjust your cookie 
-              settings at any time.
+          <h2 className="text-2xl font-semibold mb-4">3. Cookies & Analytics</h2>
+          <div className="bg-card/50 p-6 rounded-lg border border-primary/20 space-y-4">
+            <p>
+              This website is designed to be **cookieless**. We do not store any cookies on your device for 
+              tracking or core functionality.
             </p>
-            <p>Legal basis: Art. 6 para. 1 lit. a GDPR (consent)</p>
+            
+            <h3 className="text-lg font-semibold">Vercel Analytics & Speed Insights (Cookieless)</h3>
+            <p>
+              We use Vercel Analytics and Speed Insights to monitor website performance and traffic anonymously. 
+              This service **does not use cookies**. Data is collected in an aggregated and anonymized manner 
+              that does not allow for personal identification.
+            </p>
+
+            <h3 className="text-lg font-semibold">Affiliate Links (Amazon)</h3>
+            <p>
+              While this site does not set cookies itself, clicking on an affiliate link (e.g., to Amazon) will 
+              redirect you to the provider's website. At that point, the provider (Amazon) may set cookies on their 
+              own domain to track the referral. Please see the next section "Amazon Affiliate Program" for more details.
+            </p>
           </div>
         </section>
 

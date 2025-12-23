@@ -4,7 +4,7 @@ import { filterProducts, sortProducts, FilterState } from '@/lib/utils/category-
 import { Category } from '@/lib/categories';
 
 interface UseCategoryProductsProps {
-  category: Category | undefined;
+  category: Omit<Category, 'icon'> | undefined;
   filters: FilterState;
 }
 

@@ -99,9 +99,7 @@ export const metadata: Metadata = {
     "mobile-web-app-capable": "yes",
     "apple-mobile-web-app-status-bar-style": "black-translucent",
   },
-  alternates: {
-    canonical: 'https://realpricedata.com',
-  },
+
   robots: {
     index: true,
     follow: true,

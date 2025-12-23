@@ -143,3 +143,7 @@ export function getCategoryPath(
 
   return path;
 }
+// Return a copy of the category without the icon function (for serialization)
+export function stripCategoryIcon(category: any): any {
+  return JSON.parse(JSON.stringify(category));
+}

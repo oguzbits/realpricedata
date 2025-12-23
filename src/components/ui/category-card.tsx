@@ -4,11 +4,12 @@ import type { Category } from "@/lib/categories"
 import { getCategoryPath } from "@/lib/categories"
 
 interface CategoryCardProps {
-  category: Category
+  category: Omit<Category, 'icon'>
+  Icon: React.ComponentType<{ className?: string }>
   country: string
 }
 
-export function CategoryCard({ category, country }: CategoryCardProps) {
+export function CategoryCard({ category, Icon, country }: CategoryCardProps) {
   return (
     <Link 
       className="no-underline group" 
@@ -17,7 +18,7 @@ export function CategoryCard({ category, country }: CategoryCardProps) {
     >
       <div className="flex items-center p-3 rounded-lg border border-border/50 bg-card/40 hover:bg-muted/40 hover:border-primary/30 transition-all">
         <div className="shrink-0 w-10 h-10 rounded-md bg-muted/50 flex items-center justify-center text-muted-foreground group-hover:text-primary transition-colors">
-          <category.icon className="h-5 w-5" aria-hidden="true" />
+          <Icon className="h-5 w-5" aria-hidden="true" />
         </div>
         <div className="ml-3 flex-1 min-w-0">
           <div className="flex items-center gap-2">

@@ -4,10 +4,12 @@ import { Search } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Category } from "@/lib/categories";
 
+import { getCategoryIcon } from "@/lib/category-icons";
+
 interface CategoryHeaderProps {
-  category: Category;
+  category: Omit<Category, 'icon'>;
   countryCode: string;
-  breadcrumbs: Category[];
+  breadcrumbs: (Omit<Category, 'icon'> & { Icon: React.ComponentType<{ className?: string }> })[];
   productCount: number;
   searchValue: string;
   onSearchChange: (value: string) => void;
@@ -21,6 +23,7 @@ export function CategoryHeader({
   searchValue,
   onSearchChange,
 }: CategoryHeaderProps) {
+  const Icon = getCategoryIcon(category.slug);
   return (
     <div className="flex flex-col gap-6">
       {/* Breadcrumb */}
@@ -61,7 +64,7 @@ export function CategoryHeader({
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
         <div>
           <div className="flex items-center gap-3 mb-2">
-            <category.icon className="h-6 w-6 sm:h-8 sm:w-8 text-primary shrink-0" aria-hidden="true" />
+            <Icon className="h-6 w-6 sm:h-8 sm:w-8 text-primary shrink-0" aria-hidden="true" />
             <h1 className="text-xl sm:text-2xl font-bold tracking-tight">{category.name}</h1>
           </div>
           <p className="text-muted-foreground text-xs sm:text-sm">

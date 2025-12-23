@@ -8,7 +8,12 @@ import {
   TableRow 
 } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
-import { ChevronDown, ChevronUp, ChevronsUpDown } from "lucide-react";
+import { ChevronDown, ChevronUp, ChevronsUpDown, Info } from "lucide-react";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import { cn } from "@/lib/utils";
 import { Product, getAffiliateRedirectPath } from "@/lib/product-registry";
 
@@ -61,11 +66,22 @@ export function ProductTable({
               aria-sort={sortBy === 'pricePerUnit' ? (sortOrder === 'asc' ? 'ascending' : 'descending') : 'none'}
               role="columnheader"
             >
-              <div className="flex items-center">Price/{unitLabel} {getSortIcon('pricePerUnit')}</div>
+              <div className="flex items-center gap-1.5">
+                <span>Price/{unitLabel}</span>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Info className="h-3.5 w-3.5 text-muted-foreground/70 hover:text-foreground transition-colors cursor-help" />
+                  </TooltipTrigger>
+                  <TooltipContent side="top" align="start" className="max-w-[200px]">
+                    This is the calculated price per {unitLabel} of capacity, allowing you to easily compare value across different sizes.
+                  </TooltipContent>
+                </Tooltip>
+                {getSortIcon('pricePerUnit')}
+              </div>
             </TableHead>
             <TableHead className="min-w-[200px]">Product</TableHead>
             <TableHead 
-              className="cursor-pointer hover:bg-muted/50 focus-visible:bg-muted/50 outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-inset" 
+              className="cursor-pointer hover:bg-muted/50 focus-visible:bg-muted/50 outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-inset pr-12" 
               onClick={() => onSort('price')}
               onKeyDown={(e) => handleKeyDown(e, 'price')}
               tabIndex={0}
@@ -110,12 +126,13 @@ export function ProductTable({
                   {product.title}
                 </a>
               </TableCell>
-              <TableCell className="font-mono text-muted-foreground whitespace-nowrap">
+              <TableCell className="font-mono text-muted-foreground whitespace-nowrap pr-12">
                 {formatCurrency(product.price)}
               </TableCell>
               <TableCell className="font-mono text-muted-foreground">
                 {product.capacity} {product.capacityUnit}
               </TableCell>
+
               <TableCell className="hidden md:table-cell text-muted-foreground text-sm">
                 {product.warranty}
               </TableCell>

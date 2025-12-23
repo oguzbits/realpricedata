@@ -91,8 +91,9 @@ export function ProductCard({
             src={image} 
             alt={title}
             fill
-            className="object-contain p-4 transition-transform duration-300 group-hover:scale-110"
-            sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+            className="object-contain p-4"
+            sizes="(max-width: 640px) 220px, (max-width: 768px) 265px, (max-width: 1024px) 293px, 300px"
+            quality={80}
           />
         ) : (
           <Package className="w-10 h-10 text-muted-foreground/10 stroke-1" />

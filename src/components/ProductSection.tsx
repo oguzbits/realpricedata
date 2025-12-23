@@ -33,6 +33,10 @@ export function ProductSection({
   const { country } = useCountry();
   const countryConfig = getCountryByCode(country);
   const carouselRef = useRef<CarouselRef>(null);
+  const [scrollState, setScrollState] = React.useState({
+    canScrollLeft: false,
+    canScrollRight: false,
+  });
 
   const filteredProducts = !onCategoryChange || !selectedCategory || selectedCategory === "all"
     ? products
@@ -53,6 +57,8 @@ export function ProductSection({
         href={`/${country}/categories`}
         onScrollLeft={() => carouselRef.current?.scrollLeft()}
         onScrollRight={() => carouselRef.current?.scrollRight()}
+        canScrollLeft={scrollState.canScrollLeft}
+        canScrollRight={scrollState.canScrollRight}
         categories={categories}
         selectedCategory={selectedCategory}
         onCategoryChange={onCategoryChange}
@@ -60,7 +66,10 @@ export function ProductSection({
 
       {children}
 
-      <Carousel ref={carouselRef}>
+      <Carousel 
+        ref={carouselRef}
+        onScrollStateChange={setScrollState}
+      >
         {processedProducts.map((product) => (
           <ProductCard
             key={product.asin}
@@ -81,3 +90,4 @@ export function ProductSection({
     </section>
   );
 }
+

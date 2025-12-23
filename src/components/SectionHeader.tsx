@@ -11,6 +11,8 @@ import {
   SelectValue 
 } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
+
 
 interface SectionHeaderProps {
   title: string;
@@ -18,6 +20,8 @@ interface SectionHeaderProps {
   href: string;
   onScrollLeft?: () => void;
   onScrollRight?: () => void;
+  canScrollLeft?: boolean;
+  canScrollRight?: boolean;
   categories?: { label: string; value: string }[];
   selectedCategory?: string;
   onCategoryChange?: (value: string) => void;
@@ -29,6 +33,8 @@ export function SectionHeader({
   href,
   onScrollLeft,
   onScrollRight,
+  canScrollLeft = false,
+  canScrollRight = false,
   categories,
   selectedCategory,
   onCategoryChange
@@ -68,7 +74,10 @@ export function SectionHeader({
               variant="outline"
               size="icon"
               onClick={onScrollLeft}
-              className="w-9 h-9 bg-secondary/50 border-border/60 rounded-xl hover:bg-secondary/70 hover:text-primary hover:border-primary/20 transition-all active:scale-95"
+              className={cn(
+                "w-9 h-9 bg-secondary/50 border-border/60 rounded-xl hover:bg-secondary/70 hover:text-primary hover:border-primary/20 transition-all active:scale-95",
+                !canScrollLeft && "opacity-0 pointer-events-none scale-90"
+              )}
             >
               <ChevronLeft className="w-4 h-4" />
             </Button>
@@ -76,7 +85,10 @@ export function SectionHeader({
               variant="outline"
               size="icon"
               onClick={onScrollRight}
-              className="w-9 h-9 bg-secondary/50 border-border/60 rounded-xl hover:bg-secondary/70 hover:text-primary hover:border-primary/20 transition-all active:scale-95"
+              className={cn(
+                "w-9 h-9 bg-secondary/50 border-border/60 rounded-xl hover:bg-secondary/70 hover:text-primary hover:border-primary/20 transition-all active:scale-95",
+                !canScrollRight && "opacity-0 pointer-events-none scale-90"
+              )}
             >
               <ChevronRight className="w-4 h-4" />
             </Button>
@@ -86,3 +98,4 @@ export function SectionHeader({
     </div>
   );
 }
+

@@ -54,7 +54,7 @@ export function ProductTable({
         <TableHeader>
           <TableRow>
             <TableHead 
-              className="cursor-pointer hover:bg-muted/50 focus-visible:bg-muted/50 outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-inset" 
+              className="cursor-pointer hover:bg-muted/50 focus-visible:bg-muted/50 outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-inset w-[140px]" 
               onClick={() => onSort('pricePerUnit')}
               onKeyDown={(e) => handleKeyDown(e, 'pricePerUnit')}
               tabIndex={0}
@@ -63,6 +63,7 @@ export function ProductTable({
             >
               <div className="flex items-center">Price/{unitLabel} {getSortIcon('pricePerUnit')}</div>
             </TableHead>
+            <TableHead className="min-w-[200px]">Product</TableHead>
             <TableHead 
               className="cursor-pointer hover:bg-muted/50 focus-visible:bg-muted/50 outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-inset" 
               onClick={() => onSort('price')}
@@ -89,43 +90,14 @@ export function ProductTable({
               {categorySlug === 'power-supplies' ? 'Certification' : 'Technology'}
             </TableHead>
             <TableHead className="hidden sm:table-cell">Condition</TableHead>
-            <TableHead>Product</TableHead>
+            <TableHead className="text-right">Action</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
           {products.map((product, index) => (
-            <TableRow key={product.id || product.slug} className="group">
-              <TableCell className="font-medium">
+            <TableRow key={product.id || product.slug} className="group hover:bg-muted/30 transition-colors">
+              <TableCell className="font-mono font-bold text-foreground">
                 {formatCurrency(product.pricePerUnit || 0, 3)}
-              </TableCell>
-              <TableCell>
-                {formatCurrency(product.price)}
-              </TableCell>
-              <TableCell>
-                {product.capacity} {product.capacityUnit}
-              </TableCell>
-              <TableCell className="hidden md:table-cell text-muted-foreground text-base">
-                {product.warranty}
-              </TableCell>
-              <TableCell className="hidden sm:table-cell text-muted-foreground text-base">
-                {product.formFactor}
-              </TableCell>
-              <TableCell className="hidden sm:table-cell text-muted-foreground text-base">
-                {categorySlug === 'power-supplies' 
-                  ? (product.certification || product.technology) 
-                  : product.technology}
-              </TableCell>
-              <TableCell className="hidden sm:table-cell">
-                <Badge 
-                  className={cn(
-                    "text-sm font-medium border-0 px-2 py-0.5",
-                    product.condition === 'New' && "bg-emerald-100 text-emerald-800 dark:bg-emerald-500/20 dark:text-emerald-300 hover:bg-emerald-200 dark:hover:bg-emerald-500/30",
-                    product.condition === 'Renewed' && "bg-blue-100 text-blue-800 dark:bg-blue-500/20 dark:text-blue-300 hover:bg-blue-200 dark:hover:bg-blue-500/30",
-                    product.condition === 'Used' && "bg-amber-100 text-amber-800 dark:bg-amber-500/20 dark:text-amber-300 hover:bg-amber-200 dark:hover:bg-amber-500/30"
-                  )}
-                >
-                  {product.condition}
-                </Badge>
               </TableCell>
               <TableCell>
                 <a 
@@ -133,9 +105,52 @@ export function ProductTable({
                   onClick={() => onAffiliateClick(product, index)}
                   target="_blank" 
                   rel="noopener noreferrer"
-                  className="text-primary underline text-base line-clamp-2 block"
+                  className="text-primary font-medium hover:underline text-base line-clamp-2 block leading-snug"
                 >
                   {product.title}
+                </a>
+              </TableCell>
+              <TableCell className="font-mono text-muted-foreground whitespace-nowrap">
+                {formatCurrency(product.price)}
+              </TableCell>
+              <TableCell className="font-mono text-muted-foreground">
+                {product.capacity} {product.capacityUnit}
+              </TableCell>
+              <TableCell className="hidden md:table-cell text-muted-foreground text-sm">
+                {product.warranty}
+              </TableCell>
+              <TableCell className="hidden sm:table-cell text-muted-foreground text-sm">
+                {product.formFactor}
+              </TableCell>
+              <TableCell className="hidden sm:table-cell text-muted-foreground text-sm">
+                {categorySlug === 'power-supplies' 
+                  ? (product.certification || product.technology) 
+                  : product.technology}
+              </TableCell>
+              <TableCell className="hidden sm:table-cell">
+                <Badge 
+                  variant="outline"
+                  className={cn(
+                    "text-xs font-semibold px-2 py-0 border-0 shadow-none",
+                    product.condition === 'New' && "bg-emerald-100/50 text-emerald-800 dark:bg-emerald-500/10 dark:text-emerald-300",
+                    product.condition === 'Renewed' && "bg-blue-100/50 text-blue-800 dark:bg-blue-500/10 dark:text-blue-300",
+                    product.condition === 'Used' && "bg-amber-100/50 text-amber-800 dark:bg-amber-500/10 dark:text-amber-300"
+                  )}
+                >
+                  {product.condition}
+                </Badge>
+              </TableCell>
+              <TableCell className="text-right">
+                <a 
+                  href={getAffiliateRedirectPath(product.slug)}
+                  onClick={() => onAffiliateClick(product, index)}
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="inline-block"
+                >
+                  <button className="h-9 px-4 bg-[#FFD814] hover:bg-[#F7CA00] text-black font-bold text-sm rounded-xl shadow-sm border border-[#FCD200]/50 transition-all cursor-pointer whitespace-nowrap active:scale-[0.98]">
+                    View Deal
+                  </button>
                 </a>
               </TableCell>
             </TableRow>

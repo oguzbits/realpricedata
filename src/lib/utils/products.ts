@@ -63,7 +63,7 @@ export function calculateProductMetrics(p: Partial<Product>): Partial<Product> {
 /**
  * Optimizes external image URLs, specifically Amazon's ._AC_ tags
  */
-export function getOptimizedImageUrl(url?: string, width: number = 400): string {
+export function getOptimizedImageUrl(url?: string, width: number = 250): string {
   if (!url) return "";
   
   // If it's an Amazon image, replace the size tag (e.g. _SX522_ or _SY600_) 
@@ -91,7 +91,7 @@ export function adaptToUIModel(p: Product, currency: string = "EUR", symbol: str
       currency, 
       displayAmount: `${enhancedProduct.price} ${symbol}` 
     },
-    image: getOptimizedImageUrl(enhancedProduct.image, 400), 
+    image: getOptimizedImageUrl(enhancedProduct.image), 
     url: `/out/${enhancedProduct.slug}`, // Standard redirect path
     category: enhancedProduct.category,
     capacity: `${enhancedProduct.capacity}${enhancedProduct.capacityUnit}`,

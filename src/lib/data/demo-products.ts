@@ -35,7 +35,7 @@ export type PowerSupplyProduct = {
   name: string;
   price: number;
   wattage: number;
-  pricePerUnit: number; // Price per 100W
+  pricePerUnit: number; // Price per 1W
   efficiency: "80+ Gold" | "80+ Platinum" | "80+ Bronze" | "80+ White";
   modularity: "Full" | "Semi" | "Non";
   condition: "New" | "Used" | "Renewed";
@@ -173,14 +173,14 @@ export const batteryProducts: BatteryProduct[] = [
   },
 ].sort((a, b) => a.pricePerUnit - b.pricePerUnit);
 
-// Power Supply Products (sorted by price per 100W)
+// Power Supply Products (sorted by price per W)
 export const powerSupplyProducts: PowerSupplyProduct[] = [
   {
     id: "1",
     name: "Corsair RM750e (2023)",
     price: 89.99,
     wattage: 750,
-    pricePerUnit: 11.99,
+    pricePerUnit: 0.12,
     efficiency: "80+ Gold" as const,
     modularity: "Full" as const,
     condition: "New" as const,
@@ -192,7 +192,7 @@ export const powerSupplyProducts: PowerSupplyProduct[] = [
     name: "EVGA SuperNOVA 850 GT",
     price: 109.99,
     wattage: 850,
-    pricePerUnit: 12.94,
+    pricePerUnit: 0.129,
     efficiency: "80+ Gold" as const,
     modularity: "Full" as const,
     condition: "New" as const,
@@ -204,7 +204,7 @@ export const powerSupplyProducts: PowerSupplyProduct[] = [
     name: "Thermaltake Toughpower GX2",
     price: 79.99,
     wattage: 600,
-    pricePerUnit: 13.33,
+    pricePerUnit: 0.133,
     efficiency: "80+ Gold" as const,
     modularity: "Non" as const,
     condition: "New" as const,
@@ -216,7 +216,7 @@ export const powerSupplyProducts: PowerSupplyProduct[] = [
     name: "Seasonic FOCUS GX-750",
     price: 119.99,
     wattage: 750,
-    pricePerUnit: 15.99,
+    pricePerUnit: 0.16,
     efficiency: "80+ Gold" as const,
     modularity: "Full" as const,
     condition: "New" as const,
@@ -228,7 +228,7 @@ export const powerSupplyProducts: PowerSupplyProduct[] = [
     name: "be quiet! Straight Power 12",
     price: 189.99,
     wattage: 850,
-    pricePerUnit: 22.35,
+    pricePerUnit: 0.224,
     efficiency: "80+ Platinum" as const,
     modularity: "Full" as const,
     condition: "New" as const,
@@ -272,7 +272,7 @@ export const categoryConfig = {
   powersupplies: {
     title: "Power Supplies",
     url: "realpricedata.com/us/electronics/power-supplies",
-    unitLabel: "Price/100W",
+    unitLabel: "Price/W",
     currency: "$",
     insightText: "Mid-range 750W units often offer the best value per watt!",
     filters: {

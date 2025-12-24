@@ -83,11 +83,6 @@ export function HeroTableDemo() {
             </div>
           </div>
 
-          {/* Value Proposition Badge */}
-          <Badge className="bg-primary/20 text-primary border-primary/30 text-sm animate-pulse shrink-0">
-            <Sparkles className="w-3 h-3 mr-1" />
-            Sorted by Unit Price
-          </Badge>
         </div>
 
         <div
@@ -97,67 +92,7 @@ export function HeroTableDemo() {
           )}
           style={{ willChange: fadeOut ? "opacity" : "auto" }}
         >
-          {/* Sidebar */}
-          <div className="w-28 sm:w-40 border-r border-border bg-muted/20 p-2 sm:p-4 hidden sm:block">
-            <div className="space-y-6">
-              <div>
-                <div className="text-sm font-semibold text-foreground mb-3">
-                  {config.filters.filter1.title}
-                </div>
-                <div className="space-y-2">
-                  {config.filters.filter1.options.map((option) => (
-                    <div key={option} className="flex items-center gap-2">
-                      <div
-                        className="w-3 h-3 rounded-[3px] bg-primary/80"
-                        aria-hidden="true"
-                      />
-                      <span className="text-sm text-muted-foreground">
-                        {option}
-                      </span>
-                    </div>
-                  ))}
-                </div>
-              </div>
 
-              <div>
-                <div className="text-sm font-semibold text-foreground mb-3">
-                  {config.filters.filter2.title}
-                </div>
-                <div className="space-y-2">
-                  {config.filters.filter2.options.map((option) => (
-                    <div key={option} className="flex items-center gap-2">
-                      <div
-                        className="w-3 h-3 rounded-[3px] border border-muted-foreground/30"
-                        aria-hidden="true"
-                      />
-                      <span className="text-sm text-muted-foreground">
-                        {option}
-                      </span>
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              <div>
-                <div className="text-sm font-semibold text-foreground mb-3">
-                  {config.filters.filter3.title}
-                </div>
-                <div className="space-y-2">
-                  {config.filters.filter3.options.map((option) => (
-                    <div key={option} className="flex items-center gap-2">
-                      <div
-                        className="w-3 h-3 rounded-[3px] border border-muted-foreground/30"
-                        aria-hidden="true"
-                      />
-                      <span className="text-sm text-muted-foreground">
-                        {option}
-                      </span>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </div>
-          </div>
 
           {/* Main Content */}
           <div className="flex-1 flex flex-col min-w-0 bg-muted/40">
@@ -240,7 +175,7 @@ export function HeroTableDemo() {
               <div className="flex items-center gap-2 text-sm">
                 <div className="flex items-center gap-1.5 px-2 py-0.5 bg-primary/10 rounded-full text-xs font-bold text-primary shrink-0 uppercase tracking-wider">
                   <Sparkles className="w-3 h-3" />
-                  Insight
+                  <p className="hidden xl:block">Insight</p>
                 </div>
                 <p className="text-foreground/80 font-medium truncate">
                   {config.insightText}

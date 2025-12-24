@@ -84,7 +84,7 @@ export function HomeContent({ country }: { country: string }) {
                 </div>
               </div>
             </div>
-            <div className="relative w-full max-w-[800px] mx-auto lg:ml-auto order-2 lg:order-2">
+            <div className="hidden lg:block relative w-full max-w-[800px] mx-auto lg:ml-auto order-2 lg:order-2">
               <HeroTableDemo />
             </div>
           </div>

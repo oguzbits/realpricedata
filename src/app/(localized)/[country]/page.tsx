@@ -15,7 +15,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const domain = countryConfig?.domain || "amazon.com";
 
   return {
-    title: `Amazon ${code} Price Per Unit Tracker & Storage Deals | realpricedata.com`,
+    title: `Amazon ${code} Unit Price Tracker & Deals | realpricedata.com`,
     description: `Compare Amazon ${name} (${domain}) products by their true cost per TB, GB, or unit. Find the best storage deals and hardware savings in ${name} instantly.`,
     alternates: {
       canonical: `https://realpricedata.com/${country.toLowerCase()}`,

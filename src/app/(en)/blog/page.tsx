@@ -1,10 +1,9 @@
-import { Metadata } from "next";
-import { getAllBlogPosts } from "@/lib/blog";
 import { BlogCard } from "@/components/blog/blog-card";
-import { SectionHeader } from "@/components/SectionHeader";
+import { getAllBlogPosts } from "@/lib/blog";
+import { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Blog | Market Trends & Hardware Pricing Insights",
+  title: "Blog | Hardware Pricing & Market Trends",
   description:
     "In-depth analysis of RAM, SSD, and HDD pricing trends. Learn how to save money on your next hardware purchase.",
   alternates: {

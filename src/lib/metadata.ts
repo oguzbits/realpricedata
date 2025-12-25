@@ -4,7 +4,7 @@ export const siteMetadata: Metadata = {
   metadataBase: new URL("https://realpricedata.com"),
   title: {
     default:
-      "Amazon Germany (DE) Price Per Unit Tracker, Storage Deals & True Value | realpricedata.com",
+      "Amazon DE Unit Price Tracker & Deals | realpricedata.com",
     template: "%s | realpricedata.com",
   },
   description:
@@ -49,7 +49,7 @@ export const siteMetadata: Metadata = {
     type: "website",
     locale: "en_US",
     url: "https://realpricedata.com",
-    title: "realpricedata.com - Amazon Germany (DE) Price Per Unit Tracker",
+    title: "realpricedata.com - Unit Price Tracker",
     description:
       "Compare Amazon.de products by their true cost per TB, GB, or unit. Find the best storage deals and hardware savings in Germany instantly.",
     siteName: "realpricedata.com",
@@ -64,7 +64,7 @@ export const siteMetadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "realpricedata.com - Amazon Germany (DE) Price Per Unit Tracker",
+    title: "realpricedata.com - Unit Price Tracker",
     description:
       "Compare Amazon.de products by their true cost per TB, GB, or unit. Find the best storage deals and hardware savings in Germany instantly.",
     images: ["/og-image.png"],

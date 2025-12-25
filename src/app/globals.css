@@ -7,19 +7,6 @@
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --color-sidebar-ring: var(--sidebar-ring);
-  --color-sidebar-border: var(--sidebar-border);
-  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
-  --color-sidebar-accent: var(--sidebar-accent);
-  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
-  --color-sidebar-primary: var(--sidebar-primary);
-  --color-sidebar-foreground: var(--sidebar-foreground);
-  --color-sidebar: var(--sidebar);
-  --color-chart-5: var(--chart-5);
-  --color-chart-4: var(--chart-4);
-  --color-chart-3: var(--chart-3);
-  --color-chart-2: var(--chart-2);
-  --color-chart-1: var(--chart-1);
   --color-ring: var(--ring);
   --color-input: var(--input);
   --color-border: var(--border);
@@ -40,11 +27,6 @@
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
   --radius-xl: calc(var(--radius) + 4px);
-
-  /* Brand specific */
-  --color-brand-real: var(--brand-real);
-  --color-brand-price: var(--brand-price);
-  --color-brand-data: var(--brand-data);
 }
 
 :root {
@@ -81,26 +63,6 @@
   --input: oklch(0.92 0.005 240);
   --ring: oklch(0.55 0.2 260);
 
-  /* Brand Constants */
-  --brand-real: oklch(0.6 0.2 25);
-  --brand-price: oklch(0.7 0.2 45);
-  --brand-data: oklch(0.85 0.18 85);
-
-  --chart-1: oklch(0.55 0.22 255);
-  --chart-2: oklch(0.65 0.2 230);
-  --chart-3: oklch(0.7 0.15 200);
-  --chart-4: oklch(0.6 0.2 170);
-  --chart-5: oklch(0.5 0.25 140);
-
-  --sidebar: oklch(0.995 0.002 240);
-  --sidebar-foreground: oklch(0.2 0.01 240);
-  --sidebar-primary: oklch(0.55 0.2 260);
-  --sidebar-primary-foreground: oklch(1 0 0);
-  --sidebar-accent: oklch(0.96 0.005 240);
-  --sidebar-accent-foreground: oklch(0.2 0.01 240);
-  --sidebar-border: oklch(0.92 0.005 240);
-  --sidebar-ring: oklch(0.55 0.22 255);
-
   /* CamelCamelCamel Branding */
   --ccc-red: #e52a00;
   --ccc-orange: #ff6200;
@@ -135,20 +97,6 @@
   --border: oklch(0.25 0.03 240);
   --input: oklch(0.25 0.03 240);
   --ring: oklch(0.65 0.18 260);
-
-  /* Brand Constants (Dark Mode adjustment for visibility) */
-  --brand-real: oklch(0.7 0.18 25);
-  --brand-price: oklch(0.75 0.18 45);
-  --brand-data: oklch(0.85 0.15 85);
-
-  --sidebar: oklch(0.14 0.02 240);
-  --sidebar-foreground: oklch(0.95 0.01 240);
-  --sidebar-primary: oklch(0.65 0.18 260);
-  --sidebar-primary-foreground: oklch(1 0 0);
-  --sidebar-accent: oklch(0.18 0.02 240);
-  --sidebar-accent-foreground: oklch(0.95 0.01 240);
-  --sidebar-border: oklch(0.22 0.03 240);
-  --sidebar-ring: oklch(0.65 0.18 260);
 }
 
 @layer base {
@@ -173,52 +121,7 @@
 
   /* Improved focus indicators for keyboard navigation */
   *:focus-visible {
-    outline: 2px solid hsl(var(--ring));
+    outline: 2px solid var(--ring);
     outline-offset: 2px;
-  }
-}
-
-@keyframes float {
-  0%,
-  100% {
-    transform: translateY(0px);
-  }
-  50% {
-    transform: translateY(-20px);
-  }
-}
-
-@keyframes float-delayed {
-  0%,
-  100% {
-    transform: translateY(0px);
-  }
-  50% {
-    transform: translateY(-15px);
-  }
-}
-
-@keyframes pulse-slow {
-  0%,
-  100% {
-    opacity: 1;
-  }
-  50% {
-    opacity: 0.8;
-  }
-}
-
-@layer utilities {
-  .animate-float {
-    animation: float 6s ease-in-out infinite;
-  }
-
-  .animate-float-delayed {
-    animation: float-delayed 8s ease-in-out infinite;
-    animation-delay: 2s;
-  }
-
-  .animate-pulse-slow {
-    animation: pulse-slow 3s ease-in-out infinite;
   }
 }

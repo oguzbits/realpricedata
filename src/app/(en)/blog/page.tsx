@@ -1,6 +1,7 @@
 import { BlogCard } from "@/components/blog/blog-card";
 import { getAllBlogPosts } from "@/lib/blog";
 import { Metadata } from "next";
+import Link from "next/link";
 
 export const metadata: Metadata = {
   title: "Blog | Hardware Pricing & Market Trends",
@@ -16,7 +17,23 @@ export default async function BlogIndexPage() {
 
   return (
     <div className="bg-background flex min-h-screen flex-col gap-0 pb-16">
-      <div className="container mx-auto px-4 pt-12 md:pt-20">
+      <div className="container mx-auto px-4 pt-12 md:pt-16">
+        {/* Breadcrumb */}
+        <nav className="mb-8" aria-label="Breadcrumb">
+          <ol className="text-muted-foreground flex flex-wrap items-center gap-1.5 gap-y-2 text-sm leading-normal sm:gap-2 sm:text-base">
+            <li>
+              <Link
+                href="/"
+                className="hover:text-foreground transition-colors"
+              >
+                Home
+              </Link>
+            </li>
+            <li className="text-muted-foreground/50">/</li>
+            <li className="text-foreground font-medium">Blog</li>
+          </ol>
+        </nav>
+
         <div className="mb-12 max-w-3xl">
           <h1 className="mb-6 text-4xl leading-tight font-black tracking-tighter sm:text-5xl md:text-6xl">
             Hardware Market <br />

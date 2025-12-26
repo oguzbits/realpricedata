@@ -1,16 +1,16 @@
-import { Metadata } from "next";
-import { notFound } from "next/navigation";
-import { getBlogPostBySlug, getAllBlogPosts } from "@/lib/blog";
-import { MarkdownRenderer } from "@/components/blog/markdown-renderer";
 import { ArticleSchema } from "@/components/blog/article-schema";
-import { Calendar, Clock, User, ChevronLeft } from "lucide-react";
-import Link from "next/link";
+import { MarkdownRenderer } from "@/components/blog/markdown-renderer";
 import {
   Accordion,
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
+import { getAllBlogPosts, getBlogPostBySlug } from "@/lib/blog";
+import { Calendar, Clock, User } from "lucide-react";
+import { Metadata } from "next";
+import Link from "next/link";
+import { notFound } from "next/navigation";
 
 interface BlogPostPageProps {
   params: Promise<{ slug: string }>;
@@ -72,14 +72,33 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
 
       {/* Article Header */}
       <header className="bg-muted/30 border-b">
-        <div className="container mx-auto max-w-4xl px-4 py-12 md:py-20">
-          <Link
-            href="/blog"
-            className="text-muted-foreground hover:text-primary group mb-8 inline-flex items-center gap-2 text-base font-bold transition-colors"
-          >
-            <ChevronLeft className="h-4 w-4 transition-transform group-hover:-translate-x-1" />
-            Back to Blog
-          </Link>
+        <div className="container mx-auto max-w-4xl px-4 py-8 md:py-12">
+          {/* Breadcrumb */}
+          <nav className="mb-8" aria-label="Breadcrumb">
+            <ol className="text-muted-foreground flex flex-wrap items-center gap-1.5 gap-y-2 text-sm leading-normal sm:gap-2 sm:text-base">
+              <li>
+                <Link
+                  href="/"
+                  className="hover:text-foreground transition-colors"
+                >
+                  Home
+                </Link>
+              </li>
+              <li className="text-muted-foreground/50">/</li>
+              <li>
+                <Link
+                  href="/blog"
+                  className="hover:text-foreground transition-colors"
+                >
+                  Blog
+                </Link>
+              </li>
+              <li className="text-muted-foreground/50">/</li>
+              <li className="text-foreground font-medium wrap-break-word">
+                {post.title}
+              </li>
+            </ol>
+          </nav>
 
           <div className="text-muted-foreground mb-6 flex flex-wrap items-center gap-4 text-base font-medium">
             <div className="flex items-center gap-1.5">

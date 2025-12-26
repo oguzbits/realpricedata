@@ -1,5 +1,5 @@
-import Link from "next/link";
 import Image from "next/image";
+import Link from "next/link";
 
 export function Footer() {
   return (
@@ -33,7 +33,7 @@ export function Footer() {
           </div>
 
           <nav className="text-base" aria-label="Legal information">
-            <h4 className="mb-3 font-semibold">Quick Links</h4>
+            <h4 className="mb-3 font-semibold">About realpricedata</h4>
             <ul className="space-y-2">
               <li>
                 <Link

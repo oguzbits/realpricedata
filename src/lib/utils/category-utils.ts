@@ -25,9 +25,10 @@ export function filterProducts(
   // 1. Search Filter
   if (filters.search) {
     const searchLower = filters.search.toLowerCase();
-    filtered = filtered.filter((p) =>
-      p.title.toLowerCase().includes(searchLower),
-    );
+    filtered = filtered.filter((p) => {
+      const title = typeof p.title === "string" ? p.title : Object.values(p.title).join(" ");
+      return title.toLowerCase().includes(searchLower);
+    });
   }
 
   // 2. Condition Filter
@@ -39,7 +40,7 @@ export function filterProducts(
   if (filters.technology && filters.technology.length > 0) {
     filtered = filtered.filter((p) => {
       const techVal = p.technology || "";
-      const certVal = (p as any).certification || "";
+      const certVal = (p as Product).certification || "";
 
       if (categorySlug === "power-supplies") {
         return (
@@ -108,8 +109,8 @@ export function sortProducts(
       return isAsc ? aValue - bValue : bValue - aValue;
     }
 
-    const aStr = String(aValue || "");
-    const bStr = String(bValue || "");
+    const aStr = typeof aValue === "string" ? aValue : typeof aValue === "object" && aValue !== null ? Object.values(aValue)[0] : String(aValue || "");
+    const bStr = typeof bValue === "string" ? bValue : typeof bValue === "object" && bValue !== null ? Object.values(bValue)[0] : String(bValue || "");
 
     if (aStr < bStr) return isAsc ? -1 : 1;
     if (aStr > bStr) return isAsc ? 1 : -1;

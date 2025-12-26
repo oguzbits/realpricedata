@@ -105,8 +105,16 @@ export function getAlternateLanguages(path: string = "") {
 
   // We are currently using /de as our primary localized version for Amazon.de unit prices
   // x-default should point to our primary version for global users
-  return {
+  const alternates: Record<string, string> = {
     "en-DE": `${baseUrl}/de${cleanPath}`,
     "x-default": `${baseUrl}/de${cleanPath}`,
   };
+
+  // Only add 'en' for the homepage to provide a self-referencing link for the root domain.
+  // Marketplace subpages currently only exist under /[country] prefixes.
+  if (cleanPath === "") {
+    alternates["en"] = baseUrl;
+  }
+
+  return alternates;
 }

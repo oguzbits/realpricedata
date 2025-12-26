@@ -8,7 +8,7 @@ export const siteMetadata: Metadata = {
     template: "%s | realpricedata.com",
   },
   description:
-    "Amazon Germany (DE) unit price tracker. Compare HDD, SSD, and RAM by true cost per unit (EUR/TB & GB). Find the best storage deals and hardware savings instantly.",
+    "Amazon DE price tracker for hardware & storage. Compare HDD, SSD, RAM and more by true cost per TB/GB. Find the best value hardware deals instantly.",
   keywords: [
     "Amazon price tracker",
     "price per unit",
@@ -51,7 +51,7 @@ export const siteMetadata: Metadata = {
     url: "https://realpricedata.com",
     title: "realpricedata.com - Unit Price Tracker",
     description:
-      "Compare Amazon.de products by their true cost per TB, GB, or unit. Find the best storage deals and hardware savings in Germany instantly.",
+      "Compare Amazon DE hardware by true cost per TB/GB. Track HDD, SSD, and RAM prices to find the best value deals instantly.",
     siteName: "realpricedata.com",
     images: [
       {
@@ -66,7 +66,7 @@ export const siteMetadata: Metadata = {
     card: "summary_large_image",
     title: "realpricedata.com - Unit Price Tracker",
     description:
-      "Compare Amazon.de products by their true cost per TB, GB, or unit. Find the best storage deals and hardware savings in Germany instantly.",
+      "Compare Amazon DE hardware by true cost per TB/GB. Track HDD, SSD, and RAM prices to find the best value deals instantly.",
     images: ["/og-image.png"],
     creator: "@realpricedata",
   },

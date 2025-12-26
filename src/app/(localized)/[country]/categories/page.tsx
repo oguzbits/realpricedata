@@ -17,8 +17,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const canonicalUrl = `https://realpricedata.com/${validCountry.toLowerCase()}/categories`;
 
   return {
-    title: `All Product Categories - Amazon ${validCountry.toUpperCase()} | realpricedata.com`,
-    description: `Browse all tracked product categories on Amazon ${validCountry.toUpperCase()}. Compare storage and memory prices by their true cost per unit to find the best deals.`,
+    title: `All Categories - Amazon ${validCountry.toUpperCase()} | realpricedata.com`,
+    description: `Browse all tracked product categories on Amazon ${validCountry.toUpperCase()}. Compare hardware prices by true cost per TB/GB to find the best value deals.`,
     alternates: {
       canonical: canonicalUrl,
       languages: getAlternateLanguages("/categories"),

@@ -8,14 +8,14 @@ import productsData from "@/data/products.json";
  */
 
 export interface Product {
-  id?: number; // Optional for backwards compatibility
+  id?: number;
   slug: string;
-  asin: string;
-  title: string;
+  asin: string | Record<string, string>;
+  title: string | Record<string, string>;
   category: string;
   image?: string;
   affiliateUrl: string;
-  price: number;
+  prices: Record<string, number>; // New multi-market prices
   capacity: number;
   capacityUnit: "GB" | "TB" | "W";
   normalizedCapacity?: number;

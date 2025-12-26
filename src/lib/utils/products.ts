@@ -48,10 +48,14 @@ const UNIT_CONVERSION: Record<string, number> = {
 /**
  * Calculates generic unit price based on category configuration.
  */
-export function calculateProductMetrics(p: Partial<Product>): Partial<Product> {
-  const { price, capacity, capacityUnit, category } = p;
+export function calculateProductMetrics(
+  p: Partial<Product>,
+  overridePrice?: number,
+): Partial<Product> {
+  const price = overridePrice !== undefined ? overridePrice : 0;
+  const { capacity, capacityUnit, category } = p;
 
-  if (!price || !capacity || !capacityUnit || !category) return p;
+  if (price === undefined || !capacity || !capacityUnit || !category) return p;
 
   const categoryConfig = allCategories[category];
   const comparisonUnit = categoryConfig?.unitType || capacityUnit; // Fallback to capacityUnit if category not found
@@ -89,24 +93,46 @@ export function getOptimizedImageUrl(
 }
 
 /**
+ * Gets localized product data for a specific country.
+ */
+export function getLocalizedProductData(p: Product, countryCode: string = "us") {
+  const code = countryCode.toLowerCase();
+  
+  const price = p.prices?.[code] || p.prices?.["us"] || 0;
+  
+  const title = typeof p.title === "string" 
+    ? p.title 
+    : p.title[code] || p.title["us"] || Object.values(p.title)[0];
+    
+  const asin = typeof p.asin === "string"
+    ? p.asin
+    : p.asin[code] || p.asin["us"] || Object.values(p.asin)[0];
+    
+  return { price, title, asin };
+}
+
+/**
  * Adapts internal Product model to ProductUIModel
  */
 export function adaptToUIModel(
   p: Product,
-  currency: string = "EUR",
-  symbol: string = "€",
+  countryCode: string = "us",
+  currency: string = "USD",
+  symbol: string = "$",
 ): ProductUIModel {
-  const enhancedProduct = calculateProductMetrics(p) as Product;
+  const { price, title, asin } = getLocalizedProductData(p, countryCode);
+  const enhancedProduct = calculateProductMetrics(p, price) as Product;
+  
   const categoryConfig = allCategories[p.category];
   const displayUnit = categoryConfig?.unitType || p.capacityUnit;
 
   return {
-    asin: enhancedProduct.asin,
-    title: enhancedProduct.title,
+    asin,
+    title,
     price: {
-      amount: enhancedProduct.price,
+      amount: price,
       currency,
-      displayAmount: `${enhancedProduct.price} ${symbol}`,
+      displayAmount: `${price} ${symbol}`,
     },
     image: getOptimizedImageUrl(enhancedProduct.image),
     url: `/out/${enhancedProduct.slug}`, // Standard redirect path

@@ -14,6 +14,7 @@ import { Category, getBreadcrumbs, stripCategoryIcon } from "@/lib/categories";
 import { getCategoryIcon } from "@/lib/category-icons";
 import { getCountryByCode } from "@/lib/countries";
 import { Product } from "@/lib/product-registry";
+import { LocalizedProduct } from "@/hooks/use-category-products";
 import { Filter, Info, Search } from "lucide-react";
 import * as React from "react";
 
@@ -48,7 +49,7 @@ export function CategoryProductsView({
     clearAllFilters,
   } = useProductFilters();
   const { products, filteredCount, unitLabel, hasProducts } =
-    useCategoryProducts({ category, filters });
+    useCategoryProducts({ category, filters, countryCode });
 
   // 2. Analytics
   React.useEffect(() => {
@@ -65,7 +66,7 @@ export function CategoryProductsView({
     }).format(value);
   };
 
-  const handleAffiliateClick = (product: Product, index: number) => {
+  const handleAffiliateClick = (product: LocalizedProduct, index: number) => {
     trackSEO.affiliateClick({
       productName: product.title,
       category: categorySlug,

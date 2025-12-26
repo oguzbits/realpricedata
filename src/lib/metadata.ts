@@ -14,11 +14,11 @@ export const coreKeywords = [
 export const siteMetadata: Metadata = {
   metadataBase: new URL("https://realpricedata.com"),
   title: {
-    default: "Amazon DE Unit Price Tracker & Deals | realpricedata.com",
+    default: "Amazon US Unit Price Tracker & Deals | realpricedata.com",
     template: "%s | realpricedata.com",
   },
   description:
-    "Amazon DE price tracker for hardware & storage. Compare HDD, SSD, RAM and more by true cost per TB/GB. Find the best value hardware deals instantly.",
+    "Amazon US price tracker for hardware & storage. Compare HDD, SSD, RAM and more by true cost per TB/GB. Find the best value hardware deals instantly.",
   keywords: coreKeywords,
   authors: [{ name: "RealPriceData Team" }],
   creator: "RealPriceData Team",
@@ -48,14 +48,14 @@ export const siteMetadata: Metadata = {
     url: "https://realpricedata.com",
     title: "realpricedata.com - Unit Price Tracker",
     description:
-      "Compare Amazon DE hardware by true cost per TB/GB. Track HDD, SSD, and RAM prices to find the best value deals instantly.",
+      "Compare Amazon US hardware by true cost per TB/GB. Track HDD, SSD, and RAM prices to find the best value deals instantly.",
     siteName: "realpricedata.com",
     images: [
       {
         url: "/og-image.png",
         width: 1200,
         height: 630,
-        alt: "realpricedata.com - Find the best value on Amazon Germany",
+        alt: "realpricedata.com - Find the best value on Amazon US",
       },
     ],
   },
@@ -63,7 +63,7 @@ export const siteMetadata: Metadata = {
     card: "summary_large_image",
     title: "realpricedata.com - Unit Price Tracker",
     description:
-      "Compare Amazon DE hardware by true cost per TB/GB. Track HDD, SSD, and RAM prices to find the best value deals instantly.",
+      "Compare Amazon US hardware by true cost per TB/GB. Track HDD, SSD, and RAM prices to find the best value deals instantly.",
     images: ["/og-image.png"],
     creator: "@realpricedata",
   },
@@ -95,20 +95,27 @@ export const siteMetadata: Metadata = {
   },
 };
 
+import { getAllCountries } from "./countries";
+
 export function getAlternateLanguages(path: string = "") {
   const baseUrl = "https://realpricedata.com";
   const normalizedPath = path.startsWith("/") ? path : `/${path}`;
   const cleanPath = normalizedPath === "/" ? "" : normalizedPath;
 
-  // We are currently using /de as our primary localized version for Amazon.de unit prices
-  // x-default should point to our primary version for global users
+  const liveCountries = getAllCountries().filter(c => c.isLive);
   const alternates: Record<string, string> = {
-    "en-DE": `${baseUrl}/de${cleanPath}`,
-    "x-default": `${baseUrl}/de${cleanPath}`,
+    // x-default should point to our primary/landing version for global users
+    "x-default": `${baseUrl}/us${cleanPath}`,
   };
 
-  // Only add 'en' for the homepage to provide a self-referencing link for the root domain.
-  // Marketplace subpages currently only exist under /[country] prefixes.
+  liveCountries.forEach(country => {
+    // For our site, we use English UI across all markets
+    // So hreflang should be 'en-COUNTRYCODE'
+    const hreflang = country.code === "us" ? "en-US" : `en-${country.code.toUpperCase()}`;
+    alternates[hreflang] = `${baseUrl}/${country.code}${cleanPath}`;
+  });
+
+  // Root domain is 'en' (Global English)
   if (cleanPath === "") {
     alternates["en"] = baseUrl;
   }

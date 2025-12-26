@@ -11,7 +11,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseUrl = "https://realpricedata.com";
 
   // Static routes
-  const staticRoutes = [
+  const staticRoutes: MetadataRoute.Sitemap = [
     "",
     "/impressum",
     "/datenschutz",
@@ -19,12 +19,32 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     "/blog",
     "/en/legal-notice",
     "/en/privacy",
-  ].map((route) => ({
-    url: `${baseUrl}${route}`,
-    lastModified: new Date(),
-    changeFrequency: "daily" as const,
-    priority: route === "" ? 1.0 : 0.8,
-  }));
+  ].map((route) => {
+    const entry: any = {
+      url: `${baseUrl}${route}`,
+      lastModified: new Date(),
+      changeFrequency: "daily" as const,
+      priority: route === "" ? 1.0 : 0.8,
+    };
+
+    // Add alternates for the homepage
+    if (route === "") {
+      const liveCountries = getAllCountries().filter((c) => c.isLive);
+      entry.alternates = {
+        languages: {
+          ...Object.fromEntries(
+            liveCountries.map((c) => [
+              c.code === "us" ? "en-US" : `en-${c.code.toUpperCase()}`,
+              `${baseUrl}/${c.code}`,
+            ])
+          ),
+          "x-default": `${baseUrl}/us`,
+        },
+      };
+    }
+
+    return entry;
+  });
 
   // Blog posts
   const blogPosts = await getAllBlogPosts();
@@ -39,9 +59,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const categoryHierarchy = getCategoryHierarchy();
 
   // Generate URLs for all live countries
-  const countries = getAllCountries()
-    .filter((c) => c.isLive)
-    .map((c) => c.code);
+  const liveCountries = getAllCountries().filter((c) => c.isLive);
+  const countries = liveCountries.map((c) => c.code);
 
   const countryRoutes: MetadataRoute.Sitemap = [];
 
@@ -52,6 +71,14 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       lastModified: new Date(),
       changeFrequency: "daily" as const,
       priority: 0.9,
+      alternates: {
+        languages: Object.fromEntries(
+          liveCountries.map((c) => [
+            c.code === "us" ? "en-US" : `en-${c.code.toUpperCase()}`,
+            `${baseUrl}/${c.code}`,
+          ]),
+        ),
+      },
     });
 
     // Country categories page
@@ -60,15 +87,32 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       lastModified: new Date(),
       changeFrequency: "daily" as const,
       priority: 0.8,
+      alternates: {
+        languages: Object.fromEntries(
+          liveCountries.map((c) => [
+            c.code === "us" ? "en-US" : `en-${c.code.toUpperCase()}`,
+            `${baseUrl}/${c.code}/categories`,
+          ]),
+        ),
+      },
     });
 
     // Parent category pages
     categoryHierarchy.forEach((hierarchy) => {
+      const path = `/${hierarchy.parent.slug}`;
       countryRoutes.push({
-        url: `${baseUrl}/${country}/${hierarchy.parent.slug}`,
+        url: `${baseUrl}/${country}${path}`,
         lastModified: new Date(),
         changeFrequency: "weekly" as const,
         priority: 0.8,
+        alternates: {
+          languages: Object.fromEntries(
+            liveCountries.map((c) => [
+              c.code === "us" ? "en-US" : `en-${c.code.toUpperCase()}`,
+              `${baseUrl}/${c.code}${path}`,
+            ]),
+          ),
+        },
       });
     });
 
@@ -76,11 +120,20 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     Object.values(allCategories)
       .filter((cat) => cat.parent) // Only categories with parents
       .forEach((category) => {
+        const fullPath = getCategoryPath(category.slug, country);
         countryRoutes.push({
-          url: `${baseUrl}${getCategoryPath(category.slug, country)}`,
+          url: `${baseUrl}${fullPath}`,
           lastModified: new Date(),
           changeFrequency: "daily" as const,
           priority: 0.9, // Higher priority for product pages
+          alternates: {
+            languages: Object.fromEntries(
+              liveCountries.map((c) => [
+                c.code === "us" ? "en-US" : `en-${c.code.toUpperCase()}`,
+                `${baseUrl}${getCategoryPath(category.slug, c.code)}`,
+              ]),
+            ),
+          },
         });
       });
   });

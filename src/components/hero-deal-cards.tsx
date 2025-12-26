@@ -4,14 +4,20 @@ import { ProductSection } from "@/components/ProductSection";
 import { useCountry } from "@/hooks/use-country";
 import { getCountryByCode } from "@/lib/countries";
 import { getAllProducts, type Product } from "@/lib/product-registry";
-import { adaptToUIModel } from "@/lib/utils/products";
+import {
+  adaptToUIModel,
+  calculateProductMetrics,
+  getLocalizedProductData,
+} from "@/lib/utils/products";
 
 type ProductWithDiscount = Product & {
   discount: number;
 };
 
 // Calculate discount percentage based on market average or typical retail price
-const calculateDiscount = (product: Product): number => {
+const calculateDiscount = (product: Product, countryCode: string = "us"): number => {
+  const { price } = getLocalizedProductData(product, countryCode);
+  
   // Typical market prices per unit (TB for storage, GB for RAM, W for PSU)
   const marketPrices: Record<string, number> = {
     SSD: 120, // Average $/TB
@@ -33,23 +39,25 @@ const calculateDiscount = (product: Product): number => {
     }
   }
 
-  const currentPrice = product.pricePerUnit || 0;
+  // Calculate pricePerUnit for this specific country price
+  const enhanced = calculateProductMetrics(product, price);
+  const currentPricePerUnit = enhanced.pricePerUnit || 0;
 
-  if (marketPrice === 0 || currentPrice === 0) return 0;
+  if (marketPrice === 0 || currentPricePerUnit === 0) return 0;
 
   const discount = Math.round(
-    ((marketPrice - currentPrice) / marketPrice) * 100,
+    ((marketPrice - currentPricePerUnit) / marketPrice) * 100,
   );
   return Math.max(0, Math.min(discount, 99)); // Clamp between 0-99%
 };
 
 // Get the top 3 deals based on discount percentage
-const getTopDeals = (): ProductWithDiscount[] => {
+const getTopDeals = (countryCode: string = "us"): ProductWithDiscount[] => {
   const allProducts = getAllProducts();
   return allProducts
     .map((product) => ({
       ...product,
-      discount: calculateDiscount(product),
+      discount: calculateDiscount(product, countryCode),
     }))
     .sort((a, b) => b.discount - a.discount)
     .slice(0, 3);
@@ -59,10 +67,11 @@ export function HeroDealCards() {
   const { country } = useCountry();
   const countryConfig = getCountryByCode(country);
 
-  const highlightedDeals = getTopDeals();
+  const highlightedDeals = getTopDeals(country);
   const uiProducts = highlightedDeals.map((p) => {
     const ui = adaptToUIModel(
       p,
+      country,
       countryConfig?.currency,
       countryConfig?.symbol,
     );

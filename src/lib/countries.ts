@@ -18,7 +18,7 @@ export const countries: Record<string, Country> = {
     currency: "USD",
     symbol: "$",
     locale: "en-US",
-    isLive: false,
+    isLive: true,
   },
   uk: {
     code: "uk",
@@ -92,7 +92,7 @@ export const countries: Record<string, Country> = {
   },
 };
 
-export const DEFAULT_COUNTRY = "de";
+export const DEFAULT_COUNTRY = "us";
 
 // Get all countries as array
 export function getAllCountries(): Country[] {

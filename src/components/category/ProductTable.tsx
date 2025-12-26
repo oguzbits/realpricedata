@@ -16,16 +16,17 @@ import {
 } from "@/components/ui/tooltip";
 import { cn } from "@/lib/utils";
 import { Product, getAffiliateRedirectPath } from "@/lib/product-registry";
+import { LocalizedProduct } from "@/hooks/use-category-products";
 
 interface ProductTableProps {
-  products: Product[];
+  products: LocalizedProduct[];
   unitLabel: string;
   categorySlug: string;
   sortBy: string;
   sortOrder: string;
   onSort: (key: string) => void;
   formatCurrency: (value: number, fractionDigits?: number) => string;
-  onAffiliateClick: (product: Product, index: number) => void;
+  onAffiliateClick: (product: LocalizedProduct, index: number) => void;
 }
 
 export function ProductTable({

@@ -29,7 +29,12 @@ export function HomeContent({ country }: { country: string }) {
 
   // Adapt products to UI model
   const uiProducts = allProducts.map((p) =>
-    adaptToUIModel(p, countryConfig?.currency, countryConfig?.symbol),
+    adaptToUIModel(
+      p,
+      countryConfig?.code || country,
+      countryConfig?.currency,
+      countryConfig?.symbol,
+    ),
   );
 
   // Create mock data for sections using real products

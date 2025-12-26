@@ -1,20 +1,32 @@
 import { Category } from "@/lib/categories";
-import { getProductsByCategory } from "@/lib/product-registry";
+import { Product, getProductsByCategory } from "@/lib/product-registry";
 import {
   filterProducts,
   FilterState,
   sortProducts,
 } from "@/lib/utils/category-utils";
+import {
+  calculateProductMetrics,
+  getLocalizedProductData,
+} from "@/lib/utils/products";
 import { useMemo } from "react";
+
+export interface LocalizedProduct extends Omit<Product, "asin" | "title" | "price"> {
+  asin: string;
+  title: string;
+  price: number;
+}
 
 interface UseCategoryProductsProps {
   category: Omit<Category, "icon"> | undefined;
   filters: FilterState;
+  countryCode?: string;
 }
 
 export function useCategoryProducts({
   category,
   filters,
+  countryCode = "us",
 }: UseCategoryProductsProps) {
   // Load raw products for this category
   const rawProducts = useMemo(() => {
@@ -25,19 +37,38 @@ export function useCategoryProducts({
   // Derived configuration
   const unitLabel = category?.unitType || "TB";
 
+  // Localize products for this country
+  const localizedProducts = useMemo(() => {
+    return rawProducts.map((p): LocalizedProduct => {
+      const { price, title, asin } = getLocalizedProductData(p, countryCode);
+      const enhanced = calculateProductMetrics(p, price);
+      return {
+        ...p,
+        price,
+        title,
+        asin,
+        pricePerUnit: enhanced.pricePerUnit,
+      };
+    });
+  }, [rawProducts, countryCode]);
+
   // Apply filtering and sorting
   const filteredAndSortedProducts = useMemo(() => {
     if (!category) return [];
 
     const filtered = filterProducts(
-      rawProducts,
+      localizedProducts as any,
       filters,
       category.slug,
       unitLabel,
     );
 
-    return sortProducts(filtered, filters.sortBy, filters.sortOrder);
-  }, [rawProducts, filters, category, unitLabel]);
+    return sortProducts(
+      filtered as any,
+      filters.sortBy,
+      filters.sortOrder,
+    ) as LocalizedProduct[];
+  }, [localizedProducts, filters, category, unitLabel]);
 
   return {
     products: filteredAndSortedProducts,

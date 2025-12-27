@@ -15,15 +15,20 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const code = (countryConfig?.code || country || "US").toUpperCase();
   const domain = countryConfig?.domain || "amazon.com";
 
+  const canonicalUrl =
+    country.toLowerCase() === DEFAULT_COUNTRY
+      ? "https://realpricedata.com"
+      : `https://realpricedata.com/${country.toLowerCase()}`;
+
   return {
     title: `Amazon ${code} Unit Price Tracker & Deals | realpricedata.com`,
     description: `Amazon ${code} price tracker for hardware & storage. Compare HDD, SSD, RAM and more by true cost per TB/GB. Find the best value hardware deals instantly.`,
     alternates: {
-      canonical:
-        country.toLowerCase() === DEFAULT_COUNTRY
-          ? "https://realpricedata.com"
-          : `https://realpricedata.com/${country.toLowerCase()}`,
-      languages: getAlternateLanguages(),
+      canonical: canonicalUrl,
+      languages: getAlternateLanguages(""),
+    },
+    openGraph: {
+      url: canonicalUrl,
     },
   };
 }

@@ -4,8 +4,8 @@ import {
   getCategoryPath,
   allCategories,
 } from "@/lib/categories";
-import { getAllCountries } from "./countries";
-import { getAllBlogPosts } from "./blog";
+import { getAllCountries } from "@/lib/countries";
+import { getAllBlogPosts } from "@/lib/blog";
 import { getAlternateLanguages } from "@/lib/metadata";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {

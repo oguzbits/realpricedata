@@ -114,7 +114,7 @@ export function ProductCard({
 
           {pricePerUnit && (
             <div className="border-border/40 flex items-center justify-between border-t pt-1">
-              <span className="text-muted-foreground/40 text-sm font-black tracking-widest uppercase">
+              <span className="text-muted-foreground/80 text-sm font-black tracking-widest uppercase">
                 Unit Price
               </span>
               <span className="text-primary bg-primary/5 rounded-md px-1.5 py-0.5 font-mono text-base font-bold">

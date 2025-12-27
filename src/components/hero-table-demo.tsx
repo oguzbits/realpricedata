@@ -159,7 +159,7 @@ export function HeroTableDemo() {
                         {config.currency}
                         {product.price.toFixed(2)}
                       </div>
-                      <div className="text-foreground/60 col-span-2 font-mono text-[11px] sm:text-sm">
+                      <div className="text-foreground/85 col-span-2 font-mono text-[11px] sm:text-sm">
                         {currentCategory === "harddrives" &&
                           `${(product as HardDriveProduct).capacity}${(product as HardDriveProduct).capacityUnit}`}
                         {currentCategory === "batteries" &&

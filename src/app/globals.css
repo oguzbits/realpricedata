@@ -41,27 +41,27 @@
   --popover-foreground: oklch(0.141 0.005 285.82);
 
   /* Primary - Link Blue */
-  --primary: oklch(0.55 0.2 260);
+  --primary: oklch(0.45 0.2 260);
   --primary-foreground: oklch(0.985 0 0);
 
   /* Secondary - Zinc 100 */
   --secondary: oklch(0.967 0.001 286.37);
-  --secondary-foreground: oklch(0.55 0.2 260);
+  --secondary-foreground: oklch(0.45 0.2 260);
 
   /* Muted - Zinc 600 in light mode for better contrast */
   --muted: oklch(0.967 0.001 286.37);
-  --muted-foreground: oklch(0.45 0.015 285.93);
+  --muted-foreground: oklch(0.35 0.015 285.93);
 
   /* Accent - Zinc 100 */
   --accent: oklch(0.967 0.001 286.37);
-  --accent-foreground: oklch(0.55 0.2 260);
+  --accent-foreground: oklch(0.45 0.2 260);
 
   --destructive: oklch(0.637 0.193 26.14);
   --destructive-foreground: oklch(0.985 0 0);
 
-  --border: oklch(0.92 0.004 286.32);
-  --input: oklch(0.92 0.004 286.32);
-  --ring: oklch(0.55 0.2 260);
+  --border: oklch(0.85 0.004 286.32);
+  --input: oklch(0.85 0.004 286.32);
+  --ring: oklch(0.45 0.2 260);
 
   /* Branding - Kept but refined */
   --ccc-red: #e52a00;

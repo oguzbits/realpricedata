@@ -1,10 +1,10 @@
 "use client";
 
 import { Badge } from "@/components/ui/badge";
-import { Check } from "lucide-react";
+import { getFlagUrl } from "@/lib/countries";
 
 interface CountryItemProps {
-  flag: string;
+  code: string;
   name: string;
   domain: string;
   isLive: boolean;
@@ -12,7 +12,7 @@ interface CountryItemProps {
 }
 
 export function CountryItem({
-  flag,
+  code,
   name,
   domain,
   isLive,
@@ -21,26 +21,29 @@ export function CountryItem({
   return (
     <div className="flex w-full items-center justify-between">
       <div className="flex items-center gap-3">
-        <span className="text-2xl">{flag}</span>
+        <img
+          src={getFlagUrl(code)}
+          alt={name}
+          className="h-4 w-6 object-cover shadow-sm"
+        />
         <div className="flex flex-col">
           <span className="font-medium">{name}</span>
           <span className="text-muted-foreground text-sm">{domain}</span>
         </div>
       </div>
       <div className="flex items-center gap-2">
-        {isLive ? (
+        {isActive ? (
           <Badge
             variant="secondary"
             className="bg-emerald-100 text-sm text-emerald-700 dark:bg-emerald-500/20 dark:text-emerald-300"
           >
-            Live
+            Active
           </Badge>
-        ) : (
-          <Badge variant="outline" className="text-sm">
+        ) : !isLive ? (
+          <Badge variant="outline" className="text-muted-foreground text-[10px] font-medium uppercase">
             Soon
           </Badge>
-        )}
-        {isActive && <Check className="text-primary h-4 w-4" />}
+        ) : null}
       </div>
     </div>
   );

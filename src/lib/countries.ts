@@ -80,16 +80,6 @@ export const countries: Record<string, Country> = {
     locale: "fr-FR",
     isLive: true,
   },
-  au: {
-    code: "au",
-    name: "Australia",
-    flag: "🇦🇺",
-    domain: "amazon.com.au",
-    currency: "AUD",
-    symbol: "A$",
-    locale: "en-AU",
-    isLive: false,
-  },
 };
 
 export const DEFAULT_COUNTRY = "us";
@@ -173,6 +163,13 @@ export function getUserCountry(): string {
 
   // 3. Default
   return DEFAULT_COUNTRY;
+}
+
+// Get flag URL (SVG) for a country code
+export function getFlagUrl(code: string): string {
+  // Map "uk" to "gb" for flagcdn
+  const flagCode = code.toLowerCase() === "uk" ? "gb" : code.toLowerCase();
+  return `https://flagcdn.com/${flagCode}.svg`;
 }
 
 // Validate country code

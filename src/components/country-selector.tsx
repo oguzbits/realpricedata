@@ -11,7 +11,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { useCountry } from "@/hooks/use-country";
-import { getAllCountries } from "@/lib/countries";
+import { getAllCountries, getFlagUrl } from "@/lib/countries";
 import { Globe } from "lucide-react";
 
 export function CountrySelector() {
@@ -32,7 +32,13 @@ export function CountrySelector() {
           aria-label="Select country"
         >
           <Globe className="h-4 w-4" />
-          <span className="hidden sm:inline">{currentCountry?.flag}</span>
+          {currentCountry && (
+            <img
+              src={getFlagUrl(currentCountry.code)}
+              alt={currentCountry.name}
+              className="hidden h-3 w-5 object-cover shadow-sm sm:inline"
+            />
+          )}
           <span className="hidden md:inline">{currentCountry?.name}</span>
           <span className="font-semibold md:hidden">
             {currentCountry?.code.toUpperCase()}
@@ -47,11 +53,11 @@ export function CountrySelector() {
         {liveCountries.map((c) => (
           <DropdownMenuItem
             key={c.code}
-          onSelect={() => changeCountry(c.code)}
-          className="cursor-pointer focus:bg-accent focus:text-accent-foreground"
-        >
+            onSelect={() => changeCountry(c.code)}
+            className="cursor-pointer focus:bg-accent focus:text-accent-foreground"
+          >
             <CountryItem
-              flag={c.flag}
+              code={c.code}
               name={c.name}
               domain={c.domain}
               isLive={true}
@@ -75,7 +81,7 @@ export function CountrySelector() {
                 className="cursor-not-allowed opacity-60"
               >
                 <CountryItem
-                  flag={c.flag}
+                  code={c.code}
                   name={c.name}
                   domain={c.domain}
                   isLive={false}

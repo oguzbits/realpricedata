@@ -4,7 +4,7 @@ import dynamic from "next/dynamic";
 import { HeroCategoryPills } from "@/components/hero-category-pills";
 import { HeroDealCards } from "@/components/hero-deal-cards";
 import { HeroTableDemo } from "@/components/hero-table-demo";
-import { getAllCountries, getCountryByCode, DEFAULT_COUNTRY } from "@/lib/countries";
+import { getAllCountries, getCountryByCode, DEFAULT_COUNTRY, getFlagUrl } from "@/lib/countries";
 import { getAllProducts } from "@/lib/product-registry";
 import { adaptToUIModel, getLocalizedProductData } from "@/lib/utils/products";
 
@@ -118,31 +118,38 @@ export function HomeContent({ country }: { country: string }) {
               Supported Marketplaces
             </p>
             <div className="flex flex-wrap justify-center gap-6 sm:gap-10">
-              {getAllCountries().map((c: any) => (
-                <Link
-                  key={c.code}
-                  href={
-                    c.isLive
-                      ? c.code === DEFAULT_COUNTRY
-                        ? "/"
-                        : `/${c.code}`
-                      : "#"
-                  }
-                  className={`group flex flex-col items-center gap-2 no-underline transition-transform ${
-                    c.isLive
-                      ? "cursor-pointer hover:scale-110"
-                      : "pointer-events-none cursor-not-allowed opacity-30 grayscale"
-                  }`}
-                  aria-disabled={!c.isLive}
-                >
-                  <span className="text-4xl drop-shadow-sm filter">
-                    {c.flag}
-                  </span>
-                  <span className="text-primary text-sm font-bold group-hover:underline">
-                    {c.code.toUpperCase()}
-                  </span>
-                </Link>
-              ))}
+              {getAllCountries().map((c) => {
+                const isActive = c.code === country;
+                const flagUrl = getFlagUrl(c.code);
+
+                return (
+                  <Link
+                    key={c.code}
+                    href={c.isLive ? `/${c.code}` : "#"}
+                    className={`group relative flex flex-col items-center no-underline transition-all ${
+                      c.isLive
+                        ? "cursor-pointer"
+                        : "pointer-events-none cursor-not-allowed opacity-20 grayscale"
+                    }`}
+                    aria-disabled={!c.isLive}
+                  >
+                    <div
+                      className={`flex items-center justify-center overflow-hidden border-2 transition-all duration-300 ${
+                        isActive
+                          ? "border-blue-400/30 bg-blue-500/10 rounded-2xl p-4 shadow-sm"
+                          : "border-transparent bg-transparent p-4"
+                      }`}
+                    >
+                      <img
+                        src={flagUrl}
+                        alt={c.name}
+                        className="h-8 w-12 object-cover transition-all sm:h-10 sm:w-16"
+                        loading="lazy"
+                      />
+                    </div>
+                  </Link>
+                );
+              })}
             </div>
           </div>
 

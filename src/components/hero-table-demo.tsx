@@ -135,7 +135,7 @@ export function HeroTableDemo() {
                         {config.currency}
                         {currentCategory === "harddrives"
                           ? (product as HardDriveProduct).pricePerUnit.toFixed(
-                              3,
+                              2,
                             )
                           : currentCategory === "batteries"
                             ? (product as BatteryProduct).pricePerUnit.toFixed(
@@ -143,7 +143,7 @@ export function HeroTableDemo() {
                               )
                             : (
                                 product as PowerSupplyProduct
-                              ).pricePerUnit.toFixed(3)}
+                              ).pricePerUnit.toFixed(2)}
                         {idx === 0 && (
                           <Badge className="h-4 border-0 bg-emerald-100 px-1.5 text-[10px] font-bold tracking-wider text-emerald-800 uppercase sm:text-[11px] dark:bg-emerald-500/20 dark:text-emerald-300">
                             Top

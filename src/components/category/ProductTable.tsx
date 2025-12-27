@@ -149,7 +149,7 @@ export function ProductTable({
               className="group hover:bg-muted/30 transition-colors"
             >
               <TableCell className="text-foreground font-mono font-bold">
-                {formatCurrency(product.pricePerUnit || 0, 3)}
+                {formatCurrency(product.pricePerUnit || 0, 2)}
               </TableCell>
               <TableCell>
                 <a

@@ -469,7 +469,7 @@ export class MockAmazonAPI {
 
     // Format price per unit if available
     const pricePerUnit = listing?.Price.PricePerUnit
-      ? `$${listing.Price.PricePerUnit.toFixed(3)} / ${unitCount?.Label || "Unit"}`
+      ? `$${listing.Price.PricePerUnit.toFixed(2)} / ${unitCount?.Label || "Unit"}`
       : undefined;
 
     return {

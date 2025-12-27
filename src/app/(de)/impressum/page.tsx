@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { LanguageSwitcher } from "@/components/LanguageSwitcher";
+import { getOpenGraph } from "@/lib/metadata";
 
 export const metadata: Metadata = {
   title: "Impressum | realpricedata.com",
@@ -13,9 +14,11 @@ export const metadata: Metadata = {
       "x-default": "https://realpricedata.com/en/legal-notice",
     },
   },
-  openGraph: {
+  openGraph: getOpenGraph({
+    title: "Impressum | realpricedata.com",
+    description: "Impressum und rechtliche Angaben für realpricedata.com.",
     url: "https://realpricedata.com/impressum",
-  },
+  }),
 };
 
 export default function ImpressumPage() {

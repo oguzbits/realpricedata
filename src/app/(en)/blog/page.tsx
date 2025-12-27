@@ -1,5 +1,6 @@
 import { BlogCard } from "@/components/blog/blog-card";
 import { getAllBlogPosts } from "@/lib/blog";
+import { getOpenGraph } from "@/lib/metadata";
 import { Metadata } from "next";
 import Link from "next/link";
 
@@ -10,9 +11,11 @@ export const metadata: Metadata = {
   alternates: {
     canonical: "https://realpricedata.com/blog",
   },
-  openGraph: {
+  openGraph: getOpenGraph({
+    title: "Blog | Hardware Pricing & Market Trends",
+    description: "In-depth analysis of RAM, SSD, and HDD pricing trends.",
     url: "https://realpricedata.com/blog",
-  },
+  }),
 };
 
 export default async function BlogIndexPage() {

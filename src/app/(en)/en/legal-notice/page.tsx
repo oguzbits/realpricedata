@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { LanguageSwitcher } from "@/components/LanguageSwitcher";
+import { getOpenGraph } from "@/lib/metadata";
 
 export const metadata: Metadata = {
   title: "Legal Notice | realpricedata.com",
@@ -13,9 +14,11 @@ export const metadata: Metadata = {
       "x-default": "https://realpricedata.com/en/legal-notice",
     },
   },
-  openGraph: {
+  openGraph: getOpenGraph({
+    title: "Legal Notice | realpricedata.com",
+    description: "Legal notice and imprint for realpricedata.com.",
     url: "https://realpricedata.com/en/legal-notice",
-  },
+  }),
 };
 
 export default function LegalNoticePage() {

@@ -163,3 +163,22 @@ export function generateKeywords(category?: Category, extraKeywords: string[] = 
     ...baseKeywords,
   ])];
 }
+
+/**
+ * Returns a complete Open Graph object with sane defaults and overrides.
+ */
+export function getOpenGraph(overrides: {
+  title?: string;
+  description?: string;
+  url?: string;
+  type?: "website" | "article";
+  locale?: string;
+  [key: string]: any;
+} = {}) {
+  // If no title/description provided, Next.js will use the page's top-level title/description
+  // but it's better to be explicit to ensure they are present in the OG tags.
+  return {
+    ...siteMetadata.openGraph,
+    ...overrides,
+  };
+}

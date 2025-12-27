@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { getOpenGraph } from "@/lib/metadata";
 import {
   Accordion,
   AccordionContent,
@@ -13,9 +14,11 @@ export const metadata: Metadata = {
   alternates: {
     canonical: "https://realpricedata.com/faq",
   },
-  openGraph: {
+  openGraph: getOpenGraph({
+    title: "FAQ - Frequently Asked Questions",
+    description: "Find answers to common questions about realpricedata.com.",
     url: "https://realpricedata.com/faq",
-  },
+  }),
 };
 
 export default function FAQPage() {

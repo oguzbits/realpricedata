@@ -1,6 +1,6 @@
 import HomeContent from "@/components/HomeContent";
 import { getCountryByCode, DEFAULT_COUNTRY } from "@/lib/countries";
-import { getAlternateLanguages } from "@/lib/metadata";
+import { getAlternateLanguages, getOpenGraph } from "@/lib/metadata";
 import { Metadata } from "next";
 
 type Props = {
@@ -20,16 +20,22 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       ? "https://realpricedata.com"
       : `https://realpricedata.com/${country.toLowerCase()}`;
 
+  const title = `Price Tracker - Amazon ${code}`;
+  const description = `Amazon ${code} price tracker for hardware & storage. Compare HDD, SSD, RAM and more by true cost per TB/GB. Find the best value hardware deals instantly.`;
+
   return {
-    title: `Price Tracker - Amazon ${code}`,
-    description: `Amazon ${code} price tracker for hardware & storage. Compare HDD, SSD, RAM and more by true cost per TB/GB. Find the best value hardware deals instantly.`,
+    title,
+    description,
     alternates: {
       canonical: canonicalUrl,
       languages: getAlternateLanguages(""),
     },
-    openGraph: {
+    openGraph: getOpenGraph({
+      title,
+      description,
       url: canonicalUrl,
-    },
+      locale: `en_${code}`,
+    }),
   };
 }
 

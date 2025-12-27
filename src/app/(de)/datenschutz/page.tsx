@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { getOpenGraph } from "@/lib/metadata";
 import { LanguageSwitcher } from "@/components/LanguageSwitcher";
 
 export const metadata: Metadata = {
@@ -13,9 +14,11 @@ export const metadata: Metadata = {
       "x-default": "https://realpricedata.com/en/privacy",
     },
   },
-  openGraph: {
+  openGraph: getOpenGraph({
+    title: "Datenschutzerklärung | realpricedata.com",
+    description: "Datenschutzerklärung und Informationen zum Datenschutz.",
     url: "https://realpricedata.com/datenschutz",
-  },
+  }),
 };
 
 export default function DatenschutzPage() {

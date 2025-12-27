@@ -8,6 +8,7 @@ import {
 } from "@/components/ui/accordion";
 import { getAllBlogPosts, getBlogPostBySlug } from "@/lib/blog";
 import { Calendar, Clock, User } from "lucide-react";
+import { getOpenGraph } from "@/lib/metadata";
 import { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
@@ -41,7 +42,7 @@ export async function generateMetadata({
     alternates: {
       canonical: `https://realpricedata.com/blog/${post.slug}`,
     },
-    openGraph: {
+    openGraph: getOpenGraph({
       title: post.title,
       description: post.description,
       type: "article",
@@ -49,7 +50,7 @@ export async function generateMetadata({
       modifiedTime: post.lastUpdated,
       authors: [post.author.name],
       url: `https://realpricedata.com/blog/${post.slug}`,
-    },
+    }),
     twitter: {
       card: "summary_large_image",
       title: post.title,

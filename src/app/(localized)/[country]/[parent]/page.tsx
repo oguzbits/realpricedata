@@ -2,7 +2,7 @@ import { ParentCategoryView } from "@/components/category/ParentCategoryView";
 import { Button } from "@/components/ui/button";
 import { getCategoryBySlug, getChildCategories } from "@/lib/categories";
 import { DEFAULT_COUNTRY, isValidCountryCode } from "@/lib/countries";
-import { getAlternateLanguages } from "@/lib/metadata";
+import { getAlternateLanguages, getOpenGraph } from "@/lib/metadata";
 import { Metadata } from "next";
 import Link from "next/link";
 import { redirect } from "next/navigation";
@@ -26,17 +26,22 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   }
 
   const canonicalUrl = `https://realpricedata.com/${validCountry.toLowerCase()}/${parentSlug.toLowerCase()}`;
+  const title = `${parentCategory.name} - Amazon ${validCountry.toUpperCase()}`;
+  const description = `Track ${parentCategory.name} prices on Amazon ${validCountry.toUpperCase()} by true cost per TB/GB. Compare hardware value and find the best storage deals instantly.`;
 
   return {
-    title: `${parentCategory.name} - Amazon ${validCountry.toUpperCase()}`,
-    description: `Track ${parentCategory.name} prices on Amazon ${validCountry.toUpperCase()} by true cost per TB/GB. Compare hardware value and find the best storage deals instantly.`,
+    title,
+    description,
     alternates: {
       canonical: canonicalUrl,
       languages: getAlternateLanguages(`/${parentSlug.toLowerCase()}`),
     },
-    openGraph: {
+    openGraph: getOpenGraph({
+      title,
+      description,
       url: canonicalUrl,
-    },
+      locale: `en_${validCountry.toUpperCase()}`,
+    }),
   };
 }
 

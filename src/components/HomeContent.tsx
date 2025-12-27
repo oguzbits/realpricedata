@@ -125,7 +125,7 @@ export function HomeContent({ country }: { country: string }) {
                 return (
                   <Link
                     key={c.code}
-                    href={c.isLive ? `/${c.code}` : "#"}
+                    href={c.isLive ? (c.code === DEFAULT_COUNTRY ? "/" : `/${c.code}`) : "#"}
                     className={`group relative flex flex-col items-center no-underline transition-all ${
                       c.isLive
                         ? "cursor-pointer"

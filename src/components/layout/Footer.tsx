@@ -4,6 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useCountry } from "@/hooks/use-country";
 import { getCategoryPath } from "@/lib/categories";
+import { DEFAULT_COUNTRY } from "@/lib/countries";
 
 export function Footer() {
   const { country } = useCountry();
@@ -13,7 +14,10 @@ export function Footer() {
       <div className="container mx-auto px-4 py-8 md:py-12">
         <div className="grid grid-cols-1 gap-8 md:grid-cols-3">
           <div>
-            <div className="mb-2 flex items-center space-x-2">
+            <Link
+              href={country === DEFAULT_COUNTRY ? "/" : `/${country}`}
+              className="mb-2 flex items-center space-x-2 no-underline hover:opacity-80 transition-opacity"
+            >
               <Image
                 src="/icon-192.png"
                 alt="Real Price Data Logo"
@@ -26,7 +30,7 @@ export function Footer() {
                 <span className="text-(--ccc-orange)">price</span>
                 <span className="text-(--ccc-yellow)">data</span>
               </h3>
-            </div>
+            </Link>
             <p className="text-muted-foreground max-w-xs text-base">
               Compare products by price per unit to find the best value.
               Data-driven, neutral, and efficient.

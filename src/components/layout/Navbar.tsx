@@ -16,6 +16,8 @@ import { usePathname } from "next/navigation";
 import * as React from "react";
 
 import { CountrySelector } from "@/components/country-selector";
+import { useCountry } from "@/hooks/use-country";
+import { DEFAULT_COUNTRY } from "@/lib/countries";
 import dynamic from "next/dynamic";
 
 const SearchModal = dynamic(
@@ -27,6 +29,7 @@ const SearchModal = dynamic(
 
 export function Navbar() {
   const { setTheme, theme } = useTheme();
+  const { country } = useCountry();
   const pathname = usePathname();
   const [mounted, setMounted] = React.useState(false);
   const [searchOpen, setSearchOpen] = React.useState(false);
@@ -82,7 +85,7 @@ export function Navbar() {
         {/* Left: Logo */}
         <div className="flex shrink-0 items-center gap-2 sm:gap-6">
           <Link
-            href="/"
+            href={country === DEFAULT_COUNTRY ? "/" : `/${country}`}
             className="flex items-center space-x-2 no-underline"
             title="Amazon Price Per Unit Tracker, Storage Deals & True Value"
             aria-label="Real Price Data Home - Amazon Price Per Unit Tracker"

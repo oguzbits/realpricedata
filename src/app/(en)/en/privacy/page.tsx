@@ -13,6 +13,9 @@ export const metadata: Metadata = {
       "x-default": "https://realpricedata.com/en/privacy",
     },
   },
+  openGraph: {
+    url: "https://realpricedata.com/en/privacy",
+  },
 };
 
 export default function PrivacyPage() {

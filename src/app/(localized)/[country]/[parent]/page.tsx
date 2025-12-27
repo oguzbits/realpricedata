@@ -34,6 +34,9 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       canonical: canonicalUrl,
       languages: getAlternateLanguages(`/${parentSlug.toLowerCase()}`),
     },
+    openGraph: {
+      url: canonicalUrl,
+    },
   };
 }
 

@@ -13,6 +13,9 @@ export const metadata: Metadata = {
   alternates: {
     canonical: "https://realpricedata.com/faq",
   },
+  openGraph: {
+    url: "https://realpricedata.com/faq",
+  },
 };
 
 export default function FAQPage() {

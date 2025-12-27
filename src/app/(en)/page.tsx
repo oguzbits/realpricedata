@@ -8,6 +8,9 @@ export const metadata: Metadata = {
     canonical: "https://realpricedata.com",
     languages: getAlternateLanguages(),
   },
+  openGraph: {
+    url: "https://realpricedata.com",
+  },
 };
 
 export default function HomePage() {

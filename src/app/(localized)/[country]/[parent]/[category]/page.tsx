@@ -36,6 +36,9 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
         `/${parent.toLowerCase()}/${categorySlug.toLowerCase()}`
       ),
     },
+    openGraph: {
+      url: canonicalUrl,
+    },
     keywords: generateKeywords(category),
   };
 }

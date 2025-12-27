@@ -45,7 +45,6 @@ export const siteMetadata: Metadata = {
   openGraph: {
     type: "website",
     locale: "en_US",
-    url: "https://realpricedata.com",
     title: "realpricedata.com - Unit Price Tracker",
     description:
       "Compare Amazon hardware by true cost per TB/GB. Track HDD, SSD, and RAM prices to find the best value deals instantly.",

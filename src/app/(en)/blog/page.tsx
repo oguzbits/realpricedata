@@ -10,6 +10,9 @@ export const metadata: Metadata = {
   alternates: {
     canonical: "https://realpricedata.com/blog",
   },
+  openGraph: {
+    url: "https://realpricedata.com/blog",
+  },
 };
 
 export default async function BlogIndexPage() {

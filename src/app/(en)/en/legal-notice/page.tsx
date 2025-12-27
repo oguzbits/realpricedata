@@ -13,6 +13,9 @@ export const metadata: Metadata = {
       "x-default": "https://realpricedata.com/en/legal-notice",
     },
   },
+  openGraph: {
+    url: "https://realpricedata.com/en/legal-notice",
+  },
 };
 
 export default function LegalNoticePage() {

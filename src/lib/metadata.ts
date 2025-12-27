@@ -104,18 +104,27 @@ export function getAlternateLanguages(path: string = "") {
 
   const liveCountries = getAllCountries().filter(c => c.isLive);
   const alternates: Record<string, string> = {
-    // x-default should point to our primary/landing version for global users
-    "x-default": `${baseUrl}/us${cleanPath}`,
+    // x-default should point to our primary/landing version (US)
+    "x-default": cleanPath === "" ? baseUrl : `${baseUrl}/us${cleanPath}`,
   };
 
   liveCountries.forEach(country => {
-    // For our site, we use English UI across all markets
-    // So hreflang should be 'en-COUNTRYCODE'
-    const hreflang = country.code === "us" ? "en-US" : `en-${country.code.toUpperCase()}`;
-    alternates[hreflang] = `${baseUrl}/${country.code}${cleanPath}`;
+    // Correct ISO 3166-1 alpha-2 for United Kingdom is GB
+    let region = country.code.toUpperCase();
+    if (region === "UK") region = "GB";
+    
+    // For our site, we use English UI across all markets: 'en-REGION'
+    const hreflang = `en-${region}`;
+    
+    // For US homepage, we use the root domain
+    if (country.code === "us" && cleanPath === "") {
+      alternates[hreflang] = baseUrl;
+    } else {
+      alternates[hreflang] = `${baseUrl}/${country.code}${cleanPath}`;
+    }
   });
 
-  // Root domain is 'en' (Global English)
+  // Root domain also serves as the general 'en' version
   if (cleanPath === "") {
     alternates["en"] = baseUrl;
   }

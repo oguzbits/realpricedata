@@ -4,8 +4,9 @@ import {
   getCategoryPath,
   allCategories,
 } from "@/lib/categories";
-import { getAllCountries } from "@/lib/countries";
-import { getAllBlogPosts } from "@/lib/blog";
+import { getAllCountries } from "./countries";
+import { getAllBlogPosts } from "./blog";
+import { getAlternateLanguages } from "@/lib/metadata";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseUrl = "https://realpricedata.com";
@@ -29,17 +30,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
     // Add alternates for the homepage
     if (route === "") {
-      const liveCountries = getAllCountries().filter((c) => c.isLive);
       entry.alternates = {
-        languages: {
-          ...Object.fromEntries(
-            liveCountries.map((c) => [
-              c.code === "us" ? "en-US" : `en-${c.code.toUpperCase()}`,
-              `${baseUrl}/${c.code}`,
-            ])
-          ),
-          "x-default": `${baseUrl}/us`,
-        },
+        languages: getAlternateLanguages(""),
       };
     }
 
@@ -72,12 +64,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       changeFrequency: "daily" as const,
       priority: 0.9,
       alternates: {
-        languages: Object.fromEntries(
-          liveCountries.map((c) => [
-            c.code === "us" ? "en-US" : `en-${c.code.toUpperCase()}`,
-            `${baseUrl}/${c.code}`,
-          ]),
-        ),
+        languages: getAlternateLanguages(""),
       },
     });
 
@@ -88,12 +75,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       changeFrequency: "daily" as const,
       priority: 0.8,
       alternates: {
-        languages: Object.fromEntries(
-          liveCountries.map((c) => [
-            c.code === "us" ? "en-US" : `en-${c.code.toUpperCase()}`,
-            `${baseUrl}/${c.code}/categories`,
-          ]),
-        ),
+        languages: getAlternateLanguages("/categories"),
       },
     });
 
@@ -106,12 +88,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
         changeFrequency: "weekly" as const,
         priority: 0.8,
         alternates: {
-          languages: Object.fromEntries(
-            liveCountries.map((c) => [
-              c.code === "us" ? "en-US" : `en-${c.code.toUpperCase()}`,
-              `${baseUrl}/${c.code}${path}`,
-            ]),
-          ),
+          languages: getAlternateLanguages(path),
         },
       });
     });
@@ -127,12 +104,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
           changeFrequency: "daily" as const,
           priority: 0.9, // Higher priority for product pages
           alternates: {
-            languages: Object.fromEntries(
-              liveCountries.map((c) => [
-                c.code === "us" ? "en-US" : `en-${c.code.toUpperCase()}`,
-                `${baseUrl}${getCategoryPath(category.slug, c.code)}`,
-              ]),
-            ),
+            languages: getAlternateLanguages(`/${category.parent}/${category.slug}`),
           },
         });
       });

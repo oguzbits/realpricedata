@@ -128,7 +128,7 @@ export function HeroTableDemo() {
                       className={cn(
                         "hover:bg-muted/50 grid grid-cols-12 items-center gap-2 px-4 py-3 text-xs transition-all sm:text-sm",
                         idx === 0 &&
-                          "bg-blue-50/50 ring-1 ring-blue-200/50 dark:bg-blue-950/30 dark:ring-blue-800/50",
+                          "bg-primary/5 ring-primary/20 bg-linear-to-r from-primary/10 via-primary/5 to-transparent shadow-xs ring-1 ring-inset",
                       )}
                     >
                       <div className="text-foreground col-span-3 flex items-center gap-2 font-mono font-bold">
@@ -151,15 +151,15 @@ export function HeroTableDemo() {
                         )}
                       </div>
                       <div className="col-span-5 sm:col-span-4">
-                        <span className="text-primary block truncate font-medium">
+                        <span className="text-foreground/90 dark:text-white block truncate font-bold">
                           {product.name}
                         </span>
                       </div>
-                      <div className="text-muted-foreground col-span-2 font-mono">
+                      <div className="text-foreground/80 col-span-2 font-mono">
                         {config.currency}
                         {product.price.toFixed(2)}
                       </div>
-                      <div className="text-muted-foreground col-span-2 font-mono text-[11px] sm:text-sm">
+                      <div className="text-foreground/60 col-span-2 font-mono text-[11px] sm:text-sm">
                         {currentCategory === "harddrives" &&
                           `${(product as HardDriveProduct).capacity}${(product as HardDriveProduct).capacityUnit}`}
                         {currentCategory === "batteries" &&
@@ -180,7 +180,7 @@ export function HeroTableDemo() {
                   <Sparkles className="h-3 w-3" />
                   <p className="hidden xl:block">Insight</p>
                 </div>
-                <p className="text-foreground/80 truncate font-medium">
+                <p className="text-foreground/90 truncate font-medium">
                   {config.insightText}
                 </p>
               </div>

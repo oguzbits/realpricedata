@@ -136,7 +136,7 @@ export function HomeContent({ country }: { country: string }) {
                     <div
                       className={`flex items-center justify-center overflow-hidden border-2 transition-all duration-300 ${
                         isActive
-                          ? "border-blue-400/30 bg-blue-500/10 rounded-2xl p-4 shadow-sm"
+                          ? "border-primary/30 bg-primary/10 rounded-2xl p-4 shadow-sm"
                           : "border-transparent bg-transparent p-4"
                       }`}
                     >

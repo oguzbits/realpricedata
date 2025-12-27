@@ -56,7 +56,7 @@ export function ProductCard({
         return "bg-amber-100 text-amber-800 dark:bg-amber-500/20 dark:text-amber-300 border-transparent";
       case "blue":
       default:
-        return "bg-blue-100 text-blue-800 dark:bg-blue-500/20 dark:text-blue-300 border-transparent";
+        return "bg-secondary text-secondary-foreground border-transparent";
     }
   };
 

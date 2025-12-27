@@ -32,38 +32,38 @@
 :root {
   --radius: 0.75rem;
 
-  /* Light Mode - Refined Neutrals */
-  --background: #fefefe;
-  --foreground: oklch(0.2 0.02 240);
+  /* Light Mode - Zinc Palette (Neutral Modern) */
+  --background: oklch(0.985 0 0);
+  --foreground: oklch(0.141 0.005 285.82);
   --card: oklch(1 0 0);
-  --card-foreground: oklch(0.2 0.02 240);
+  --card-foreground: oklch(0.141 0.005 285.82);
   --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.2 0.02 240);
+  --popover-foreground: oklch(0.141 0.005 285.82);
 
-  /* Primary - Deep Indigo */
+  /* Primary - Link Blue */
   --primary: oklch(0.55 0.2 260);
   --primary-foreground: oklch(0.985 0 0);
 
-  /* Secondary - Soft Slate */
-  --secondary: oklch(0.94 0.005 240);
-  --secondary-foreground: oklch(0.3 0.01 240);
+  /* Secondary - Zinc 100 */
+  --secondary: oklch(0.967 0.001 286.37);
+  --secondary-foreground: oklch(0.55 0.2 260);
 
-  /* Muted - Soft Grey */
-  --muted: oklch(0.97 0.005 240);
-  --muted-foreground: oklch(0.45 0.01 240);
+  /* Muted - Zinc 600 in light mode for better contrast */
+  --muted: oklch(0.967 0.001 286.37);
+  --muted-foreground: oklch(0.45 0.015 285.93);
 
-  /* Accent */
-  --accent: oklch(0.92 0.01 240);
-  --accent-foreground: oklch(0.2 0.02 240);
+  /* Accent - Zinc 100 */
+  --accent: oklch(0.967 0.001 286.37);
+  --accent-foreground: oklch(0.55 0.2 260);
 
-  --destructive: oklch(0.55 0.22 25);
-  --destructive-foreground: oklch(1 0 0);
+  --destructive: oklch(0.637 0.193 26.14);
+  --destructive-foreground: oklch(0.985 0 0);
 
-  --border: oklch(0.92 0.005 240);
-  --input: oklch(0.92 0.005 240);
+  --border: oklch(0.92 0.004 286.32);
+  --input: oklch(0.92 0.004 286.32);
   --ring: oklch(0.55 0.2 260);
 
-  /* Branding */
+  /* Branding - Kept but refined */
   --ccc-red: #e52a00;
   --ccc-orange: #ff6200;
   --ccc-yellow: #ff9a03;
@@ -71,32 +71,38 @@
 }
 
 .dark {
-  /* Dark Mode - Deep Midnight */
-  --background: oklch(0.12 0.02 240);
-  --foreground: oklch(0.95 0.01 240);
-  --card: oklch(0.16 0.02 240);
-  --card-foreground: oklch(0.95 0.01 240);
-  --popover: oklch(0.16 0.02 240);
-  --popover-foreground: oklch(0.95 0.01 240);
+  /* Dark Mode - Zinc 950 Foundation */
+  --background: oklch(0.141 0.005 285.82);
+  --foreground: oklch(0.985 0 0);
 
-  --primary: oklch(0.65 0.18 260);
-  --primary-foreground: oklch(1 0 0);
+  /* Lighter Cards - Zinc 900 */
+  --card: oklch(0.211 0.006 285.88);
+  --card-foreground: oklch(0.985 0 0);
+  --popover: oklch(0.211 0.006 285.88);
+  --popover-foreground: oklch(0.985 0 0);
 
-  --secondary: oklch(0.2 0.02 240);
-  --secondary-foreground: oklch(0.95 0.01 240);
+  /* Primary - Sky Blue for Dark Mode */
+  --primary: oklch(0.7 0.15 250);
+  --primary-foreground: oklch(0.141 0.005 285.82);
 
-  --muted: oklch(0.18 0.02 240);
-  --muted-foreground: oklch(0.7 0.02 240);
+  /* Secondary - Zinc 800 */
+  --secondary: oklch(0.274 0.006 286.03);
+  --secondary-foreground: oklch(0.985 0 0);
 
-  --accent: oklch(0.22 0.03 240);
-  --accent-foreground: oklch(0.95 0.01 240);
+  /* Muted - Zinc 400 in dark mode for better contrast */
+  --muted: oklch(0.274 0.006 286.03);
+  --muted-foreground: oklch(0.82 0.01 286.06);
 
-  --destructive: oklch(0.6 0.2 25);
-  --destructive-foreground: oklch(1 0 0);
+  /* Accent - Zinc 800 */
+  --accent: oklch(0.274 0.006 286.03);
+  --accent-foreground: oklch(0.985 0 0);
 
-  --border: oklch(0.25 0.03 240);
-  --input: oklch(0.25 0.03 240);
-  --ring: oklch(0.65 0.18 260);
+  --destructive: oklch(0.396 0.141 25.72);
+  --destructive-foreground: oklch(0.985 0 0);
+
+  --border: oklch(0.274 0.006 286.03);
+  --input: oklch(0.274 0.006 286.03);
+  --ring: oklch(0.7 0.15 250);
 }
 
 @layer base {
@@ -111,12 +117,18 @@
     overflow-x: clip;
   }
 
-  /* Accessibility: Links should have underline on hover/focus, not just color */
-  a:not(.no-underline):hover,
-  a:not(.no-underline):focus-visible {
+  /* Link styling: Blue with underline by default */
+  a:not(.no-underline) {
+    color: var(--primary);
     text-decoration: underline;
     text-decoration-thickness: 1px;
-    text-underline-offset: 2px;
+    text-underline-offset: 4px;
+    transition: text-decoration-color 0.2s;
+  }
+
+  a:not(.no-underline):hover {
+    text-decoration-color: var(--primary);
+    text-decoration-thickness: 2px;
   }
 
   /* Improved focus indicators for keyboard navigation */

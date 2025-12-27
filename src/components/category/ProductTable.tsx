@@ -188,7 +188,7 @@ export function ProductTable({
                     product.condition === "New" &&
                       "bg-emerald-100/50 text-emerald-800 dark:bg-emerald-500/10 dark:text-emerald-300",
                     product.condition === "Renewed" &&
-                      "bg-blue-100/50 text-blue-800 dark:bg-blue-500/10 dark:text-blue-300",
+                      "bg-secondary text-secondary-foreground",
                     product.condition === "Used" &&
                       "bg-amber-100/50 text-amber-800 dark:bg-amber-500/10 dark:text-amber-300",
                   )}

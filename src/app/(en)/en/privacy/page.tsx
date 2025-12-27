@@ -103,6 +103,17 @@ export default function PrivacyPage() {
               cookies**. Data is collected in an aggregated and anonymized
               manner that does not allow for personal identification.
             </p>
+            <h3 className="text-lg font-semibold">
+              Local Storage (Functional Storage)
+            </h3>
+            <p>
+              We use your browser's "local storage" to save your regional
+              preference (e.g., your selected marketplace like US or Germany).
+              This is used solely to ensure the technically correct display of
+              currencies, pricing, and regional content. This data is strictly
+              functional and is not used for tracking purposes or the creation
+              of user profiles.
+            </p>
 
             <h3 className="text-lg font-semibold">Affiliate Links (Amazon)</h3>
             <p>

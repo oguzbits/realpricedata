@@ -110,6 +110,18 @@ export default function DatenschutzPage() {
               vollständig anonymisiert erhoben und dienen ausschließlich der
               Verbesserung der Website-Geschwindigkeit und Nutzererfahrung.
             </p>
+            <h3 className="text-lg font-semibold">
+              Local Storage (Funktionale Speicherung)
+            </h3>
+            <p>
+              Wir nutzen den "Local Storage" Ihres Browsers, um Ihre regionale
+              Präferenz (z. B. den gewählten Marktplatz wie USA oder
+              Deutschland) zu speichern. Dies dient ausschließlich der technisch
+              korrekten Darstellung von Währungen, Preisen und regionalen
+              Inhalten. Diese Daten sind rein funktional und werden nicht zu
+              Tracking-Zwecken oder zur Erstellung von Nutzerprofilen
+              verwendet.
+            </p>
 
             <h3 className="text-lg font-semibold">Affiliate-Links (Amazon)</h3>
             <p>

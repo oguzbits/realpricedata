@@ -265,48 +265,63 @@
     "condition": "New",
     "brand": "Crucial",
     "prices": {
+      "us": 427.00,
+      "ca": 549.95,
+      "uk": null,
+      "it": null,
+      "fr": 489.99,
       "de": 444.99,
-      "us": 427
+      "es": null
     }
   },
   {
     "id": 112,
-    "slug": "lexar-udimm-ddr4-ram-8gb",
-    "asin": "B0C7Z4C6YJ",
-    "title": "Lexar UDIMM DDR4 RAM 8GB",
+    "slug": "kingston-fury-beast-16gb",
+    "asin": "B097K3WV9J",
+    "title": "Kingston Fury Beast 16GB 3200MHz DDR4 CL16 Desktop Memory Single Stick",
     "category": "ram",
-    "affiliateUrl": "https://amzn.to/4qIdsZl",
-    "image": "https://m.media-amazon.com/images/I/61n-gmo9AuL._AC_SX522_.jpg",
-    "capacity": 8,
+    "affiliateUrl": "https://amzn.to/4atYjpv",
+    "image": "https://m.media-amazon.com/images/I/61MYgWr+xWL._AC_SX522_.jpg",
+    "capacity": 16,
     "capacityUnit": "GB",
     "warranty": "Limited Lifetime Warranty",
     "formFactor": "DIMM",
     "technology": "DDR4",
     "condition": "New",
-    "brand": "Lexar",
+    "brand": "Kingston",
     "prices": {
-      "de": 75.99,
-      "us": 75.99
+      "us": 98.77,
+      "ca": 134.76,
+      "uk": 124.99,
+      "it": 125.46,
+      "fr": 134.63,
+      "de": 133.33,
+      "es": 131.57
     }
   },
   {
     "id": 113,
-    "slug": "crucial-ddr5-ram-8gb-4800mhz",
-    "asin": "B09HWFZZM4",
-    "title": "Crucial DDR5 RAM 8GB 4800MHz",
+    "slug": "gskill-f4-3200c16d-32gvk",
+    "asin": "B07XJLDHW4",
+    "title": "Gskill F4-3200C16D-32GVK Memory D4 3200 32GB C16 RipV K2 2x 16GB",
     "category": "ram",
-    "affiliateUrl": "https://amzn.to/4p4TN4l",
-    "image": "https://m.media-amazon.com/images/I/71rIspMTJwL._AC_SX522_.jpg",
-    "capacity": 8,
+    "affiliateUrl": "https://amzn.to/4qmDQri",
+    "image": "https://m.media-amazon.com/images/I/618SEnJR1nL._AC_SX679_.jpg",
+    "capacity": 32,
     "capacityUnit": "GB",
     "warranty": "Limited Lifetime Warranty",
     "formFactor": "DIMM",
-    "technology": "DDR5",
+    "technology": "DDR4",
     "condition": "New",
-    "brand": "Crucial",
+    "brand": "Gskill",
     "prices": {
-      "de": 119,
-      "us": 119
+      "us": 114.99,
+      "ca": 223.89,
+      "uk": 168.10,
+      "it": 209.50,
+      "fr": 210.00,
+      "de": 254.26,
+      "es": 209.68
     }
   },
   {
@@ -325,27 +340,38 @@
     "condition": "New",
     "brand": "Lexar",
     "prices": {
-      "de": 125.16
+      "us": null,
+      "ca": null,
+      "uk": 110.31,
+      "it": 110.99,
+      "fr": 120.99,
+      "de": 115.99,
+      "es": 120.99
     }
   },
   {
     "id": 115,
-    "slug": "patriot-memory-viper-venom-kit-ddr5-ram-16gb-2-x-8gb-5200mhz-cl36",
-    "asin": "B09XY688YP",
-    "title": "Patriot Memory Viper Venom Kit DDR5 RAM 16GB (2 x 8GB) 5200MHz CL36",
+    "slug": "gskill-trident-z5-rgb-ddr5-ram-32gb-2-x-16gb-5200mhz-cl36",
+    "asin": "B09PTGZM6Y",
+    "title": "G.SKILL Trident Z5 RGB Series DDR5 RAM (Intel XMP 3.0 & AMD Expo) 32GB (2x16GB)",
     "category": "ram",
-    "affiliateUrl": "https://amzn.to/49oaT8B",
-    "image": "https://m.media-amazon.com/images/I/610Hy5HZ00L._AC_SY300_SX300_QL70_ML2_.jpg",
-    "capacity": 16,
+    "affiliateUrl": "https://amzn.to/3YevrKv",
+    "image": "https://m.media-amazon.com/images/I/71DiVTefKBL._AC_SX522_.jpg",
+    "capacity": 32,
     "capacityUnit": "GB",
     "warranty": "Limited Lifetime Warranty",
     "formFactor": "DIMM",
     "technology": "DDR5",
     "condition": "New",
-    "brand": "Patriot Memory",
+    "brand": "Gskill",
     "prices": {
-      "de": 197.9,
-      "us": 197.9
+      "us": 374.99,
+      "ca": 720.80,
+      "uk": 474.23,
+      "it": 616.69,
+      "fr": 687.53,
+      "de": null,
+      "es": 639.59
     }
   },
   {
@@ -364,19 +390,24 @@
     "condition": "New",
     "brand": "Corsair",
     "prices": {
-      "de": 143.57,
-      "us": 143.57
+      "us": null,
+      "ca": 150.99,
+      "uk": 115.99,
+      "it": 181.99,
+      "fr": 147.99,
+      "de": 134.14,
+      "es": 134.93
     }
   },
   {
     "id": 117,
-    "slug": "corsair-vengeance-rgb-ddr5-ram-16gb-1-x-16gb-6000mhz-cl36-44-44-96-1-35v-amd-expo-intel-xmp-3-0",
-    "asin": "B0F2B244T4",
-    "title": "Corsair Vengeance RGB DDR5 RAM 16GB (1x16GB) 6000MHz CL36-44-44-96 1.35V AMD Expo Intel XMP 3.0",
+    "slug": "corsair-vengeance-rgb-ddr5-ram-32gb-2-x-16gb-6400mhz-cl36",
+    "asin": "B0BXHC74WD",
+    "title": "CORSAIR VENGEANCE RGB DDR5 RAM 32GB (2x16GB) 6400MHz CL36",
     "category": "ram",
-    "affiliateUrl": "https://amzn.to/3N0SOEZ",
-    "image": "https://m.media-amazon.com/images/I/71qnz2USWXL._AC_SX522_.jpg",
-    "capacity": 16,
+    "affiliateUrl": "https://amzn.to/4pfehrh",
+    "image": "https://m.media-amazon.com/images/I/61X5rnciqUL._AC_SX679_.jpg",
+    "capacity": 32,
     "capacityUnit": "GB",
     "warranty": "Limited Lifetime Warranty",
     "formFactor": "DIMM",
@@ -384,8 +415,13 @@
     "condition": "New",
     "brand": "Corsair",
     "prices": {
-      "de": 309.99,
-      "us": 309.99
+      "us": 407.99,
+      "ca": 674.99,
+      "uk": 373.30,
+      "it": null,
+      "fr": 624.95,
+      "de": null,
+      "es": null
     }
   },
   {
@@ -404,8 +440,13 @@
     "condition": "New",
     "brand": "Corsair",
     "prices": {
+      "us": 251.41,
+      "ca": null,
+      "uk": 190.99,
+      "it": 225.08,
+      "fr": 221.33,
       "de": 215.99,
-      "us": 215.99
+      "es": 215.99
     }
   },
   {
@@ -424,8 +465,13 @@
     "condition": "New",
     "brand": "Crucial",
     "prices": {
-      "de": 265.79,
-      "us": 265.79
+      "us": 257.90,
+      "ca": null,
+      "uk": null,
+      "it": null,
+      "fr": 270.31,
+      "de": 480.38,
+      "es": 354.30
     }
   },
   {
@@ -444,8 +490,13 @@
     "condition": "New",
     "brand": "Kingston",
     "prices": {
-      "de": 499.99,
-      "us": 499.99
+      "us": null,
+      "ca": 613.98,
+      "uk": 418.88,
+      "it": 588.93,
+      "fr": 552.41,
+      "de": 499.90,
+      "es": 583.43
     }
   },
   {

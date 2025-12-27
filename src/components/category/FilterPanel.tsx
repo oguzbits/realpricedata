@@ -36,9 +36,8 @@ export function FilterPanel({
     getCategoryFilterOptions(categorySlug);
 
   return (
-    <Card className="border-none p-4 shadow-none lg:border lg:shadow-sm">
-      <CardContent className="p-0">
-        <h2 className="sr-only">Filters</h2>
+    <div className="flex flex-col gap-4">
+      <h2 className="sr-only">Filters</h2>
         <Accordion
           type="multiple"
           defaultValue={["condition", "capacity", "technology", "form-factor"]}
@@ -46,7 +45,7 @@ export function FilterPanel({
         >
           {/* Condition Filter */}
           <AccordionItem value="condition" className="border-b">
-            <AccordionTrigger className="pt-0 pb-3 text-base font-semibold hover:no-underline">
+            <AccordionTrigger className="py-2.5 text-sm font-bold hover:no-underline sm:text-base">
               Condition
             </AccordionTrigger>
             <AccordionContent>
@@ -65,7 +64,7 @@ export function FilterPanel({
                     />
                     <Label
                       htmlFor={`condition-${condition}`}
-                      className="cursor-pointer text-base leading-none font-normal"
+                      className="cursor-pointer text-sm leading-none font-medium sm:text-base"
                     >
                       {condition}
                     </Label>
@@ -77,7 +76,7 @@ export function FilterPanel({
 
           {/* Capacity Filter */}
           <AccordionItem value="capacity" className="border-b">
-            <AccordionTrigger className="py-3 text-base font-semibold hover:no-underline">
+            <AccordionTrigger className="py-2.5 text-sm font-bold hover:no-underline sm:text-base">
               Capacity ({unitLabel})
             </AccordionTrigger>
             <AccordionContent>
@@ -123,7 +122,7 @@ export function FilterPanel({
 
           {/* Technology Filter */}
           <AccordionItem value="technology" className="border-b">
-            <AccordionTrigger className="py-3 text-base font-semibold hover:no-underline">
+            <AccordionTrigger className="py-2.5 text-sm font-bold hover:no-underline sm:text-base">
               {categorySlug === "power-supplies"
                 ? "Certification"
                 : "Technology"}
@@ -142,7 +141,7 @@ export function FilterPanel({
                     />
                     <Label
                       htmlFor={`tech-${tech}`}
-                      className="cursor-pointer text-base leading-none font-normal"
+                      className="cursor-pointer text-sm leading-none font-medium sm:text-base"
                     >
                       {tech}
                     </Label>
@@ -154,7 +153,7 @@ export function FilterPanel({
 
           {/* Form Factor Filter */}
           <AccordionItem value="form-factor" className="border-none">
-            <AccordionTrigger className="py-3 text-base font-semibold hover:no-underline">
+            <AccordionTrigger className="py-2.5 text-sm font-bold hover:no-underline sm:text-base">
               Form Factor
             </AccordionTrigger>
             <AccordionContent>
@@ -168,7 +167,7 @@ export function FilterPanel({
                     />
                     <Label
                       htmlFor={`ff-${ff}`}
-                      className="cursor-pointer text-base leading-none font-normal"
+                      className="cursor-pointer text-sm leading-none font-medium sm:text-base"
                     >
                       {ff}
                     </Label>
@@ -178,7 +177,6 @@ export function FilterPanel({
             </AccordionContent>
           </AccordionItem>
         </Accordion>
-      </CardContent>
-    </Card>
+    </div>
   );
 }

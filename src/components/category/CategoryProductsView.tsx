@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import {
   Sheet,
   SheetContent,
+  SheetHeader,
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
@@ -114,13 +115,15 @@ export function CategoryProductsView({
             <>
               {/* Desktop Filters */}
               <aside className="hidden w-60 shrink-0 lg:block">
-                <FilterPanel
-                  filters={filters}
-                  onFilterChange={handleFilterChange}
-                  onCapacityChange={setCapacityRange}
-                  unitLabel={unitLabel}
-                  categorySlug={categorySlug}
-                />
+                <div className="bg-card sticky top-24 rounded-lg border p-4 shadow-sm">
+                  <FilterPanel
+                    filters={filters}
+                    onFilterChange={handleFilterChange}
+                    onCapacityChange={setCapacityRange}
+                    unitLabel={unitLabel}
+                    categorySlug={categorySlug}
+                  />
+                </div>
               </aside>
 
               {/* Main Content */}
@@ -136,15 +139,19 @@ export function CategoryProductsView({
                         <Filter className="h-4 w-4" /> Filters
                       </Button>
                     </SheetTrigger>
-                    <SheetContent side="left" className="w-[300px] pt-12">
-                      <SheetTitle className="sr-only">Filters</SheetTitle>
-                      <FilterPanel
-                        filters={filters}
-                        onFilterChange={handleFilterChange}
-                        onCapacityChange={setCapacityRange}
-                        unitLabel={unitLabel}
-                        categorySlug={categorySlug}
-                      />
+                    <SheetContent side="left" className="w-[300px] p-0">
+                      <SheetHeader className="border-b px-6 py-4 text-left">
+                        <SheetTitle className="text-xl font-bold">Filters</SheetTitle>
+                      </SheetHeader>
+                      <div className="px-6 py-4">
+                        <FilterPanel
+                          filters={filters}
+                          onFilterChange={handleFilterChange}
+                          onCapacityChange={setCapacityRange}
+                          unitLabel={unitLabel}
+                          categorySlug={categorySlug}
+                        />
+                      </div>
                     </SheetContent>
                   </Sheet>
                 </div>

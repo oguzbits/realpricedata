@@ -94,7 +94,6 @@ export function ProductTable({
                 {getSortIcon("pricePerUnit")}
               </div>
             </TableHead>
-            <TableHead className="min-w-[200px]">Product</TableHead>
             <TableHead
               className="hover:bg-muted/50 focus-visible:bg-muted/50 focus-visible:ring-primary cursor-pointer pr-12 outline-none focus-visible:ring-2 focus-visible:ring-inset"
               onClick={() => onSort("price")}
@@ -131,6 +130,7 @@ export function ProductTable({
                 Capacity {getSortIcon("capacity")}
               </div>
             </TableHead>
+            <TableHead className="min-w-[200px]">Product</TableHead>
             <TableHead className="hidden md:table-cell">Warranty</TableHead>
             <TableHead className="hidden sm:table-cell">Form Factor</TableHead>
             <TableHead className="hidden sm:table-cell">
@@ -151,6 +151,12 @@ export function ProductTable({
               <TableCell className="text-foreground font-mono font-bold">
                 {formatCurrency(product.pricePerUnit || 0, 2)}
               </TableCell>
+              <TableCell className="text-muted-foreground pr-12 font-mono whitespace-nowrap">
+                {formatCurrency(product.price)}
+              </TableCell>
+              <TableCell className="text-muted-foreground font-mono">
+                {product.capacity} {product.capacityUnit}
+              </TableCell>
               <TableCell>
                 <a
                   href={getAffiliateRedirectPath(product.slug)}
@@ -161,12 +167,6 @@ export function ProductTable({
                 >
                   {product.title}
                 </a>
-              </TableCell>
-              <TableCell className="text-muted-foreground pr-12 font-mono whitespace-nowrap">
-                {formatCurrency(product.price)}
-              </TableCell>
-              <TableCell className="text-muted-foreground font-mono">
-                {product.capacity} {product.capacityUnit}
               </TableCell>
 
               <TableCell className="text-muted-foreground hidden text-sm md:table-cell">

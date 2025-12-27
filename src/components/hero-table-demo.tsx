@@ -111,13 +111,13 @@ export function HeroTableDemo() {
                     <TrendingUp className="h-3 w-3" />
                     {config.unitLabel}
                   </div>
-                  <div className="col-span-5 sm:col-span-4">Product</div>
                   <div className="col-span-2">Price</div>
                   <div className="col-span-2">
                     {currentCategory === "harddrives" && "Capacity"}
                     {currentCategory === "batteries" && "Pack"}
                     {currentCategory === "powersupplies" && "Watts"}
                   </div>
+                  <div className="col-span-5 sm:col-span-4">Product</div>
                 </div>
 
                 {/* Table Body */}
@@ -150,11 +150,6 @@ export function HeroTableDemo() {
                           </Badge>
                         )}
                       </div>
-                      <div className="col-span-5 sm:col-span-4">
-                        <span className="text-foreground/90 dark:text-white block truncate font-bold">
-                          {product.name}
-                        </span>
-                      </div>
                       <div className="text-foreground/80 col-span-2 font-mono">
                         {config.currency}
                         {product.price.toFixed(2)}
@@ -166,6 +161,11 @@ export function HeroTableDemo() {
                           `${(product as BatteryProduct).packSize}p`}
                         {currentCategory === "powersupplies" &&
                           `${(product as PowerSupplyProduct).wattage}W`}
+                      </div>
+                      <div className="col-span-5 sm:col-span-4">
+                        <span className="text-foreground/90 dark:text-white block truncate font-bold">
+                          {product.name}
+                        </span>
                       </div>
                     </div>
                   ))}

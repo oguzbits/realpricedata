@@ -16,7 +16,7 @@ export function Footer() {
           <div>
             <Link
               href={country === DEFAULT_COUNTRY ? "/" : `/${country}`}
-              className="mb-2 flex items-center space-x-2 no-underline hover:opacity-80 transition-opacity"
+              className="mb-2 flex items-center space-x-2 no-underline"
             >
               <Image
                 src="/icon-192.png"

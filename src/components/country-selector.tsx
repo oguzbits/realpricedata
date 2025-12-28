@@ -11,8 +11,9 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { useCountry } from "@/hooks/use-country";
-import { getAllCountries, getFlagUrl } from "@/lib/countries";
+import { getAllCountries, getFlag } from "@/lib/countries";
 import { Globe } from "lucide-react";
+import Image from "next/image";
 
 export function CountrySelector() {
   const { country, currentCountry, changeCountry } = useCountry();
@@ -33,9 +34,11 @@ export function CountrySelector() {
         >
           <Globe className="h-4 w-4" />
           {currentCountry && (
-            <img
-              src={getFlagUrl(currentCountry.code)}
+            <Image
+              src={getFlag(currentCountry.code)}
               alt={currentCountry.name}
+              width={20}
+              height={12}
               className="hidden h-3 w-5 object-cover shadow-sm sm:inline"
             />
           )}

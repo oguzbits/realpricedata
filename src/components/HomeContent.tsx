@@ -1,10 +1,11 @@
 import Link from "next/link";
 import Script from "next/script";
+import Image from "next/image";
 import dynamic from "next/dynamic";
 import { HeroCategoryPills } from "@/components/hero-category-pills";
 import { HeroDealCards } from "@/components/hero-deal-cards";
 import { HeroTableDemo } from "@/components/hero-table-demo";
-import { getAllCountries, getCountryByCode, DEFAULT_COUNTRY, getFlagUrl } from "@/lib/countries";
+import { getAllCountries, getCountryByCode, DEFAULT_COUNTRY, getFlag } from "@/lib/countries";
 import { getAllProducts } from "@/lib/product-registry";
 import { adaptToUIModel, getLocalizedProductData } from "@/lib/utils/products";
 
@@ -120,7 +121,7 @@ export function HomeContent({ country }: { country: string }) {
             <div className="flex flex-wrap justify-center gap-6 sm:gap-10">
               {getAllCountries().map((c) => {
                 const isActive = c.code === country;
-                const flagUrl = getFlagUrl(c.code);
+                const flagUrl = getFlag(c.code);
 
                 return (
                   <Link
@@ -140,9 +141,11 @@ export function HomeContent({ country }: { country: string }) {
                           : "border-transparent bg-transparent p-4"
                       }`}
                     >
-                      <img
+                      <Image
                         src={flagUrl}
                         alt={c.name}
+                        width={64}
+                        height={40}
                         className="h-8 w-12 object-cover transition-all sm:h-10 sm:w-16"
                         loading="lazy"
                       />

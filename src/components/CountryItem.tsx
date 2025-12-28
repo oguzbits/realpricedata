@@ -1,7 +1,8 @@
 "use client";
 
 import { Badge } from "@/components/ui/badge";
-import { getFlagUrl } from "@/lib/countries";
+import { getFlag } from "@/lib/countries";
+import Image from "next/image";
 
 interface CountryItemProps {
   code: string;
@@ -21,9 +22,11 @@ export function CountryItem({
   return (
     <div className="flex w-full items-center justify-between">
       <div className="flex items-center gap-3">
-        <img
-          src={getFlagUrl(code)}
+        <Image
+          src={getFlag(code)}
           alt={name}
+          width={24}
+          height={16}
           className="h-4 w-6 object-cover shadow-sm"
         />
         <div className="flex flex-col">

@@ -166,10 +166,10 @@ export function getUserCountry(): string {
 }
 
 // Get flag URL (SVG) for a country code
-export function getFlagUrl(code: string): string {
-  // Map "uk" to "gb" for flagcdn
+export function getFlag(code: string): string {
+  // Map "uk" to "gb" for local flags
   const flagCode = code.toLowerCase() === "uk" ? "gb" : code.toLowerCase();
-  return `https://flagcdn.com/${flagCode}.svg`;
+  return `/flags/${flagCode}.svg`;
 }
 
 // Validate country code

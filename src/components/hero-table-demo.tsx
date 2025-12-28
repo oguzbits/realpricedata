@@ -126,7 +126,7 @@ export function HeroTableDemo() {
                     <div
                       key={product.id}
                       className={cn(
-                        "hover:bg-muted/50 grid grid-cols-12 items-center gap-2 px-4 py-3 text-xs transition-all sm:text-sm",
+                        "grid grid-cols-12 items-center gap-2 px-4 py-3 text-xs transition-all sm:text-sm",
                         idx === 0 &&
                           "bg-primary/5 ring-primary/20 bg-linear-to-r from-primary/10 via-primary/5 to-transparent shadow-xs ring-1 ring-inset",
                       )}

@@ -3,7 +3,7 @@ import { Sparkles, ArrowRight } from "lucide-react";
 
 export function PromoBanner() {
   return (
-    <div className="relative z-60 flex w-full items-center justify-center gap-3 overflow-hidden border-b border-white/10 bg-linear-to-r from-[#e52a00] via-[#ff6200] to-[#ff9a03] px-4 py-2.5 text-center text-white shadow-lg">
+    <div className="relative z-40 flex w-full items-center justify-center gap-3 overflow-hidden border-b border-white/10 bg-linear-to-r from-[#e52a00] via-[#ff6200] to-[#ff9a03] px-4 py-2.5 text-center text-white shadow-lg">
       {/* Decorative elements */}
       <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_center,white_1px,transparent_1px)] bg-size-[16px_16px] opacity-10"></div>
       <div className="absolute -top-4 -left-4 h-12 w-12 rounded-full bg-white/10 blur-xl"></div>

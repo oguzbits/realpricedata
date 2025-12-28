@@ -8,7 +8,7 @@ import {
 } from "@/components/ui/accordion";
 
 export const metadata: Metadata = {
-  title: "FAQ - Frequently Asked Questions | realpricedata.com",
+  title: "FAQ - Frequently Asked Questions",
   description:
     "Find answers to common questions about realpricedata.com, price per unit comparison, and how to find the best deals.",
   alternates: {

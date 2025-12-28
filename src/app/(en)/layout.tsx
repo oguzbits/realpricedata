@@ -17,11 +17,11 @@ export default function EnglishLayout({
 }) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <head>
+      <BaseLayoutContent>
         <link rel="preconnect" href="https://m.media-amazon.com" />
         <link rel="dns-prefetch" href="https://m.media-amazon.com" />
-      </head>
-      <BaseLayoutContent>{children}</BaseLayoutContent>
+        {children}
+      </BaseLayoutContent>
     </html>
   );
 }

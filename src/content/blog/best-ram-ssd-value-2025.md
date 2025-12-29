@@ -1,5 +1,5 @@
 ---
-title: "Best Value RAM and SSDs for Gaming in 2025: Beat the Price Hikes"
+title: "Best Value RAM and SSDs for Gaming in 2025"
 description: "Don't overpay for memory. Learn how the Samsung, Micron, and SK Hynix AI focus is raising prices and how to find the best DDR5 and NVMe deals in 2025."
 slug: "best-ram-ssd-value-2025"
 publishDate: "2025-12-28"

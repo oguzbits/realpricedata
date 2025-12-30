@@ -17,6 +17,7 @@ interface CategoryHeaderProps {
   productCount: number;
   searchValue: string;
   onSearchChange: (value: string) => void;
+  filterTrigger?: React.ReactNode;
 }
 
 export function CategoryHeader({
@@ -26,6 +27,7 @@ export function CategoryHeader({
   productCount,
   searchValue,
   onSearchChange,
+  filterTrigger,
 }: CategoryHeaderProps) {
   const Icon = getCategoryIcon(category.slug);
 
@@ -38,41 +40,37 @@ export function CategoryHeader({
     })),
   ];
 
+  const searchInput = (
+    <div className="relative flex-1 md:w-72 lg:w-96 md:flex-none">
+      <Search className="text-muted-foreground absolute top-2.5 left-2 h-4 w-4" />
+      <Input
+        placeholder="Search products..."
+        className="bg-card dark:bg-card focus-visible:border-primary h-10 pl-8 shadow-sm transition-colors focus-visible:ring-0"
+        value={searchValue}
+        onChange={(e) => onSearchChange(e.target.value)}
+        aria-label="Search products"
+      />
+    </div>
+  );
+
   return (
-    <div className="flex flex-col gap-6">
-      <Breadcrumbs items={breadcrumbItems} className="mb-0" />
+    <div className="flex flex-col gap-4">
+      {/* Top Row: Breadcrumbs + Desktop/Tablet Search */}
+      <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+        <Breadcrumbs items={breadcrumbItems} className="mb-0" />
 
-      {/* Header Content */}
-      <div className="flex flex-col items-start justify-between gap-4 md:flex-row md:items-center">
-        <div>
-          <div className="mb-2 flex items-center gap-3">
-            <Icon
-              className="text-primary h-6 w-6 shrink-0 sm:h-8 sm:w-8"
-              aria-hidden="true"
-            />
-            <h1 className="text-xl font-bold tracking-tight sm:text-2xl">
-              {category.name}
-            </h1>
-          </div>
-          <p className="text-muted-foreground text-sm sm:text-base">
-            {productCount > 0
-              ? `Showing ${productCount} products`
-              : category.description}
-          </p>
-        </div>
-
-        <div className="flex w-full items-center gap-2 md:w-auto">
-          <div className="relative flex-1 md:w-64">
-            <Search className="text-muted-foreground absolute top-2.5 left-2 h-4 w-4" />
-            <Input
-              placeholder="Search products..."
-              className="bg-card dark:bg-card focus-visible:border-primary pl-8 shadow-sm transition-colors focus-visible:ring-0"
-              value={searchValue}
-              onChange={(e) => onSearchChange(e.target.value)}
-              aria-label="Search products"
-            />
+        <div className="hidden md:flex items-center gap-2">
+          {searchInput}
+          <div className="lg:hidden">
+            {filterTrigger}
           </div>
         </div>
+      </div>
+
+      {/* Mobile/Tablet Controls (Below MD) */}
+      <div className="flex items-center gap-2 md:hidden">
+        {searchInput}
+        {filterTrigger}
       </div>
     </div>
   );

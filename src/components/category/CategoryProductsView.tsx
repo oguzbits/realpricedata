@@ -97,6 +97,34 @@ export function CategoryProductsView({
     trackSEO.sortChanged(String(effectiveKey), newOrder, categorySlug);
   };
 
+  const mobileFilterTrigger = (
+    <Sheet>
+      <SheetTrigger asChild>
+        <Button
+          variant="outline"
+          size="sm"
+          className="bg-card h-10 gap-2 border shadow-sm"
+        >
+          <Filter className="h-4 w-4" /> Filters
+        </Button>
+      </SheetTrigger>
+      <SheetContent side="left" className="w-[300px] p-0">
+        <SheetHeader className="border-b px-6 py-4 text-left">
+          <SheetTitle className="text-xl font-bold">Filters</SheetTitle>
+        </SheetHeader>
+        <div className="px-6 py-4">
+          <FilterPanel
+            filters={filters}
+            onFilterChange={handleFilterChange}
+            onCapacityChange={setCapacityRange}
+            unitLabel={unitLabel}
+            categorySlug={categorySlug}
+          />
+        </div>
+      </SheetContent>
+    </Sheet>
+  );
+
   // 4. Main Render
   return (
     <div className="container mx-auto px-4 py-6">
@@ -108,6 +136,7 @@ export function CategoryProductsView({
           productCount={filteredCount}
           searchValue={filters.search}
           onSearchChange={setSearch}
+          filterTrigger={mobileFilterTrigger}
         />
 
         <div className="flex gap-6">
@@ -128,34 +157,6 @@ export function CategoryProductsView({
 
               {/* Main Content */}
               <div className="min-w-0 flex-1">
-                <div className="mb-4 flex justify-end lg:hidden">
-                  <Sheet>
-                    <SheetTrigger asChild>
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        className="bg-card gap-2"
-                      >
-                        <Filter className="h-4 w-4" /> Filters
-                      </Button>
-                    </SheetTrigger>
-                    <SheetContent side="left" className="w-[300px] p-0">
-                      <SheetHeader className="border-b px-6 py-4 text-left">
-                        <SheetTitle className="text-xl font-bold">Filters</SheetTitle>
-                      </SheetHeader>
-                      <div className="px-6 py-4">
-                        <FilterPanel
-                          filters={filters}
-                          onFilterChange={handleFilterChange}
-                          onCapacityChange={setCapacityRange}
-                          unitLabel={unitLabel}
-                          categorySlug={categorySlug}
-                        />
-                      </div>
-                    </SheetContent>
-                  </Sheet>
-                </div>
-
                 {products.length > 0 ? (
                   <ProductTable
                     products={products}

@@ -63,7 +63,7 @@ export function ProductTable({
         <TableHeader>
           <TableRow>
             <TableHead
-              className="hover:bg-muted/50 focus-visible:bg-muted/50 focus-visible:ring-primary w-[140px] cursor-pointer outline-none focus-visible:ring-2 focus-visible:ring-inset"
+              className="hover:bg-muted/50 focus-visible:bg-muted/50 focus-visible:ring-primary w-[100px] cursor-pointer outline-none focus-visible:ring-2 focus-visible:ring-inset sm:w-[140px]"
               onClick={() => onSort("pricePerUnit")}
               onKeyDown={(e) => handleKeyDown(e, "pricePerUnit")}
               tabIndex={0}
@@ -78,24 +78,11 @@ export function ProductTable({
             >
               <div className="flex items-center gap-1.5">
                 <span>Price/{unitLabel}</span>
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                    <Info className="text-muted-foreground/70 hover:text-foreground h-3.5 w-3.5 cursor-help transition-colors" />
-                  </TooltipTrigger>
-                  <TooltipContent
-                    side="top"
-                    align="start"
-                    className="max-w-[200px]"
-                  >
-                    This is the calculated price per {unitLabel} of capacity,
-                    allowing you to easily compare value across different sizes.
-                  </TooltipContent>
-                </Tooltip>
                 {getSortIcon("pricePerUnit")}
               </div>
             </TableHead>
             <TableHead
-              className="hover:bg-muted/50 focus-visible:bg-muted/50 focus-visible:ring-primary cursor-pointer pr-12 outline-none focus-visible:ring-2 focus-visible:ring-inset"
+              className="hover:bg-muted/50 focus-visible:bg-muted/50 focus-visible:ring-primary hidden cursor-pointer pr-4 outline-none focus-visible:ring-2 focus-visible:ring-inset sm:table-cell sm:pr-12"
               onClick={() => onSort("price")}
               onKeyDown={(e) => handleKeyDown(e, "price")}
               tabIndex={0}
@@ -113,7 +100,7 @@ export function ProductTable({
               </div>
             </TableHead>
             <TableHead
-              className="hover:bg-muted/50 focus-visible:bg-muted/50 focus-visible:ring-primary cursor-pointer outline-none focus-visible:ring-2 focus-visible:ring-inset"
+              className="hover:bg-muted/50 focus-visible:bg-muted/50 focus-visible:ring-primary hidden cursor-pointer outline-none focus-visible:ring-2 focus-visible:ring-inset sm:table-cell"
               onClick={() => onSort("capacity")}
               onKeyDown={(e) => handleKeyDown(e, "capacity")}
               tabIndex={0}
@@ -130,7 +117,7 @@ export function ProductTable({
                 Capacity {getSortIcon("capacity")}
               </div>
             </TableHead>
-            <TableHead className="min-w-[200px]">Product</TableHead>
+            <TableHead className="min-w-[120px] sm:min-w-[200px]">Product</TableHead>
             <TableHead className="hidden md:table-cell">Warranty</TableHead>
             <TableHead className="hidden sm:table-cell">Form Factor</TableHead>
             <TableHead className="hidden sm:table-cell">
@@ -139,7 +126,7 @@ export function ProductTable({
                 : "Technology"}
             </TableHead>
             <TableHead className="hidden sm:table-cell">Condition</TableHead>
-            <TableHead className="text-right">Action</TableHead>
+            <TableHead className="px-2 text-right sm:px-4">Action</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -148,25 +135,34 @@ export function ProductTable({
               key={product.id || product.slug}
               className="group hover:bg-muted/30 transition-colors"
             >
-              <TableCell className="text-foreground font-mono font-bold">
+              <TableCell className="text-foreground font-mono text-[13px] font-bold sm:text-base">
                 {formatCurrency(product.pricePerUnit || 0, 2)}
               </TableCell>
-              <TableCell className="text-muted-foreground pr-12 font-mono whitespace-nowrap">
+              <TableCell className="text-muted-foreground hidden whitespace-nowrap pr-4 font-mono sm:table-cell sm:pr-12">
                 {formatCurrency(product.price)}
               </TableCell>
-              <TableCell className="text-muted-foreground font-mono">
+              <TableCell className="text-muted-foreground hidden font-mono sm:table-cell">
                 {product.capacity} {product.capacityUnit}
               </TableCell>
-              <TableCell>
-                <a
-                  href={getAffiliateRedirectPath(product.slug)}
-                  onClick={() => onAffiliateClick(product, index)}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-primary line-clamp-2 block text-base leading-snug font-medium hover:underline"
-                >
-                  {product.title}
-                </a>
+              <TableCell className="max-w-0 sm:max-w-none">
+                <div className="flex flex-col">
+                  <a
+                    href={getAffiliateRedirectPath(product.slug)}
+                    onClick={() => onAffiliateClick(product, index)}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-primary line-clamp-2 block text-sm leading-snug font-medium hover:underline sm:text-base"
+                  >
+                    {product.title}
+                  </a>
+                  <div className="text-muted-foreground mt-1 flex items-center gap-1.5 font-mono text-[10px] sm:hidden">
+                    <span>{formatCurrency(product.price)}</span>
+                    <span className="text-muted-foreground/30">•</span>
+                    <span>
+                      {product.capacity} {product.capacityUnit}
+                    </span>
+                  </div>
+                </div>
               </TableCell>
 
               <TableCell className="text-muted-foreground hidden text-sm md:table-cell">
@@ -196,7 +192,7 @@ export function ProductTable({
                   {product.condition}
                 </Badge>
               </TableCell>
-              <TableCell className="text-right">
+              <TableCell className="px-2 text-right sm:px-4">
                 <a
                   href={getAffiliateRedirectPath(product.slug)}
                   onClick={() => onAffiliateClick(product, index)}
@@ -204,8 +200,9 @@ export function ProductTable({
                   rel="noopener noreferrer"
                   className="inline-block"
                 >
-                  <button className="h-9 cursor-pointer rounded-xl border border-[#FCD200]/50 bg-[#FFD814] px-4 text-sm font-bold whitespace-nowrap text-black shadow-sm transition-all hover:bg-[#F7CA00] active:scale-[0.98]">
-                    View on Amazon
+                  <button className="h-8 cursor-pointer rounded-lg border border-[#FCD200]/50 bg-[#FFD814] px-3 text-[11px] font-bold whitespace-nowrap text-black shadow-sm transition-all hover:bg-[#F7CA00] active:scale-[0.98] sm:h-9 sm:rounded-xl sm:px-4 sm:text-sm">
+                    <span className="sm:hidden">View</span>
+                    <span className="hidden sm:inline">View on Amazon</span>
                   </button>
                 </a>
               </TableCell>

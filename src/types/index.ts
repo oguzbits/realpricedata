@@ -91,6 +91,8 @@ export interface Country {
 export interface BreadcrumbItem {
   name: string;
   href?: string;
+  icon?: LucideIcon;
+  suffix?: string;
 }
 
 /**

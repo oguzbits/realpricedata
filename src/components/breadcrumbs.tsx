@@ -10,36 +10,53 @@ interface BreadcrumbsProps {
 
 export function Breadcrumbs({ items, className }: BreadcrumbsProps) {
   return (
-    <nav className={cn("mb-8", className)} aria-label="Breadcrumb">
-      <ol className="text-muted-foreground flex flex-wrap items-center gap-1.5 gap-y-2 text-sm leading-normal sm:gap-2 sm:text-base">
-        {items.map((item, index) => (
-          <React.Fragment key={index}>
-            {index > 0 && (
-              <li className="text-muted-foreground/50" aria-hidden="true">
-                /
-              </li>
-            )}
-            <li>
-              {item.href && index < items.length - 1 ? (
-                <Link
-                  href={item.href}
-                  className="text-primary hover:underline transition-colors"
-                >
-                  {item.name}
-                </Link>
-              ) : (
-                <span
-                  className={cn(
-                    "wrap-break-word",
-                    index === items.length - 1 && "text-foreground font-medium",
-                  )}
-                >
-                  {item.name}
+    <nav className={cn("mb-4", className)} aria-label="Breadcrumb">
+      <ol className="text-muted-foreground flex flex-wrap items-center gap-1.5 gap-y-1 text-sm leading-normal sm:gap-2">
+        {items.map((item, index) => {
+          const isLast = index === items.length - 1;
+          const Icon = item.icon;
+
+          const content = (
+            <span
+              className={cn(
+                "inline-flex items-center gap-1.5 wrap-break-word",
+                isLast && "text-foreground font-bold"
+              )}
+            >
+              {Icon && <Icon className="h-3.5 w-3.5 opacity-70" aria-hidden="true" />}
+              <span>{item.name}</span>
+              {item.suffix && (
+                <span className="text-muted-foreground/50 font-medium ml-1 lowercase">
+                  {item.suffix}
                 </span>
               )}
-            </li>
-          </React.Fragment>
-        ))}
+            </span>
+          );
+
+          return (
+            <React.Fragment key={index}>
+              {index > 0 && (
+                <li className="text-muted-foreground/30 flex items-center" aria-hidden="true">
+                  <span className="text-[10px]">/</span>
+                </li>
+              )}
+              <li className="flex items-center">
+                {item.href && !isLast ? (
+                  <Link
+                    href={item.href}
+                    className="hover:text-primary transition-colors hover:underline underline-offset-4"
+                  >
+                    {content}
+                  </Link>
+                ) : isLast ? (
+                  <h1 className="inline">{content}</h1>
+                ) : (
+                  content
+                )}
+              </li>
+            </React.Fragment>
+          );
+        })}
       </ol>
     </nav>
   );

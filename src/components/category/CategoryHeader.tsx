@@ -34,14 +34,16 @@ export function CategoryHeader({
   const breadcrumbItems = [
     { name: "Home", href: "/" },
     { name: "Categories", href: `/${countryCode}/categories` },
-    ...breadcrumbs.map((crumb) => ({
+    ...breadcrumbs.map((crumb, idx) => ({
       name: crumb.name,
       href: `/${countryCode}/${crumb.parent ? crumb.parent + "/" : ""}${crumb.slug}`,
+      icon: idx === breadcrumbs.length - 1 ? Icon : undefined,
+      suffix: idx === breadcrumbs.length - 1 ? `on Amazon ${countryCode.toUpperCase()}` : undefined,
     })),
   ];
 
   const searchInput = (
-    <div className="relative flex-1 md:w-72 lg:w-96 md:flex-none">
+    <div className="relative flex-1 md:w-64 lg:w-80 md:flex-none">
       <Search className="text-muted-foreground absolute top-2.5 left-2 h-4 w-4" />
       <Input
         placeholder="Search products..."
@@ -55,8 +57,8 @@ export function CategoryHeader({
 
   return (
     <div className="flex flex-col gap-4">
-      {/* Top Row: Breadcrumbs + Desktop/Tablet Search */}
-      <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+      {/* Top Row: Breadcrumbs (includes H1) + Search / Filters */}
+      <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
         <Breadcrumbs items={breadcrumbItems} className="mb-0" />
 
         <div className="hidden md:flex items-center gap-2">

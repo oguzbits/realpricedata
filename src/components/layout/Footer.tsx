@@ -1,14 +1,13 @@
-"use client";
-
 import Image from "next/image";
 import Link from "next/link";
-import { useCountry } from "@/hooks/use-country";
 import { getCategoryPath } from "@/lib/categories";
 import { DEFAULT_COUNTRY } from "@/lib/countries";
 
-export function Footer() {
-  const { country } = useCountry();
-  
+interface FooterProps {
+  country?: string;
+}
+
+export function Footer({ country = DEFAULT_COUNTRY }: FooterProps) {
   return (
     <footer className="bg-muted/40 border-t">
       <div className="container mx-auto px-4 py-8 md:py-12">

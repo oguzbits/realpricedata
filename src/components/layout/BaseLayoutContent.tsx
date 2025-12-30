@@ -1,4 +1,4 @@
-import { Footer } from "@/components/layout/Footer";
+import { FooterWrapper } from "@/components/layout/FooterWrapper";
 import { Navbar } from "@/components/layout/Navbar";
 import { PromoBanner } from "@/components/layout/PromoBanner";
 import { ScrollTracker } from "@/components/ScrollTracker";
@@ -31,7 +31,7 @@ export function BaseLayoutContent({ children }: { children: React.ReactNode }) {
             <PromoBanner />
             <Navbar />
             <main className="flex-1">{children}</main>
-            <Footer />
+            <FooterWrapper />
           </div>
 
           {/* Cookieless Analytics - No consent needed! */}

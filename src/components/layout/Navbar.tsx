@@ -27,6 +27,7 @@ export function Navbar({ country: propCountry }: { country?: string }) {
               width={28}
               height={28}
               className="h-7 w-7"
+              priority
             />
             <h3 className="text-lg font-black tracking-tight">
               <span className="text-(--ccc-red)">real</span>

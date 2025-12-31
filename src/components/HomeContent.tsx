@@ -8,6 +8,7 @@ import dynamic from "next/dynamic";
 import Image from "next/image";
 import Link from "next/link";
 import Script from "next/script";
+import { Suspense } from "react";
 
 const PopularProducts = dynamic(
   () =>
@@ -157,8 +158,12 @@ export function HomeContent({ country }: { country: string }) {
           </div>
 
           <HeroDealCards country={country} />
-          <PopularProducts products={uiProducts} country={country} />
-          <PriceDrops products={mockPriceDrops} country={country} />
+          <Suspense>
+            <PopularProducts products={uiProducts} country={country} />
+          </Suspense>
+          <Suspense>
+            <PriceDrops products={mockPriceDrops} country={country} />
+          </Suspense>
         </section>
       </div>
     </div>

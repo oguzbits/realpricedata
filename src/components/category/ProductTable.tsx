@@ -1,22 +1,8 @@
-import * as React from "react";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
-import { ChevronDown, ChevronUp, ChevronsUpDown, Info } from "lucide-react";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
+import { getAffiliateRedirectPath } from "@/lib/product-registry";
+import { LocalizedProduct } from "@/lib/server/category-products";
 import { cn } from "@/lib/utils";
-import { Product, getAffiliateRedirectPath } from "@/lib/product-registry";
-import { LocalizedProduct } from "@/hooks/use-category-products";
+import { SortableTableHead } from "./SortableTableHead";
 
 interface ProductTableProps {
   products: LocalizedProduct[];
@@ -24,9 +10,7 @@ interface ProductTableProps {
   categorySlug: string;
   sortBy: string;
   sortOrder: string;
-  onSort: (key: string) => void;
   formatCurrency: (value: number, fractionDigits?: number) => string;
-  onAffiliateClick: (product: LocalizedProduct, index: number) => void;
 }
 
 export function ProductTable({
@@ -35,120 +19,68 @@ export function ProductTable({
   categorySlug,
   sortBy,
   sortOrder,
-  onSort,
   formatCurrency,
-  onAffiliateClick,
 }: ProductTableProps) {
-  const getSortIcon = (key: string) => {
-    const effectiveSortBy = !sortBy ? "pricePerUnit" : sortBy;
-    if (effectiveSortBy !== key)
-      return <ChevronsUpDown className="ml-1 h-3 w-3 opacity-50" />;
-    return sortOrder === "asc" ? (
-      <ChevronUp className="ml-1 h-3 w-3" />
-    ) : (
-      <ChevronDown className="ml-1 h-3 w-3" />
-    );
-  };
-
-  const handleKeyDown = (e: React.KeyboardEvent, key: string) => {
-    if (e.key === "Enter" || e.key === " ") {
-      e.preventDefault();
-      onSort(key);
-    }
-  };
-
   return (
-    <div className="bg-card rounded-md border">
-      <Table>
-        <TableHeader>
-          <TableRow>
-            <TableHead
-              className="hover:bg-muted/50 focus-visible:bg-muted/50 focus-visible:ring-primary w-[100px] cursor-pointer outline-none focus-visible:ring-2 focus-visible:ring-inset sm:w-[140px]"
-              onClick={() => onSort("pricePerUnit")}
-              onKeyDown={(e) => handleKeyDown(e, "pricePerUnit")}
-              tabIndex={0}
-              aria-sort={
-                sortBy === "pricePerUnit"
-                  ? sortOrder === "asc"
-                    ? "ascending"
-                    : "descending"
-                  : "none"
-              }
-              role="columnheader"
+    <div className="bg-card w-full overflow-x-auto rounded-md border">
+      <table className="w-full caption-bottom text-base">
+        <thead className="[&_tr]:border-b">
+          <tr className="hover:bg-muted/50 data-[state=selected]:bg-muted border-b transition-colors">
+            <SortableTableHead
+              sortKey="pricePerUnit"
+              currentSortBy={sortBy}
+              currentSortOrder={sortOrder}
+              className="text-foreground h-10 px-2 text-left align-middle font-medium whitespace-nowrap hover:bg-muted/50 focus-visible:bg-muted/50 focus-visible:ring-primary w-[100px] cursor-pointer outline-none focus-visible:ring-2 focus-visible:ring-inset sm:w-[140px]"
             >
-              <div className="flex items-center gap-1.5">
-                <span>Price/{unitLabel}</span>
-                {getSortIcon("pricePerUnit")}
-              </div>
-            </TableHead>
-            <TableHead
-              className="hover:bg-muted/50 focus-visible:bg-muted/50 focus-visible:ring-primary hidden cursor-pointer pr-4 outline-none focus-visible:ring-2 focus-visible:ring-inset sm:table-cell sm:pr-12"
-              onClick={() => onSort("price")}
-              onKeyDown={(e) => handleKeyDown(e, "price")}
-              tabIndex={0}
-              aria-sort={
-                sortBy === "price"
-                  ? sortOrder === "asc"
-                    ? "ascending"
-                    : "descending"
-                  : "none"
-              }
-              role="columnheader"
+              Price/{unitLabel}
+            </SortableTableHead>
+            <SortableTableHead
+              sortKey="price"
+              currentSortBy={sortBy}
+              currentSortOrder={sortOrder}
+              className="text-foreground h-10 px-2 text-left align-middle font-medium whitespace-nowrap hover:bg-muted/50 focus-visible:bg-muted/50 focus-visible:ring-primary hidden cursor-pointer pr-4 outline-none focus-visible:ring-2 focus-visible:ring-inset sm:table-cell sm:pr-12"
             >
-              <div className="flex items-center">
-                Price {getSortIcon("price")}
-              </div>
-            </TableHead>
-            <TableHead
-              className="hover:bg-muted/50 focus-visible:bg-muted/50 focus-visible:ring-primary hidden cursor-pointer outline-none focus-visible:ring-2 focus-visible:ring-inset sm:table-cell"
-              onClick={() => onSort("capacity")}
-              onKeyDown={(e) => handleKeyDown(e, "capacity")}
-              tabIndex={0}
-              aria-sort={
-                sortBy === "capacity"
-                  ? sortOrder === "asc"
-                    ? "ascending"
-                    : "descending"
-                  : "none"
-              }
-              role="columnheader"
+              Price
+            </SortableTableHead>
+            <SortableTableHead
+              sortKey="capacity"
+              currentSortBy={sortBy}
+              currentSortOrder={sortOrder}
+              className="text-foreground h-10 px-2 text-left align-middle font-medium whitespace-nowrap hover:bg-muted/50 focus-visible:bg-muted/50 focus-visible:ring-primary hidden cursor-pointer outline-none focus-visible:ring-2 focus-visible:ring-inset sm:table-cell"
             >
-              <div className="flex items-center">
-                Capacity {getSortIcon("capacity")}
-              </div>
-            </TableHead>
-            <TableHead className="min-w-[120px] sm:min-w-[200px]">Product</TableHead>
-            <TableHead className="hidden md:table-cell">Warranty</TableHead>
-            <TableHead className="hidden sm:table-cell">Form Factor</TableHead>
-            <TableHead className="hidden sm:table-cell">
+              Capacity
+            </SortableTableHead>
+            <th className="text-foreground h-10 px-2 text-left align-middle font-medium whitespace-nowrap min-w-[120px] sm:min-w-[200px]">Product</th>
+            <th className="text-foreground h-10 px-2 text-left align-middle font-medium whitespace-nowrap hidden md:table-cell">Warranty</th>
+            <th className="text-foreground h-10 px-2 text-left align-middle font-medium whitespace-nowrap hidden sm:table-cell">Form Factor</th>
+            <th className="text-foreground h-10 px-2 text-left align-middle font-medium whitespace-nowrap hidden sm:table-cell">
               {categorySlug === "power-supplies"
                 ? "Certification"
                 : "Technology"}
-            </TableHead>
-            <TableHead className="hidden sm:table-cell">Condition</TableHead>
-            <TableHead className="px-2 text-right sm:px-4">Action</TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {products.map((product, index) => (
-            <TableRow
+            </th>
+            <th className="text-foreground h-10 px-2 text-left align-middle font-medium whitespace-nowrap hidden sm:table-cell">Condition</th>
+            <th className="text-foreground h-10 px-2 text-right align-middle font-medium whitespace-nowrap px-2 sm:px-4">Action</th>
+          </tr>
+        </thead>
+        <tbody className="[&_tr:last-child]:border-0">
+          {products.map((product) => (
+            <tr
               key={product.id || product.slug}
-              className="group hover:bg-muted/30 transition-colors"
+              className="hover:bg-muted/50 data-[state=selected]:bg-muted border-b transition-colors group hover:bg-muted/30"
             >
-              <TableCell className="text-foreground font-mono text-[13px] font-bold sm:text-base">
+              <td className="p-2 align-middle whitespace-nowrap text-foreground font-mono text-[13px] font-bold sm:text-base">
                 {formatCurrency(product.pricePerUnit || 0, 2)}
-              </TableCell>
-              <TableCell className="text-muted-foreground hidden whitespace-nowrap pr-4 font-mono sm:table-cell sm:pr-12">
+              </td>
+              <td className="p-2 align-middle whitespace-nowrap text-muted-foreground hidden whitespace-nowrap pr-4 font-mono sm:table-cell sm:pr-12">
                 {formatCurrency(product.price)}
-              </TableCell>
-              <TableCell className="text-muted-foreground hidden font-mono sm:table-cell">
+              </td>
+              <td className="p-2 align-middle whitespace-nowrap text-muted-foreground hidden font-mono sm:table-cell">
                 {product.capacity} {product.capacityUnit}
-              </TableCell>
-              <TableCell className="max-w-0 sm:max-w-none">
+              </td>
+              <td className="p-2 align-middle whitespace-nowrap max-w-0 sm:max-w-none whitespace-normal">
                 <div className="flex flex-col">
                   <a
                     href={getAffiliateRedirectPath(product.slug)}
-                    onClick={() => onAffiliateClick(product, index)}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="text-primary line-clamp-2 block text-sm leading-snug font-medium hover:underline sm:text-base"
@@ -163,20 +95,20 @@ export function ProductTable({
                     </span>
                   </div>
                 </div>
-              </TableCell>
+              </td>
 
-              <TableCell className="text-muted-foreground hidden text-sm md:table-cell">
+              <td className="p-2 align-middle whitespace-nowrap text-muted-foreground hidden text-sm md:table-cell">
                 {product.warranty}
-              </TableCell>
-              <TableCell className="text-muted-foreground hidden text-sm sm:table-cell">
+              </td>
+              <td className="p-2 align-middle whitespace-nowrap text-muted-foreground hidden text-sm sm:table-cell">
                 {product.formFactor}
-              </TableCell>
-              <TableCell className="text-muted-foreground hidden text-sm sm:table-cell">
+              </td>
+              <td className="p-2 align-middle whitespace-nowrap text-muted-foreground hidden text-sm sm:table-cell">
                 {categorySlug === "power-supplies"
                   ? product.certification || product.technology
                   : product.technology}
-              </TableCell>
-              <TableCell className="hidden sm:table-cell">
+              </td>
+              <td className="p-2 align-middle whitespace-nowrap hidden sm:table-cell">
                 <Badge
                   variant="outline"
                   className={cn(
@@ -191,11 +123,10 @@ export function ProductTable({
                 >
                   {product.condition}
                 </Badge>
-              </TableCell>
-              <TableCell className="px-2 text-right sm:px-4">
+              </td>
+              <td className="p-2 align-middle whitespace-nowrap px-2 text-right sm:px-4">
                 <a
                   href={getAffiliateRedirectPath(product.slug)}
-                  onClick={() => onAffiliateClick(product, index)}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="inline-block"
@@ -205,11 +136,11 @@ export function ProductTable({
                     <span className="hidden sm:inline">View on Amazon</span>
                   </button>
                 </a>
-              </TableCell>
-            </TableRow>
+              </td>
+            </tr>
           ))}
-        </TableBody>
-      </Table>
+        </tbody>
+      </table>
     </div>
   );
 }

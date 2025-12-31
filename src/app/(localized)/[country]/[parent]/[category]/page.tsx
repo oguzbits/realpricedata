@@ -1,8 +1,8 @@
-import { CategoryProductsView } from "@/components/category/CategoryProductsView";
+import { CategoryProductsView } from "@/components/category/CategoryProductsView.server";
 import { Button } from "@/components/ui/button";
 import { getCategoryBySlug } from "@/lib/categories";
 import { DEFAULT_COUNTRY, isValidCountryCode } from "@/lib/countries";
-import { getAlternateLanguages, generateKeywords, getOpenGraph } from "@/lib/metadata";
+import { generateKeywords, getAlternateLanguages, getOpenGraph } from "@/lib/metadata";
 import { Metadata } from "next";
 import Link from "next/link";
 
@@ -12,6 +12,7 @@ interface Props {
     parent: string;
     category: string;
   }>;
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
@@ -48,8 +49,9 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   };
 }
 
-export default async function CategoryProductsPage({ params }: Props) {
+export default async function CategoryProductsPage({ params, searchParams }: Props) {
   const { country, category: categorySlug } = await params;
+  const filters = await searchParams;
   const validCountry = isValidCountryCode(country) ? country : DEFAULT_COUNTRY;
   const category = getCategoryBySlug(categorySlug);
 
@@ -73,6 +75,7 @@ export default async function CategoryProductsPage({ params }: Props) {
     <CategoryProductsView
       category={JSON.parse(JSON.stringify(category))}
       countryCode={validCountry}
+      searchParams={filters}
     />
   );
 }

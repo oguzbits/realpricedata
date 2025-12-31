@@ -1,5 +1,3 @@
-"use client";
-
 import { Button } from "@/components/ui/button";
 import { CategoryCard } from "@/components/ui/category-card";
 import {
@@ -9,27 +7,31 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
-import { LocalizedProduct, useCategoryProducts } from "@/hooks/use-category-products";
-import { useProductFilters } from "@/hooks/use-product-filters";
 import { Category, getBreadcrumbs, getChildCategories, stripCategoryIcon } from "@/lib/categories";
 import { getCategoryIcon } from "@/lib/category-icons";
 import { getCountryByCode } from "@/lib/countries";
+import { FilterParams, getCategoryProducts } from "@/lib/server/category-products";
 import { Filter, Info, Search } from "lucide-react";
-import * as React from "react";
 
-// Extracted Sub-components
+// Client components
 import { CategoryHeader } from "@/components/category/CategoryHeader";
-import { FilterPanel } from "@/components/category/FilterPanel";
+import { FilterPanelClient } from "@/components/category/FilterPanelClient";
 import { ProductTable } from "@/components/category/ProductTable";
 
 interface CategoryProductsViewProps {
   category: Omit<Category, "icon">;
   countryCode: string;
+  searchParams: FilterParams;
 }
 
+/**
+ * SERVER COMPONENT - Filters and renders products on the server
+ * This is much faster than client-side filtering and better for SEO
+ */
 export function CategoryProductsView({
   category,
   countryCode,
+  searchParams,
 }: CategoryProductsViewProps) {
   const categorySlug = category.slug;
   const breadcrumbs = getBreadcrumbs(categorySlug).map((crumb) => ({
@@ -38,21 +40,10 @@ export function CategoryProductsView({
   }));
   const countryConfig = getCountryByCode(countryCode);
 
-  // 1. State & Logic Hooks
-  const {
-    filters,
-    setSearch,
-    toggleArrayFilter,
-    setCapacityRange,
-    setSort,
-    clearAllFilters,
-  } = useProductFilters();
-  const { products, filteredCount, unitLabel, hasProducts } =
-    useCategoryProducts({ category, filters, countryCode });
+  // SERVER-SIDE FILTERING - This is the key optimization!
+  const { products, filteredCount, unitLabel, hasProducts, filters } =
+    getCategoryProducts(category, countryCode, searchParams);
 
-
-
-  // 3. Shared Handlers
   const formatCurrency = (value: number, fractionDigits = 2) => {
     return new Intl.NumberFormat(countryConfig?.locale || "en-US", {
       style: "currency",
@@ -62,25 +53,7 @@ export function CategoryProductsView({
     }).format(value);
   };
 
-  const handleAffiliateClick = (product: LocalizedProduct, index: number) => {
-    // Placeholder for future analytics if needed
-  };
-
-  const handleFilterChange = (filterName: string, value: string) => {
-    toggleArrayFilter(filterName as any, value);
-  };
-
-  const handleSort = (key: string) => {
-    const effectiveKey = !key ? "pricePerUnit" : key;
-    const currentSortBy = !filters.sortBy ? "pricePerUnit" : filters.sortBy;
-    const newOrder =
-      currentSortBy === effectiveKey && filters.sortOrder === "asc"
-        ? "desc"
-        : "asc";
-
-    setSort(key as any, newOrder as "asc" | "desc");
-  };
-
+  // Mobile filter sheet (client component for interactivity)
   const mobileFilterTrigger = (
     <Sheet>
       <SheetTrigger asChild>
@@ -97,19 +70,17 @@ export function CategoryProductsView({
           <SheetTitle className="text-xl font-bold">Filters</SheetTitle>
         </SheetHeader>
         <div className="px-6 py-4">
-          <FilterPanel
-            filters={filters}
-            onFilterChange={handleFilterChange}
-            onCapacityChange={setCapacityRange}
-            unitLabel={unitLabel}
+          <FilterPanelClient
             categorySlug={categorySlug}
+            unitLabel={unitLabel}
+            initialFilters={filters}
           />
         </div>
       </SheetContent>
     </Sheet>
   );
 
-  // 4. Main Render
+  // Main render
   return (
     <div className="container mx-auto px-4 py-6">
       <div className="flex flex-col gap-6">
@@ -118,28 +89,24 @@ export function CategoryProductsView({
           countryCode={countryCode}
           breadcrumbs={breadcrumbs}
           productCount={filteredCount}
-          searchValue={filters.search}
-          onSearchChange={setSearch}
           filterTrigger={mobileFilterTrigger}
         />
 
         <div className="flex gap-6">
           {hasProducts ? (
             <>
-              {/* Desktop Filters */}
+              {/* Desktop Filters - CLIENT COMPONENT */}
               <aside className="hidden w-60 shrink-0 lg:block">
                 <div className="bg-card sticky top-24 rounded-lg border p-4 shadow-sm">
-                  <FilterPanel
-                    filters={filters}
-                    onFilterChange={handleFilterChange}
-                    onCapacityChange={setCapacityRange}
-                    unitLabel={unitLabel}
+                  <FilterPanelClient
                     categorySlug={categorySlug}
+                    unitLabel={unitLabel}
+                    initialFilters={filters}
                   />
                 </div>
               </aside>
 
-              {/* Main Content */}
+              {/* Main Content - SERVER RENDERED */}
               <div className="min-w-0 flex-1">
                 {products.length > 0 ? (
                   <ProductTable
@@ -148,12 +115,10 @@ export function CategoryProductsView({
                     categorySlug={categorySlug}
                     sortBy={filters.sortBy}
                     sortOrder={filters.sortOrder}
-                    onSort={handleSort}
                     formatCurrency={formatCurrency}
-                    onAffiliateClick={handleAffiliateClick}
                   />
                 ) : (
-                  <NoProductsMatchingFilters onClear={clearAllFilters} />
+                  <NoProductsMatchingFilters />
                 )}
 
                 <div className="text-muted-foreground mt-4 text-center text-sm">
@@ -187,7 +152,7 @@ export function CategoryProductsView({
   );
 }
 
-function NoProductsMatchingFilters({ onClear }: { onClear: () => void }) {
+function NoProductsMatchingFilters() {
   return (
     <div className="bg-card/50 flex flex-col items-center justify-center rounded-md border py-12 text-center">
       <div className="bg-muted/30 mb-4 rounded-full p-4">
@@ -196,10 +161,8 @@ function NoProductsMatchingFilters({ onClear }: { onClear: () => void }) {
       <h3 className="mb-2 text-lg font-semibold">No products found</h3>
       <p className="text-muted-foreground mb-6 max-w-sm">
         We couldn't find any products matching your current filters.
+        Try adjusting your filters or search term.
       </p>
-      <Button variant="outline" onClick={onClear}>
-        Clear All Filters
-      </Button>
     </div>
   );
 }

@@ -11,12 +11,14 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { DEFAULT_COUNTRY, getAllCountries, getCountryByCode, getFlag, isValidCountryCode } from "@/lib/countries";
 import { Globe } from "lucide-react";
+import Link from "next/link";
 import Image from "next/image";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { CountryItem } from "./CountryItem";
 
 export function CountrySelector({ currentCountryCode }: { currentCountryCode?: string }) {
   const pathname = usePathname();
+  const searchParams = useSearchParams();
   const router = useRouter();
   const allCountries = getAllCountries();
   const currentCountry = getCountryByCode(currentCountryCode || DEFAULT_COUNTRY);
@@ -73,13 +75,22 @@ export function CountrySelector({ currentCountryCode }: { currentCountryCode?: s
               targetHref = `/${c.code}${pathname === "/" ? "" : pathname}`;
             }
 
+            const queryString = searchParams.toString();
+            if (queryString) {
+              targetHref += `?${queryString}`;
+            }
+
             return (
               <DropdownMenuItem
                 key={c.code}
-                onClick={() => router.push(targetHref)}
+                asChild
                 className="cursor-pointer focus:bg-accent focus:text-accent-foreground"
               >
-                <div className="w-full">
+                <Link 
+                  href={targetHref} 
+                  className="w-full flex no-underline items-center"
+                  prefetch={true}
+                >
                   <CountryItem
                     code={c.code}
                     name={c.name}
@@ -87,7 +98,7 @@ export function CountrySelector({ currentCountryCode }: { currentCountryCode?: s
                     isLive={true}
                     isActive={currentCountryCode === c.code}
                   />
-                </div>
+                </Link>
               </DropdownMenuItem>
             );
           })}

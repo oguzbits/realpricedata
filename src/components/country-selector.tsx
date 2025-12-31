@@ -19,6 +19,8 @@ import {
 import { Globe } from "lucide-react";
 import Image from "next/image";
 import { usePathname, useSearchParams } from "next/navigation";
+import { startTransition } from "react";
+import { setCountryAction } from "@/actions/country-actions";
 import { CountryItem } from "./CountryItem";
 
 export function CountrySelector({
@@ -108,9 +110,24 @@ export function CountrySelector({
 
             return (
               <DropdownMenuItem key={c.code} asChild>
-                <a
-                  href={targetHref}
-                  className="focus:bg-accent focus:text-accent-foreground flex w-full cursor-pointer items-center px-2 py-1.5 no-underline"
+                <div
+                  role="button"
+                  tabIndex={0}
+                  className="focus:bg-accent focus:text-accent-foreground flex w-full cursor-pointer items-center px-2 py-1.5 no-underline outline-none"
+                  onClick={() => {
+                    // Use server action for instant navigation + cache revalidation
+                    startTransition(() => {
+                      setCountryAction(c.code, targetHref);
+                    });
+                  }}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter" || e.key === " ") {
+                      e.preventDefault();
+                      startTransition(() => {
+                        setCountryAction(c.code, targetHref);
+                      });
+                    }
+                  }}
                 >
                   <CountryItem
                     code={c.code}
@@ -119,7 +136,7 @@ export function CountrySelector({
                     isLive={true}
                     isActive={currentCountryCode === c.code}
                   />
-                </a>
+                </div>
               </DropdownMenuItem>
             );
           })}

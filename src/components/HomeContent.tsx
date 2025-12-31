@@ -3,7 +3,12 @@ import { HeroDealCards } from "@/components/hero-deal-cards";
 import { HeroTableDemo } from "@/components/hero-table-demo";
 import { PopularProducts } from "@/components/PopularProducts";
 import { PriceDrops } from "@/components/PriceDrops";
-import { getAllCountries, getCountryByCode, getFlag, type CountryCode } from "@/lib/countries";
+import {
+  getAllCountries,
+  getCountryByCode,
+  getFlag,
+  type CountryCode,
+} from "@/lib/countries";
 import { getAllProducts } from "@/lib/server/cached-products";
 import { adaptToUIModel, getLocalizedProductData } from "@/lib/utils/products";
 import Image from "next/image";
@@ -17,7 +22,10 @@ export async function HomeContent({ country }: { country: CountryCode }) {
   // Adapt products to UI model
   const uiProducts = allProducts
     .map((p) => {
-      const { price } = getLocalizedProductData(p, countryConfig?.code || country);
+      const { price } = getLocalizedProductData(
+        p,
+        countryConfig?.code || country,
+      );
       if (price === null || price === 0) return null;
 
       return adaptToUIModel(
@@ -30,7 +38,9 @@ export async function HomeContent({ country }: { country: CountryCode }) {
     .filter((p): p is NonNullable<typeof p> => p !== null);
 
   const mockPriceDrops = uiProducts.slice(2, 6).map((p) => {
-    const hash = p.asin.split("").reduce((acc: number, char: string) => acc + char.charCodeAt(0), 0);
+    const hash = p.asin
+      .split("")
+      .reduce((acc: number, char: string) => acc + char.charCodeAt(0), 0);
     const dropPercentage = (hash % 10) + 5;
     const oldPrice = p.price.amount / (1 - dropPercentage / 100);
     return {
@@ -147,5 +157,3 @@ export async function HomeContent({ country }: { country: CountryCode }) {
 }
 
 export default HomeContent;
-
-

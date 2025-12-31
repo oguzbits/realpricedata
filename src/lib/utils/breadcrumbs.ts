@@ -3,7 +3,11 @@
  * Helpers for building breadcrumb trails
  */
 
-import { getCategoryBySlug, getParentCategory, type CategorySlug } from "@/lib/categories";
+import {
+  getCategoryBySlug,
+  getParentCategory,
+  type CategorySlug,
+} from "@/lib/categories";
 import type { CountryCode } from "@/lib/countries";
 import type { BreadcrumbItem } from "@/types";
 

@@ -12,9 +12,7 @@ export function PageLayout({ children, country }: PageLayoutProps) {
   return (
     <>
       <Navbar country={country} />
-      <main className="flex-1">
-        {children}
-      </main>
+      <main className="flex-1">{children}</main>
       <Footer country={country} />
     </>
   );

@@ -40,11 +40,11 @@ export default function FAQPage() {
           </AccordionTrigger>
           <AccordionContent className="text-muted-foreground leading-relaxed">
             realpricedata.com is a specialized price comparison engine that
-            focuses on the &quot;price per unit&quot; (e.g., price per Terabyte, price per
-            Gigabyte, or price per item). Unlike standard price comparison sites
-            that just show the total price, we help you find the true best value
-            by standardizing the cost across different package sizes and
-            capacities.
+            focuses on the &quot;price per unit&quot; (e.g., price per Terabyte,
+            price per Gigabyte, or price per item). Unlike standard price
+            comparison sites that just show the total price, we help you find
+            the true best value by standardizing the cost across different
+            package sizes and capacities.
           </AccordionContent>
         </AccordionItem>
 
@@ -118,10 +118,10 @@ export default function FAQPage() {
             >
               Hard Drive & SSD
             </Link>{" "}
-            comparison pages and sort by &quot;Value (Price per Unit)&quot;. This will
-            instantly rank all available storage products by their actual cost
-            per TB, allowing you to save money regardless of the total drive
-            capacity.
+            comparison pages and sort by &quot;Value (Price per Unit)&quot;.
+            This will instantly rank all available storage products by their
+            actual cost per TB, allowing you to save money regardless of the
+            total drive capacity.
           </AccordionContent>
         </AccordionItem>
 
@@ -146,8 +146,8 @@ export default function FAQPage() {
             Why shouldn&apos;t I just buy the cheapest product on the list?
           </AccordionTrigger>
           <AccordionContent className="text-muted-foreground leading-relaxed">
-            The &quot;Best Price per Unit&quot; is a powerful value indicator, but you
-            should also consider brand reputation, warranty length, and
+            The &quot;Best Price per Unit&quot; is a powerful value indicator,
+            but you should also consider brand reputation, warranty length, and
             performance specs (like NVMe speeds vs SATA). Our data helps you
             find the most efficient deals, but we always encourage checking user
             reviews for reliability before making a final decision.

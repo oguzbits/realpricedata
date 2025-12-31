@@ -97,18 +97,21 @@ export function getOptimizedImageUrl(
 /**
  * Gets localized product data for a specific country.
  */
-export function getLocalizedProductData(p: Product, countryCode: string = "us") {
+export function getLocalizedProductData(
+  p: Product,
+  countryCode: string = "us",
+) {
   const code = countryCode.toLowerCase();
-  
+
   // Return null if prices object is missing or if the specific country price is null or undefined
   if (!p.prices || p.prices[code] === null || p.prices[code] === undefined) {
     return { price: null, title: p.title, asin: p.asin };
   }
-  
+
   const price = p.prices[code];
   const title = p.title;
   const asin = p.asin;
-    
+
   return { price, title, asin };
 }
 
@@ -124,7 +127,7 @@ export function adaptToUIModel(
   const { price, title, asin } = getLocalizedProductData(p, countryCode);
   const finalPrice = price ?? 0;
   const enhancedProduct = calculateProductMetrics(p, finalPrice) as Product;
-  
+
   const categoryConfig = allCategories[p.category as CategorySlug];
   const displayUnit = categoryConfig?.unitType || p.capacityUnit;
 

@@ -24,9 +24,5 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 export default async function LocalizedLayout({ children, params }: Props) {
   const { country } = await params;
-  return (
-    <PageLayout country={country}>
-      {children}
-    </PageLayout>
-  );
+  return <PageLayout country={country}>{children}</PageLayout>;
 }

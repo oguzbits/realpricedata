@@ -13,9 +13,12 @@ type ProductWithDiscount = Product & {
 };
 
 // Calculate discount percentage based on market average or typical retail price
-const calculateDiscount = (product: Product, countryCode: CountryCode = "us"): number => {
+const calculateDiscount = (
+  product: Product,
+  countryCode: CountryCode = "us",
+): number => {
   const { price } = getLocalizedProductData(product, countryCode);
-  
+
   // Typical market prices per unit (TB for storage, GB for RAM, W for PSU)
   const marketPrices: Record<string, number> = {
     SSD: 120, // Average $/TB
@@ -51,7 +54,9 @@ const calculateDiscount = (product: Product, countryCode: CountryCode = "us"): n
 };
 
 // Get the top 3 deals based on discount percentage
-const getTopDeals = async (countryCode: CountryCode = "us"): Promise<ProductWithDiscount[]> => {
+const getTopDeals = async (
+  countryCode: CountryCode = "us",
+): Promise<ProductWithDiscount[]> => {
   const allProducts = await getAllProducts();
   return allProducts
     .filter((p) => {

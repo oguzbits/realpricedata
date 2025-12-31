@@ -33,8 +33,6 @@ export interface Product {
   isPrime?: boolean;
 }
 
-
-
 /**
  * Filter state types
  */
@@ -51,7 +49,12 @@ export interface FilterState {
 
 export type SortOrder = "asc" | "desc";
 
-export type SortBy = "relevance" | "price" | "pricePerUnit" | "rating" | "capacity";
+export type SortBy =
+  | "relevance"
+  | "price"
+  | "pricePerUnit"
+  | "rating"
+  | "capacity";
 
 /**
  * Product condition types

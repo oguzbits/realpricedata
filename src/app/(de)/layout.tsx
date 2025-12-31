@@ -15,9 +15,5 @@ export default function GermanLayout({
 }: {
   children: React.ReactNode;
 }) {
-  return (
-    <PageLayout country="de">
-      {children}
-    </PageLayout>
-  );
+  return <PageLayout country="de">{children}</PageLayout>;
 }

@@ -10,7 +10,6 @@ const categories = [
 ];
 
 export function HeroCategoryPills({ country }: { country: CountryCode }) {
-
   return (
     <div className="flex flex-wrap gap-2">
       <span className="text-muted-foreground self-center text-base">

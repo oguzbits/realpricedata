@@ -46,8 +46,16 @@ export async function BlogPostViewMDX({ slug, country }: BlogPostViewMDXProps) {
 
   // Prepare MDX components with server-side data
   const components = {
-    QuickPicks: async ({ category, limit }: { category: string; limit?: number }) => {
-      const products = (await getAllProducts()).filter((p) => p.category === category);
+    QuickPicks: async ({
+      category,
+      limit,
+    }: {
+      category: string;
+      limit?: number;
+    }) => {
+      const products = (await getAllProducts()).filter(
+        (p) => p.category === category,
+      );
       return (
         <QuickPicks
           category={category}
@@ -58,11 +66,7 @@ export async function BlogPostViewMDX({ slug, country }: BlogPostViewMDXProps) {
       );
     },
     Link: (props: React.AnchorHTMLAttributes<HTMLAnchorElement>) => (
-      <LocalizedLink
-        {...props}
-        href={props.href!}
-        country={country}
-      >
+      <LocalizedLink {...props} href={props.href!} country={country}>
         {props.children}
       </LocalizedLink>
     ),
@@ -72,13 +76,13 @@ export async function BlogPostViewMDX({ slug, country }: BlogPostViewMDXProps) {
     <article className="bg-background min-h-screen pb-20">
       <ArticleSchema post={post} />
 
-      <header className="relative overflow-hidden border-b bg-muted/30">
-        <div className="bg-size-[40px_40px] absolute inset-0 opacity-10 bg-[linear-gradient(to_right,#808080_1px,transparent_1px),linear-gradient(to_bottom,#808080_1px,transparent_1px)]" />
+      <header className="bg-muted/30 relative overflow-hidden border-b">
+        <div className="absolute inset-0 bg-[linear-gradient(to_right,#808080_1px,transparent_1px),linear-gradient(to_bottom,#808080_1px,transparent_1px)] bg-size-[40px_40px] opacity-10" />
 
-        <div className="container relative mx-auto max-w-4xl px-4 py-12 md:py-20">
+        <div className="relative container mx-auto max-w-4xl px-4 py-12 md:py-20">
           <Breadcrumbs items={breadcrumbItems} />
 
-          <div className="text-muted-foreground mt-8 mb-6 flex flex-wrap items-center gap-6 text-sm font-bold uppercase tracking-widest">
+          <div className="text-muted-foreground mt-8 mb-6 flex flex-wrap items-center gap-6 text-sm font-bold tracking-widest uppercase">
             <div className="flex items-center gap-2">
               <Calendar className="text-primary h-4 w-4" />
               <span>
@@ -99,24 +103,24 @@ export async function BlogPostViewMDX({ slug, country }: BlogPostViewMDXProps) {
             </div>
           </div>
 
-          <h1 className="mb-8 text-5xl font-black leading-none uppercase tracking-tighter sm:text-6xl md:text-7xl">
+          <h1 className="mb-8 text-5xl leading-none font-black tracking-tighter uppercase sm:text-6xl md:text-7xl">
             {post.title}
           </h1>
 
-          <p className="text-muted-foreground border-primary text-xl font-medium leading-relaxed italic border-l-4 pl-6 md:text-2xl">
+          <p className="text-muted-foreground border-primary border-l-4 pl-6 text-xl leading-relaxed font-medium italic md:text-2xl">
             {post.description}
           </p>
         </div>
       </header>
 
       <div className="container mx-auto max-w-4xl px-4 py-16">
-        <div className="prose prose-neutral dark:prose-invert max-w-none prose-a:text-primary prose-a:no-underline">
+        <div className="prose prose-neutral dark:prose-invert prose-a:text-primary prose-a:no-underline max-w-none">
           <MDXContent components={components} />
         </div>
 
         {post.references && post.references.length > 0 && (
           <div className="mt-20 border-t pt-10">
-            <h2 className="mb-6 text-2xl font-black uppercase tracking-tight">
+            <h2 className="mb-6 text-2xl font-black tracking-tight uppercase">
               Market References
             </h2>
             <ul className="grid gap-4">
@@ -129,7 +133,7 @@ export async function BlogPostViewMDX({ slug, country }: BlogPostViewMDXProps) {
                     href={ref}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-muted-foreground break-all transition-colors hover:text-primary hover:underline"
+                    className="text-muted-foreground hover:text-primary break-all transition-colors hover:underline"
                   >
                     {ref}
                   </a>
@@ -141,7 +145,7 @@ export async function BlogPostViewMDX({ slug, country }: BlogPostViewMDXProps) {
 
         {post.faqs && post.faqs.length > 0 && (
           <div className="mt-20 border-t pt-10">
-            <h2 className="mb-10 text-3xl font-black uppercase italic tracking-tight">
+            <h2 className="mb-10 text-3xl font-black tracking-tight uppercase italic">
               Common <span className="text-primary not-italic">Market</span>{" "}
               Questions
             </h2>
@@ -152,10 +156,10 @@ export async function BlogPostViewMDX({ slug, country }: BlogPostViewMDXProps) {
                   value={`item-${index}`}
                   className="border-border/50"
                 >
-                  <AccordionTrigger className="text-left text-lg font-bold uppercase transition-colors hover:text-primary hover:no-underline">
+                  <AccordionTrigger className="hover:text-primary text-left text-lg font-bold uppercase transition-colors hover:no-underline">
                     {faq.question}
                   </AccordionTrigger>
-                  <AccordionContent className="text-muted-foreground text-lg font-medium leading-relaxed">
+                  <AccordionContent className="text-muted-foreground text-lg leading-relaxed font-medium">
                     {faq.answer}
                   </AccordionContent>
                 </AccordionItem>

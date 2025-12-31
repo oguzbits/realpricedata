@@ -10,8 +10,9 @@ interface BlogCardProps {
 }
 
 export function BlogCard({ post, country = "us", className }: BlogCardProps) {
-  const blogUrl = country === "us" ? `/blog/${post.slug}` : `/${country}/blog/${post.slug}`;
-  
+  const blogUrl =
+    country === "us" ? `/blog/${post.slug}` : `/${country}/blog/${post.slug}`;
+
   return (
     <Link
       href={blogUrl}

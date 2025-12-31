@@ -41,7 +41,10 @@ export function CountryItem({
             Active
           </Badge>
         ) : !isLive ? (
-          <Badge variant="outline" className="text-muted-foreground text-[10px] font-medium uppercase">
+          <Badge
+            variant="outline"
+            className="text-muted-foreground text-[10px] font-medium uppercase"
+          >
             Soon
           </Badge>
         ) : null}

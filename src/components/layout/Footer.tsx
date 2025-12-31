@@ -47,22 +47,37 @@ export function Footer({ country: propCountry }: FooterProps) {
             <h4 className="mb-3 font-semibold">Popular Categories</h4>
             <ul className="space-y-2">
               <li>
-                <Link href={getCategoryPath("hard-drives", country as CountryCode)} className="text-primary hover:underline">
+                <Link
+                  href={getCategoryPath("hard-drives", country as CountryCode)}
+                  className="text-primary hover:underline"
+                >
                   Hard Drives & SSDs
                 </Link>
               </li>
               <li>
-                <Link href={getCategoryPath("ram", country as CountryCode)} className="text-primary hover:underline">
+                <Link
+                  href={getCategoryPath("ram", country as CountryCode)}
+                  className="text-primary hover:underline"
+                >
                   RAM & Memory
                 </Link>
               </li>
               <li>
-                <Link href={getCategoryPath("power-supplies", country as CountryCode)} className="text-primary hover:underline">
+                <Link
+                  href={getCategoryPath(
+                    "power-supplies",
+                    country as CountryCode,
+                  )}
+                  className="text-primary hover:underline"
+                >
                   Power Supplies
                 </Link>
               </li>
               <li>
-                <Link href={`/${country}/categories`} className="text-primary hover:underline">
+                <Link
+                  href={`/${country}/categories`}
+                  className="text-primary hover:underline"
+                >
                   All Categories
                 </Link>
               </li>
@@ -74,33 +89,26 @@ export function Footer({ country: propCountry }: FooterProps) {
             <ul className="space-y-2">
               <li>
                 <Link
-                  href={country === DEFAULT_COUNTRY ? "/blog" : `/${country}/blog`}
+                  href={
+                    country === DEFAULT_COUNTRY ? "/blog" : `/${country}/blog`
+                  }
                   className="text-primary hover:underline"
                 >
                   Blog
                 </Link>
               </li>
               <li>
-                <Link
-                  href="/faq"
-                  className="text-primary"
-                >
+                <Link href="/faq" className="text-primary">
                   FAQ
                 </Link>
               </li>
               <li>
-                <Link
-                  href="/impressum"
-                  className="text-primary"
-                >
+                <Link href="/impressum" className="text-primary">
                   Impressum / Legal Notice
                 </Link>
               </li>
               <li>
-                <Link
-                  href="/datenschutz"
-                  className="text-primary"
-                >
+                <Link href="/datenschutz" className="text-primary">
                   Datenschutz / Privacy
                 </Link>
               </li>
@@ -114,8 +122,7 @@ export function Footer({ country: propCountry }: FooterProps) {
               affiliates.
             </p>
             <p>
-              &copy; {COPYRIGHT_YEAR} realpricedata.com. All rights
-              reserved.
+              &copy; {COPYRIGHT_YEAR} realpricedata.com. All rights reserved.
             </p>
           </div>
         </div>

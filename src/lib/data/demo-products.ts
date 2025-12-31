@@ -105,7 +105,7 @@ export const hardDriveProducts: HardDriveProduct[] = [
     price: 179.99,
     capacity: 4.0,
     capacityUnit: "TB",
-    pricePerUnit: 45.00,
+    pricePerUnit: 45.0,
     warranty: "5 years",
     formFactor: 'Internal 2.5"',
     technology: "SSD",

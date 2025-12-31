@@ -1,8 +1,16 @@
 import { CategoryProductsView } from "@/components/category/CategoryProductsView.server";
 import { Button } from "@/components/ui/button";
 import { getCategoryBySlug } from "@/lib/categories";
-import { DEFAULT_COUNTRY, isValidCountryCode, type CountryCode } from "@/lib/countries";
-import { generateKeywords, getAlternateLanguages, getOpenGraph } from "@/lib/metadata";
+import {
+  DEFAULT_COUNTRY,
+  isValidCountryCode,
+  type CountryCode,
+} from "@/lib/countries";
+import {
+  generateKeywords,
+  getAlternateLanguages,
+  getOpenGraph,
+} from "@/lib/metadata";
 import { generateCategoryProductParams } from "@/lib/static-params";
 import { Metadata } from "next";
 import Link from "next/link";
@@ -19,8 +27,6 @@ interface Props {
 export async function generateStaticParams() {
   return generateCategoryProductParams();
 }
-
-
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { country, parent, category: categorySlug } = await params;
@@ -43,7 +49,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     alternates: {
       canonical: canonicalUrl,
       languages: getAlternateLanguages(
-        `/${parent.toLowerCase()}/${categorySlug.toLowerCase()}`
+        `/${parent.toLowerCase()}/${categorySlug.toLowerCase()}`,
       ),
     },
     openGraph: getOpenGraph({
@@ -56,7 +62,10 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   };
 }
 
-export default async function CategoryProductsPage({ params, searchParams }: Props) {
+export default async function CategoryProductsPage({
+  params,
+  searchParams,
+}: Props) {
   const { country, category: categorySlug } = await params;
   const filters = await searchParams;
   const validCountry = isValidCountryCode(country) ? country : DEFAULT_COUNTRY;

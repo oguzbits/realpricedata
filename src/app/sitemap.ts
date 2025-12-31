@@ -45,7 +45,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   blogPosts.forEach((post) => {
     const postPath = `/blog/${post.slug}`;
-    
+
     // 1. Root version (handles 'en' and 'en-US' via alternates)
     blogRoutes.push({
       url: `${baseUrl}${postPath}`,
@@ -59,7 +59,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
     // 2. Localized versions
     liveCountries.forEach((country) => {
-      // US is handled by root version redirects/canonicals usually, 
+      // US is handled by root version redirects/canonicals usually,
       // but we list it if it exists as a separate route
       if (country.code !== DEFAULT_COUNTRY) {
         blogRoutes.push({
@@ -132,7 +132,9 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
           changeFrequency: "daily" as const,
           priority: 0.9, // Higher priority for product pages
           alternates: {
-            languages: getAlternateLanguages(`/${category.parent}/${category.slug}`),
+            languages: getAlternateLanguages(
+              `/${category.parent}/${category.slug}`,
+            ),
           },
         });
       });

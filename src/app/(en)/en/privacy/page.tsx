@@ -120,21 +120,22 @@ export default function PrivacyPage() {
               Local Storage (Functional Storage)
             </h3>
             <p>
-              We use your browser&apos;s &quot;local storage&quot; to save your regional
-              preference (e.g., your selected marketplace like US or Germany).
-              This is used solely to ensure the technically correct display of
-              currencies, pricing, and regional content. This data is strictly
-              functional and is not used for tracking purposes or the creation
-              of user profiles.
+              We use your browser&apos;s &quot;local storage&quot; to save your
+              regional preference (e.g., your selected marketplace like US or
+              Germany). This is used solely to ensure the technically correct
+              display of currencies, pricing, and regional content. This data is
+              strictly functional and is not used for tracking purposes or the
+              creation of user profiles.
             </p>
 
             <h3 className="text-lg font-semibold">Affiliate Links (Amazon)</h3>
             <p>
               While this site does not set cookies itself, clicking on an
               affiliate link (e.g., to Amazon) will redirect you to the
-              provider&apos;s website. At that point, the provider (Amazon) may set
-              cookies on their own domain to track the referral. Please see the
-              next section &quot;Amazon Affiliate Program&quot; for more details.
+              provider&apos;s website. At that point, the provider (Amazon) may
+              set cookies on their own domain to track the referral. Please see
+              the next section &quot;Amazon Affiliate Program&quot; for more
+              details.
             </p>
           </div>
         </section>

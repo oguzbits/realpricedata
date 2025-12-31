@@ -2,16 +2,16 @@
 
 import { Category } from "@/lib/categories";
 import { Product, getProductsByCategory } from "@/lib/product-registry";
-import {
-  filterProducts,
-  sortProducts,
-} from "@/lib/utils/category-utils";
+import { filterProducts, sortProducts } from "@/lib/utils/category-utils";
 import {
   calculateProductMetrics,
   getLocalizedProductData,
 } from "@/lib/utils/products";
 
-export interface LocalizedProduct extends Omit<Product, "asin" | "title" | "price"> {
+export interface LocalizedProduct extends Omit<
+  Product,
+  "asin" | "title" | "price"
+> {
   asin: string;
   title: string;
   price: number;

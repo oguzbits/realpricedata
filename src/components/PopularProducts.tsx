@@ -12,7 +12,7 @@ interface PopularProductsProps {
 export function PopularProducts({ products, country }: PopularProductsProps) {
   const [category, setCategory] = useQueryState(
     "popularCategory",
-    parseAsString.withDefault("all")
+    parseAsString.withDefault("all"),
   );
 
   const categories = [

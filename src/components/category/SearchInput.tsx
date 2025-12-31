@@ -21,7 +21,7 @@ export function SearchInput() {
   );
 
   return (
-    <div className="relative flex-1 md:w-64 lg:w-80 md:flex-none">
+    <div className="relative flex-1 md:w-64 md:flex-none lg:w-80">
       <Search className="text-muted-foreground absolute top-2.5 left-2 h-4 w-4" />
       <Input
         placeholder="Search products..."

@@ -105,20 +105,20 @@ export function getAlternateLanguages(path: string = "") {
   const normalizedPath = path.startsWith("/") ? path : `/${path}`;
   const cleanPath = normalizedPath === "/" ? "" : normalizedPath;
 
-  const liveCountries = getAllCountries().filter(c => c.isLive);
+  const liveCountries = getAllCountries().filter((c) => c.isLive);
   const alternates: Record<string, string> = {
     // x-default should point to our primary/landing version (US)
     "x-default": cleanPath === "" ? baseUrl : `${baseUrl}/us${cleanPath}`,
   };
 
-  liveCountries.forEach(country => {
+  liveCountries.forEach((country) => {
     // Correct ISO 3166-1 alpha-2 for United Kingdom is GB
     let region = country.code.toUpperCase();
     if (region === "UK") region = "GB";
-    
+
     // For our site, we use English UI across all markets: 'en-REGION'
     const hreflang = `en-${region}`;
-    
+
     // For US homepage, we use the root domain
     if (country.code === "us" && cleanPath === "") {
       alternates[hreflang] = baseUrl;
@@ -138,47 +138,51 @@ export function getAlternateLanguages(path: string = "") {
 /**
  * Generates SEO keywords dynamically based on category and units.
  */
-export function generateKeywords(category?: Category, extraKeywords: string[] = []): string[] {
-  const baseKeywords = [
-    ...coreKeywords,
-    ...extraKeywords,
-  ];
+export function generateKeywords(
+  category?: Category,
+  extraKeywords: string[] = [],
+): string[] {
+  const baseKeywords = [...coreKeywords, ...extraKeywords];
 
   if (!category) return baseKeywords;
 
   const unit = category.unitType;
-  const unitKeywords = unit ? [
-    `price per ${unit}`,
-    `cost per ${unit}`,
-    `cheapest ${category.name} per ${unit}`,
-    `best ${unit} value`,
-  ] : [];
+  const unitKeywords = unit
+    ? [
+        `price per ${unit}`,
+        `cost per ${unit}`,
+        `cheapest ${category.name} per ${unit}`,
+        `best ${unit} value`,
+      ]
+    : [];
 
   // Add specific aliases for common units
   if (unit === "W") {
     unitKeywords.push("price per watt", "cost per watt", "price per kW");
   } else if (unit === "TB") {
-    unitKeywords.push("price per terabyte", "cost per gigabyte", "price per GB");
+    unitKeywords.push(
+      "price per terabyte",
+      "cost per gigabyte",
+      "price per GB",
+    );
   }
 
-  return [...new Set([
-    category.name,
-    ...unitKeywords,
-    ...baseKeywords,
-  ])];
+  return [...new Set([category.name, ...unitKeywords, ...baseKeywords])];
 }
 
 /**
  * Returns a complete Open Graph object with sane defaults and overrides.
  */
-export function getOpenGraph(overrides: {
-  title?: string;
-  description?: string;
-  url?: string;
-  type?: "website" | "article";
-  locale?: string;
-  [key: string]: string | boolean | undefined | number | string[];
-} = {}) {
+export function getOpenGraph(
+  overrides: {
+    title?: string;
+    description?: string;
+    url?: string;
+    type?: "website" | "article";
+    locale?: string;
+    [key: string]: string | boolean | undefined | number | string[];
+  } = {},
+) {
   // If no title/description provided, Next.js will use the page's top-level title/description
   // but it's better to be explicit to ensure they are present in the OG tags.
   return {
@@ -190,28 +194,28 @@ export function getOpenGraph(overrides: {
 /**
  * Generates consistent homepage metadata for all marketplaces.
  * Ensures US and other country homepages follow the same pattern.
- * 
+ *
  * @param countryCode - ISO country code (e.g., 'us', 'ca', 'uk')
  * @param countryName - Full country name (optional, for future use)
  * @returns Complete Metadata object for the homepage
  */
 export function getHomePageMetadata(
-  countryCode: string
+  countryCode: string,
 ): import("next").Metadata {
   const code = countryCode.toUpperCase();
   const isUS = countryCode.toLowerCase() === "us";
-  
+
   // Canonical URL: US uses root domain, others use /{country}
   const canonicalUrl = isUS
     ? "https://realpricedata.com"
     : `https://realpricedata.com/${countryCode.toLowerCase()}`;
-  
+
   // Consistent title pattern for all marketplaces
   const title = `Price Tracker - Amazon ${code}`;
-  
+
   // Description with country code
   const description = `Amazon ${code} price tracker for hardware & storage. Compare HDD, SSD, RAM and more by true cost per TB/GB. Find the best value hardware deals instantly.`;
-  
+
   return {
     title,
     description,

@@ -9,19 +9,30 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { DEFAULT_COUNTRY, getAllCountries, getCountryByCode, getFlag, isValidCountryCode } from "@/lib/countries";
+import {
+  DEFAULT_COUNTRY,
+  getAllCountries,
+  getCountryByCode,
+  getFlag,
+  isValidCountryCode,
+} from "@/lib/countries";
 import { Globe } from "lucide-react";
-import Link from "next/link";
 import Image from "next/image";
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import Link from "next/link";
+import { usePathname, useSearchParams } from "next/navigation";
 import { CountryItem } from "./CountryItem";
 
-export function CountrySelector({ currentCountryCode }: { currentCountryCode?: string }) {
+export function CountrySelector({
+  currentCountryCode,
+}: {
+  currentCountryCode?: string;
+}) {
   const pathname = usePathname();
   const searchParams = useSearchParams();
-  const router = useRouter();
   const allCountries = getAllCountries();
-  const currentCountry = getCountryByCode(currentCountryCode || DEFAULT_COUNTRY);
+  const currentCountry = getCountryByCode(
+    currentCountryCode || DEFAULT_COUNTRY,
+  );
 
   // Separate live and coming soon countries
   const liveCountries = allCountries.filter((c) => c.isLive);
@@ -59,12 +70,13 @@ export function CountrySelector({ currentCountryCode }: { currentCountryCode?: s
         <div className="py-1">
           {/* Live Countries */}
           {liveCountries.map((c) => {
-            const segments = pathname.split('/').filter(Boolean);
+            const segments = pathname.split("/").filter(Boolean);
             const firstSegment = segments[0];
-            const hasCountryInUrl = firstSegment && isValidCountryCode(firstSegment);
-            
+            const hasCountryInUrl =
+              firstSegment && isValidCountryCode(firstSegment);
+
             let targetHref = "";
-            
+
             if (hasCountryInUrl) {
               // Replace the country identifier in the URL
               const newSegments = [...segments];
@@ -84,11 +96,11 @@ export function CountrySelector({ currentCountryCode }: { currentCountryCode?: s
               <DropdownMenuItem
                 key={c.code}
                 asChild
-                className="cursor-pointer focus:bg-accent focus:text-accent-foreground"
+                className="focus:bg-accent focus:text-accent-foreground cursor-pointer"
               >
-                <Link 
-                  href={targetHref} 
-                  className="w-full flex no-underline items-center"
+                <Link
+                  href={targetHref}
+                  className="flex w-full items-center no-underline"
                   prefetch={true}
                 >
                   <CountryItem

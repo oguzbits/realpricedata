@@ -8,7 +8,11 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
-import { getCategoryBySlug, getCategoryPath, type CategorySlug } from "@/lib/categories";
+import {
+  getCategoryBySlug,
+  getCategoryPath,
+  type CategorySlug,
+} from "@/lib/categories";
 import { FEATURED_CATEGORIES, QUICK_ACCESS_CATEGORIES } from "@/lib/constants";
 import { DEFAULT_COUNTRY, type CountryCode } from "@/lib/countries";
 import type { LucideIcon } from "lucide-react";
@@ -141,7 +145,9 @@ export function SearchModal({ open, onOpenChange }: SearchModalProps) {
         currentAvailableItems[currentSelectedIndex]
       ) {
         e.preventDefault();
-        currentHandleLinkClick(currentAvailableItems[currentSelectedIndex].slug);
+        currentHandleLinkClick(
+          currentAvailableItems[currentSelectedIndex].slug,
+        );
       }
     };
 
@@ -154,7 +160,6 @@ export function SearchModal({ open, onOpenChange }: SearchModalProps) {
     setQuery(e.target.value);
     setSelectedIndex(-1);
   };
-
 
   return (
     <Dialog open={open} onOpenChange={handleOpenChange}>
@@ -270,8 +275,8 @@ export function SearchModal({ open, onOpenChange }: SearchModalProps) {
                       No categories found
                     </p>
                     <p className="text-muted-foreground mx-auto mt-2 max-w-xs">
-                      We couldn&apos;t find anything matching &quot;{query}&quot;. Try another
-                      keyword like &quot;hard drives&quot;.
+                      We couldn&apos;t find anything matching &quot;{query}
+                      &quot;. Try another keyword like &quot;hard drives&quot;.
                     </p>
                   </div>
                 </div>

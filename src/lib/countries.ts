@@ -94,7 +94,9 @@ export function getAllCountries(): Country[] {
 }
 
 // Get country by code
-export function getCountryByCode(code: string | null | undefined): Country | undefined {
+export function getCountryByCode(
+  code: string | null | undefined,
+): Country | undefined {
   if (!code) return undefined;
   return countries[code.toLowerCase() as CountryCode];
 }
@@ -102,7 +104,9 @@ export function getCountryByCode(code: string | null | undefined): Country | und
 // Detect country from browser locale
 export function detectCountryFromLocale(locale?: string): CountryCode {
   if (!locale && typeof navigator !== "undefined") {
-    locale = navigator.language || (navigator as Navigator & { userLanguage?: string }).userLanguage;
+    locale =
+      navigator.language ||
+      (navigator as Navigator & { userLanguage?: string }).userLanguage;
   }
 
   if (!locale) return DEFAULT_COUNTRY;

@@ -20,15 +20,15 @@ export async function BlogIndexView({ country }: BlogIndexViewProps) {
         <Breadcrumbs items={breadcrumbItems} />
 
         <div className="mb-12 max-w-3xl">
-          <h1 className="mb-6 text-4xl font-black italic leading-tight uppercase tracking-tighter sm:text-5xl md:text-6xl">
+          <h1 className="mb-6 text-4xl leading-tight font-black tracking-tighter uppercase italic sm:text-5xl md:text-6xl">
             Market{" "}
-            <span className="text-primary not-italic -tracking-widest">
+            <span className="text-primary -tracking-widest not-italic">
               Data
             </span>{" "}
             <br />
             Insights
           </h1>
-          <p className="text-muted-foreground text-xl font-medium leading-relaxed">
+          <p className="text-muted-foreground text-xl leading-relaxed font-medium">
             Real-time hardware market analysis and buying guides powered by live
             price data.
           </p>

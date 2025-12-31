@@ -29,7 +29,10 @@ export function CategoryHeader({
       name: crumb.name,
       href: `/${countryCode}/${crumb.parent ? crumb.parent + "/" : ""}${crumb.slug}`,
       icon: idx === breadcrumbs.length - 1 ? Icon : undefined,
-      suffix: idx === breadcrumbs.length - 1 ? `on Amazon ${countryCode.toUpperCase()}` : undefined,
+      suffix:
+        idx === breadcrumbs.length - 1
+          ? `on Amazon ${countryCode.toUpperCase()}`
+          : undefined,
     })),
   ];
 
@@ -39,11 +42,9 @@ export function CategoryHeader({
       <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
         <Breadcrumbs items={breadcrumbItems} className="mb-0" />
 
-        <div className="hidden md:flex items-center gap-2">
+        <div className="hidden items-center gap-2 md:flex">
           <SearchInput />
-          <div className="lg:hidden">
-            {filterTrigger}
-          </div>
+          <div className="lg:hidden">{filterTrigger}</div>
         </div>
       </div>
 

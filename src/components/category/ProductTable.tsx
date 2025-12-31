@@ -30,7 +30,7 @@ export function ProductTable({
               sortKey="pricePerUnit"
               currentSortBy={sortBy}
               currentSortOrder={sortOrder}
-              className="text-foreground h-10 px-2 text-left align-middle font-medium whitespace-nowrap hover:bg-muted/50 focus-visible:bg-muted/50 focus-visible:ring-primary w-[100px] cursor-pointer outline-none focus-visible:ring-2 focus-visible:ring-inset sm:w-[140px]"
+              className="text-foreground hover:bg-muted/50 focus-visible:bg-muted/50 focus-visible:ring-primary h-10 w-[100px] cursor-pointer px-2 text-left align-middle font-medium whitespace-nowrap outline-none focus-visible:ring-2 focus-visible:ring-inset sm:w-[140px]"
             >
               Price/{unitLabel}
             </SortableTableHead>
@@ -38,7 +38,7 @@ export function ProductTable({
               sortKey="price"
               currentSortBy={sortBy}
               currentSortOrder={sortOrder}
-              className="text-foreground h-10 px-2 text-left align-middle font-medium whitespace-nowrap hover:bg-muted/50 focus-visible:bg-muted/50 focus-visible:ring-primary hidden cursor-pointer pr-4 outline-none focus-visible:ring-2 focus-visible:ring-inset sm:table-cell sm:pr-12"
+              className="text-foreground hover:bg-muted/50 focus-visible:bg-muted/50 focus-visible:ring-primary hidden h-10 cursor-pointer px-2 pr-4 text-left align-middle font-medium whitespace-nowrap outline-none focus-visible:ring-2 focus-visible:ring-inset sm:table-cell sm:pr-12"
             >
               Price
             </SortableTableHead>
@@ -46,38 +46,48 @@ export function ProductTable({
               sortKey="capacity"
               currentSortBy={sortBy}
               currentSortOrder={sortOrder}
-              className="text-foreground h-10 px-2 text-left align-middle font-medium whitespace-nowrap hover:bg-muted/50 focus-visible:bg-muted/50 focus-visible:ring-primary hidden cursor-pointer outline-none focus-visible:ring-2 focus-visible:ring-inset sm:table-cell"
+              className="text-foreground hover:bg-muted/50 focus-visible:bg-muted/50 focus-visible:ring-primary hidden h-10 cursor-pointer px-2 text-left align-middle font-medium whitespace-nowrap outline-none focus-visible:ring-2 focus-visible:ring-inset sm:table-cell"
             >
               Capacity
             </SortableTableHead>
-            <th className="text-foreground h-10 px-2 text-left align-middle font-medium whitespace-nowrap min-w-[120px] sm:min-w-[200px]">Product</th>
-            <th className="text-foreground h-10 px-2 text-left align-middle font-medium whitespace-nowrap hidden md:table-cell">Warranty</th>
-            <th className="text-foreground h-10 px-2 text-left align-middle font-medium whitespace-nowrap hidden sm:table-cell">Form Factor</th>
-            <th className="text-foreground h-10 px-2 text-left align-middle font-medium whitespace-nowrap hidden sm:table-cell">
+            <th className="text-foreground h-10 min-w-[120px] px-2 text-left align-middle font-medium whitespace-nowrap sm:min-w-[200px]">
+              Product
+            </th>
+            <th className="text-foreground hidden h-10 px-2 text-left align-middle font-medium whitespace-nowrap md:table-cell">
+              Warranty
+            </th>
+            <th className="text-foreground hidden h-10 px-2 text-left align-middle font-medium whitespace-nowrap sm:table-cell">
+              Form Factor
+            </th>
+            <th className="text-foreground hidden h-10 px-2 text-left align-middle font-medium whitespace-nowrap sm:table-cell">
               {categorySlug === "power-supplies"
                 ? "Certification"
                 : "Technology"}
             </th>
-            <th className="text-foreground h-10 px-2 text-left align-middle font-medium whitespace-nowrap hidden sm:table-cell">Condition</th>
-            <th className="text-foreground h-10 px-2 text-right align-middle font-medium whitespace-nowrap sm:px-4">Action</th>
+            <th className="text-foreground hidden h-10 px-2 text-left align-middle font-medium whitespace-nowrap sm:table-cell">
+              Condition
+            </th>
+            <th className="text-foreground h-10 px-2 text-right align-middle font-medium whitespace-nowrap sm:px-4">
+              Action
+            </th>
           </tr>
         </thead>
         <tbody className="[&_tr:last-child]:border-0">
           {products.map((product) => (
             <tr
               key={product.id || product.slug}
-              className="hover:bg-muted/30 data-[state=selected]:bg-muted border-b transition-colors group"
+              className="hover:bg-muted/30 data-[state=selected]:bg-muted group border-b transition-colors"
             >
-              <td className="p-2 align-middle whitespace-nowrap text-foreground font-mono text-[13px] font-bold sm:text-base">
+              <td className="text-foreground p-2 align-middle font-mono text-[13px] font-bold whitespace-nowrap sm:text-base">
                 {formatCurrency(product.pricePerUnit || 0, 2)}
               </td>
-              <td className="p-2 align-middle whitespace-nowrap text-muted-foreground hidden pr-4 font-mono sm:table-cell sm:pr-12">
+              <td className="text-muted-foreground hidden p-2 pr-4 align-middle font-mono whitespace-nowrap sm:table-cell sm:pr-12">
                 {formatCurrency(product.price)}
               </td>
-              <td className="p-2 align-middle whitespace-nowrap text-muted-foreground hidden font-mono sm:table-cell">
+              <td className="text-muted-foreground hidden p-2 align-middle font-mono whitespace-nowrap sm:table-cell">
                 {product.capacity} {product.capacityUnit}
               </td>
-              <td className="p-2 align-middle max-w-0 sm:max-w-none">
+              <td className="max-w-0 p-2 align-middle sm:max-w-none">
                 <div className="flex flex-col">
                   <a
                     href={getAffiliateRedirectPath(product.slug)}
@@ -97,18 +107,18 @@ export function ProductTable({
                 </div>
               </td>
 
-              <td className="p-2 align-middle whitespace-nowrap text-muted-foreground hidden text-sm md:table-cell">
+              <td className="text-muted-foreground hidden p-2 align-middle text-sm whitespace-nowrap md:table-cell">
                 {product.warranty}
               </td>
-              <td className="p-2 align-middle whitespace-nowrap text-muted-foreground hidden text-sm sm:table-cell">
+              <td className="text-muted-foreground hidden p-2 align-middle text-sm whitespace-nowrap sm:table-cell">
                 {product.formFactor}
               </td>
-              <td className="p-2 align-middle whitespace-nowrap text-muted-foreground hidden text-sm sm:table-cell">
+              <td className="text-muted-foreground hidden p-2 align-middle text-sm whitespace-nowrap sm:table-cell">
                 {categorySlug === "power-supplies"
                   ? product.certification || product.technology
                   : product.technology}
               </td>
-              <td className="p-2 align-middle whitespace-nowrap hidden sm:table-cell">
+              <td className="hidden p-2 align-middle whitespace-nowrap sm:table-cell">
                 <Badge
                   variant="outline"
                   className={cn(
@@ -124,7 +134,7 @@ export function ProductTable({
                   {product.condition}
                 </Badge>
               </td>
-              <td className="p-2 align-middle whitespace-nowrap px-2 text-right sm:px-4">
+              <td className="p-2 px-2 text-right align-middle whitespace-nowrap sm:px-4">
                 <a
                   href={getAffiliateRedirectPath(product.slug)}
                   target="_blank"

@@ -20,13 +20,15 @@ export function Breadcrumbs({ items, className }: BreadcrumbsProps) {
             <span
               className={cn(
                 "inline-flex items-center gap-1.5 wrap-break-word",
-                isLast && "text-foreground font-bold"
+                isLast && "text-foreground font-bold",
               )}
             >
-              {Icon && <Icon className="h-3.5 w-3.5 opacity-70" aria-hidden="true" />}
+              {Icon && (
+                <Icon className="h-3.5 w-3.5 opacity-70" aria-hidden="true" />
+              )}
               <span>{item.name}</span>
               {item.suffix && (
-                <span className="text-muted-foreground/50 font-medium ml-1 lowercase">
+                <span className="text-muted-foreground/50 ml-1 font-medium lowercase">
                   {item.suffix}
                 </span>
               )}
@@ -36,7 +38,10 @@ export function Breadcrumbs({ items, className }: BreadcrumbsProps) {
           return (
             <React.Fragment key={index}>
               {index > 0 && (
-                <li className="text-muted-foreground/30 flex items-center" aria-hidden="true">
+                <li
+                  className="text-muted-foreground/30 flex items-center"
+                  aria-hidden="true"
+                >
                   <span className="text-[10px]">/</span>
                 </li>
               )}
@@ -44,7 +49,7 @@ export function Breadcrumbs({ items, className }: BreadcrumbsProps) {
                 {item.href && !isLast ? (
                   <Link
                     href={item.href}
-                    className="hover:text-primary transition-colors hover:underline underline-offset-4"
+                    className="hover:text-primary underline-offset-4 transition-colors hover:underline"
                   >
                     {content}
                   </Link>

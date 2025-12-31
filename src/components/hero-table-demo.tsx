@@ -122,53 +122,61 @@ export function HeroTableDemo() {
 
                 {/* Table Body */}
                 <div className="divide-border divide-y">
-                  {products.map((product: BatteryProduct | HardDriveProduct | PowerSupplyProduct, idx) => (
-                    <div
-                      key={product.id}
-                      className={cn(
-                        "grid grid-cols-12 items-center gap-2 px-4 py-3 text-xs transition-all sm:text-sm",
-                        idx === 0 &&
-                          "bg-primary/5 ring-primary/20 bg-linear-to-r from-primary/10 via-primary/5 to-transparent shadow-xs ring-1 ring-inset",
-                      )}
-                    >
-                      <div className="text-foreground col-span-3 flex items-center gap-2 font-mono font-bold">
-                        {config.currency}
-                        {currentCategory === "harddrives"
-                          ? (product as HardDriveProduct).pricePerUnit.toFixed(
-                              2,
-                            )
-                          : currentCategory === "batteries"
-                            ? (product as BatteryProduct).pricePerUnit.toFixed(
-                                2,
-                              )
-                            : (
-                                product as PowerSupplyProduct
-                              ).pricePerUnit.toFixed(2)}
-                        {idx === 0 && (
-                          <Badge className="h-4 border-0 bg-emerald-100 px-1.5 text-[10px] font-bold tracking-wider text-emerald-800 uppercase sm:text-[11px] dark:bg-emerald-500/20 dark:text-emerald-300">
-                            Best
-                          </Badge>
+                  {products.map(
+                    (
+                      product:
+                        | BatteryProduct
+                        | HardDriveProduct
+                        | PowerSupplyProduct,
+                      idx,
+                    ) => (
+                      <div
+                        key={product.id}
+                        className={cn(
+                          "grid grid-cols-12 items-center gap-2 px-4 py-3 text-xs transition-all sm:text-sm",
+                          idx === 0 &&
+                            "bg-primary/5 ring-primary/20 from-primary/10 via-primary/5 bg-linear-to-r to-transparent shadow-xs ring-1 ring-inset",
                         )}
+                      >
+                        <div className="text-foreground col-span-3 flex items-center gap-2 font-mono font-bold">
+                          {config.currency}
+                          {currentCategory === "harddrives"
+                            ? (
+                                product as HardDriveProduct
+                              ).pricePerUnit.toFixed(2)
+                            : currentCategory === "batteries"
+                              ? (
+                                  product as BatteryProduct
+                                ).pricePerUnit.toFixed(2)
+                              : (
+                                  product as PowerSupplyProduct
+                                ).pricePerUnit.toFixed(2)}
+                          {idx === 0 && (
+                            <Badge className="h-4 border-0 bg-emerald-100 px-1.5 text-[10px] font-bold tracking-wider text-emerald-800 uppercase sm:text-[11px] dark:bg-emerald-500/20 dark:text-emerald-300">
+                              Best
+                            </Badge>
+                          )}
+                        </div>
+                        <div className="text-foreground/80 col-span-2 font-mono">
+                          {config.currency}
+                          {product.price.toFixed(2)}
+                        </div>
+                        <div className="text-foreground/85 col-span-2 font-mono text-[11px] sm:text-sm">
+                          {currentCategory === "harddrives" &&
+                            `${(product as HardDriveProduct).capacity}${(product as HardDriveProduct).capacityUnit}`}
+                          {currentCategory === "batteries" &&
+                            `${(product as BatteryProduct).packSize}p`}
+                          {currentCategory === "powersupplies" &&
+                            `${(product as PowerSupplyProduct).wattage}W`}
+                        </div>
+                        <div className="col-span-5 sm:col-span-4">
+                          <span className="text-foreground/90 block truncate font-bold dark:text-white">
+                            {product.name}
+                          </span>
+                        </div>
                       </div>
-                      <div className="text-foreground/80 col-span-2 font-mono">
-                        {config.currency}
-                        {product.price.toFixed(2)}
-                      </div>
-                      <div className="text-foreground/85 col-span-2 font-mono text-[11px] sm:text-sm">
-                        {currentCategory === "harddrives" &&
-                          `${(product as HardDriveProduct).capacity}${(product as HardDriveProduct).capacityUnit}`}
-                        {currentCategory === "batteries" &&
-                          `${(product as BatteryProduct).packSize}p`}
-                        {currentCategory === "powersupplies" &&
-                          `${(product as PowerSupplyProduct).wattage}W`}
-                      </div>
-                      <div className="col-span-5 sm:col-span-4">
-                        <span className="text-foreground/90 dark:text-white block truncate font-bold">
-                          {product.name}
-                        </span>
-                      </div>
-                    </div>
-                  ))}
+                    ),
+                  )}
                 </div>
               </div>
             </div>

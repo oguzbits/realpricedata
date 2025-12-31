@@ -11,7 +11,10 @@ import {
 } from "@/lib/utils/products";
 import { useMemo } from "react";
 
-export interface LocalizedProduct extends Omit<Product, "asin" | "title" | "price"> {
+export interface LocalizedProduct extends Omit<
+  Product,
+  "asin" | "title" | "price"
+> {
   asin: string;
   title: string;
   price: number;
@@ -43,7 +46,7 @@ export function useCategoryProducts({
       .map((p) => {
         const { price, title, asin } = getLocalizedProductData(p, countryCode);
         if (price === null || price === 0) return null;
-        
+
         const enhanced = calculateProductMetrics(p, price);
         return {
           ...p,

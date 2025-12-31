@@ -11,7 +11,6 @@ export async function generateStaticParams() {
   return generateCountryParams();
 }
 
-
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { country } = await params;
   const title = `Blog | Hardware Pricing & Market Trends - ${country.toUpperCase()}`;

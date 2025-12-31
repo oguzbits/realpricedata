@@ -1,7 +1,15 @@
 import { ParentCategoryView } from "@/components/category/ParentCategoryView";
 import { Button } from "@/components/ui/button";
-import { getCategoryBySlug, getChildCategories, type CategorySlug } from "@/lib/categories";
-import { DEFAULT_COUNTRY, isValidCountryCode, type CountryCode } from "@/lib/countries";
+import {
+  getCategoryBySlug,
+  getChildCategories,
+  type CategorySlug,
+} from "@/lib/categories";
+import {
+  DEFAULT_COUNTRY,
+  isValidCountryCode,
+  type CountryCode,
+} from "@/lib/countries";
 import { getAlternateLanguages, getOpenGraph } from "@/lib/metadata";
 import { generateParentCategoryParams } from "@/lib/static-params";
 import { Metadata } from "next";
@@ -18,7 +26,6 @@ interface Props {
 export async function generateStaticParams() {
   return generateParentCategoryParams();
 }
-
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { country, parent: parentSlug } = await params;

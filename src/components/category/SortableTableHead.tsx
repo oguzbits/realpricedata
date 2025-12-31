@@ -32,7 +32,7 @@ export function SortableTableHead({
       startTransition,
     }),
   );
-  
+
   const [, setSortOrder] = useQueryState(
     "sortOrder",
     parseAsString.withDefault("asc").withOptions({

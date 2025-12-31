@@ -1,6 +1,11 @@
 "use client";
 
-import { parseAsArrayOf, parseAsFloat, parseAsString, useQueryStates } from "nuqs";
+import {
+  parseAsArrayOf,
+  parseAsFloat,
+  parseAsString,
+  useQueryStates,
+} from "nuqs";
 import { useTransition } from "react";
 import { FilterPanel } from "./FilterPanel";
 
@@ -48,10 +53,7 @@ export function FilterPanelClient({
     },
   );
 
-  const toggleArrayFilter = (
-    key: string,
-    value: string,
-  ) => {
+  const toggleArrayFilter = (key: string, value: string) => {
     const filterKey = key as "condition" | "technology" | "formFactor";
     const currentValues = filters[filterKey] || [];
     const newValues = currentValues.includes(value)

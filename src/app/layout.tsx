@@ -37,7 +37,7 @@ export default function RootLayout({
         >
           <NuqsProvider>
             <div className="flex min-h-screen flex-col">
-              <PromoBanner /> 
+              <PromoBanner />
               {children}
             </div>
             <SpeedInsights />

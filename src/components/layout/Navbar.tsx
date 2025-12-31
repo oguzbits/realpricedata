@@ -12,7 +12,7 @@ export function Navbar({ country: propCountry }: { country?: string }) {
 
   return (
     <header className="bg-background/95 supports-backdrop-filter:bg-background/60 sticky top-0 z-50 w-full border-b backdrop-blur">
-      <div className="container relative mx-auto flex h-16 items-center justify-between px-4">
+      <div className="relative container mx-auto flex h-16 items-center justify-between px-4">
         {/* Left: Logo */}
         <div className="flex shrink-0 items-center gap-2 sm:gap-6">
           <Link
@@ -35,7 +35,7 @@ export function Navbar({ country: propCountry }: { country?: string }) {
             </h3>
           </Link>
         </div>
- 
+
         {/* Center: Global Search Button */}
         <SearchButton />
 

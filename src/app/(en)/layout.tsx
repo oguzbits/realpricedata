@@ -15,9 +15,5 @@ export default function EnglishLayout({
 }: {
   children: React.ReactNode;
 }) {
-  return (
-    <PageLayout country="us">
-      {children}
-    </PageLayout>
-  );
+  return <PageLayout country="us">{children}</PageLayout>;
 }

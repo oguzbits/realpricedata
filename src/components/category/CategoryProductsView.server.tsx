@@ -7,10 +7,18 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
-import { Category, getBreadcrumbs, getChildCategories, stripCategoryIcon } from "@/lib/categories";
+import {
+  Category,
+  getBreadcrumbs,
+  getChildCategories,
+  stripCategoryIcon,
+} from "@/lib/categories";
 import { getCategoryIcon } from "@/lib/category-icons";
 import { getCountryByCode, type CountryCode } from "@/lib/countries";
-import { FilterParams, getCategoryProducts } from "@/lib/server/category-products";
+import {
+  FilterParams,
+  getCategoryProducts,
+} from "@/lib/server/category-products";
 import { Filter, Info, Search } from "lucide-react";
 
 // Client components
@@ -160,8 +168,8 @@ function NoProductsMatchingFilters() {
       </div>
       <h3 className="mb-2 text-lg font-semibold">No products found</h3>
       <p className="text-muted-foreground mb-6 max-w-sm">
-        We couldn&apos;t find any products matching your current filters.
-        Try adjusting your filters or search term.
+        We couldn&apos;t find any products matching your current filters. Try
+        adjusting your filters or search term.
       </p>
     </div>
   );

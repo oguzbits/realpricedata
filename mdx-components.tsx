@@ -9,16 +9,16 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
     // Default component overrides
     h2: (props) => (
       <h2
-        className="mb-8 mt-16 text-3xl font-black uppercase italic tracking-tight"
+        className="mt-16 mb-8 text-3xl font-black tracking-tight uppercase italic"
         {...props}
       />
     ),
     h3: (props) => (
-      <h3 className="mb-4 mt-12 text-xl font-bold uppercase" {...props} />
+      <h3 className="mt-12 mb-4 text-xl font-bold uppercase" {...props} />
     ),
     p: (props) => (
       <p
-        className="text-muted-foreground mb-6 text-lg font-medium leading-relaxed"
+        className="text-muted-foreground mb-6 text-lg leading-relaxed font-medium"
         {...props}
       />
     ),

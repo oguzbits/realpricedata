@@ -3,7 +3,11 @@ import type { CountryCode } from "./countries";
 
 export type UnitType = "TB" | "GB" | "W";
 
-export type CategorySlug = "electronics" | "hard-drives" | "ram" | "power-supplies";
+export type CategorySlug =
+  | "electronics"
+  | "hard-drives"
+  | "ram"
+  | "power-supplies";
 
 export interface Category {
   name: string;
@@ -96,7 +100,9 @@ export function getCategoryBySlug(slug: string): Category | undefined {
 }
 
 // Get parent category for a given category
-export function getParentCategory(categorySlug: CategorySlug): Category | undefined {
+export function getParentCategory(
+  categorySlug: CategorySlug,
+): Category | undefined {
   const category = allCategories[categorySlug];
   if (!category?.parent) return undefined;
   return allCategories[category.parent];

@@ -126,6 +126,7 @@ export function HomeContent({ country }: { country: string }) {
                   <Link
                     key={c.code}
                     href={href}
+                    prefetch={false}
                     className={`group relative flex flex-col items-center no-underline transition-all ${
                       c.isLive
                         ? "cursor-pointer"

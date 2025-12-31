@@ -20,24 +20,19 @@ export function proxy(request: NextRequest) {
   const firstSegment = segments[0]
   
   if (firstSegment && isValidCountryCode(firstSegment)) {
-    const response = NextResponse.next()
+    // If it's the default country home (e.g., /us), redirect to root (/)
+    // Otherwise, just continue to the localized page
+    const shouldRedirectToRoot = firstSegment === DEFAULT_COUNTRY && segments.length === 1
+    const response = shouldRedirectToRoot 
+      ? NextResponse.redirect(new URL('/', request.url))
+      : NextResponse.next()
     
-    // Update the country cookie to match the explicit URL preference
-    // This allows the user to switch regions just by clicking a link
+    // Synchronize the country cookie with the explicit URL preference
     if (request.cookies.get('country')?.value !== firstSegment) {
       response.cookies.set('country', firstSegment, {
         path: '/',
         maxAge: 31536000,
         sameSite: 'lax'
-      })
-    }
-
-    // Special case: Redirect the default country home (e.g., /us) to root (/)
-    // but KEEP the path for sub-pages (e.g., /us/blog -> keep it or redirect?)
-    // Based on sitemap.ts, /us is non-canonical for the homepage.
-    if (firstSegment === DEFAULT_COUNTRY && segments.length === 1) {
-      return NextResponse.redirect(new URL('/', request.url), {
-        headers: response.headers // Carry over the new cookie!
       })
     }
 

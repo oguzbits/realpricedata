@@ -1,9 +1,7 @@
 import { FooterWrapper } from "@/components/layout/FooterWrapper";
 import { Navbar } from "@/components/layout/Navbar";
 import { PromoBanner } from "@/components/layout/PromoBanner";
-import { ScrollTracker } from "@/components/ScrollTracker";
 import { ThemeProvider } from "@/components/theme-provider";
-import { TimeTracker } from "@/components/TimeTracker";
 import { NuqsProvider } from "@/providers/nuqs-provider";
 import { Analytics } from "@vercel/analytics/next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
@@ -34,9 +32,7 @@ export function BaseLayoutContent({ children }: { children: React.ReactNode }) {
             <FooterWrapper />
           </div>
 
-          {/* Cookieless Analytics - No consent needed! */}
-          <ScrollTracker />
-          <TimeTracker />
+          {/* Vercel Analytics - Page views only (custom events not enabled) */}
           <SpeedInsights />
           <Analytics />
         </NuqsProvider>

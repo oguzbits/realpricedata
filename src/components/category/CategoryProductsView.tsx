@@ -1,6 +1,7 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
+import { CategoryCard } from "@/components/ui/category-card";
 import {
   Sheet,
   SheetContent,
@@ -8,16 +9,11 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
-import { useCategoryProducts } from "@/hooks/use-category-products";
+import { LocalizedProduct, useCategoryProducts } from "@/hooks/use-category-products";
 import { useProductFilters } from "@/hooks/use-product-filters";
-import { trackSEO } from "@/lib/analytics";
-import { Category, getBreadcrumbs, stripCategoryIcon, getChildCategories, getCategoryPath } from "@/lib/categories";
-import { CategoryCard } from "@/components/ui/category-card";
+import { Category, getBreadcrumbs, getChildCategories, stripCategoryIcon } from "@/lib/categories";
 import { getCategoryIcon } from "@/lib/category-icons";
 import { getCountryByCode } from "@/lib/countries";
-import { Product } from "@/lib/product-registry";
-import { LocalizedProduct } from "@/hooks/use-category-products";
-import Link from "next/link";
 import { Filter, Info, Search } from "lucide-react";
 import * as React from "react";
 
@@ -54,10 +50,7 @@ export function CategoryProductsView({
   const { products, filteredCount, unitLabel, hasProducts } =
     useCategoryProducts({ category, filters, countryCode });
 
-  // 2. Analytics
-  React.useEffect(() => {
-    trackSEO.categoryView(categorySlug, countryCode);
-  }, [categorySlug, countryCode]);
+
 
   // 3. Shared Handlers
   const formatCurrency = (value: number, fractionDigits = 2) => {
@@ -70,19 +63,11 @@ export function CategoryProductsView({
   };
 
   const handleAffiliateClick = (product: LocalizedProduct, index: number) => {
-    trackSEO.affiliateClick({
-      productName: product.title,
-      category: categorySlug,
-      country: countryCode,
-      price: product.price,
-      pricePerUnit: product.pricePerUnit || 0,
-      position: index + 1,
-    });
+    // Placeholder for future analytics if needed
   };
 
   const handleFilterChange = (filterName: string, value: string) => {
     toggleArrayFilter(filterName as any, value);
-    trackSEO.filterApplied(filterName, value, categorySlug);
   };
 
   const handleSort = (key: string) => {
@@ -94,7 +79,6 @@ export function CategoryProductsView({
         : "asc";
 
     setSort(key as any, newOrder as "asc" | "desc");
-    trackSEO.sortChanged(String(effectiveKey), newOrder, categorySlug);
   };
 
   const mobileFilterTrigger = (

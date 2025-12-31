@@ -6,7 +6,6 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { trackSEO } from "@/lib/analytics";
 import { Moon, Sun } from "lucide-react";
 import { useTheme } from "next-themes";
 import * as React from "react";
@@ -29,8 +28,6 @@ export function ThemeToggle() {
           onClick={() => {
             const newTheme = theme === "light" ? "dark" : "light";
             setTheme(newTheme);
-            // Track theme change for SEO analytics
-            trackSEO.themeChanged(newTheme as "light" | "dark");
           }}
           aria-label={
             mounted

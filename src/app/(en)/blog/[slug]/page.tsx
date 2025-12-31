@@ -1,6 +1,6 @@
 import { BlogPostViewMDX } from "@/components/blog/blog-post-view-mdx";
 import { getAllBlogPosts, getBlogPostBySlug } from "@/lib/blog";
-import { getOpenGraph } from "@/lib/metadata";
+import { getAlternateLanguages, getOpenGraph } from "@/lib/metadata";
 import { Metadata } from "next";
 
 interface BlogPostPageProps {
@@ -31,6 +31,7 @@ export async function generateMetadata({
     description: post.description,
     alternates: {
       canonical: `https://realpricedata.com/blog/${post.slug}`,
+      languages: getAlternateLanguages(`blog/${post.slug}`),
     },
     openGraph: getOpenGraph({
       title: post.title,

@@ -68,6 +68,12 @@ export default async function ParentCategoryPage({ params }: Props) {
   }
 
   const parentCategory = getCategoryBySlug(parentSlug);
+
+  // If this is actually a child category (e.g. /us/hard-drives), redirect to the nested path (e.g. /us/electronics/hard-drives)
+  if (parentCategory?.parent) {
+    redirect(`/${countryCode}/${parentCategory.parent}/${parentSlug}`);
+  }
+
   const childCategories = getChildCategories(parentSlug);
 
   if (!parentCategory) {

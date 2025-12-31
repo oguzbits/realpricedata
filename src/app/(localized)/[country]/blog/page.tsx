@@ -1,5 +1,5 @@
 import { BlogIndexView } from "@/components/blog/blog-index-view";
-import { getOpenGraph } from "@/lib/metadata";
+import { getAlternateLanguages, getOpenGraph } from "@/lib/metadata";
 import { generateCountryParams } from "@/lib/static-params";
 import { Metadata } from "next";
 
@@ -23,6 +23,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     description,
     alternates: {
       canonical: url,
+      languages: getAlternateLanguages("blog"),
     },
     openGraph: getOpenGraph({
       title,

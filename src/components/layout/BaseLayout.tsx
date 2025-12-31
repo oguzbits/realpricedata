@@ -5,8 +5,7 @@ import { NuqsProvider } from "@/providers/nuqs-provider";
 import { Analytics } from "@vercel/analytics/next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { Inter } from "next/font/google";
-import { siteMetadata } from "@/lib/metadata";
-import type { Metadata } from "next";
+import * as React from "react";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -15,15 +14,14 @@ const inter = Inter({
   variable: "--font-inter",
 });
 
-export const metadata: Metadata = siteMetadata;
-
-export default function RootLayout({
-  children,
-}: {
+interface BaseLayoutProps {
   children: React.ReactNode;
-}) {
+  lang?: string;
+}
+
+export function BaseLayout({ children, lang = "en" }: BaseLayoutProps) {
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html lang={lang} suppressHydrationWarning>
       <head>
         <link rel="preconnect" href="https://m.media-amazon.com" />
         <link rel="dns-prefetch" href="https://m.media-amazon.com" />

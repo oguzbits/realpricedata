@@ -1,6 +1,6 @@
 import { BlogPostViewMDX } from "@/components/blog/blog-post-view-mdx";
 import { getBlogPostBySlug } from "@/lib/blog";
-import { getOpenGraph } from "@/lib/metadata";
+import { getAlternateLanguages, getOpenGraph } from "@/lib/metadata";
 import { generateBlogPostParams } from "@/lib/static-params";
 import { Metadata } from "next";
 
@@ -29,6 +29,7 @@ export async function generateMetadata({
     description: post.description,
     alternates: {
       canonical: url,
+      languages: getAlternateLanguages(`blog/${post.slug}`),
     },
     openGraph: getOpenGraph({
       title: post.title,

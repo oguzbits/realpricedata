@@ -1,3 +1,4 @@
+import { BaseLayout } from "@/components/layout/BaseLayout";
 import { PageLayout } from "@/components/layout/PageLayout";
 import { siteMetadata } from "@/lib/metadata";
 import { Metadata } from "next";
@@ -15,5 +16,9 @@ export default function EnglishLayout({
 }: {
   children: React.ReactNode;
 }) {
-  return <PageLayout country="us">{children}</PageLayout>;
+  return (
+    <BaseLayout lang="en">
+      <PageLayout country="us">{children}</PageLayout>
+    </BaseLayout>
+  );
 }

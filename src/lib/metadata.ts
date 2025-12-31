@@ -108,7 +108,7 @@ export function getAlternateLanguages(path: string = "") {
   const liveCountries = getAllCountries().filter((c) => c.isLive);
   const alternates: Record<string, string> = {
     // x-default should point to our primary/landing version (US)
-    "x-default": cleanPath === "" ? baseUrl : `${baseUrl}/us${cleanPath}`,
+    "x-default": `${baseUrl}${cleanPath}`,
   };
 
   liveCountries.forEach((country) => {
@@ -119,9 +119,9 @@ export function getAlternateLanguages(path: string = "") {
     // For our site, we use English UI across all markets: 'en-REGION'
     const hreflang = `en-${region}`;
 
-    // For US homepage, we use the root domain
-    if (country.code === "us" && cleanPath === "") {
-      alternates[hreflang] = baseUrl;
+    // For US, we use the root domain for all pages
+    if (country.code === "us") {
+      alternates[hreflang] = `${baseUrl}${cleanPath}`;
     } else {
       alternates[hreflang] = `${baseUrl}/${country.code}${cleanPath}`;
     }

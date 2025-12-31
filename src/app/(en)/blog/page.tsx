@@ -1,5 +1,5 @@
 import { BlogIndexView } from "@/components/blog/blog-index-view";
-import { getOpenGraph } from "@/lib/metadata";
+import { getAlternateLanguages, getOpenGraph } from "@/lib/metadata";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -8,6 +8,7 @@ export const metadata: Metadata = {
     "Expert analysis of RAM, SSD, and HDD pricing trends. Track market fluctuations and get the best value for your PC build.",
   alternates: {
     canonical: "https://realpricedata.com/blog",
+    languages: getAlternateLanguages("blog"),
   },
   openGraph: getOpenGraph({
     title: "Blog | Hardware Pricing & Market Trends",

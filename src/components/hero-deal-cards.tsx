@@ -88,6 +88,7 @@ export function HeroDealCards({ country }: { country: string }) {
       title="Highlighted Deals"
       description="These are outstanding deals we've found and feel are worth sharing."
       products={uiProducts}
+      country={country}
       priorityIndices={[0, 1]}
       productCardProps={
         {

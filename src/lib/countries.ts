@@ -90,7 +90,8 @@ export function getAllCountries(): Country[] {
 }
 
 // Get country by code
-export function getCountryByCode(code: string): Country | undefined {
+export function getCountryByCode(code: string | null | undefined): Country | undefined {
+  if (!code) return undefined;
   return countries[code.toLowerCase()];
 }
 
@@ -173,6 +174,7 @@ export function getFlag(code: string): string {
 }
 
 // Validate country code
-export function isValidCountryCode(code: string): boolean {
+export function isValidCountryCode(code: string | null | undefined): boolean {
+  if (!code) return false;
   return !!countries[code.toLowerCase()];
 }

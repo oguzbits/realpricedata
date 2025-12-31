@@ -1,13 +1,13 @@
-import Link from "next/link";
-import Script from "next/script";
-import Image from "next/image";
-import dynamic from "next/dynamic";
 import { HeroCategoryPills } from "@/components/hero-category-pills";
 import { HeroDealCards } from "@/components/hero-deal-cards";
 import { HeroTableDemo } from "@/components/hero-table-demo";
-import { getAllCountries, getCountryByCode, DEFAULT_COUNTRY, getFlag } from "@/lib/countries";
+import { DEFAULT_COUNTRY, getAllCountries, getCountryByCode, getFlag } from "@/lib/countries";
 import { getAllProducts } from "@/lib/product-registry";
 import { adaptToUIModel, getLocalizedProductData } from "@/lib/utils/products";
+import dynamic from "next/dynamic";
+import Image from "next/image";
+import Link from "next/link";
+import Script from "next/script";
 
 const PopularProducts = dynamic(
   () =>
@@ -157,8 +157,8 @@ export function HomeContent({ country }: { country: string }) {
           </div>
 
           <HeroDealCards country={country} />
-          <PopularProducts products={uiProducts} />
-          <PriceDrops products={mockPriceDrops} />
+          <PopularProducts products={uiProducts} country={country} />
+          <PriceDrops products={mockPriceDrops} country={country} />
         </section>
       </div>
     </div>

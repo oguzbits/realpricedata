@@ -1,6 +1,7 @@
 "use client";
 
 import { parseAsArrayOf, parseAsFloat, parseAsString, useQueryStates } from "nuqs";
+import { useTransition } from "react";
 import { FilterPanel } from "./FilterPanel";
 
 interface FilterPanelClientProps {
@@ -24,11 +25,18 @@ export function FilterPanelClient({
   unitLabel,
   initialFilters,
 }: FilterPanelClientProps) {
+  const [isPending, startTransition] = useTransition();
   const [filters, setFilters] = useQueryStates(
     {
-      condition: parseAsArrayOf(parseAsString).withDefault([]),
-      technology: parseAsArrayOf(parseAsString).withDefault([]),
-      formFactor: parseAsArrayOf(parseAsString).withDefault([]),
+      condition: parseAsArrayOf(parseAsString).withDefault(
+        initialFilters.condition,
+      ),
+      technology: parseAsArrayOf(parseAsString).withDefault(
+        initialFilters.technology,
+      ),
+      formFactor: parseAsArrayOf(parseAsString).withDefault(
+        initialFilters.formFactor,
+      ),
       minCapacity: parseAsFloat,
       maxCapacity: parseAsFloat,
     },
@@ -36,6 +44,7 @@ export function FilterPanelClient({
       shallow: false,
       throttleMs: 500,
       clearOnDefault: true,
+      startTransition, // Use React Transition to avoid flicker
     },
   );
 

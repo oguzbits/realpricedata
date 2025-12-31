@@ -1,16 +1,22 @@
 "use client";
 
-import React from "react";
-import { ProductUIModel } from "@/lib/amazon-api";
 import { ProductSection } from "@/components/ProductSection";
+import { ProductUIModel } from "@/lib/amazon-api";
+import { parseAsString, useQueryStates } from "nuqs";
 
 interface PriceDropsProps {
   products: (ProductUIModel & { dropPercentage: number })[];
+  country: string;
 }
 
-export function PriceDrops({ products }: PriceDropsProps) {
-  const [period, setPeriod] = React.useState<"daily" | "weekly">("daily");
-  const [category, setCategory] = React.useState("all");
+export function PriceDrops({ products, country }: PriceDropsProps) {
+  const [{ period, category }, setFilters] = useQueryStates({
+    period: parseAsString.withDefault("daily"),
+    category: parseAsString.withDefault("all"),
+  });
+
+  const setPeriod = (p: "daily" | "weekly") => setFilters({ period: p });
+  const setCategory = (c: string) => setFilters({ category: c });
 
   const filteredProducts = products
     .map((p) => ({
@@ -35,6 +41,7 @@ export function PriceDrops({ products }: PriceDropsProps) {
       title="Top Amazon Price Drops"
       description="The products below have seen significant price drops since the last update. Save big by choosing these vetted deals."
       products={filteredProducts}
+      country={country}
       categories={categories}
       selectedCategory={category}
       onCategoryChange={setCategory}

@@ -3,17 +3,20 @@
 import { Input } from "@/components/ui/input";
 import { Search } from "lucide-react";
 import { parseAsString, useQueryState } from "nuqs";
+import { useTransition } from "react";
 
 /**
  * Client component for search input that syncs with URL
  */
 export function SearchInput() {
+  const [isPending, startTransition] = useTransition();
   const [search, setSearch] = useQueryState(
     "search",
     parseAsString.withDefault("").withOptions({
       shallow: false,
       throttleMs: 300,
       clearOnDefault: true,
+      startTransition,
     }),
   );
 

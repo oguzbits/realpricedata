@@ -1,18 +1,18 @@
 "use client";
 
-import React, { useRef } from "react";
-import { useCountry } from "@/hooks/use-country";
-import { getCountryByCode } from "@/lib/countries";
-import { ProductCard } from "@/components/product-card";
-import { ProductUIModel } from "@/lib/amazon-api";
-import { SectionHeader } from "@/components/SectionHeader";
 import { Carousel, CarouselRef } from "@/components/Carousel";
-import { parseUnitValue, calculateProductBadges } from "@/lib/utils/products";
+import { ProductCard } from "@/components/product-card";
+import { SectionHeader } from "@/components/SectionHeader";
+import { ProductUIModel } from "@/lib/amazon-api";
+import { getCountryByCode } from "@/lib/countries";
+import { calculateProductBadges, parseUnitValue } from "@/lib/utils/products";
+import React, { useRef } from "react";
 
 interface ProductSectionProps {
   title: string;
   description: string;
   products: ProductUIModel[];
+  country: string; // Add country prop
   categories?: { label: string; value: string }[];
   selectedCategory?: string;
   onCategoryChange?: (category: string) => void;
@@ -25,6 +25,7 @@ export function ProductSection({
   title,
   description,
   products,
+  country, // Use the prop
   categories,
   selectedCategory,
   onCategoryChange,
@@ -32,7 +33,6 @@ export function ProductSection({
   productCardProps,
   priorityIndices,
 }: ProductSectionProps) {
-  const { country } = useCountry();
   const countryConfig = getCountryByCode(country);
   const carouselRef = useRef<CarouselRef>(null);
   const [scrollState, setScrollState] = React.useState({

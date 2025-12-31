@@ -2,6 +2,7 @@
 
 import { ChevronDown, ChevronUp, ChevronsUpDown } from "lucide-react";
 import { parseAsString, useQueryState } from "nuqs";
+import { useTransition } from "react";
 
 interface SortableTableHeadProps {
   sortKey: string;
@@ -22,11 +23,13 @@ export function SortableTableHead({
   children,
   className = "",
 }: SortableTableHeadProps) {
+  const [isPending, startTransition] = useTransition();
   const [sortBy, setSortBy] = useQueryState(
     "sortBy",
     parseAsString.withDefault("pricePerUnit").withOptions({
       shallow: false,
       clearOnDefault: true,
+      startTransition,
     }),
   );
   
@@ -35,6 +38,7 @@ export function SortableTableHead({
     parseAsString.withDefault("asc").withOptions({
       shallow: false,
       clearOnDefault: true,
+      startTransition,
     }),
   );
 

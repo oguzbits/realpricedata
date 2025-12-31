@@ -1,105 +1,81 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { usePathname, useRouter } from "next/navigation";
 import {
-  getUserCountry,
-  saveCountryPreference,
-  isValidCountryCode,
   DEFAULT_COUNTRY,
-  type Country,
-  countries,
+  getCountryByCode,
+  isValidCountryCode,
+  saveCountryPreference
 } from "@/lib/countries";
+import { usePathname } from "next/navigation";
+import { useCallback, useMemo } from "react";
 
+/**
+ * Hook to manage and access the current country context.
+ * The country is primarily driven by the first path segment.
+ */
 export function useCountry() {
   const pathname = usePathname();
-  const router = useRouter();
-  const [country, setCountry] = useState<string>(DEFAULT_COUNTRY);
-  const [isLoading, setIsLoading] = useState(true);
 
-  // Extract country from URL
-  const getCountryFromPath = (): string | null => {
+  // Extract country from URL path segment (e.g. /us/categories -> us)
+  const countryFromPath = useMemo(() => {
     const segments = pathname.split("/").filter(Boolean);
-    if (segments.length > 0 && isValidCountryCode(segments[0])) {
-      return segments[0];
-    }
-    return null;
-  };
+    const firstSegment = segments[0];
+    return isValidCountryCode(firstSegment) ? firstSegment : DEFAULT_COUNTRY;
+  }, [pathname]);
 
-  // Initialize country on mount and on pathname changes
-  useEffect(() => {
-    const urlCountry = getCountryFromPath();
+  const currentCountry = useMemo(() => 
+    getCountryByCode(countryFromPath), 
+    [countryFromPath]
+  );
 
-    if (urlCountry) {
-      // URL has country code - use it and save preference
-      setCountry(urlCountry);
-      saveCountryPreference(urlCountry);
-      setIsLoading(false);
+  /**
+   * Change country by updating the URL path segment
+   */
+  const changeCountry = useCallback((newCountryCode: string) => {
+    if (!isValidCountryCode(newCountryCode)) return;
 
-      // If it's the default country landing page, redirect to root to avoid duplicate content
-      if (
-        urlCountry === DEFAULT_COUNTRY &&
-        pathname === `/${DEFAULT_COUNTRY}`
-      ) {
-        router.replace("/");
-      }
-    } else {
-      // No country in URL - get user's preferred/detected country
-      const userCountry = getUserCountry();
-      setCountry(userCountry);
-      setIsLoading(false);
-
-      // If we're on the root homepage, redirect to the country homepage (unless it's default)
-      if (pathname === "/" && userCountry !== DEFAULT_COUNTRY) {
-        router.replace(`/${userCountry}`);
-      }
-    }
-  }, [pathname, router]);
-
-  // Change country and update URL
-  const changeCountry = (newCountryCode: string) => {
-    if (!isValidCountryCode(newCountryCode)) {
-      console.error(`Invalid country code: ${newCountryCode}`);
-      return;
-    }
-
-    const urlCountry = getCountryFromPath();
-    const oldCountry = country;
-
-    setCountry(newCountryCode);
     saveCountryPreference(newCountryCode);
+    
+    // Set a cookie so middleware knows the preference for future visits
+    if (typeof document !== 'undefined') {
+      document.cookie = `country=${newCountryCode}; path=/; max-age=31536000; samesite=lax`;
+    }
 
-    // Update URL
-    if (urlCountry) {
-      // If switching TO the default country from its localized landing page, go to root
-      if (
-        newCountryCode === DEFAULT_COUNTRY &&
-        pathname === `/${urlCountry}`
-      ) {
-        router.push("/");
+    const segments = pathname.split("/").filter(Boolean);
+    const firstSegment = segments[0];
+
+    let targetPath = "";
+
+    // Case 1: Current URL has a country code (e.g. /de/products)
+    if (firstSegment && isValidCountryCode(firstSegment)) {
+      const newSegments = [...segments];
+      newSegments[0] = newCountryCode;
+      
+      // If switching to default country root, go to /
+      if (newCountryCode === DEFAULT_COUNTRY && newSegments.length === 1) {
+        targetPath = "/";
       } else {
-        // Safe way to replace ONLY the first segment (the country code)
-        const segments = pathname.split("/"); // e.g. ["", "us", "electronics"]
-        segments[1] = newCountryCode;
-        const newPath = segments.join("/");
-        router.push(newPath || "/");
+        targetPath = `/${newSegments.join("/")}`;
       }
-    } else if (pathname === "/") {
-      // If we're on the root homepage and switching away from default, redirect
-      if (newCountryCode !== DEFAULT_COUNTRY) {
-        router.push(`/${newCountryCode}`);
+    } 
+    // Case 2: Current URL is root or doesn't have country code (e.g. /blog)
+    else {
+      if (newCountryCode === DEFAULT_COUNTRY) {
+        targetPath = pathname; // Stay on current path (e.g. /blog)
+      } else {
+        targetPath = `/${newCountryCode}${pathname === "/" ? "" : pathname}`;
       }
     }
-  };
 
-  // Get current country object
-  const currentCountry: Country | undefined = countries[country];
+    if (targetPath) {
+      window.location.href = targetPath;
+    }
+  }, [pathname]);
 
   return {
-    country,
+    country: countryFromPath,
     currentCountry,
     changeCountry,
-    isLoading,
-    hasCountryInUrl: !!getCountryFromPath(),
+    hasCountryInUrl: pathname.split("/").filter(Boolean)[0] === countryFromPath,
   };
 }

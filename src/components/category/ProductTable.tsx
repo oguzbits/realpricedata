@@ -1,8 +1,8 @@
+import { SortableTableHead } from "@/components/category/SortableTableHead";
 import { Badge } from "@/components/ui/badge";
 import { getAffiliateRedirectPath } from "@/lib/product-registry";
 import { LocalizedProduct } from "@/lib/server/category-products";
 import { cn } from "@/lib/utils";
-import { SortableTableHead } from "./SortableTableHead";
 
 interface ProductTableProps {
   products: LocalizedProduct[];
@@ -59,25 +59,25 @@ export function ProductTable({
                 : "Technology"}
             </th>
             <th className="text-foreground h-10 px-2 text-left align-middle font-medium whitespace-nowrap hidden sm:table-cell">Condition</th>
-            <th className="text-foreground h-10 px-2 text-right align-middle font-medium whitespace-nowrap px-2 sm:px-4">Action</th>
+            <th className="text-foreground h-10 px-2 text-right align-middle font-medium whitespace-nowrap sm:px-4">Action</th>
           </tr>
         </thead>
         <tbody className="[&_tr:last-child]:border-0">
           {products.map((product) => (
             <tr
               key={product.id || product.slug}
-              className="hover:bg-muted/50 data-[state=selected]:bg-muted border-b transition-colors group hover:bg-muted/30"
+              className="hover:bg-muted/30 data-[state=selected]:bg-muted border-b transition-colors group"
             >
               <td className="p-2 align-middle whitespace-nowrap text-foreground font-mono text-[13px] font-bold sm:text-base">
                 {formatCurrency(product.pricePerUnit || 0, 2)}
               </td>
-              <td className="p-2 align-middle whitespace-nowrap text-muted-foreground hidden whitespace-nowrap pr-4 font-mono sm:table-cell sm:pr-12">
+              <td className="p-2 align-middle whitespace-nowrap text-muted-foreground hidden pr-4 font-mono sm:table-cell sm:pr-12">
                 {formatCurrency(product.price)}
               </td>
               <td className="p-2 align-middle whitespace-nowrap text-muted-foreground hidden font-mono sm:table-cell">
                 {product.capacity} {product.capacityUnit}
               </td>
-              <td className="p-2 align-middle whitespace-nowrap max-w-0 sm:max-w-none whitespace-normal">
+              <td className="p-2 align-middle max-w-0 sm:max-w-none">
                 <div className="flex flex-col">
                   <a
                     href={getAffiliateRedirectPath(product.slug)}

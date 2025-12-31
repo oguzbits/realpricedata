@@ -16,6 +16,22 @@ export function proxy(request: NextRequest) {
     return NextResponse.next();
   }
 
+  // 0. Check for explicit country set via query param (e.g. ?set_country=us)
+  // This supports prefetching for the US root domain by updating the cookie on the redirect
+  const setCountryParam = request.nextUrl.searchParams.get("set_country");
+  if (setCountryParam && isValidCountryCode(setCountryParam)) {
+    const url = request.nextUrl.clone();
+    url.searchParams.delete("set_country");
+
+    const response = NextResponse.redirect(url);
+    response.cookies.set("country", setCountryParam, {
+      path: "/",
+      maxAge: 31536000,
+      sameSite: "lax",
+    });
+    return response;
+  }
+
   // 1. Check if the URL already has a valid country code
   const segments = pathname.split("/").filter(Boolean);
   const firstSegment = segments[0];

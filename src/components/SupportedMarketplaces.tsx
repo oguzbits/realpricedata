@@ -22,7 +22,11 @@ export function SupportedMarketplaces({
         {allCountries.map((c) => {
           const isActive = c.code === currentCountry;
           const flagUrl = getFlag(c.code);
-          const href = c.isLive ? (c.code === "us" ? "/" : `/${c.code}`) : "#";
+          const href = c.isLive
+            ? c.code === "us"
+              ? "/?set_country=us"
+              : `/${c.code}`
+            : "#";
 
           return (
             <Link
@@ -30,6 +34,7 @@ export function SupportedMarketplaces({
               href={href}
               onClick={() => {
                 if (c.isLive) {
+                  // Save preference to cookie + localStorage
                   saveCountryPreference(c.code);
                 }
               }}

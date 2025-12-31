@@ -147,12 +147,12 @@ export function getSavedCountry(): CountryCode | null {
   }
 }
 
-// Save country preference to localStorage
+// Save country preference to localStorage and Cookies
 export function saveCountryPreference(countryCode: string): void {
   if (typeof window === "undefined") return;
   try {
     localStorage.setItem(COUNTRY_STORAGE_KEY, countryCode.toLowerCase());
-    // Also set cookie for middleware
+    // Also set cookie for middleware so the Server Proxy respects the choice
     document.cookie = `country=${countryCode.toLowerCase()}; path=/; max-age=31536000; SameSite=Lax`;
   } catch {
     // Silently fail if localStorage/cookies are not available

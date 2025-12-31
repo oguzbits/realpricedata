@@ -1,6 +1,5 @@
 "use client";
 
-import { CountryItem } from "./CountryItem";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -10,14 +9,15 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { useCountry } from "@/hooks/use-country";
-import { getAllCountries, getFlag } from "@/lib/countries";
+import { DEFAULT_COUNTRY, getAllCountries, getCountryByCode, getFlag } from "@/lib/countries";
 import { Globe } from "lucide-react";
 import Image from "next/image";
+import Link from "next/link";
+import { CountryItem } from "./CountryItem";
 
-export function CountrySelector() {
-  const { country, currentCountry, changeCountry } = useCountry();
+export function CountrySelector({ currentCountryCode }: { currentCountryCode?: string }) {
   const allCountries = getAllCountries();
+  const currentCountry = getCountryByCode(currentCountryCode || DEFAULT_COUNTRY);
 
   // Separate live and coming soon countries
   const liveCountries = allCountries.filter((c) => c.isLive);
@@ -56,16 +56,18 @@ export function CountrySelector() {
         {liveCountries.map((c) => (
           <DropdownMenuItem
             key={c.code}
-            onSelect={() => changeCountry(c.code)}
+            asChild
             className="cursor-pointer focus:bg-accent focus:text-accent-foreground"
           >
-            <CountryItem
-              code={c.code}
-              name={c.name}
-              domain={c.domain}
-              isLive={true}
-              isActive={country === c.code}
-            />
+            <Link href={`/${c.code}`} prefetch={false}>
+              <CountryItem
+                code={c.code}
+                name={c.name}
+                domain={c.domain}
+                isLive={true}
+                isActive={currentCountryCode === c.code}
+              />
+            </Link>
           </DropdownMenuItem>
         ))}
 

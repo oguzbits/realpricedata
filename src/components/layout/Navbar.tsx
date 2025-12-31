@@ -6,7 +6,7 @@ import { CountrySelector } from "@/components/country-selector";
 import { SearchButton } from "@/components/layout/SearchButton";
 import { ThemeToggle } from "@/components/layout/ThemeToggle";
 
-export function Navbar() {
+export function Navbar({ country }: { country?: string }) {
 
   return (
     <header className="bg-background/95 supports-backdrop-filter:bg-background/60 sticky top-0 z-50 w-full border-b backdrop-blur">
@@ -33,14 +33,14 @@ export function Navbar() {
             </h3>
           </Link>
         </div>
-
+ 
         {/* Center: Global Search Button */}
         <SearchButton />
 
         {/* Right: Controls */}
         <TooltipProvider>
           <div className="flex shrink-0 items-center gap-1 sm:gap-2">
-            <CountrySelector />
+            <CountrySelector currentCountryCode={country} />
             <ThemeToggle />
           </div>
         </TooltipProvider>

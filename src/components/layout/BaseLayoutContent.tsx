@@ -1,3 +1,4 @@
+import "@/app/globals.css";
 import { Footer } from "@/components/layout/Footer";
 import { Navbar } from "@/components/layout/Navbar";
 import { PromoBanner } from "@/components/layout/PromoBanner";
@@ -6,7 +7,6 @@ import { NuqsProvider } from "@/providers/nuqs-provider";
 import { Analytics } from "@vercel/analytics/next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { Inter } from "next/font/google";
-import "@/app/globals.css";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -33,7 +33,7 @@ export function BaseLayoutContent({
         <NuqsProvider>
           <div className="flex min-h-screen flex-col">
             <PromoBanner />
-            <Navbar />
+            <Navbar country={country} />
             <main className="flex-1">{children}</main>
             <Footer country={country} />
           </div>

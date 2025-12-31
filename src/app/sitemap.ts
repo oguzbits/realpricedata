@@ -59,19 +59,15 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
     // 2. Localized versions
     liveCountries.forEach((country) => {
-      // US is handled by root version redirects/canonicals usually,
-      // but we list it if it exists as a separate route
-      if (country.code !== DEFAULT_COUNTRY) {
-        blogRoutes.push({
-          url: `${baseUrl}/${country.code}${postPath}`,
-          lastModified: new Date(post.lastUpdated || post.publishDate),
-          changeFrequency: "weekly" as const,
-          priority: 0.6,
-          alternates: {
-            languages: getAlternateLanguages(postPath),
-          },
-        });
-      }
+      blogRoutes.push({
+        url: `${baseUrl}/${country.code}${postPath}`,
+        lastModified: new Date(post.lastUpdated || post.publishDate),
+        changeFrequency: "weekly" as const,
+        priority: 0.6,
+        alternates: {
+          languages: getAlternateLanguages(postPath),
+        },
+      });
     });
   });
 
@@ -82,69 +78,41 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   liveCountries.forEach((c) => {
     const country = c.code;
-    // Country home page - skip for default country (US) as the root domain (/)
-    // handles it and /us is non-canonical.
-    if (country !== DEFAULT_COUNTRY) {
-      countryRoutes.push({
-        url: `${baseUrl}/${country}`,
-        lastModified: new Date(),
-        changeFrequency: "daily" as const,
-        priority: 0.9,
-        alternates: {
-          languages: getAlternateLanguages(""),
-        },
-      });
-    }
+
+    // Country home page
+    countryRoutes.push({
+      url: `${baseUrl}/${country}`,
+      lastModified: new Date(),
+      changeFrequency: "daily" as const,
+      priority: 0.9,
+      alternates: {
+        languages: getAlternateLanguages(""),
+      },
+    });
 
     // Country categories page
-    if (country !== DEFAULT_COUNTRY) {
-      countryRoutes.push({
-        url: `${baseUrl}/${country}/categories`,
-        lastModified: new Date(),
-        changeFrequency: "daily" as const,
-        priority: 0.8,
-        alternates: {
-          languages: getAlternateLanguages("/categories"),
-        },
-      });
-    } else {
-      // Add root categories page once
-      countryRoutes.push({
-        url: `${baseUrl}/categories`,
-        lastModified: new Date(),
-        changeFrequency: "daily" as const,
-        priority: 0.8,
-        alternates: {
-          languages: getAlternateLanguages("/categories"),
-        },
-      });
-    }
+    countryRoutes.push({
+      url: `${baseUrl}/${country}/categories`,
+      lastModified: new Date(),
+      changeFrequency: "daily" as const,
+      priority: 0.8,
+      alternates: {
+        languages: getAlternateLanguages("/categories"),
+      },
+    });
 
     // Parent category pages
     categoryHierarchy.forEach((hierarchy) => {
       const path = `/${hierarchy.parent.slug}`;
-      if (country !== DEFAULT_COUNTRY) {
-        countryRoutes.push({
-          url: `${baseUrl}/${country}${path}`,
-          lastModified: new Date(),
-          changeFrequency: "weekly" as const,
-          priority: 0.8,
-          alternates: {
-            languages: getAlternateLanguages(path),
-          },
-        });
-      } else {
-        // Add root parent page once
-        countryRoutes.push({
-          url: `${baseUrl}${path}`,
-          lastModified: new Date(),
-          changeFrequency: "weekly" as const,
-          priority: 0.8,
-          alternates: {
-            languages: getAlternateLanguages(path),
-          },
-        });
-      }
+      countryRoutes.push({
+        url: `${baseUrl}/${country}${path}`,
+        lastModified: new Date(),
+        changeFrequency: "weekly" as const,
+        priority: 0.8,
+        alternates: {
+          languages: getAlternateLanguages(path),
+        },
+      });
     });
 
     // Child category pages (product listing pages)

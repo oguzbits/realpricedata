@@ -3,7 +3,7 @@ import { HeroDealCards } from "@/components/hero-deal-cards";
 import { HeroTableDemo } from "@/components/hero-table-demo";
 import { PopularProducts } from "@/components/PopularProducts";
 import { PriceDrops } from "@/components/PriceDrops";
-import { DEFAULT_COUNTRY, getAllCountries, getCountryByCode, getFlag, type CountryCode } from "@/lib/countries";
+import { getAllCountries, getCountryByCode, getFlag, type CountryCode } from "@/lib/countries";
 import { getAllProducts } from "@/lib/server/cached-products";
 import { adaptToUIModel, getLocalizedProductData } from "@/lib/utils/products";
 import Image from "next/image";
@@ -30,7 +30,7 @@ export async function HomeContent({ country }: { country: CountryCode }) {
     .filter((p): p is NonNullable<typeof p> => p !== null);
 
   const mockPriceDrops = uiProducts.slice(2, 6).map((p) => {
-    const hash = p.asin.split("").reduce((acc, char) => acc + char.charCodeAt(0), 0);
+    const hash = p.asin.split("").reduce((acc: number, char: string) => acc + char.charCodeAt(0), 0);
     const dropPercentage = (hash % 10) + 5;
     const oldPrice = p.price.amount / (1 - dropPercentage / 100);
     return {

@@ -1,11 +1,11 @@
 "use client";
 
 import { ProductSection } from "@/components/ProductSection";
-import { ProductUIModel } from "@/lib/amazon-api";
+import { Product } from "@/types";
 import { parseAsString, useQueryState } from "nuqs";
 
 interface PopularProductsProps {
-  products: ProductUIModel[];
+  products: Product[];
   country: string;
 }
 

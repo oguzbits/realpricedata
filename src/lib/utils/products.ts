@@ -1,4 +1,4 @@
-import { ProductUIModel } from "@/lib/amazon-api";
+import { Product as UIProduct } from "@/types";
 import { allCategories, type CategorySlug } from "@/lib/categories";
 import { type CountryCode } from "@/lib/countries";
 import { Product } from "@/lib/product-registry";
@@ -17,7 +17,7 @@ export function parseUnitValue(pricePerUnit?: string): number {
  * Calculates badges for products based on their unit values.
  */
 export function calculateProductBadges(
-  products: (ProductUIModel & { unitValue: number })[],
+  products: (UIProduct & { unitValue: number })[],
 ) {
   const minUnitValue = Math.min(
     ...products.map((p) => p.unitValue).filter((v) => v !== Infinity),
@@ -120,7 +120,7 @@ export function adaptToUIModel(
   countryCode: CountryCode = "us",
   currency: Currency = "USD",
   symbol: string = "$",
-): ProductUIModel {
+): UIProduct {
   const { price, title, asin } = getLocalizedProductData(p, countryCode);
   const finalPrice = price ?? 0;
   const enhancedProduct = calculateProductMetrics(p, finalPrice) as Product;

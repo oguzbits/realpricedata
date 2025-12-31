@@ -3,7 +3,7 @@
 import { Carousel, CarouselRef } from "@/components/Carousel";
 import { ProductCard } from "@/components/product-card";
 import { SectionHeader } from "@/components/SectionHeader";
-import { ProductUIModel } from "@/lib/amazon-api";
+import { Product } from "@/types";
 import { getCountryByCode } from "@/lib/countries";
 import { calculateProductBadges, parseUnitValue } from "@/lib/utils/products";
 import React, { useRef } from "react";
@@ -11,7 +11,7 @@ import React, { useRef } from "react";
 interface ProductSectionProps {
   title: string;
   description: string;
-  products: ProductUIModel[];
+  products: Product[];
   country: string; // Add country prop
   categories?: { label: string; value: string }[];
   selectedCategory?: string;

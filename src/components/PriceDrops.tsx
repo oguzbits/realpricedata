@@ -1,11 +1,11 @@
 "use client";
 
 import { ProductSection } from "@/components/ProductSection";
-import { ProductUIModel } from "@/lib/amazon-api";
+import { Product } from "@/types";
 import { parseAsString, useQueryStates } from "nuqs";
 
 interface PriceDropsProps {
-  products: (ProductUIModel & { dropPercentage: number })[];
+  products: (Product & { dropPercentage: number })[];
   country: string;
 }
 

@@ -1,6 +1,10 @@
 import HomeContent from "@/components/HomeContent";
 import { ParentCategoryView } from "@/components/category/ParentCategoryView";
-import { getCategoryBySlug, getChildCategories } from "@/lib/categories";
+import {
+  allCategories,
+  getCategoryBySlug,
+  getChildCategories,
+} from "@/lib/categories";
 import {
   DEFAULT_COUNTRY,
   isValidCountryCode,
@@ -13,14 +17,24 @@ import {
 } from "@/lib/metadata";
 import { generateCountryParams } from "@/lib/static-params";
 import { Metadata } from "next";
-import { notFound, redirect } from "next/navigation";
+import { notFound } from "next/navigation";
 
 type Props = {
   params: Promise<{ country: string }>;
 };
 
 export async function generateStaticParams() {
-  return generateCountryParams();
+  const countryParams = generateCountryParams();
+
+  // Also enable SSG for US Top Level Categories (which map to [country] slug)
+  // e.g. /electronics -> country="electronics"
+  const parentCategoryParams = Object.values(allCategories)
+    .filter((cat) => !cat.parent)
+    .map((cat) => ({
+      country: cat.slug,
+    }));
+
+  return [...countryParams, ...parentCategoryParams];
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {

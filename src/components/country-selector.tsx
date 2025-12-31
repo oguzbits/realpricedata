@@ -15,12 +15,12 @@ import {
   getCountryByCode,
   getFlag,
   isValidCountryCode,
+  saveCountryPreference,
 } from "@/lib/countries";
 import { Globe } from "lucide-react";
 import Image from "next/image";
-import { usePathname, useSearchParams } from "next/navigation";
-import { startTransition } from "react";
-import { setCountryAction } from "@/actions/country-actions";
+import Link from "next/link";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { CountryItem } from "./CountryItem";
 
 export function CountrySelector({
@@ -28,6 +28,7 @@ export function CountrySelector({
 }: {
   currentCountryCode?: string;
 }) {
+  const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const allCountries = getAllCountries();
@@ -110,24 +111,15 @@ export function CountrySelector({
 
             return (
               <DropdownMenuItem key={c.code} asChild>
-                <div
-                  role="button"
-                  tabIndex={0}
-                  className="focus:bg-accent focus:text-accent-foreground flex w-full cursor-pointer items-center px-2 py-1.5 no-underline outline-none"
+                <Link
+                  href={targetHref}
+                  className="focus:bg-accent focus:text-accent-foreground flex w-full cursor-pointer items-center px-2 py-1.5 no-underline"
                   onClick={() => {
-                    // Use server action for instant navigation + cache revalidation
-                    startTransition(() => {
-                      setCountryAction(c.code, targetHref);
-                    });
+                    saveCountryPreference(c.code);
+                    // Explicitly refresh to update server components with new cookie
+                    router.refresh();
                   }}
-                  onKeyDown={(e) => {
-                    if (e.key === "Enter" || e.key === " ") {
-                      e.preventDefault();
-                      startTransition(() => {
-                        setCountryAction(c.code, targetHref);
-                      });
-                    }
-                  }}
+                  prefetch={true}
                 >
                   <CountryItem
                     code={c.code}
@@ -136,7 +128,7 @@ export function CountrySelector({
                     isLive={true}
                     isActive={currentCountryCode === c.code}
                   />
-                </div>
+                </Link>
               </DropdownMenuItem>
             );
           })}

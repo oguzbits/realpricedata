@@ -6,14 +6,14 @@ export const metadata: Metadata = {
   ...siteMetadata,
   openGraph: {
     ...siteMetadata.openGraph,
-    locale: "de_DE",
+    locale: "en_US",
   },
 };
 
-export default function GermanLayout({
+export default function RootCountryLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  return <PageLayout country="de">{children}</PageLayout>;
+  return <PageLayout country="us">{children}</PageLayout>;
 }

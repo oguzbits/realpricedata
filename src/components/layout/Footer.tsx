@@ -107,20 +107,62 @@ export function Footer({ country: propCountry }: FooterProps) {
                 </Link>
               </li>
               <li>
-                <Link href="/faq" className="text-primary">
+                <Link
+                  href={
+                    country === DEFAULT_COUNTRY ? "/faq" : `/${country}/faq`
+                  }
+                  className="text-primary hover:underline"
+                >
                   FAQ
                 </Link>
               </li>
-              <li>
-                <Link href="/impressum" className="text-primary">
-                  Impressum / Legal Notice
-                </Link>
-              </li>
-              <li>
-                <Link href="/datenschutz" className="text-primary">
-                  Datenschutz / Privacy
-                </Link>
-              </li>
+              {country === "de" ? (
+                <>
+                  <li>
+                    <Link
+                      href={`/${country}/impressum`}
+                      className="text-primary hover:underline"
+                    >
+                      Impressum
+                    </Link>
+                  </li>
+                  <li>
+                    <Link
+                      href={`/${country}/datenschutz`}
+                      className="text-primary hover:underline"
+                    >
+                      Datenschutz
+                    </Link>
+                  </li>
+                </>
+              ) : (
+                <>
+                  <li>
+                    <Link
+                      href={
+                        country === DEFAULT_COUNTRY
+                          ? "/legal-notice"
+                          : `/${country}/legal-notice`
+                      }
+                      className="text-primary hover:underline"
+                    >
+                      Legal Notice
+                    </Link>
+                  </li>
+                  <li>
+                    <Link
+                      href={
+                        country === DEFAULT_COUNTRY
+                          ? "/privacy"
+                          : `/${country}/privacy`
+                      }
+                      className="text-primary hover:underline"
+                    >
+                      Privacy
+                    </Link>
+                  </li>
+                </>
+              )}
             </ul>
           </nav>
 

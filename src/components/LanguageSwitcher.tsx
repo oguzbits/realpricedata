@@ -10,8 +10,9 @@ export function LanguageSwitcher({
   currentLang,
   currentPath,
 }: LanguageSwitcherProps) {
-  const dePath = currentPath === "privacy" ? "/datenschutz" : "/impressum";
-  const enPath = `/en/${currentPath}`;
+  const dePath =
+    currentPath === "privacy" ? "/de/datenschutz" : "/de/impressum";
+  const enPath = `/${currentPath}`;
 
   return (
     <div className="mb-8 flex items-center gap-3">

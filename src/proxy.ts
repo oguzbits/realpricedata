@@ -63,10 +63,9 @@ export function proxy(request: NextRequest) {
     return response;
   }
 
-  // 2. If no country code, detect the best country
-  // First, check for a cookie (saved preference)
+  // 2. If no country code, allow US (Default)
+  // We ONLY redirect if the user has an EXPLICIT cookie preference.
   const savedCountry = request.cookies.get("country")?.value;
-
   if (savedCountry && isValidCountryCode(savedCountry)) {
     if (savedCountry !== DEFAULT_COUNTRY) {
       // Redirect naked paths (e.g., / or /blog) to localized versions (e.g., /de or /de/blog)
@@ -74,28 +73,9 @@ export function proxy(request: NextRequest) {
         new URL(`/${savedCountry}${pathname}`, request.url),
       );
     }
-    // If it's the default country (us), we stay on the current path (/)
-    return NextResponse.next();
   }
 
-  // Next, detect from Accept-Language header (only if no cookie)
-  const acceptLanguage = request.headers.get("accept-language");
-  if (acceptLanguage && pathname === "/") {
-    // Primary language/country extraction
-    const preferredLocale = acceptLanguage.split(",")[0].split("-");
-    const lang = preferredLocale[0];
-    const countryFromHeader = preferredLocale[1]?.toLowerCase() || lang;
-
-    if (
-      isValidCountryCode(countryFromHeader) &&
-      countryFromHeader !== DEFAULT_COUNTRY
-    ) {
-      return NextResponse.redirect(
-        new URL(`/${countryFromHeader}${pathname}`, request.url),
-      );
-    }
-  }
-
+  // Default: Serve US (Next.js handles the route)
   return NextResponse.next();
 }
 

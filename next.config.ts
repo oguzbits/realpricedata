@@ -26,7 +26,7 @@ const nextConfig: NextConfig = {
       "@radix-ui/react-tabs",
       "@radix-ui/react-tooltip",
     ],
-  } as any, // Type assertion for experimental features not yet in type definitions
+  },
   // Optimize images
   images: {
     formats: ["image/avif", "image/webp"],

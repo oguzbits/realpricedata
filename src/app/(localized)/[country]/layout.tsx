@@ -24,9 +24,15 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 export default async function LocalizedLayout({ children, params }: Props) {
   const { country } = await params;
+  const countryConfig = getCountryByCode(country);
+  
+  // Use 'en-REGION' because the UI is English across all marketplaces.
+  // UK is mapped to GB for valid ISO language-region codes.
+  const region = countryConfig?.code.toUpperCase() === "UK" ? "GB" : countryConfig?.code.toUpperCase() || "US";
+  const lang = `en-${region}`;
   
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html lang={lang} suppressHydrationWarning>
       <BaseLayoutContent country={country as CountryCode}>
         <link rel="preconnect" href="https://m.media-amazon.com" />
         <link rel="dns-prefetch" href="https://m.media-amazon.com" />

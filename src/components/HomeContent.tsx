@@ -1,61 +1,16 @@
 import { HeroCategoryPills } from "@/components/hero-category-pills";
 import { HeroDealCards } from "@/components/hero-deal-cards";
 import { HeroTableDemo } from "@/components/hero-table-demo";
-import { getAllCountries, getCountryByCode, getFlag, type CountryCode } from "@/lib/countries";
-import { getAllProducts } from "@/lib/server/cached-products";
-import { adaptToUIModel, getLocalizedProductData } from "@/lib/utils/products";
-import dynamic from "next/dynamic";
+import { PopularProductsWrapper } from "@/components/home/PopularProductsWrapper";
+import { PriceDropsWrapper } from "@/components/home/PriceDropsWrapper";
+import { ProductSectionSkeleton } from "@/components/product-section-skeleton";
+import { getAllCountries, getFlag, type CountryCode } from "@/lib/countries";
 import Image from "next/image";
 import Link from "next/link";
 import Script from "next/script";
 import { Suspense } from "react";
 
-const PopularProducts = dynamic(
-  () =>
-    import("@/components/PopularProducts").then((mod) => mod.PopularProducts),
-  {
-    ssr: true,
-  },
-);
-
-const PriceDrops = dynamic(
-  () => import("@/components/PriceDrops").then((mod) => mod.PriceDrops),
-  {
-    ssr: true,
-  },
-);
-
-export async function HomeContent({ country }: { country: CountryCode }) {
-  const countryConfig = getCountryByCode(country);
-  const allProducts = await getAllProducts();
-
-  // Adapt products to UI model
-  const uiProducts = allProducts
-    .map((p) => {
-      const { price } = getLocalizedProductData(p, countryConfig?.code || country);
-      if (price === null || price === 0) return null;
-
-      return adaptToUIModel(
-        p,
-        countryConfig?.code || country,
-        countryConfig?.currency,
-        countryConfig?.symbol,
-      );
-    })
-    .filter((p): p is NonNullable<typeof p> => p !== null);
-
-  const mockPriceDrops = uiProducts.slice(2, 6).map((p) => {
-    // Use a stable value based on ASIN for purity
-    const hash = p.asin.split("").reduce((acc, char) => acc + char.charCodeAt(0), 0);
-    const dropPercentage = (hash % 10) + 5; // Stable 5-15% drop
-    const oldPrice = p.price.amount / (1 - dropPercentage / 100);
-    return {
-      ...p,
-      dropPercentage,
-      oldPrice,
-    };
-  });
-
+export function HomeContent({ country }: { country: CountryCode }) {
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "WebSite",
@@ -78,13 +33,13 @@ export async function HomeContent({ country }: { country: CountryCode }) {
 
       <div className="flex flex-col gap-2 pt-4 sm:gap-4 md:gap-8">
         <section className="container mx-auto px-4 pt-4 sm:pt-8 md:pt-12">
-          {/* Hero Section */}
+          {/* Hero Section - Loads Immediately */}
           <div className="mb-16 grid grid-cols-1 items-center gap-8 lg:grid-cols-2 lg:gap-12">
             <div className="order-1 max-w-2xl text-left lg:order-1">
               <h1 className="dark:text-foreground mb-6 text-4xl leading-[1.05] font-black tracking-tighter text-[#1a1a1a] sm:text-5xl md:text-6xl">
                 Save money on your <br />
                 <span className="text-(--hero-emphasis)">
-                  next Amazon purchase.
+                   next Amazon purchase.
                 </span>
               </h1>
               <p className="text-muted-foreground mb-8 max-w-xl text-lg leading-relaxed md:text-xl">
@@ -109,7 +64,7 @@ export async function HomeContent({ country }: { country: CountryCode }) {
             </div>
           </div>
 
-          {/* Country Flag Selection Wrapper */}
+          {/* Country Flag Selection Wrapper - Loads Immediately */}
           <div className="border-border mb-16 flex flex-col items-center justify-center border-y py-10">
             <p className="text-muted-foreground mb-6 text-sm font-bold tracking-widest uppercase">
               Supported Marketplaces
@@ -118,10 +73,6 @@ export async function HomeContent({ country }: { country: CountryCode }) {
               {getAllCountries().map((c) => {
                 const isActive = c.code === country;
                 const flagUrl = getFlag(c.code);
-                
-                // We use standard hierarchical URLs for all countries.
-                // The proxy/middleware will handle updating the session cookie
-                // and redirecting /us to / automatically.
                 const href = c.isLive ? `/${c.code}` : "#";
 
                 return (
@@ -158,12 +109,17 @@ export async function HomeContent({ country }: { country: CountryCode }) {
             </div>
           </div>
 
-          <HeroDealCards country={country} />
-          <Suspense>
-            <PopularProducts products={uiProducts} country={country} />
+          {/* Product Sections - Streamed with Suspense */}
+          <Suspense fallback={<ProductSectionSkeleton />}>
+            <HeroDealCards country={country} />
           </Suspense>
-          <Suspense>
-            <PriceDrops products={mockPriceDrops} country={country} />
+          
+          <Suspense fallback={<ProductSectionSkeleton />}>
+            <PopularProductsWrapper country={country} />
+          </Suspense>
+          
+          <Suspense fallback={<ProductSectionSkeleton />}>
+            <PriceDropsWrapper country={country} />
           </Suspense>
         </section>
       </div>
@@ -172,3 +128,4 @@ export async function HomeContent({ country }: { country: CountryCode }) {
 }
 
 export default HomeContent;
+

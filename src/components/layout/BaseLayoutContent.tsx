@@ -1,4 +1,4 @@
-import { FooterWrapper } from "@/components/layout/FooterWrapper";
+import { Footer } from "@/components/layout/Footer";
 import { Navbar } from "@/components/layout/Navbar";
 import { PromoBanner } from "@/components/layout/PromoBanner";
 import { ThemeProvider } from "@/components/theme-provider";
@@ -15,7 +15,13 @@ const inter = Inter({
   variable: "--font-inter",
 });
 
-export function BaseLayoutContent({ children }: { children: React.ReactNode }) {
+export function BaseLayoutContent({ 
+  children, 
+  country 
+}: { 
+  children: React.ReactNode;
+  country?: string;
+}) {
   return (
     <body className={`${inter.variable} ${inter.className}`}>
       <ThemeProvider
@@ -29,7 +35,7 @@ export function BaseLayoutContent({ children }: { children: React.ReactNode }) {
             <PromoBanner />
             <Navbar />
             <main className="flex-1">{children}</main>
-            <FooterWrapper />
+            <Footer country={country} />
           </div>
 
           {/* Vercel Analytics - Page views only (custom events not enabled) */}

@@ -22,10 +22,12 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   };
 }
 
-export default async function LocalizedLayout({ children }: Props) {
+export default async function LocalizedLayout({ children, params }: Props) {
+  const { country } = await params;
+  
   return (
     <html lang="en" suppressHydrationWarning>
-      <BaseLayoutContent>
+      <BaseLayoutContent country={country}>
         <link rel="preconnect" href="https://m.media-amazon.com" />
         <link rel="dns-prefetch" href="https://m.media-amazon.com" />
         {children}

@@ -17,7 +17,7 @@ export default function EnglishLayout({
 }) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <BaseLayoutContent>
+      <BaseLayoutContent country="us">
         <link rel="preconnect" href="https://m.media-amazon.com" />
         <link rel="dns-prefetch" href="https://m.media-amazon.com" />
         {children}

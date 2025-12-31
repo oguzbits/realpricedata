@@ -3,6 +3,7 @@ import { getCategoryBySlug, getCategoryPath } from "@/lib/categories";
 import {
   DEFAULT_COUNTRY,
   isValidCountryCode,
+  getAllCountries,
   type CountryCode,
 } from "@/lib/countries";
 import {
@@ -41,6 +42,10 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const title = `${category.name} - Amazon ${validCountry.toUpperCase()}`;
   const description = `Compare ${category.name} on Amazon ${validCountry.toUpperCase()} by true cost per TB/GB. Find the best value on storage and memory deals instantly.`;
 
+  // Get correct locale from country config (e.g. en-GB for UK)
+  const countryConfig = getAllCountries().find((c) => c.code === validCountry);
+  const locale = countryConfig?.locale.replace("-", "_") || "en_US";
+
   return {
     title,
     description,
@@ -54,7 +59,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       title,
       description,
       url: canonicalUrl,
-      locale: `en_${validCountry.toUpperCase()}`,
+      locale,
     }),
     keywords: generateKeywords(category),
   };

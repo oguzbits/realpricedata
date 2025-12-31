@@ -3,6 +3,7 @@ import { getCategoryHierarchy } from "@/lib/categories";
 import {
   DEFAULT_COUNTRY,
   isValidCountryCode,
+  getAllCountries,
   type CountryCode,
 } from "@/lib/countries";
 import { getAlternateLanguages, getOpenGraph } from "@/lib/metadata";
@@ -34,6 +35,10 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const title = `All Categories - Amazon ${validCountry.toUpperCase()}`;
   const description = `Browse all tracked product categories on Amazon ${validCountry.toUpperCase()}. Compare hardware prices by true cost per TB/GB to find the best value deals.`;
 
+  // Get correct locale from country config (e.g. en-GB for UK)
+  const countryConfig = getAllCountries().find((c) => c.code === validCountry);
+  const locale = countryConfig?.locale.replace("-", "_") || "en_US";
+
   return {
     title,
     description,
@@ -45,7 +50,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       title,
       description,
       url: canonicalUrl,
-      locale: `en_${validCountry.toUpperCase()}`,
+      locale,
     }),
   };
 }

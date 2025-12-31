@@ -15,11 +15,9 @@ import {
   getCountryByCode,
   getFlag,
   isValidCountryCode,
-  saveCountryPreference,
 } from "@/lib/countries";
 import { Globe } from "lucide-react";
 import Image from "next/image";
-import Link from "next/link";
 import { usePathname, useSearchParams } from "next/navigation";
 import { CountryItem } from "./CountryItem";
 
@@ -110,11 +108,9 @@ export function CountrySelector({
 
             return (
               <DropdownMenuItem key={c.code} asChild>
-                <Link
+                <a
                   href={targetHref}
                   className="focus:bg-accent focus:text-accent-foreground flex w-full cursor-pointer items-center px-2 py-1.5 no-underline"
-                  onClick={() => saveCountryPreference(c.code)}
-                  prefetch={true}
                 >
                   <CountryItem
                     code={c.code}
@@ -123,7 +119,7 @@ export function CountrySelector({
                     isLive={true}
                     isActive={currentCountryCode === c.code}
                   />
-                </Link>
+                </a>
               </DropdownMenuItem>
             );
           })}

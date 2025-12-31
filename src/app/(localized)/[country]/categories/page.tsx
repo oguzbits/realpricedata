@@ -53,10 +53,6 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 export default async function CategoriesPage({ params }: Props) {
   const { country } = await params;
 
-  if (country.toLowerCase() === "us") {
-    redirect("/categories");
-  }
-
   if (!isValidCountryCode(country)) {
     notFound();
   }

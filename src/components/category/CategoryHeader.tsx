@@ -23,11 +23,20 @@ export function CategoryHeader({
   const Icon = getCategoryIcon(category.slug);
 
   const breadcrumbItems = [
-    { name: "Home", href: "/" },
-    { name: "Categories", href: `/${countryCode}/categories` },
+    {
+      name: "Home",
+      href: countryCode === "us" ? "/" : `/${countryCode}`,
+    },
+    {
+      name: "Categories",
+      href: countryCode === "us" ? "/categories" : `/${countryCode}/categories`,
+    },
     ...breadcrumbs.map((crumb, idx) => ({
       name: crumb.name,
-      href: `/${countryCode}/${crumb.parent ? crumb.parent + "/" : ""}${crumb.slug}`,
+      href:
+        countryCode === "us"
+          ? `/${crumb.parent ? crumb.parent + "/" : ""}${crumb.slug}`
+          : `/${countryCode}/${crumb.parent ? crumb.parent + "/" : ""}${crumb.slug}`,
       icon: idx === breadcrumbs.length - 1 ? Icon : undefined,
       suffix:
         idx === breadcrumbs.length - 1

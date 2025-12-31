@@ -1,6 +1,11 @@
 import HomeContent from "@/components/HomeContent";
 import { ParentCategoryView } from "@/components/category/ParentCategoryView";
-import { getCategoryBySlug, getChildCategories } from "@/lib/categories";
+import {
+  getCategoryBySlug,
+  getCategoryHierarchy,
+  getChildCategories,
+} from "@/lib/categories";
+import { AllCategoriesView } from "@/components/category/AllCategoriesView";
 import {
   DEFAULT_COUNTRY,
   isValidCountryCode,
@@ -31,20 +36,27 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     return getHomePageMetadata(country.toLowerCase());
   }
 
-  // If it's a parent category slug (like 'electronics')
+  // Handle parent categories and 'categories' path
   const category = getCategoryBySlug(country);
-  if (category && !category.parent) {
+  const isCategories = country === "categories";
+  if (isCategories || (category && !category.parent)) {
     const validCountry = DEFAULT_COUNTRY;
-    const title = `${category.name} - Amazon ${validCountry.toUpperCase()}`;
-    const description = `Track ${category.name} prices on Amazon ${validCountry.toUpperCase()} by true cost per TB/GB. Compare hardware value and find the best storage deals instantly.`;
-    const canonicalUrl = `https://realpricedata.com/${category.slug}`;
+    const title = isCategories
+      ? `All Categories - Amazon ${validCountry.toUpperCase()}`
+      : `${category?.name} - Amazon ${validCountry.toUpperCase()}`;
+    const description = isCategories
+      ? `Browse all tracked product categories on Amazon ${validCountry.toUpperCase()}. Compare hardware prices by true cost per TB/GB to find the best value deals.`
+      : `Track ${category?.name} prices on Amazon ${validCountry.toUpperCase()} by true cost per TB/GB. Compare hardware value and find the best storage deals instantly.`;
+    const canonicalUrl = `https://realpricedata.com/${isCategories ? "categories" : category?.slug}`;
 
     return {
       title,
       description,
       alternates: {
         canonical: canonicalUrl,
-        languages: getAlternateLanguages(`/${category.slug}`),
+        languages: getAlternateLanguages(
+          `/${isCategories ? "categories" : category?.slug}`,
+        ),
       },
       openGraph: getOpenGraph({
         title,
@@ -62,12 +74,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 export default async function CountryHomePage({ params }: Props) {
   const { country } = await params;
 
-  // 1. Redirect /us to /
-  if (country.toLowerCase() === "us") {
-    redirect("/");
-  }
-
-  // 2. Handle valid country codes
+  // Handle valid country codes
   if (isValidCountryCode(country)) {
     return <HomeContent country={country.toLowerCase() as CountryCode} />;
   }
@@ -85,6 +92,19 @@ export default async function CountryHomePage({ params }: Props) {
     );
   }
 
-  // 4. Otherwise 404
+  // 4. Handle 'categories' root path for US
+  if (country === "categories") {
+    const hierarchyRaw = getCategoryHierarchy();
+    const categoryHierarchy = JSON.parse(JSON.stringify(hierarchyRaw));
+
+    return (
+      <AllCategoriesView
+        categoryHierarchy={categoryHierarchy}
+        countryCode={DEFAULT_COUNTRY}
+      />
+    );
+  }
+
+  // 5. Otherwise 404
   notFound();
 }

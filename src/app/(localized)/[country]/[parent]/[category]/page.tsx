@@ -67,12 +67,7 @@ export default async function CategoryProductsPage({
   const { country, parent, category: categorySlug } = await params;
   const filters = await searchParams;
 
-  // 1. Redirect /us/electronics/hard-drives to /electronics/hard-drives
-  if (country.toLowerCase() === "us") {
-    redirect(`/${parent}/${categorySlug}`);
-  }
-
-  // 2. Handle valid country codes
+  // Handle valid country codes
   if (isValidCountryCode(country)) {
     const category = getCategoryBySlug(categorySlug);
     if (!category) notFound();

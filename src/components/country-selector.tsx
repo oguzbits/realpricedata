@@ -15,6 +15,7 @@ import {
   getCountryByCode,
   getFlag,
   isValidCountryCode,
+  saveCountryPreference,
 } from "@/lib/countries";
 import { Globe } from "lucide-react";
 import Image from "next/image";
@@ -78,12 +79,12 @@ export function CountrySelector({
             let targetHref = "";
 
             if (hasCountryInUrl) {
-              // Replace the country identifier in the URL
+              // Replace the country code in the URL
               const newSegments = [...segments];
               newSegments[0] = c.code;
               targetHref = `/${newSegments.join("/")}`;
             } else {
-              // Add country identifier to the path
+              // Add country code to the path (for root path)
               targetHref = `/${c.code}${pathname === "/" ? "" : pathname}`;
             }
 
@@ -93,14 +94,11 @@ export function CountrySelector({
             }
 
             return (
-              <DropdownMenuItem
-                key={c.code}
-                asChild
-                className="focus:bg-accent focus:text-accent-foreground cursor-pointer"
-              >
+              <DropdownMenuItem key={c.code} asChild>
                 <Link
                   href={targetHref}
-                  className="flex w-full items-center no-underline"
+                  className="focus:bg-accent focus:text-accent-foreground flex w-full cursor-pointer items-center px-2 py-1.5 no-underline"
+                  onClick={() => saveCountryPreference(c.code)}
                   prefetch={true}
                 >
                   <CountryItem

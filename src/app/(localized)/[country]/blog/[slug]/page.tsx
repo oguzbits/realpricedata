@@ -52,9 +52,5 @@ export default async function LocalizedBlogPostPage({
 }: LocalizedBlogPostPageProps) {
   const { slug, country } = await params;
 
-  if (country.toLowerCase() === "us") {
-    redirect(`/blog/${slug}`);
-  }
-
   return <BlogPostViewMDX slug={slug} country={country} />;
 }

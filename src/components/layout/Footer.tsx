@@ -79,7 +79,11 @@ export function Footer({ country: propCountry }: FooterProps) {
               </li>
               <li>
                 <Link
-                  href={`/${country}/categories`}
+                  href={
+                    country === DEFAULT_COUNTRY
+                      ? "/categories"
+                      : `/${country}/categories`
+                  }
                   className="text-primary hover:underline"
                   prefetch={true}
                 >

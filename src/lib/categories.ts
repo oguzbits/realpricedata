@@ -147,9 +147,8 @@ export function getCategoryPath(
     path = `/${category.slug}`;
   }
 
-  // Prepend country code if provided and not the default country (US)
-  // US content is served from the root domain
-  if (countryCode && countryCode.toLowerCase() !== "us") {
+  // Prepend country code if provided
+  if (countryCode) {
     path = `/${countryCode.toLowerCase()}${path}`;
   }
 

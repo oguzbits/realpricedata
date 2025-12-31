@@ -41,10 +41,6 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 export default async function LocalizedBlogIndexPage({ params }: Props) {
   const { country } = await params;
 
-  if (country.toLowerCase() === "us") {
-    redirect("/blog");
-  }
-
   if (!isValidCountryCode(country)) {
     notFound();
   }

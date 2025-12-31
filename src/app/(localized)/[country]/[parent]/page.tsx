@@ -97,11 +97,6 @@ export default async function ParentCategoryPage({ params }: Props) {
 
   // 1. If valid country code
   if (isValidCountryCode(countryCode)) {
-    // Redirect /us/electronics to /electronics
-    if (countryCode.toLowerCase() === "us") {
-      redirect(`/${parentSlug}`);
-    }
-
     const parentCategory = getCategoryBySlug(parentSlug);
 
     // If this is actually a child category (e.g. /uk/hard-drives), redirect to localized parent/child nested path

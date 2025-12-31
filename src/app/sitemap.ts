@@ -50,7 +50,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     blogRoutes.push({
       url: `${baseUrl}${postPath}`,
       lastModified: new Date(post.lastUpdated || post.publishDate),
-      changeFrequency: "weekly" as const,
+      changeFrequency: "daily" as const,
       priority: 0.7,
       alternates: {
         languages: getAlternateLanguages(postPath),

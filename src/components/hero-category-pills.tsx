@@ -1,9 +1,6 @@
-"use client";
-
 import Link from "next/link";
 import { HardDrive, MemoryStick, Zap } from "lucide-react";
 import { getCategoryPath } from "@/lib/categories";
-import { useCountry } from "@/hooks/use-country";
 
 const categories = [
   { name: "Hard Drives & SSDs", icon: HardDrive, slug: "hard-drives" },
@@ -11,8 +8,7 @@ const categories = [
   { name: "Power Supplies", icon: Zap, slug: "power-supplies" },
 ];
 
-export function HeroCategoryPills() {
-  const { country } = useCountry();
+export function HeroCategoryPills({ country }: { country: string }) {
 
   return (
     <div className="flex flex-wrap gap-2">

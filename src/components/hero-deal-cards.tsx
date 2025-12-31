@@ -1,7 +1,4 @@
-"use client";
-
 import { ProductSection } from "@/components/ProductSection";
-import { useCountry } from "@/hooks/use-country";
 import { getCountryByCode } from "@/lib/countries";
 import { getAllProducts, type Product } from "@/lib/product-registry";
 import {
@@ -68,8 +65,7 @@ const getTopDeals = (countryCode: string = "us"): ProductWithDiscount[] => {
     .slice(0, 3);
 };
 
-export function HeroDealCards() {
-  const { country } = useCountry();
+export function HeroDealCards({ country }: { country: string }) {
   const countryConfig = getCountryByCode(country);
 
   const highlightedDeals = getTopDeals(country);

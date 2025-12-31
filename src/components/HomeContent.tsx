@@ -104,7 +104,7 @@ export function HomeContent({ country }: { country: string }) {
 
               <div className="flex flex-col gap-6">
                 <div className="text-muted-foreground flex items-center gap-2 text-base">
-                  <HeroCategoryPills />
+                  <HeroCategoryPills country={country} />
                 </div>
               </div>
             </div>
@@ -156,7 +156,7 @@ export function HomeContent({ country }: { country: string }) {
             </div>
           </div>
 
-          <HeroDealCards />
+          <HeroDealCards country={country} />
           <PopularProducts products={uiProducts} />
           <PriceDrops products={mockPriceDrops} />
         </section>

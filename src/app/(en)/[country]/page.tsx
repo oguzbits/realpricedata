@@ -4,6 +4,7 @@ import {
   allCategories,
   getCategoryBySlug,
   getChildCategories,
+  stripCategoryIcon,
 } from "@/lib/categories";
 import {
   DEFAULT_COUNTRY,
@@ -87,8 +88,8 @@ export default async function CountryHomePage({ params }: Props) {
     const childCategories = getChildCategories(category.slug);
     return (
       <ParentCategoryView
-        parentCategory={JSON.parse(JSON.stringify(category))}
-        childCategories={JSON.parse(JSON.stringify(childCategories))}
+        parentCategory={stripCategoryIcon(category)}
+        childCategories={childCategories.map(stripCategoryIcon)}
         countryCode={DEFAULT_COUNTRY}
       />
     );

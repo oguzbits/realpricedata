@@ -77,30 +77,29 @@ export function CountrySelector({
             const hasCountryInUrl =
               firstSegment && isValidCountryCode(firstSegment);
 
+            const baseSegments = hasCountryInUrl ? segments.slice(1) : segments;
+
+            // Map localized paths (e.g. impressum <-> legal-notice)
+            const mappedSegments = baseSegments.map((segment) => {
+              const isTargetGerman = c.code === "de";
+              if (isTargetGerman) {
+                if (segment === "legal-notice") return "impressum";
+                if (segment === "privacy") return "datenschutz";
+              } else {
+                if (segment === "impressum") return "legal-notice";
+                if (segment === "datenschutz") return "privacy";
+              }
+              return segment;
+            });
+
             let targetHref = "";
 
-            if (hasCountryInUrl) {
-              if (c.code === DEFAULT_COUNTRY) {
-                // Switching TO US (Default): Remove the country segment
-                // e.g., /ca/categories -> /categories
-                const newSegments = segments.slice(1);
-                targetHref = `/${newSegments.join("/")}`;
-              } else {
-                // Switching between non-US countries
-                // e.g., /ca/categories -> /de/categories
-                const newSegments = [...segments];
-                newSegments[0] = c.code;
-                targetHref = `/${newSegments.join("/")}`;
-              }
+            if (c.code === DEFAULT_COUNTRY) {
+              targetHref = `/${mappedSegments.join("/")}`;
             } else {
-              if (c.code === DEFAULT_COUNTRY) {
-                // Staying on US (Default): Keep path as is
-                targetHref = `${pathname}`;
-              } else {
-                // Switching FROM US to another country
-                // e.g., /categories -> /ca/categories
-                targetHref = `/${c.code}${pathname === "/" ? "" : pathname}`;
-              }
+              targetHref = `/${c.code}${
+                mappedSegments.length > 0 ? `/${mappedSegments.join("/")}` : ""
+              }`;
             }
 
             const queryString = searchParams.toString();

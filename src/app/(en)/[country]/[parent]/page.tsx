@@ -3,6 +3,7 @@ import { ParentCategoryView } from "@/components/category/ParentCategoryView";
 import {
   getCategoryBySlug,
   getChildCategories,
+  stripCategoryIcon,
   type CategorySlug,
 } from "@/lib/categories";
 import {
@@ -117,8 +118,8 @@ export default async function ParentCategoryPage({
 
     return (
       <ParentCategoryView
-        parentCategory={JSON.parse(JSON.stringify(parentCategory))}
-        childCategories={JSON.parse(JSON.stringify(childCategories))}
+        parentCategory={stripCategoryIcon(parentCategory)}
+        childCategories={childCategories.map(stripCategoryIcon)}
         countryCode={countryCode as CountryCode}
       />
     );
@@ -135,7 +136,7 @@ export default async function ParentCategoryPage({
       // Render as US Child Category
       return (
         <CategoryProductsView
-          category={JSON.parse(JSON.stringify(childCategory))}
+          category={stripCategoryIcon(childCategory)}
           countryCode={DEFAULT_COUNTRY}
           searchParams={filters}
         />

@@ -27,6 +27,14 @@ const nextConfig: NextConfig = {
       "@radix-ui/react-tooltip",
     ],
   },
+  // Cache Life Profiles for Next.js 16 "use cache"
+  cacheLife: {
+    prices: {
+      stale: 3600, // 1 hour
+      revalidate: 7200, // 2 hours
+      expire: 86400, // 24 hours
+    },
+  },
   // Optimize images
   images: {
     formats: ["image/avif", "image/webp"],

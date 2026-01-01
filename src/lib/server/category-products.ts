@@ -7,6 +7,7 @@ import {
   calculateProductMetrics,
   getLocalizedProductData,
 } from "@/lib/utils/products";
+import { cacheLife } from "next/cache";
 
 export interface LocalizedProduct extends Omit<
   Product,
@@ -38,6 +39,9 @@ export async function getCategoryProducts(
   countryCode: string,
   filterParams: FilterParams,
 ) {
+  // Apply 'prices' profile defined in next.config.ts
+  cacheLife("prices");
+
   // Load raw products for this category
   const rawProducts = getProductsByCategory(categorySlug);
   const category = allCategories[categorySlug as CategorySlug];

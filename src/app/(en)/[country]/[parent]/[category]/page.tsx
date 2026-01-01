@@ -1,5 +1,9 @@
 import { CategoryProductsView } from "@/components/category/CategoryProductsView.server";
-import { getCategoryBySlug, getCategoryPath } from "@/lib/categories";
+import {
+  getCategoryBySlug,
+  getCategoryPath,
+  stripCategoryIcon,
+} from "@/lib/categories";
 import {
   DEFAULT_COUNTRY,
   getAllCountries,
@@ -79,7 +83,7 @@ export default async function CategoryProductsPage({
 
     return (
       <CategoryProductsView
-        category={JSON.parse(JSON.stringify(category))}
+        category={stripCategoryIcon(category)}
         countryCode={country.toLowerCase() as CountryCode}
         searchParams={filters}
       />

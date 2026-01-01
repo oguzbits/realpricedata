@@ -62,8 +62,7 @@ export default async function CategoriesPage({ params }: Props) {
     notFound();
   }
 
-  const hierarchyRaw = getCategoryHierarchy();
-  const categoryHierarchy = JSON.parse(JSON.stringify(hierarchyRaw));
+  const categoryHierarchy = getCategoryHierarchy();
 
   return (
     <AllCategoriesView

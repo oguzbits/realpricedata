@@ -27,8 +27,7 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default function CategoriesPage() {
-  const hierarchyRaw = getCategoryHierarchy();
-  const categoryHierarchy = JSON.parse(JSON.stringify(hierarchyRaw));
+  const categoryHierarchy = getCategoryHierarchy();
 
   return (
     <AllCategoriesView

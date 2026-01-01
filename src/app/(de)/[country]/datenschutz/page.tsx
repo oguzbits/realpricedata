@@ -1,12 +1,10 @@
 import ValidDatenschutzPage, {
   metadata as privacyMetadata,
-} from "@/app/(de)/datenschutz/page";
-import { isValidCountryCode } from "@/lib/countries";
-import { generateCountryParams } from "@/lib/static-params";
-import { notFound } from "next/navigation";
+} from "@/app/(de)/(root)/datenschutz/page";
+import { notFound, redirect } from "next/navigation";
 
 export async function generateStaticParams() {
-  return generateCountryParams();
+  return [{ country: "de" }];
 }
 
 interface Props {
@@ -15,7 +13,7 @@ interface Props {
 
 export async function generateMetadata({ params }: Props) {
   const { country } = await params;
-  if (!isValidCountryCode(country)) {
+  if (country !== "de") {
     return { title: "Page Not Found" };
   }
   return privacyMetadata;
@@ -24,8 +22,8 @@ export async function generateMetadata({ params }: Props) {
 export default async function LocalizedDatenschutzPage({ params }: Props) {
   const { country } = await params;
 
-  if (!isValidCountryCode(country)) {
-    notFound();
+  if (country !== "de") {
+    redirect("/de/datenschutz");
   }
 
   return <ValidDatenschutzPage />;

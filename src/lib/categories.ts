@@ -20,6 +20,7 @@ export interface Category {
   unitType?: UnitType; // e.g., "TB", "GB", "W"
   hidden?: boolean;
   popularFilters?: { label: string; params: string }[];
+  aliases?: string[]; // SEO and URL aliases
 }
 
 export interface CategoryHierarchy {
@@ -27,12 +28,11 @@ export interface CategoryHierarchy {
   children: Category[];
 }
 
-// All categories in a flat structure
-export const allCategories: Record<CategorySlug, Category> = {
+// Internal base categories object to derive slugs from
+const CATEGORY_MAP: Record<CategorySlug, Omit<Category, "slug">> = {
   // Parent Category
   electronics: {
     name: "Electronics",
-    slug: "electronics",
     description: "Digital storage solutions - compare price per terabyte",
     icon: HardDrive,
     metaTitle: "Hard Drive Storage - Best Price Per TB | realpricedata.com",
@@ -43,7 +43,6 @@ export const allCategories: Record<CategorySlug, Category> = {
   // Electronics Children (ONLY monetized categories)
   "hard-drives": {
     name: "Hard Drives & SSDs",
-    slug: "hard-drives",
     description: "HDD and SSD storage solutions - compare price per TB",
     icon: HardDrive,
     parent: "electronics",
@@ -56,11 +55,11 @@ export const allCategories: Record<CategorySlug, Category> = {
       { label: "HDDs", params: "technology=HDD" },
       { label: "NVMe SSDs", params: "formFactor=M.2+NVMe" },
     ],
+    aliases: ["disks", "storage", "hdd", "ssd"],
   },
 
   ram: {
     name: "RAM & Memory",
-    slug: "ram",
     description: "DDR4 and DDR5 RAM modules - compare price per GB",
     icon: MemoryStick,
     parent: "electronics",
@@ -73,11 +72,11 @@ export const allCategories: Record<CategorySlug, Category> = {
       { label: "DDR5 RAM", params: "technology=DDR5" },
       { label: "Laptop RAM", params: "formFactor=SO-DIMM" },
     ],
+    aliases: ["memory"],
   },
 
   "power-supplies": {
     name: "Power Supplies",
-    slug: "power-supplies",
     description: "ATX and SFX power supplies - compare price per Watt",
     icon: Zap,
     parent: "electronics",
@@ -88,8 +87,23 @@ export const allCategories: Record<CategorySlug, Category> = {
     popularFilters: [
       { label: "80+ Gold PSUs", params: "technology=80%2B+Gold" },
     ],
+    aliases: ["psu"],
   },
 };
+
+// All categories in a flat structure with slug added
+export const allCategories: Record<CategorySlug, Category> = Object.entries(
+  CATEGORY_MAP,
+).reduce(
+  (acc, [slug, data]) => {
+    acc[slug as CategorySlug] = {
+      ...(data as Omit<Category, "slug">),
+      slug: slug as CategorySlug,
+    } as Category;
+    return acc;
+  },
+  {} as Record<CategorySlug, Category>,
+);
 
 // Get category hierarchy (parent with children)
 export function getCategoryHierarchy(): CategoryHierarchy[] {
@@ -102,7 +116,10 @@ export function getCategoryHierarchy(): CategoryHierarchy[] {
     const children = Object.values(allCategories).filter(
       (cat) => cat.parent === parent.slug && !cat.hidden,
     );
-    hierarchies.push({ parent, children });
+    hierarchies.push({
+      parent: stripCategoryIcon(parent) as Category,
+      children: children.map(stripCategoryIcon) as Category[],
+    });
   });
 
   return hierarchies;
@@ -169,7 +186,9 @@ export function getCategoryPath(
 
   return path;
 }
+
 // Return a copy of the category without the icon function (for serialization)
 export function stripCategoryIcon(category: Category): Omit<Category, "icon"> {
-  return JSON.parse(JSON.stringify(category));
+  const { icon, ...rest } = category;
+  return JSON.parse(JSON.stringify(rest));
 }

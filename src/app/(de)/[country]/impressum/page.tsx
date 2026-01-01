@@ -1,12 +1,10 @@
 import ValidImpressumPage, {
   metadata as impressumMetadata,
-} from "@/app/(de)/impressum/page";
-import { isValidCountryCode } from "@/lib/countries";
-import { generateCountryParams } from "@/lib/static-params";
-import { notFound } from "next/navigation";
+} from "@/app/(de)/(root)/impressum/page";
+import { notFound, redirect } from "next/navigation";
 
 export async function generateStaticParams() {
-  return generateCountryParams();
+  return [{ country: "de" }];
 }
 
 interface Props {
@@ -15,7 +13,7 @@ interface Props {
 
 export async function generateMetadata({ params }: Props) {
   const { country } = await params;
-  if (!isValidCountryCode(country)) {
+  if (country !== "de") {
     return { title: "Page Not Found" };
   }
   return impressumMetadata;
@@ -24,13 +22,9 @@ export async function generateMetadata({ params }: Props) {
 export default async function LocalizedImpressumPage({ params }: Props) {
   const { country } = await params;
 
-  if (!isValidCountryCode(country)) {
-    notFound();
+  if (country !== "de") {
+    redirect("/de/impressum");
   }
-
-  // Optional: Redirect non-DE users to English legal notice?
-  // For now, let's allow it to render if explicitly visited,
-  // but we will control navigation via Footer.
 
   return <ValidImpressumPage />;
 }

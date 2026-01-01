@@ -20,6 +20,7 @@ interface Props {
     country: string;
     parent: string;
   }>;
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 }
 
 export async function generateStaticParams() {
@@ -92,8 +93,12 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   return { title: "Category Not Found" };
 }
 
-export default async function ParentCategoryPage({ params }: Props) {
+export default async function ParentCategoryPage({
+  params,
+  searchParams,
+}: Props) {
   const { country: countryCode, parent: parentSlug } = await params;
+  const filters = await searchParams;
 
   // 1. If valid country code
   if (isValidCountryCode(countryCode)) {
@@ -132,7 +137,7 @@ export default async function ParentCategoryPage({ params }: Props) {
         <CategoryProductsView
           category={JSON.parse(JSON.stringify(childCategory))}
           countryCode={DEFAULT_COUNTRY}
-          searchParams={{}}
+          searchParams={filters}
         />
       );
     }

@@ -19,6 +19,7 @@ export interface Category {
   metaDescription?: string;
   unitType?: UnitType; // e.g., "TB", "GB", "W"
   hidden?: boolean;
+  popularFilters?: { label: string; params: string }[];
 }
 
 export interface CategoryHierarchy {
@@ -50,6 +51,11 @@ export const allCategories: Record<CategorySlug, Category> = {
     metaTitle: "Hard Drives & SSDs - Compare Price Per TB | realpricedata.com",
     metaDescription:
       "Find the best hard drive and SSD deals by comparing price per terabyte. Compare internal and external storage from top brands.",
+    popularFilters: [
+      { label: "SSDs", params: "technology=SSD" },
+      { label: "HDDs", params: "technology=HDD" },
+      { label: "NVMe SSDs", params: "formFactor=M.2+NVMe" },
+    ],
   },
 
   ram: {
@@ -62,6 +68,11 @@ export const allCategories: Record<CategorySlug, Category> = {
     metaTitle: "RAM & Memory - Compare Price Per GB | realpricedata.com",
     metaDescription:
       "Find the best RAM and memory deals by comparing price per gigabyte. Compare DDR4 and DDR5 modules from top brands like Crucial, Lexar, and Patriot.",
+    popularFilters: [
+      { label: "DDR4 RAM", params: "technology=DDR4" },
+      { label: "DDR5 RAM", params: "technology=DDR5" },
+      { label: "Laptop RAM", params: "formFactor=SO-DIMM" },
+    ],
   },
 
   "power-supplies": {
@@ -74,6 +85,9 @@ export const allCategories: Record<CategorySlug, Category> = {
     metaTitle: "Power Supplies - Compare Price Per Watt | realpricedata.com",
     metaDescription:
       "Find the best power supply deals by comparing price per watt. Compare 80+ Bronze, Gold, and Platinum PSUs from top brands.",
+    popularFilters: [
+      { label: "80+ Gold PSUs", params: "technology=80%2B+Gold" },
+    ],
   },
 };
 

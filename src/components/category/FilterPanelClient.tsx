@@ -12,13 +12,6 @@ import { FilterPanel } from "./FilterPanel";
 interface FilterPanelClientProps {
   categorySlug: string;
   unitLabel: string;
-  initialFilters: {
-    condition: string[];
-    technology: string[];
-    formFactor: string[];
-    minCapacity: number | null;
-    maxCapacity: number | null;
-  };
 }
 
 /**
@@ -28,20 +21,13 @@ interface FilterPanelClientProps {
 export function FilterPanelClient({
   categorySlug,
   unitLabel,
-  initialFilters,
 }: FilterPanelClientProps) {
   const [, startTransition] = useTransition();
   const [filters, setFilters] = useQueryStates(
     {
-      condition: parseAsArrayOf(parseAsString).withDefault(
-        initialFilters.condition,
-      ),
-      technology: parseAsArrayOf(parseAsString).withDefault(
-        initialFilters.technology,
-      ),
-      formFactor: parseAsArrayOf(parseAsString).withDefault(
-        initialFilters.formFactor,
-      ),
+      condition: parseAsArrayOf(parseAsString).withDefault([]),
+      technology: parseAsArrayOf(parseAsString).withDefault([]),
+      formFactor: parseAsArrayOf(parseAsString).withDefault([]),
       minCapacity: parseAsFloat,
       maxCapacity: parseAsFloat,
     },

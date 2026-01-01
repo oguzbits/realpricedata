@@ -93,7 +93,6 @@ export async function CategoryProductsView({
           <FilterPanelClient
             categorySlug={categorySlug}
             unitLabel={unitLabel}
-            initialFilters={filters}
           />
         </div>
       </SheetContent>
@@ -121,7 +120,6 @@ export async function CategoryProductsView({
                   <FilterPanelClient
                     categorySlug={categorySlug}
                     unitLabel={unitLabel}
-                    initialFilters={filters}
                   />
                 </div>
               </aside>

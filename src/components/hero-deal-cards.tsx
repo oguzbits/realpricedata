@@ -95,12 +95,6 @@ export async function HeroDealCards({ country }: { country: CountryCode }) {
       description="These are outstanding deals we've found and feel are worth sharing."
       products={uiProducts}
       country={country}
-      priorityIndices={[0, 1]}
-      productCardProps={
-        {
-          // Custom logic for oldPrice in HeroDealCards
-        }
-      }
     />
   );
 }

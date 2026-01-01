@@ -113,11 +113,7 @@ export async function HomeContent({ country }: { country: CountryCode }) {
           />
 
           <HeroDealCards country={country} />
-          <PopularProducts
-            products={uiProducts}
-            country={country}
-            priorityIndices={[0, 1]}
-          />
+          <PopularProducts products={uiProducts} country={country} />
           <PriceDrops products={mockPriceDrops} country={country} />
         </section>
       </div>

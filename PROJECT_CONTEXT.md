@@ -1,197 +1,98 @@
-# RealPriceData - Project Context
+# Project Features Analysis
 
-## Project Overview
+## Core Architecture
 
-**RealPriceData** is a price comparison platform focused on the **"Price per Unit"** metric. Unlike traditional price trackers that focus on the total price, this project aims to help users find the best value by calculating and sorting products based on their unit price (e.g., $ per TB for hard drives, $ per load for detergent).
+- **Framework**: Next.js 16 (App Router) with React 19 Compiler.
+- **Styling**: Tailwind CSS 4 with `shadcn/ui` components.
+- **State**: URL-based state management via `nuqs`.
+- **Performance**: Uses Next.js 16 `cacheComponents` ("use cache") and `experimental.optimizePackageImports`.
 
-## Country-Specific Routing
+## implementation Details
 
-- All main pages are prefixed with `/[country]` (e.g., `/us`, `/de`)
-- The homepage for each country is `/[country]` (e.g., `/us`)
-- The category browser is at `/[country]/categories` (e.g., `/us/categories`)
-- Product pages follow: `/[country]/[parent]/[category]` (e.g., `/us/electronics/hard-drives`)
-- Users can switch countries via the navbar dropdown, which updates the URL
-- Country preference is saved to localStorage for persistence
-- Automatic country detection from browser locale on first visit
+### 1. Localization & Routing
 
-## Technology Stack
+- **Dual-Route Groups**: Split into `(en)` and `(de)` for language-specific static pages (e.g., Legal pages in German).
+- **Dynamic Country Handling**:
+  - **Path**: `src/app/(en)/[country]/` handles most country-specific views.
+  - **Logic**: valid country codes (e.g., `/uk`, `/ca`) render `HomeContent`.
+  - **Edge Case**: **Top-Level Categories** (e.g., `/electronics`) are also routed through `[country]`. The `page.tsx` checks if the param matches a category slug instead of a country code.
+  - **Default**: Root `/` renders US content via `src/app/(en)/(root)/page.tsx`.
+- **Persistence**: Country preference saved in cookies (`country` key).
+- **Fallbacks**: Browser locale detection -> Defined Country -> Default (US).
 
-- **Framework**: [Next.js 16+](https://nextjs.org/) (App Router)
-- **Language**: [TypeScript](https://www.typescriptlang.org/)
-- **Styling**: [Tailwind CSS](https://tailwindcss.com/)
-- **UI Components**: [shadcn/ui](https://ui.shadcn.com/) (based on Radix UI)
-- **Icons**: [Lucide React](https://lucide.dev/)
-- **Package Manager**: `npm`
+### 2. Category System (`src/lib/categories.ts`)
 
-## Architecture & File Structure
+- **Structure**: Flat object `allCategories` with `parent` pointers for hierarchy.
+- **Data**: Includes slugs, icons, unit types (TB, GB, W), and SEO metadata.
+- **Components**:
+  - `parentCategoryView`: Renders intermediate category pages.
+  - `ProductTable` (implied): Renders leaf category data.
 
-- **`src/app`**: Contains the App Router pages.
-  - `page.tsx`: Root homepage (redirects to country)
-  - `[country]/page.tsx`: Country-specific homepage
-  - `[country]/categories/page.tsx`: Category browser for that country
-  - `[country]/[parent]/page.tsx`: Parent category page (e.g., Electronics)
-  - `[country]/[parent]/[category]/page.tsx`: Product listing page with filters and sorting
-- **`src/components/ui`**: Reusable UI components from shadcn/ui (Button, Card, Sheet, etc.)
-- **`src/components`**: Feature components (Navbar, Footer, SearchModal, etc.)
-- **`src/lib`**: Utility functions and configuration
-  - `categories.ts`: Category definitions and helper functions
-  - `countries.ts`: Country configuration and detection logic
-  - `analytics.ts`: Analytics tracking utilities
-  - `amazon-api.ts`: Mock implementation of Amazon Product Advertising API
-- **`src/hooks`**: Custom React hooks
-  - `use-country.ts`: Country management and URL synchronization
-  - `use-product-filters.ts`: Filter state management with nuqs
-- **`src/providers`**: Context providers (NuqsProvider, ThemeProvider)
+### 3. Search Functionality (`SearchModal.tsx`)
 
-## Key Features
+- **Type**: Client-side modal with keyboard shortcuts (`Cmd+K`, Arrows, Enter).
+- **Behavior**:
+  - **Empty**: Shows "Featured" and "Quick Access" categories.
+  - **Typing**: Filters `ALL_CATEGORIES` in real-time.
+  - **No Results**: Shows helpful empty state.
 
-1.  **Unified Product Listing**: A single dynamic page (`categories/[slug]`) handles product listings.
-2.  **Advanced Filtering**:
-    - **Desktop**: Sticky sidebar with collapsible sections (Accordion).
-    - **Mobile**: Slide-out Sheet with the same filter capabilities.
-    - **Filters**: Condition (New/Used), Capacity, Technology, Form Factor.
-3.  **Price Analysis**:
-    - Automatic calculation of "Price/Unit" (e.g., Price/TB).
-    - Sorting by Price/Unit to highlight best value.
-4.  **Global Reach**: Visualizes supported countries (Amazon marketplaces) using a 3D Globe component.
+### 4. Blog System
 
-## Design System
+- **Format**: MDX files with frontmatter.
+- **Location**: `src/app/(en)/(localized)/[country]/blog` (inferred) or similar localized path.
 
-- **Theme**: Dark mode default.
-- **Aesthetic**: Premium, modern, "glassmorphism" effects (backdrop-blur), vibrant accent colors (primary purple/blue), and clean typography.
-- **Responsiveness**: Mobile-first approach. Complex tables hide less critical columns on smaller screens.
+### 5. Analytics & SEO
 
-## Data Model
+- **Analytics**: Vercel Analytics and Speed Insights.
+- **SEO**: Dynamic metadata generation utilizing `generateMetadata` in `layout.tsx` and `page.tsx`, respecting `canonical` URLs and `hreflang` (implied logic).
 
-Currently uses a **Mock API** (`MockAmazonAPI`) that simulates the structure of the official Amazon PA-API 5.0.
+## Critical Edge Cases
 
-- **Product Fields**: ASIN, Title, Price, Image, URL, Category, Capacity, Warranty, Form Factor, Technology, Condition.
-- **Affiliate Integration**: Ready for Amazon Associates integration (affiliate links).
+1.  **Route Ambiguity**:
 
-## Product Categories
+    - The `[country]` dynamic segment captures **anything** after root.
+    - _Risk_: Adding a new top-level static route (e.g., `/about`) requires ensuring it doesn't conflict or is placed _before_ the dynamic segment in folder structure (or explicitly handled).
+    - _Handling_: The current logic explicitly checks `isValidCountryCode(param)` -> `getCategoryBySlug(param)` -> `notFound()`.
 
-All categories must follow the **"Price per Unit"** principle. Products should be consumables or capacity-based items where unit pricing provides meaningful value comparison.
+2.  **Category Modifications**:
 
-### Valid Category Examples
+    - Editing `src/lib/categories.ts` automatically updates routes.
+    - _Risk_: Changing a category `slug` will break existing URLs and SEO rankings. Redirects must be implemented manually if slugs change.
+    - _Constraint_: Parent categories MUST have `unitType` undefined or handled correctly in UI if they aggregate mixed types.
 
-- **Storage**: Hard Drives, SSDs, MicroSD Cards, USB Drives (Price per TB/GB)
-- **Food**: Protein Powder, Coffee, Rice & Pasta, Snacks (Price per kg/lb/oz)
-- **Household**: Laundry Detergent, Paper Products, Trash Bags, Dishwasher Tabs (Price per load/count/sheet)
-- **Power**: Batteries (Price per count)
+3.  **Localization Mismatch**:
 
-### Invalid Categories
+    - Routes are grouped by language (`(en)`, `(de)`).
+    - _Risk_: If a country like `es` (Spain) falls under `(en)` group layout, it might show English static UI (headers/footers) unless `PageLayout` handles content translation dynamically.
+    - _Current State_: `(en)` handles `[country]` which likely defaults specific UI elements to English unless overridden.
 
-- ❌ Monitors, Processors, Graphics Cards (single-unit electronics)
-- ❌ Laptops, Phones, Tablets (indivisible products)
-- ❌ Furniture, Appliances (no unit metric)
+4.  **Cookie Dependency**:
+    - Country switching relies on `document.cookie`.
 
-## Coding Conventions
+### 6. Design System
 
-### Components
+- **Theme**: Dark mode default with glassmorphism effects.
+- **Components**: `shadcn/ui` tailored for "premium" feel.
+- **Responsiveness**: Mobile-first, complex tables adapt columns.
 
-- **Always use functional components** with TypeScript interfaces
-- **Props**: Define explicit interfaces for all component props
-- **Event handlers**: Use arrow functions inline or define as `const`
-- **Exports**: Use default exports for pages, named exports for components
-
-### Styling
-
-- **Tailwind-first**: Use Tailwind utility classes for all styling
-- **No custom CSS**: Avoid creating separate CSS files unless absolutely necessary
-- **Responsive**: Mobile-first approach, use `sm:`, `md:`, `lg:` breakpoints
-- **Dark mode**: Default theme is dark, use `dark:` variants where needed
-- **shadcn/ui**: Prefer shadcn/ui components over building custom ones
-
-### State Management
-
-- **URL state**: Use `nuqs` for filter state (shareable, bookmarkable)
-- **Local state**: Use `useState` for component-level UI state only
-- **Country state**: Managed by `useCountry()` hook with localStorage persistence
-- **Filter state**: Managed by `useProductFilters()` hook (nuqs-based)
-
-### Performance
-
-- **Images**: Always use `next/image` with proper width/height
-- **Lazy loading**: Use dynamic imports for heavy components
-- **Memoization**: Use `useMemo` for expensive calculations (e.g., filtered products)
-
-### File Organization
-
-- **Pages**: `src/app/[route]/page.tsx`
-- **Components**: `src/components/ui/` for shadcn, `src/components/` for custom
-- **Utilities**: `src/lib/` for helpers and API mocks
-- **Types**: Define TypeScript interfaces inline or in adjacent `.types.ts` files
-
-## Development Guidelines
+## Safe Extension Guide (How to not break things)
 
 ### Adding a New Category
 
-1. Add the category to `src/app/page.tsx` (homepage) with appropriate icon
-2. Ensure the category has a valid "price per unit" metric
-3. Create or update mock data in `src/lib/amazon-api.ts`
-4. Update `src/app/categories/page.tsx` to include the new category
-5. Test the category page at `/categories/[slug]`
+1.  **Edit `src/lib/categories.ts`**:
+    - Add entry to `allCategories`.
+    - **Critical**: Ensure `unitType` is consistent with parent if applicable.
+    - **Route**: No new file needed. `[country]` handles it automatically via `page.tsx` logic.
+    - **Icon**: Must be a valid Lucide icon.
 
-### Adding a New Filter
+### modifying Localization
 
-1. Add state variable to the page component
-2. Create the filter UI in the `FilterList` component
-3. Update the filter logic in the component (usually a `.filter()` call)
-4. Ensure both desktop and mobile views work (same `FilterPanel` component)
+1.  **Adding a Country**:
+    - Update `src/lib/countries.ts` (`countries` object).
+    - **Constraint**: New country must likely map to an existing route group `(en)` or `(de)` unless you create a new group.
+    - **Cookies**: Country switching logic automatically picks up new valid codes.
 
-### UI/UX Principles
+### UI/Component Updates
 
-- **Premium feel**: Use glassmorphism, subtle shadows, and smooth animations
-- **Consistency**: Reuse shadcn/ui components for uniform appearance
-- **Accessibility**: Ensure proper ARIA labels, keyboard navigation
-- **Performance**: Keep initial load fast, defer non-critical resources
-
-## Common Patterns
-
-### Filter Pattern (with nuqs)
-
-```tsx
-import { useProductFilters } from "@/hooks/use-product-filters";
-
-const { filters, toggleArrayFilter, setSearch, clearAllFilters } =
-  useProductFilters();
-
-// Filters are automatically synced with URL
-// filters.condition - string[] | null
-// filters.search - string
-// filters.minCapacity - number | null
-
-// Toggle a filter value
-toggleArrayFilter("condition", "New");
-
-// Set search
-setSearch("samsung");
-
-// Clear all
-clearAllFilters();
-```
-
-### Sorting Pattern
-
-```tsx
-const [sortConfig, setSortConfig] = useState({
-  key: "pricePerTB",
-  direction: "asc",
-});
-const sortedData = useMemo(() => {
-  return [...data].sort((a, b) => {
-    if (sortConfig.direction === "asc")
-      return a[sortConfig.key] - b[sortConfig.key];
-    return b[sortConfig.key] - a[sortConfig.key];
-  });
-}, [data, sortConfig]);
-```
-
-## Future Roadmap
-
-- [ ] Replace mock data with real Amazon PA-API integration
-- [ ] Implement user authentication for price alerts
-- [ ] Add price history charts for individual products
-- [ ] Implement URL-based filter state for sharing
-- [ ] Add more product categories (pet supplies, office supplies)
-- [ ] Multi-country currency conversion
+- **Server vs Client**: Most leaf components are Server Components. Interactive parts (Search, Filters) use `nuqs` (Client Side) for URL state.
+- **Nuqs**: When adding filters, use `useQueryState` from `nuqs`. Do NOT use standard `useState` for things that should be shareable.

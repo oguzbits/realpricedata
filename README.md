@@ -108,13 +108,8 @@ See [ROUTING.md](ROUTING.md) for complete details on the localization strategy.
 
 ## Documentation
 
-- **[PROJECT_CONTEXT.md](PROJECT_CONTEXT.md)** - Project overview, architecture, and coding conventions
-- **[ROUTING.md](ROUTING.md)** - URL structure and country-based routing
+- **[PROJECT_CONTEXT.md](PROJECT_CONTEXT.md)** - Key features, architecture, and edge cases.
 - **[NUQS.md](NUQS.md)** - URL state management with nuqs
-- **[ANALYTICS.md](ANALYTICS.md)** - Analytics tracking and SEO optimization
-- **[SPEED_INSIGHTS_SETUP.md](SPEED_INSIGHTS_SETUP.md)** - Performance monitoring
-- **[HERO_DEMO_LOCALIZATION.md](HERO_DEMO_LOCALIZATION.md)** - Hero demo table localization
-- **[COMMUNITY_FEATURES_PLAN.md](COMMUNITY_FEATURES_PLAN.md)** - Future feature planning
 
 ---
 

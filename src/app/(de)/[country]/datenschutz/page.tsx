@@ -1,6 +1,6 @@
-import ValidPrivacyPage, {
+import ValidDatenschutzPage, {
   metadata as privacyMetadata,
-} from "@/app/(root)/privacy/page";
+} from "@/app/(de)/datenschutz/page";
 import { isValidCountryCode } from "@/lib/countries";
 import { generateCountryParams } from "@/lib/static-params";
 import { notFound } from "next/navigation";
@@ -18,7 +18,7 @@ export async function generateMetadata(props: any) {
   return privacyMetadata;
 }
 
-export default async function LocalizedPrivacyPage(props: any) {
+export default async function LocalizedDatenschutzPage(props: any) {
   const params = await props.params;
   const { country } = params;
 
@@ -26,5 +26,5 @@ export default async function LocalizedPrivacyPage(props: any) {
     notFound();
   }
 
-  return <ValidPrivacyPage />;
+  return <ValidDatenschutzPage />;
 }

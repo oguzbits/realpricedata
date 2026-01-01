@@ -4,7 +4,7 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
-import { getOpenGraph } from "@/lib/metadata";
+import { getOpenGraph, getAlternateLanguages } from "@/lib/metadata";
 import type { Metadata } from "next";
 import Link from "next/link";
 
@@ -14,6 +14,7 @@ export const metadata: Metadata = {
     "Find answers to common questions about realpricedata.com, price per unit comparison, and how to find the best deals.",
   alternates: {
     canonical: "https://realpricedata.com/faq",
+    languages: getAlternateLanguages("faq"),
   },
   openGraph: getOpenGraph({
     title: "FAQ - Frequently Asked Questions",

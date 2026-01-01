@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { getOpenGraph } from "@/lib/metadata";
+import { getOpenGraph, getAlternateLanguages } from "@/lib/metadata";
 import { LanguageSwitcher } from "@/components/LanguageSwitcher";
 
 export const metadata: Metadata = {
@@ -7,11 +7,9 @@ export const metadata: Metadata = {
   description: "Legal notice and company information for realpricedata.com.",
   alternates: {
     canonical: "https://realpricedata.com/legal-notice",
-    languages: {
-      de: "https://realpricedata.com/impressum",
-      en: "https://realpricedata.com/en/legal-notice",
-      "x-default": "https://realpricedata.com/en/legal-notice",
-    },
+    languages: getAlternateLanguages("legal-notice", {
+      de: "/impressum",
+    }),
   },
   openGraph: getOpenGraph({
     title: "Legal Notice | realpricedata.com",

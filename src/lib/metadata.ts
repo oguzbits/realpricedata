@@ -101,7 +101,10 @@ export const siteMetadata: Metadata = {
 
 import { getAllCountries } from "./countries";
 
-export function getAlternateLanguages(path: string = "") {
+export function getAlternateLanguages(
+  path: string = "",
+  customTranslations: Record<string, string> = {},
+) {
   const baseUrl = "https://realpricedata.com";
   const normalizedPath = path.startsWith("/") ? path : `/${path}`;
   const cleanPath = normalizedPath === "/" ? "" : normalizedPath;
@@ -111,6 +114,12 @@ export function getAlternateLanguages(path: string = "") {
     // x-default should point to our primary/landing version (US)
     "x-default": `${baseUrl}${cleanPath}`,
   };
+
+  // Add custom translations first so they can be overridden by regional ones if needed,
+  // or serve as the base for specific languages.
+  Object.entries(customTranslations).forEach(([lang, url]) => {
+    alternates[lang] = url.startsWith("http") ? url : `${baseUrl}${url}`;
+  });
 
   liveCountries.forEach((country) => {
     // Correct ISO 3166-1 alpha-2 for United Kingdom is GB
@@ -128,9 +137,9 @@ export function getAlternateLanguages(path: string = "") {
     }
   });
 
-  // Root domain also serves as the general 'en' version
-  if (cleanPath === "") {
-    alternates["en"] = baseUrl;
+  // Root domain also serves as the general 'en' version if not already set
+  if (!alternates["en"]) {
+    alternates["en"] = `${baseUrl}${cleanPath}`;
   }
 
   return alternates;

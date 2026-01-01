@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { LanguageSwitcher } from "@/components/LanguageSwitcher";
-import { getOpenGraph } from "@/lib/metadata";
+import { getOpenGraph, getAlternateLanguages } from "@/lib/metadata";
 
 export const metadata: Metadata = {
   title: "Impressum | realpricedata.com",
@@ -8,11 +8,9 @@ export const metadata: Metadata = {
     "Impressum und rechtliche Angaben für realpricedata.com. Informationen gemäß § 5 DDG, Kontakt details und Haftungsausschluss.",
   alternates: {
     canonical: "https://realpricedata.com/impressum",
-    languages: {
-      de: "https://realpricedata.com/impressum",
-      en: "https://realpricedata.com/en/legal-notice",
-      "x-default": "https://realpricedata.com/en/legal-notice",
-    },
+    languages: getAlternateLanguages("legal-notice", {
+      de: "/impressum",
+    }),
   },
   openGraph: getOpenGraph({
     title: "Impressum | realpricedata.com",

@@ -2,11 +2,9 @@ import "@/app/globals.css";
 
 import { PromoBanner } from "@/components/layout/PromoBanner";
 import { ThemeProvider } from "@/components/theme-provider";
-import { siteMetadata } from "@/lib/metadata";
 import { NuqsProvider } from "@/providers/nuqs-provider";
 import { Analytics } from "@vercel/analytics/next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
-import { Metadata, Viewport } from "next";
 import { Inter } from "next/font/google";
 import * as React from "react";
 
@@ -17,26 +15,15 @@ const inter = Inter({
   variable: "--font-inter",
 });
 
-export const metadata: Metadata = siteMetadata;
-
-export const viewport: Viewport = {
-  width: "device-width",
-  initialScale: 1,
-  maximumScale: 5,
-  userScalable: true,
-  themeColor: [
-    { media: "(prefers-color-scheme: light)", color: "#ffffff" },
-    { media: "(prefers-color-scheme: dark)", color: "#000000" },
-  ],
-};
-
 export default function RootLayout({
   children,
+  lang = "en",
 }: {
   children: React.ReactNode;
+  lang?: string;
 }) {
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html lang={lang}>
       <head>
         <link rel="preconnect" href="https://m.media-amazon.com" />
         <link rel="dns-prefetch" href="https://m.media-amazon.com" />

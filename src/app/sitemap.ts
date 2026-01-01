@@ -14,29 +14,33 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   // Static routes
   const staticRoutes: MetadataRoute.Sitemap = [
-    "",
-    "/impressum",
-    "/datenschutz",
-    "/faq",
-    "/blog",
-    "/en/legal-notice",
-    "/en/privacy",
-  ].map((route) => {
-    const entry: MetadataRoute.Sitemap[number] = {
-      url: `${baseUrl}${route}`,
+    { path: "", priority: 1.0 },
+    { path: "/blog", priority: 0.8 },
+    { path: "/faq", priority: 0.7 },
+    { path: "/privacy", priority: 0.5, customTrans: { de: "/datenschutz" } },
+    {
+      path: "/datenschutz",
+      priority: 0.5,
+      customTrans: { de: "/datenschutz" },
+    },
+    { path: "/legal-notice", priority: 0.5, customTrans: { de: "/impressum" } },
+    { path: "/impressum", priority: 0.5, customTrans: { de: "/impressum" } },
+  ].map(({ path, priority, customTrans }) => {
+    // Determine the base path for alternates
+    // For legal pages, 'privacy' and 'legal-notice' are the base paths for all en-REGION variants
+    let alternatesPath = path;
+    if (path === "/datenschutz") alternatesPath = "/privacy";
+    if (path === "/impressum") alternatesPath = "/legal-notice";
+
+    return {
+      url: `${baseUrl}${path}`,
       lastModified: new Date(),
       changeFrequency: "daily" as const,
-      priority: route === "" ? 1.0 : 0.8,
+      priority,
+      alternates: {
+        languages: getAlternateLanguages(alternatesPath, customTrans),
+      },
     };
-
-    // Add alternates for the homepage
-    if (route === "") {
-      entry.alternates = {
-        languages: getAlternateLanguages(""),
-      };
-    }
-
-    return entry;
   });
 
   // Blog posts

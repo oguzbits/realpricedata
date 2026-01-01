@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { getOpenGraph } from "@/lib/metadata";
+import { getOpenGraph, getAlternateLanguages } from "@/lib/metadata";
 import { LanguageSwitcher } from "@/components/LanguageSwitcher";
 import { BUILD_TIME } from "@/lib/build-config";
 
@@ -9,11 +9,9 @@ export const metadata: Metadata = {
     "Privacy Policy for realpricedata.com. Learn about data protection, your rights, and our cookie-less analysis.",
   alternates: {
     canonical: "https://realpricedata.com/privacy",
-    languages: {
-      de: "https://realpricedata.com/datenschutz",
-      en: "https://realpricedata.com/en/privacy",
-      "x-default": "https://realpricedata.com/en/privacy",
-    },
+    languages: getAlternateLanguages("privacy", {
+      de: "/datenschutz",
+    }),
   },
   openGraph: getOpenGraph({
     title: "Privacy Policy | realpricedata.com",

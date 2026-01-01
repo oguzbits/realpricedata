@@ -38,7 +38,17 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       changeFrequency: "daily" as const,
       priority,
       alternates: {
-        languages: getAlternateLanguages(alternatesPath, customTrans),
+        languages: getAlternateLanguages(
+          alternatesPath,
+          customTrans,
+          ![
+            "/privacy",
+            "/datenschutz",
+            "/legal-notice",
+            "/impressum",
+            "/faq",
+          ].includes(path),
+        ),
       },
     };
   });

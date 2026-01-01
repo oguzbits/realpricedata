@@ -120,7 +120,7 @@ export function Footer({ country: propCountry }: FooterProps) {
                 <>
                   <li>
                     <Link
-                      href={`/${country}/impressum`}
+                      href="/impressum"
                       className="text-primary hover:underline"
                     >
                       Impressum
@@ -128,7 +128,7 @@ export function Footer({ country: propCountry }: FooterProps) {
                   </li>
                   <li>
                     <Link
-                      href={`/${country}/datenschutz`}
+                      href="/datenschutz"
                       className="text-primary hover:underline"
                     >
                       Datenschutz

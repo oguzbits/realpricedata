@@ -7,9 +7,13 @@ export const metadata: Metadata = {
   description: "Legal notice and company information for realpricedata.com.",
   alternates: {
     canonical: "https://realpricedata.com/legal-notice",
-    languages: getAlternateLanguages("legal-notice", {
-      de: "/impressum",
-    }),
+    languages: getAlternateLanguages(
+      "legal-notice",
+      {
+        de: "/impressum",
+      },
+      false,
+    ),
   },
   openGraph: getOpenGraph({
     title: "Legal Notice | realpricedata.com",

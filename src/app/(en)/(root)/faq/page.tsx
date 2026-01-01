@@ -14,7 +14,7 @@ export const metadata: Metadata = {
     "Find answers to common questions about realpricedata.com, price per unit comparison, and how to find the best deals.",
   alternates: {
     canonical: "https://realpricedata.com/faq",
-    languages: getAlternateLanguages("faq"),
+    languages: getAlternateLanguages("faq", {}, false),
   },
   openGraph: getOpenGraph({
     title: "FAQ - Frequently Asked Questions",

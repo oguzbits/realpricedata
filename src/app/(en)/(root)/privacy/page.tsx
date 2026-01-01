@@ -9,9 +9,13 @@ export const metadata: Metadata = {
     "Privacy Policy for realpricedata.com. Learn about data protection, your rights, and our cookie-less analysis.",
   alternates: {
     canonical: "https://realpricedata.com/privacy",
-    languages: getAlternateLanguages("privacy", {
-      de: "/datenschutz",
-    }),
+    languages: getAlternateLanguages(
+      "privacy",
+      {
+        de: "/datenschutz",
+      },
+      false,
+    ),
   },
   openGraph: getOpenGraph({
     title: "Privacy Policy | realpricedata.com",

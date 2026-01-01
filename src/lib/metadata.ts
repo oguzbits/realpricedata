@@ -104,6 +104,7 @@ import { getAllCountries } from "./countries";
 export function getAlternateLanguages(
   path: string = "",
   customTranslations: Record<string, string> = {},
+  includeRegions: boolean = true,
 ) {
   const baseUrl = "https://realpricedata.com";
   const normalizedPath = path.startsWith("/") ? path : `/${path}`;
@@ -115,27 +116,28 @@ export function getAlternateLanguages(
     "x-default": `${baseUrl}${cleanPath}`,
   };
 
-  // Add custom translations first so they can be overridden by regional ones if needed,
-  // or serve as the base for specific languages.
+  // Add custom translations first
   Object.entries(customTranslations).forEach(([lang, url]) => {
     alternates[lang] = url.startsWith("http") ? url : `${baseUrl}${url}`;
   });
 
-  liveCountries.forEach((country) => {
-    // Correct ISO 3166-1 alpha-2 for United Kingdom is GB
-    let region = country.code.toUpperCase();
-    if (region === "UK") region = "GB";
+  if (includeRegions) {
+    liveCountries.forEach((country) => {
+      // Correct ISO 3166-1 alpha-2 for United Kingdom is GB
+      let region = country.code.toUpperCase();
+      if (region === "UK") region = "GB";
 
-    // For our site, we use English UI across all markets: 'en-REGION'
-    const hreflang = `en-${region}`;
+      // For our site, we use English UI across all markets: 'en-REGION'
+      const hreflang = `en-${region}`;
 
-    // For US, we use the root domain for all pages
-    if (country.code === "us") {
-      alternates[hreflang] = `${baseUrl}${cleanPath}`;
-    } else {
-      alternates[hreflang] = `${baseUrl}/${country.code}${cleanPath}`;
-    }
-  });
+      // For US, we use the root domain for all pages
+      if (country.code === "us") {
+        alternates[hreflang] = `${baseUrl}${cleanPath}`;
+      } else {
+        alternates[hreflang] = `${baseUrl}/${country.code}${cleanPath}`;
+      }
+    });
+  }
 
   // Root domain also serves as the general 'en' version if not already set
   if (!alternates["en"]) {

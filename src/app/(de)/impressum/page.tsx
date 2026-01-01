@@ -8,9 +8,13 @@ export const metadata: Metadata = {
     "Impressum und rechtliche Angaben für realpricedata.com. Informationen gemäß § 5 DDG, Kontakt details und Haftungsausschluss.",
   alternates: {
     canonical: "https://realpricedata.com/impressum",
-    languages: getAlternateLanguages("legal-notice", {
-      de: "/impressum",
-    }),
+    languages: getAlternateLanguages(
+      "legal-notice",
+      {
+        de: "/impressum",
+      },
+      false,
+    ),
   },
   openGraph: getOpenGraph({
     title: "Impressum | realpricedata.com",

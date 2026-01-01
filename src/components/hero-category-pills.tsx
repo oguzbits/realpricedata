@@ -22,6 +22,7 @@ export function HeroCategoryPills({ country }: { country: CountryCode }) {
             key={category.slug}
             href={getCategoryPath(category.slug as CategorySlug, country)}
             className="group border-primary/20 bg-secondary hover:bg-secondary/80 flex items-center gap-2 rounded-full border px-4 py-2 no-underline shadow-sm transition-all"
+            prefetch={true}
           >
             <Icon className="text-primary h-3.5 w-3.5" />
             <span className="text-primary text-base font-bold transition-colors group-hover:underline">

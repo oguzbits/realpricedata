@@ -3,24 +3,26 @@ import ValidImpressumPage, {
 } from "@/app/(de)/impressum/page";
 import { isValidCountryCode } from "@/lib/countries";
 import { generateCountryParams } from "@/lib/static-params";
-import { notFound, redirect } from "next/navigation";
+import { notFound } from "next/navigation";
 
 export async function generateStaticParams() {
   return generateCountryParams();
 }
 
-export async function generateMetadata(props: any) {
-  const params = await props.params;
-  const { country } = params;
+interface Props {
+  params: Promise<{ country: string }>;
+}
+
+export async function generateMetadata({ params }: Props) {
+  const { country } = await params;
   if (!isValidCountryCode(country)) {
     return { title: "Page Not Found" };
   }
   return impressumMetadata;
 }
 
-export default async function LocalizedImpressumPage(props: any) {
-  const params = await props.params;
-  const { country } = params;
+export default async function LocalizedImpressumPage({ params }: Props) {
+  const { country } = await params;
 
   if (!isValidCountryCode(country)) {
     notFound();

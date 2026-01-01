@@ -3,7 +3,7 @@ import { isValidCountryCode, type CountryCode } from "@/lib/countries";
 import { getAlternateLanguages, getOpenGraph } from "@/lib/metadata";
 import { generateCountryParams } from "@/lib/static-params";
 import { Metadata } from "next";
-import { notFound, redirect } from "next/navigation";
+import { notFound } from "next/navigation";
 
 type Props = {
   params: Promise<{ country: string }>;

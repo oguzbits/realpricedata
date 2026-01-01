@@ -29,7 +29,7 @@ export function SupportedMarketplaces({
               key={c.code}
               href={href}
               prefetch={c.code !== "us"}
-              onClick={(e) => {
+              onClick={() => {
                 if (c.isLive) {
                   // Save preference to cookie + localStorage
                   saveCountryPreference(c.code);

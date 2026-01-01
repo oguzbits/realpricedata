@@ -2,14 +2,14 @@ import { AllCategoriesView } from "@/components/category/AllCategoriesView";
 import { getCategoryHierarchy } from "@/lib/categories";
 import {
   DEFAULT_COUNTRY,
-  isValidCountryCode,
   getAllCountries,
+  isValidCountryCode,
   type CountryCode,
 } from "@/lib/countries";
 import { getAlternateLanguages, getOpenGraph } from "@/lib/metadata";
 import { generateCountryParams } from "@/lib/static-params";
 import { Metadata } from "next";
-import { notFound, redirect } from "next/navigation";
+import { notFound } from "next/navigation";
 
 interface Props {
   params: Promise<{

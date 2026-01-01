@@ -2,8 +2,8 @@ import { CategoryProductsView } from "@/components/category/CategoryProductsView
 import { getCategoryBySlug, getCategoryPath } from "@/lib/categories";
 import {
   DEFAULT_COUNTRY,
-  isValidCountryCode,
   getAllCountries,
+  isValidCountryCode,
   type CountryCode,
 } from "@/lib/countries";
 import {
@@ -13,7 +13,7 @@ import {
 } from "@/lib/metadata";
 import { generateCategoryProductParams } from "@/lib/static-params";
 import { Metadata } from "next";
-import { notFound, redirect } from "next/navigation";
+import { notFound } from "next/navigation";
 
 interface Props {
   params: Promise<{
@@ -69,7 +69,7 @@ export default async function CategoryProductsPage({
   params,
   searchParams,
 }: Props) {
-  const { country, parent, category: categorySlug } = await params;
+  const { country, category: categorySlug } = await params;
   const filters = await searchParams;
 
   // Handle valid country codes

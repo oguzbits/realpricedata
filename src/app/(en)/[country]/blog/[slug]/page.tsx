@@ -3,7 +3,6 @@ import { getBlogPostBySlug } from "@/lib/blog";
 import { getAlternateLanguages, getOpenGraph } from "@/lib/metadata";
 import { generateBlogPostParams } from "@/lib/static-params";
 import { Metadata } from "next";
-import { redirect } from "next/navigation";
 
 interface LocalizedBlogPostPageProps {
   params: Promise<{ country: string; slug: string }>;

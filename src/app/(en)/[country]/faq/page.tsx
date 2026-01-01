@@ -9,18 +9,20 @@ export async function generateStaticParams() {
   return generateCountryParams();
 }
 
-export async function generateMetadata(props: any) {
-  const params = await props.params;
-  const { country } = params;
+interface Props {
+  params: Promise<{ country: string }>;
+}
+
+export async function generateMetadata({ params }: Props) {
+  const { country } = await params;
   if (!isValidCountryCode(country)) {
     return { title: "Page Not Found" };
   }
   return faqMetadata;
 }
 
-export default async function LocalizedFAQPage(props: any) {
-  const params = await props.params;
-  const { country } = params;
+export default async function LocalizedFAQPage({ params }: Props) {
+  const { country } = await params;
 
   if (!isValidCountryCode(country)) {
     notFound();

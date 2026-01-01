@@ -11,8 +11,6 @@ import {
 } from "@/lib/server/cached-countries";
 import { getAllProducts } from "@/lib/server/cached-products";
 import { adaptToUIModel, getLocalizedProductData } from "@/lib/utils/products";
-import Image from "next/image";
-import Link from "next/link";
 import Script from "next/script";
 
 export async function HomeContent({ country }: { country: CountryCode }) {

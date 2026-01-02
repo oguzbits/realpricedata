@@ -68,8 +68,8 @@ export async function CategoryProductsView({
     return new Intl.NumberFormat(countryConfig?.locale || "en-US", {
       style: "currency",
       currency: countryConfig?.currency || "USD",
-      minimumSignificantDigits: 4,
-      maximumSignificantDigits: 4,
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
     }).format(value);
   };
 

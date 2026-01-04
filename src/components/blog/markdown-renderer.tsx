@@ -31,7 +31,7 @@ export function MarkdownRenderer({
           a: ({ href, children }) => {
             const isInternal =
               href?.startsWith("/") ||
-              href?.startsWith("https://realpricedata.com");
+              href?.startsWith("https://cleverprices.com");
             return (
               <Link
                 href={href || "#"}

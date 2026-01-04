@@ -95,7 +95,7 @@ export function BreadcrumbStructuredData({
         "@type": "ListItem",
         position: index + 1,
         name: item.name,
-        item: `https://realpricedata.com${item.href}`,
+        item: `https://cleverprices.com${item.href}`,
       })),
   };
 

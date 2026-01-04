@@ -35,7 +35,7 @@ const CATEGORY_MAP: Record<CategorySlug, Omit<Category, "slug">> = {
     name: "Electronics",
     description: "Digital storage solutions - compare price per terabyte",
     icon: HardDrive,
-    metaTitle: "Hard Drive Storage - Best Price Per TB | realpricedata.com",
+    metaTitle: "Hard Drive Storage - Best Price Per TB | cleverprices.com",
     metaDescription:
       "Compare hard drive and SSD prices by cost per terabyte. Find the best deals on storage from top brands like Samsung, WD, Seagate, and Crucial.",
   },
@@ -47,7 +47,7 @@ const CATEGORY_MAP: Record<CategorySlug, Omit<Category, "slug">> = {
     icon: HardDrive,
     parent: "electronics",
     unitType: "TB",
-    metaTitle: "Hard Drives & SSDs - Compare Price Per TB | realpricedata.com",
+    metaTitle: "Hard Drives & SSDs - Compare Price Per TB | cleverprices.com",
     metaDescription:
       "Find the best hard drive and SSD deals by comparing price per terabyte. Compare internal and external storage from top brands.",
     popularFilters: [
@@ -64,7 +64,7 @@ const CATEGORY_MAP: Record<CategorySlug, Omit<Category, "slug">> = {
     icon: MemoryStick,
     parent: "electronics",
     unitType: "GB",
-    metaTitle: "RAM & Memory - Compare Price Per GB | realpricedata.com",
+    metaTitle: "RAM & Memory - Compare Price Per GB | cleverprices.com",
     metaDescription:
       "Find the best RAM and memory deals by comparing price per gigabyte. Compare DDR4 and DDR5 modules from top brands like Crucial, Lexar, and Patriot.",
     popularFilters: [
@@ -81,7 +81,7 @@ const CATEGORY_MAP: Record<CategorySlug, Omit<Category, "slug">> = {
     icon: Zap,
     parent: "electronics",
     unitType: "W",
-    metaTitle: "Power Supplies - Compare Price Per Watt | realpricedata.com",
+    metaTitle: "Power Supplies - Compare Price Per Watt | cleverprices.com",
     metaDescription:
       "Find the best power supply deals by comparing price per watt. Compare 80+ Bronze, Gold, and Platinum PSUs from top brands.",
     popularFilters: [

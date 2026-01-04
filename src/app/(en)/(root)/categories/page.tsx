@@ -5,7 +5,7 @@ import { getAlternateLanguages, getOpenGraph } from "@/lib/metadata";
 import { Metadata } from "next";
 
 export async function generateMetadata(): Promise<Metadata> {
-  const canonicalUrl = "https://realpricedata.com/categories";
+  const canonicalUrl = "https://cleverprices.com/categories";
 
   const title = `All Categories - Amazon ${DEFAULT_COUNTRY.toUpperCase()}`;
   const description = `Browse all tracked product categories on Amazon ${DEFAULT_COUNTRY.toUpperCase()}. Compare hardware prices by true cost per TB/GB to find the best value deals.`;

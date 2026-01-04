@@ -1,5 +1,5 @@
 /**
- * Shared type definitions for RealPriceData
+ * Shared type definitions for CleverPrices
  * Centralized types to avoid duplication across the codebase
  */
 

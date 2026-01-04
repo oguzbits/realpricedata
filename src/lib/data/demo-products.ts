@@ -241,7 +241,7 @@ export const powerSupplyProducts: PowerSupplyProduct[] = [
 export const categoryConfig = {
   harddrives: {
     title: "Hard Drives",
-    url: "realpricedata.com/us/electronics/hard-drives",
+    url: "cleverprices.com/us/electronics/hard-drives",
     unitLabel: "Price/TB",
     currency: "$",
     insightText: "The 18TB drive is 4x cheaper per TB than the 8TB SSD!",
@@ -256,7 +256,7 @@ export const categoryConfig = {
   },
   batteries: {
     title: "Batteries",
-    url: "realpricedata.com/de/electronics/batteries",
+    url: "cleverprices.com/de/electronics/batteries",
     unitLabel: "Price/Unit",
     currency: "€",
     insightText: "The 48-pack is 6x cheaper per battery than the 8-pack!",
@@ -271,7 +271,7 @@ export const categoryConfig = {
   },
   powersupplies: {
     title: "Power Supplies",
-    url: "realpricedata.com/us/electronics/power-supplies",
+    url: "cleverprices.com/us/electronics/power-supplies",
     unitLabel: "Price/W",
     currency: "$",
     insightText: "Mid-range 750W units often offer the best value per watt!",

@@ -4,11 +4,11 @@ import { LanguageSwitcher } from "@/components/LanguageSwitcher";
 import { BUILD_TIME } from "@/lib/build-config";
 
 export const metadata: Metadata = {
-  title: "Datenschutzerklärung | realpricedata.com",
+  title: "Datenschutzerklärung | cleverprices.com",
   description:
-    "Datenschutzerklärung für realpricedata.com. Erfahren Sie alles über Datenschutz, Ihre Rechte und unsere cookiefreie Analyse.",
+    "Datenschutzerklärung für cleverprices.com. Erfahren Sie alles über Datenschutz, Ihre Rechte und unsere cookiefreie Analyse.",
   alternates: {
-    canonical: "https://realpricedata.com/datenschutz",
+    canonical: "https://cleverprices.com/datenschutz",
     languages: getAlternateLanguages(
       "privacy",
       {
@@ -18,9 +18,9 @@ export const metadata: Metadata = {
     ),
   },
   openGraph: getOpenGraph({
-    title: "Datenschutzerklärung | realpricedata.com",
+    title: "Datenschutzerklärung | cleverprices.com",
     description: "Datenschutzerklärung und Informationen zum Datenschutz.",
-    url: "https://realpricedata.com/datenschutz",
+    url: "https://cleverprices.com/datenschutz",
   }),
 };
 
@@ -64,7 +64,7 @@ export default function DatenschutzPage() {
             </p>
             <p className="mb-2">Boberger Anger 87</p>
             <p className="mb-2">21031 Hamburg</p>
-            <p className="mb-4">E-Mail: info@realpricedata.com</p>
+            <p className="mb-4">E-Mail: info@cleverprices.com</p>
           </div>
 
           <h3 className="mb-3 text-xl font-semibold">

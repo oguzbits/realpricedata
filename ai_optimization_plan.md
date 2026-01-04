@@ -83,7 +83,7 @@ Add the following structured data to your pages:
   "dateModified": "2024-12-11",
   "publisher": {
     "@type": "Organization",
-    "name": "RealPriceData",
+    "name": "CleverPrices",
     "logo": {
       "@type": "ImageObject",
       "url": "https://yoursite.com/logo.png"
@@ -126,10 +126,10 @@ Add the following structured data to your pages:
 Create `/public/llms.txt` with the following structure:
 
 ```
-# RealPriceData - AI-Optimized Site Map
+# CleverPrices - AI-Optimized Site Map
 
 ## About
-RealPriceData tracks and compares prices for storage devices and electronics across multiple countries, helping users find the best value deals.
+CleverPrices tracks and compares prices for storage devices and electronics across multiple countries, helping users find the best value deals.
 
 ## Key Pages
 
@@ -148,7 +148,7 @@ RealPriceData tracks and compares prices for storage devices and electronics acr
 - Price History Data: /data/price-history
 
 ## Contact
-Email: contact@realpricedata.com
+Email: info@cleverprices.com
 ```
 
 ### 1.3 Update robots.txt
@@ -336,7 +336,7 @@ Add:
 
 - Brief "What We Do" section with clear value proposition
 - "Latest Insights" section with recent findings
-- FAQ section: "How does RealPriceData work?"
+- FAQ section: "How does CleverPrices work?"
 
 ### 4.2 Category Pages Enhancements
 

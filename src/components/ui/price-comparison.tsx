@@ -98,7 +98,7 @@ export function PriceComparison() {
               choosing the right product —
               <span className="text-muted-foreground">
                 {" "}
-                Real Price Data shows you this automatically
+                CleverPrices shows you this automatically
               </span>
             </p>
           </div>

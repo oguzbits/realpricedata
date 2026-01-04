@@ -24,8 +24,8 @@ export async function generateMetadata({
 
   const isUS = country.toLowerCase() === "us";
   const url = isUS
-    ? `https://realpricedata.com/blog/${post.slug}`
-    : `https://realpricedata.com/${country}/blog/${post.slug}`;
+    ? `https://cleverprices.com/blog/${post.slug}`
+    : `https://cleverprices.com/${country}/blog/${post.slug}`;
 
   return {
     title: post.title,

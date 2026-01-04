@@ -19,21 +19,20 @@ export function Navbar({ country: propCountry }: { country?: string }) {
             href={country === "us" ? "/" : `/${country}`}
             className="flex items-center space-x-2 no-underline"
             title="Amazon Price Per Unit Tracker, Storage Deals & True Value"
-            aria-label="Real Price Data Home - Amazon Price Per Unit Tracker"
+            aria-label="CleverPrices Home - Amazon Price Per Unit Tracker"
             prefetch={true}
           >
             <Image
               src="/icon-192.png"
-              alt="Real Price Data Logo"
+              alt="CleverPrices Logo"
               width={28}
               height={28}
               className="h-7 w-7"
               priority
             />
             <h3 className="text-lg font-black tracking-tight">
-              <span className="text-(--ccc-red)">real</span>
-              <span className="text-(--ccc-orange)">price</span>
-              <span className="text-(--ccc-yellow)">data</span>
+              <span className="text-(--ccc-red)">clever</span>
+              <span className="text-(--ccc-orange)">prices</span>
             </h3>
           </Link>
         </div>

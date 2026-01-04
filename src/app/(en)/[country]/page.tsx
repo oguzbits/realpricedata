@@ -52,7 +52,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     const validCountry = DEFAULT_COUNTRY;
     const title = `${category.name} - Amazon ${validCountry.toUpperCase()}`;
     const description = `Track ${category.name} prices on Amazon ${validCountry.toUpperCase()} by true cost per TB/GB. Compare hardware value and find the best storage deals instantly.`;
-    const canonicalUrl = `https://realpricedata.com/${category.slug}`;
+    const canonicalUrl = `https://cleverprices.com/${category.slug}`;
 
     return {
       title,

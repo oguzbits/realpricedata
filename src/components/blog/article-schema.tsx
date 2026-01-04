@@ -12,22 +12,22 @@ export function ArticleSchema({ post }: ArticleSchemaProps) {
     description: post.description,
     author: {
       "@type": "Organization",
-      name: "RealPriceData",
-      url: "https://realpricedata.com",
+      name: "CleverPrices",
+      url: "https://cleverprices.com",
     },
     publisher: {
       "@type": "Organization",
-      name: "RealPriceData",
+      name: "CleverPrices",
       logo: {
         "@type": "ImageObject",
-        url: "https://realpricedata.com/icon-512.png",
+        url: "https://cleverprices.com/icon-512.png",
       },
     },
     datePublished: post.publishDate,
     dateModified: post.lastUpdated || post.publishDate,
     mainEntityOfPage: {
       "@type": "WebPage",
-      "@id": `https://realpricedata.com/blog/${post.slug}`,
+      "@id": `https://cleverprices.com/blog/${post.slug}`,
     },
     // Optional: add citations/references to schema if desired
     citations: post.references || [],

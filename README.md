@@ -1,4 +1,4 @@
-# RealPriceData
+# CleverPrices
 
 Price comparison platform focused on the **Price per Unit** metric. Find the best value by comparing products based on their unit price (e.g., $ per TB for hard drives, $ per load for detergent).
 
@@ -162,7 +162,7 @@ Private project – see the [LICENSE](LICENSE) file for details.
 
 ## About this repository
 
-This project powers **realpricedata.com** and is published publicly as a professional portfolio project.
+This project powers **cleverprices.com** and is published publicly as a professional portfolio project.
 
 The source code is available for:
 

@@ -9,7 +9,7 @@ import { getAlternateLanguages } from "@/lib/metadata";
 import { MetadataRoute } from "next";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const baseUrl = "https://realpricedata.com";
+  const baseUrl = "https://cleverprices.com";
   const liveCountries = getAllCountries().filter((c) => c.isLive);
 
   // Static routes

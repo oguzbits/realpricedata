@@ -22,15 +22,14 @@ export function Footer({ country: propCountry }: FooterProps) {
             >
               <Image
                 src="/icon-192.png"
-                alt="Real Price Data Logo"
+                alt="CleverPrices Logo"
                 width={24}
                 height={24}
                 className="h-6 w-6"
               />
               <h3 className="text-lg font-black tracking-tight">
-                <span className="text-(--ccc-red)">real</span>
-                <span className="text-(--ccc-orange)">price</span>
-                <span className="text-(--ccc-yellow)">data</span>
+                <span className="text-(--ccc-red)">clever</span>
+                <span className="text-(--ccc-orange)">prices</span>
               </h3>
             </Link>
             <p className="text-muted-foreground max-w-xs text-base">
@@ -94,7 +93,7 @@ export function Footer({ country: propCountry }: FooterProps) {
           </nav>
 
           <nav className="text-base" aria-label="Legal information">
-            <h4 className="mb-3 font-semibold">About realpricedata.com</h4>
+            <h4 className="mb-3 font-semibold">About cleverprices.com</h4>
             <ul className="space-y-2">
               <li>
                 <Link
@@ -173,7 +172,7 @@ export function Footer({ country: propCountry }: FooterProps) {
               affiliates.
             </p>
             <p>
-              &copy; {COPYRIGHT_YEAR} realpricedata.com. All rights reserved.
+              &copy; {COPYRIGHT_YEAR} cleverprices.com. All rights reserved.
             </p>
           </div>
         </div>

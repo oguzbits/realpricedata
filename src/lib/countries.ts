@@ -134,7 +134,7 @@ export function detectCountryFromLocale(locale?: string): CountryCode {
 }
 
 // LocalStorage key for country preference (Deprecated, kept for cleanup)
-export const COUNTRY_STORAGE_KEY = "realpricedata_country";
+export const COUNTRY_STORAGE_KEY = "cleverprices_country";
 
 // Get saved country preference from Cookies (Client-side)
 export function getSavedCountry(): CountryCode | null {

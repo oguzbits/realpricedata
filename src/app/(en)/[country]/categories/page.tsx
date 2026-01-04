@@ -29,8 +29,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     : DEFAULT_COUNTRY;
 
   const canonicalUrl = isUS
-    ? "https://realpricedata.com/categories"
-    : `https://realpricedata.com/${validCountry}/categories`;
+    ? "https://cleverprices.com/categories"
+    : `https://cleverprices.com/${validCountry}/categories`;
 
   const title = `All Categories - Amazon ${validCountry.toUpperCase()}`;
   const description = `Browse all tracked product categories on Amazon ${validCountry.toUpperCase()}. Compare hardware prices by true cost per TB/GB to find the best value deals.`;

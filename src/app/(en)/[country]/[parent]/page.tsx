@@ -38,7 +38,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
     if (!parentCategory) return { title: "Category Not Found" };
 
-    const canonicalUrl = `https://realpricedata.com/${validCountry !== "us" ? validCountry + "/" : ""}${parentSlug.toLowerCase()}`;
+    const canonicalUrl = `https://cleverprices.com/${validCountry !== "us" ? validCountry + "/" : ""}${parentSlug.toLowerCase()}`;
     const title = `${parentCategory.name} - Amazon ${validCountry.toUpperCase()}`;
     const description = `Track ${parentCategory.name} prices on Amazon ${validCountry.toUpperCase()} by true cost per TB/GB. Compare hardware value and find the best storage deals instantly.`;
 
@@ -70,7 +70,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       const validCountry = DEFAULT_COUNTRY;
       const title = `${childCategory.name} - Amazon ${validCountry.toUpperCase()}`;
       const description = `Compare ${childCategory.name} on Amazon ${validCountry.toUpperCase()} by true cost per TB/GB. Find the best value on storage and memory deals instantly.`;
-      const canonicalUrl = `https://realpricedata.com/${parentCategory.slug}/${childCategory.slug}`;
+      const canonicalUrl = `https://cleverprices.com/${parentCategory.slug}/${childCategory.slug}`;
 
       return {
         title,

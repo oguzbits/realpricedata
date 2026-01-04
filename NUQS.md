@@ -392,6 +392,6 @@ const { filters, setSearch, toggleArrayFilter } = useProductFilters();
 
 ## Project Files
 
-- **Provider**: [nuqs-provider.tsx](file:///Users/oguz/Desktop/Dev/realpricedata/src/providers/nuqs-provider.tsx)
-- **Hook**: [use-product-filters.ts](file:///Users/oguz/Desktop/Dev/realpricedata/src/hooks/use-product-filters.ts)
-- **Example**: [Product Category Page](file:///Users/oguz/Desktop/Dev/realpricedata/src/app/[country]/[parent]/[category]/page.tsx)
+- **Provider**: [nuqs-provider.tsx](file:///Users/oguz/Desktop/Dev/cleverprices/src/providers/nuqs-provider.tsx)
+- **Hook**: [use-product-filters.ts](file:///Users/oguz/Desktop/Dev/cleverprices/src/hooks/use-product-filters.ts)
+- **Example**: [Product Category Page](file:///Users/oguz/Desktop/Dev/cleverprices/src/app/[country]/[parent]/[category]/page.tsx)

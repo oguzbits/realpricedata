@@ -52,11 +52,11 @@ export async function HomeContent({ country }: { country: CountryCode }) {
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "WebSite",
-    name: "realpricedata.com",
-    url: "https://realpricedata.com",
+    name: "cleverprices.com",
+    url: "https://cleverprices.com",
     potentialAction: {
       "@type": "SearchAction",
-      target: "https://realpricedata.com/search?q={search_term_string}",
+      target: "https://cleverprices.com/search?q={search_term_string}",
       "query-input": "required name=search_term_string",
     },
   };
@@ -86,9 +86,8 @@ export async function HomeContent({ country }: { country: CountryCode }) {
               </h1>
               <p className="text-muted-foreground mb-8 max-w-xl text-lg leading-relaxed md:text-xl">
                 <strong className="font-black tracking-tight">
-                  <span className="text-(--ccc-red)">real</span>
-                  <span className="text-(--ccc-orange)">price</span>
-                  <span className="text-(--ccc-yellow)">data</span>
+                  <span className="text-(--ccc-red)">clever</span>
+                  <span className="text-(--ccc-orange)">prices</span>
                   <span className="text-muted-foreground/60">.com</span>
                 </strong>{" "}
                 is an Amazon price tracker and unit-price calculator to ensure

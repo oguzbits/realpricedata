@@ -3,4 +3,4 @@ User-agent: *
 Allow: /
 
 # Sitemap
-Sitemap: https://realpricedata.com/sitemap.xml
+Sitemap: https://cleverprices.com/sitemap.xml

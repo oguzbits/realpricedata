@@ -3,11 +3,11 @@ import { LanguageSwitcher } from "@/components/LanguageSwitcher";
 import { getOpenGraph, getAlternateLanguages } from "@/lib/metadata";
 
 export const metadata: Metadata = {
-  title: "Impressum | realpricedata.com",
+  title: "Impressum | cleverprices.com",
   description:
-    "Impressum und rechtliche Angaben für realpricedata.com. Informationen gemäß § 5 DDG, Kontakt details und Haftungsausschluss.",
+    "Impressum und rechtliche Angaben für cleverprices.com. Informationen gemäß § 5 DDG, Kontakt details und Haftungsausschluss.",
   alternates: {
-    canonical: "https://realpricedata.com/impressum",
+    canonical: "https://cleverprices.com/impressum",
     languages: getAlternateLanguages(
       "legal-notice",
       {
@@ -17,9 +17,9 @@ export const metadata: Metadata = {
     ),
   },
   openGraph: getOpenGraph({
-    title: "Impressum | realpricedata.com",
-    description: "Impressum und rechtliche Angaben für realpricedata.com.",
-    url: "https://realpricedata.com/impressum",
+    title: "Impressum | cleverprices.com",
+    description: "Impressum und rechtliche Angaben für cleverprices.com.",
+    url: "https://cleverprices.com/impressum",
   }),
 };
 
@@ -46,7 +46,7 @@ export default function ImpressumPage() {
         <section>
           <h2 className="mb-4 text-2xl font-semibold">Kontakt</h2>
           <div className="bg-card/50 border-primary/20 rounded-lg border p-6">
-            <p className="mb-2">E-Mail: info@realpricedata.com</p>
+            <p className="mb-2">E-Mail: info@cleverprices.com</p>
           </div>
         </section>
 
@@ -106,7 +106,7 @@ export default function ImpressumPage() {
           <div className="bg-card/50 border-primary/20 space-y-4 rounded-lg border p-6">
             <h3 className="text-lg font-semibold">Leistungsbeschreibung</h3>
             <p>
-              realpricedata.com ist ein Preisvergleichsportal, das es Nutzern
+              cleverprices.com ist ein Preisvergleichsportal, das es Nutzern
               ermöglicht, Preise verschiedener Produkte zu vergleichen. Wir
               verkaufen selbst keine Produkte, sondern verweisen auf Angebote
               Dritter (z.B. Amazon).

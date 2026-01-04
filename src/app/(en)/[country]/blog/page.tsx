@@ -20,8 +20,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const description =
     "Expert analysis of RAM, SSD, and HDD pricing trends. Track market fluctuations and get the best value for your PC build.";
   const url = isUS
-    ? "https://realpricedata.com/blog"
-    : `https://realpricedata.com/${country}/blog`;
+    ? "https://cleverprices.com/blog"
+    : `https://cleverprices.com/${country}/blog`;
 
   return {
     title,

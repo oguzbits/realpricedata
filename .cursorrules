@@ -1,15 +1,15 @@
-# realpricedata.com - AI Assistant Rules
+# cleverprices.com - AI Assistant Rules
 
-You are working on realpricedata.com, a premium price comparison platform focused on "Price per Unit" analysis.
+You are working on cleverprices.com, a premium price comparison platform focused on "Price per Unit" analysis.
 
 ## Core Principles
 
 1.  **Price per Unit First**: All product categories must support meaningful unit price comparison (e.g., $/TB, $/kg, $/count).
 2.  **Premium UI (Zinc Aesthetic)**: Use the Zinc/Grey palette. Dark mode by default with glassmorphism, smooth animations, and subtle orange accents.
 3.  **SEO & Branding**:
-    - Always use `realpricedata.com` for branding (avoid "RealPriceData").
+    - Always use `cleverprices.com` for branding (avoid "CleverPrices").
     - Every page must have a unique title, meta description, canonical URL, and Open Graph tags.
-    - Title format: `[Page Title] - realpricedata.com`.
+    - Title format: `[Page Title] - cleverprices.com`.
 4.  **Performance**: Prioritize local assets (e.g., use local SVG flags in `/public/flags/` instead of CDNs).
 
 ## Technology Stack

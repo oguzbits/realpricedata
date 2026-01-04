@@ -7,6 +7,6 @@ export default function robots(): MetadataRoute.Robots {
       allow: "/",
       disallow: "/private/",
     },
-    sitemap: "https://realpricedata.com/sitemap.xml",
+    sitemap: "https://cleverprices.com/sitemap.xml",
   };
 }

@@ -11,15 +11,15 @@ import Link from "next/link";
 export const metadata: Metadata = {
   title: "FAQ - Frequently Asked Questions",
   description:
-    "Find answers to common questions about realpricedata.com, price per unit comparison, and how to find the best deals.",
+    "Find answers to common questions about cleverprices.com, price per unit comparison, and how to find the best deals.",
   alternates: {
-    canonical: "https://realpricedata.com/faq",
+    canonical: "https://cleverprices.com/faq",
     languages: getAlternateLanguages("faq", {}, false),
   },
   openGraph: getOpenGraph({
     title: "FAQ - Frequently Asked Questions",
-    description: "Find answers to common questions about realpricedata.com.",
-    url: "https://realpricedata.com/faq",
+    description: "Find answers to common questions about cleverprices.com.",
+    url: "https://cleverprices.com/faq",
   }),
 };
 
@@ -37,10 +37,10 @@ export default function FAQPage() {
       <Accordion type="single" collapsible className="w-full">
         <AccordionItem value="item-1">
           <AccordionTrigger className="text-left font-semibold">
-            What is realpricedata.com?
+            What is cleverprices.com?
           </AccordionTrigger>
           <AccordionContent className="text-muted-foreground leading-relaxed">
-            realpricedata.com is a specialized price comparison engine that
+            cleverprices.com is a specialized price comparison engine that
             focuses on the &quot;price per unit&quot; (e.g., price per Terabyte,
             price per Gigabyte, or price per item). Unlike standard price
             comparison sites that just show the total price, we help you find
@@ -182,7 +182,7 @@ export default function FAQPage() {
 
         <AccordionItem value="item-10">
           <AccordionTrigger className="text-left font-semibold">
-            Is realpricedata.com free to use?
+            Is cleverprices.com free to use?
           </AccordionTrigger>
           <AccordionContent className="text-muted-foreground leading-relaxed">
             Yes, it is completely free for users. We are supported by the Amazon

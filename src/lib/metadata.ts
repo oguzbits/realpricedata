@@ -8,21 +8,21 @@ export const coreKeywords = [
   "true value finder",
   "best value hardware",
   "Amazon hardware deals",
-  "realpricedata",
+  "cleverprices",
 ];
 
 export const siteMetadata: Metadata = {
-  metadataBase: new URL("https://realpricedata.com"),
+  metadataBase: new URL("https://cleverprices.com"),
   title: {
-    default: "Amazon Unit Price Tracker & Deals | realpricedata.com",
-    template: "%s | realpricedata.com",
+    default: "Amazon Unit Price Tracker & Deals | cleverprices.com",
+    template: "%s | cleverprices.com",
   },
   description:
     "Amazon price tracker for hardware & storage. Compare HDD, SSD, and RAM by true cost per TB/GB. Find the best value hardware deals instantly.",
   keywords: coreKeywords,
-  authors: [{ name: "realpricedata.com Team" }],
-  creator: "realpricedata.com Team",
-  applicationName: "realpricedata.com",
+  authors: [{ name: "cleverprices.com Team" }],
+  creator: "cleverprices.com Team",
+  applicationName: "cleverprices.com",
   manifest: "/site.webmanifest",
   icons: {
     icon: [
@@ -49,32 +49,32 @@ export const siteMetadata: Metadata = {
   openGraph: {
     type: "website",
     locale: "en_US",
-    title: "realpricedata.com - Unit Price Tracker",
+    title: "cleverprices.com - Unit Price Tracker",
     description:
       "Compare Amazon hardware by true cost per TB/GB. Track HDD, SSD, and RAM prices to find the best value deals instantly.",
-    siteName: "realpricedata.com",
+    siteName: "cleverprices.com",
     images: [
       {
         url: "/og-image.png",
         width: 1200,
         height: 630,
-        alt: "realpricedata.com - Find the best value on Amazon US",
+        alt: "cleverprices.com - Find the best value on Amazon US",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "realpricedata.com - Unit Price Tracker",
+    title: "cleverprices.com - Unit Price Tracker",
     description:
       "Compare Amazon hardware by true cost per TB/GB. Track HDD, SSD, and RAM prices to find the best value deals instantly.",
     images: ["/og-image.png"],
-    creator: "@realpricedata",
-    site: "@realpricedata",
+    creator: "@cleverprices",
+    site: "@cleverprices",
   },
   appleWebApp: {
     capable: true,
     statusBarStyle: "default",
-    title: "realpricedata.com",
+    title: "cleverprices.com",
   },
   formatDetection: {
     telephone: false,
@@ -106,7 +106,7 @@ export function getAlternateLanguages(
   customTranslations: Record<string, string> = {},
   includeRegions: boolean = true,
 ) {
-  const baseUrl = "https://realpricedata.com";
+  const baseUrl = "https://cleverprices.com";
   const normalizedPath = path.startsWith("/") ? path : `/${path}`;
   const cleanPath = normalizedPath === "/" ? "" : normalizedPath;
 
@@ -219,8 +219,8 @@ export function getHomePageMetadata(
 
   // Canonical URL: US uses root domain, others use /{country}
   const canonicalUrl = isUS
-    ? "https://realpricedata.com"
-    : `https://realpricedata.com/${countryCode.toLowerCase()}`;
+    ? "https://cleverprices.com"
+    : `https://cleverprices.com/${countryCode.toLowerCase()}`;
 
   // Consistent title pattern for all marketplaces
   const title = `Price Tracker - Amazon ${code}`;

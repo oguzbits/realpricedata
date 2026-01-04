@@ -30,7 +30,7 @@ export async function generateMetadata({
     title: post.title,
     description: post.description,
     alternates: {
-      canonical: `https://realpricedata.com/blog/${post.slug}`,
+      canonical: `https://cleverprices.com/blog/${post.slug}`,
       languages: getAlternateLanguages(`blog/${post.slug}`),
     },
     openGraph: getOpenGraph({
@@ -40,7 +40,7 @@ export async function generateMetadata({
       publishedTime: post.publishDate,
       modifiedTime: post.lastUpdated,
       authors: [post.author.name],
-      url: `https://realpricedata.com/blog/${post.slug}`,
+      url: `https://cleverprices.com/blog/${post.slug}`,
     }),
   };
 }

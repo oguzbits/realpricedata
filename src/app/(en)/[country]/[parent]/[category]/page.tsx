@@ -42,7 +42,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   if (!category) return { title: "Category Not Found" };
 
   // Use the new getCategoryPath which handles root domain for US
-  const canonicalUrl = `https://realpricedata.com${getCategoryPath(category.slug, validCountry)}`;
+  const canonicalUrl = `https://cleverprices.com${getCategoryPath(category.slug, validCountry)}`;
   const title = `${category.name} - Amazon ${validCountry.toUpperCase()}`;
   const description = `Compare ${category.name} on Amazon ${validCountry.toUpperCase()} by true cost per TB/GB. Find the best value on storage and memory deals instantly.`;
 

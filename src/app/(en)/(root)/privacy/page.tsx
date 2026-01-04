@@ -4,11 +4,11 @@ import { LanguageSwitcher } from "@/components/LanguageSwitcher";
 import { BUILD_TIME } from "@/lib/build-config";
 
 export const metadata: Metadata = {
-  title: "Privacy Policy | realpricedata.com",
+  title: "Privacy Policy | cleverprices.com",
   description:
-    "Privacy Policy for realpricedata.com. Learn about data protection, your rights, and our cookie-less analysis.",
+    "Privacy Policy for cleverprices.com. Learn about data protection, your rights, and our cookie-less analysis.",
   alternates: {
-    canonical: "https://realpricedata.com/privacy",
+    canonical: "https://cleverprices.com/privacy",
     languages: getAlternateLanguages(
       "privacy",
       {
@@ -18,9 +18,9 @@ export const metadata: Metadata = {
     ),
   },
   openGraph: getOpenGraph({
-    title: "Privacy Policy | realpricedata.com",
+    title: "Privacy Policy | cleverprices.com",
     description: "Privacy Policy and data protection information.",
-    url: "https://realpricedata.com/privacy",
+    url: "https://cleverprices.com/privacy",
   }),
 };
 
@@ -58,7 +58,7 @@ export default function PrivacyPage() {
             </p>
             <p className="mb-2">Boberger Anger 87</p>
             <p className="mb-2">21031 Hamburg</p>
-            <p className="mb-4">Email: info@realpricedata.com</p>
+            <p className="mb-4">Email: info@cleverprices.com</p>
           </div>
         </section>
 

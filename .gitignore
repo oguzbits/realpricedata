@@ -48,3 +48,6 @@ next-env.d.ts
 
 # planning/documentation
 /.planning/
+
+# disabled/future configs
+/.future/

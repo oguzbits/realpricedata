@@ -13,7 +13,8 @@
     "db:push": "drizzle-kit push",
     "db:studio": "drizzle-kit studio",
     "import": "bun run scripts/import-products.ts",
-    "update-prices": "bun run scripts/update-prices.ts"
+    "update-prices": "bun run scripts/update-prices.ts",
+    "collect-history": "bun run scripts/collect-price-history.ts"
   },
   "dependencies": {
     "@mdx-js/loader": "^3.1.1",

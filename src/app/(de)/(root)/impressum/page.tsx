@@ -1,13 +1,13 @@
-import type { Metadata } from "next";
 import { LanguageSwitcher } from "@/components/LanguageSwitcher";
-import { getOpenGraph, getAlternateLanguages } from "@/lib/metadata";
+import { getAlternateLanguages, getOpenGraph } from "@/lib/metadata";
+import { BRAND_DOMAIN, CONTACT_EMAIL, getSiteUrl } from "@/lib/site-config";
+import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Impressum | cleverprices.com",
-  description:
-    "Impressum und rechtliche Angaben für cleverprices.com. Informationen gemäß § 5 DDG, Kontakt details und Haftungsausschluss.",
+  title: `Impressum | ${BRAND_DOMAIN}`,
+  description: `Impressum und rechtliche Angaben für ${BRAND_DOMAIN}. Informationen gemäß § 5 DDG, Kontakt details und Haftungsausschluss.`,
   alternates: {
-    canonical: "https://cleverprices.com/impressum",
+    canonical: getSiteUrl("/impressum"),
     languages: getAlternateLanguages(
       "legal-notice",
       {
@@ -17,9 +17,9 @@ export const metadata: Metadata = {
     ),
   },
   openGraph: getOpenGraph({
-    title: "Impressum | cleverprices.com",
-    description: "Impressum und rechtliche Angaben für cleverprices.com.",
-    url: "https://cleverprices.com/impressum",
+    title: `Impressum | ${BRAND_DOMAIN}`,
+    description: `Impressum und rechtliche Angaben für ${BRAND_DOMAIN}.`,
+    url: getSiteUrl("/impressum"),
   }),
 };
 
@@ -46,7 +46,7 @@ export default function ImpressumPage() {
         <section>
           <h2 className="mb-4 text-2xl font-semibold">Kontakt</h2>
           <div className="bg-card/50 border-primary/20 rounded-lg border p-6">
-            <p className="mb-2">E-Mail: info@cleverprices.com</p>
+            <p className="mb-2">E-Mail: {CONTACT_EMAIL}</p>
           </div>
         </section>
 
@@ -106,7 +106,7 @@ export default function ImpressumPage() {
           <div className="bg-card/50 border-primary/20 space-y-4 rounded-lg border p-6">
             <h3 className="text-lg font-semibold">Leistungsbeschreibung</h3>
             <p>
-              cleverprices.com ist ein Preisvergleichsportal, das es Nutzern
+              {BRAND_DOMAIN} ist ein Preisvergleichsportal, das es Nutzern
               ermöglicht, Preise verschiedener Produkte zu vergleichen. Wir
               verkaufen selbst keine Produkte, sondern verweisen auf Angebote
               Dritter (z.B. Amazon).

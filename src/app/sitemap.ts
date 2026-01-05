@@ -6,10 +6,11 @@ import {
 } from "@/lib/categories";
 import { DEFAULT_COUNTRY, getAllCountries } from "@/lib/countries";
 import { getAlternateLanguages } from "@/lib/metadata";
+import { SITE_URL } from "@/lib/site-config";
 import { MetadataRoute } from "next";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const baseUrl = "https://cleverprices.com";
+  const baseUrl = SITE_URL;
   const liveCountries = getAllCountries().filter((c) => c.isLive);
 
   // Static routes

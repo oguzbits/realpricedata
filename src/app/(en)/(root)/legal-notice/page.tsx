@@ -1,12 +1,13 @@
-import type { Metadata } from "next";
-import { getOpenGraph, getAlternateLanguages } from "@/lib/metadata";
 import { LanguageSwitcher } from "@/components/LanguageSwitcher";
+import { getAlternateLanguages, getOpenGraph } from "@/lib/metadata";
+import { BRAND_DOMAIN, CONTACT_EMAIL, getSiteUrl } from "@/lib/site-config";
+import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Legal Notice | cleverprices.com",
-  description: "Legal notice and company information for cleverprices.com.",
+  title: `Legal Notice | ${BRAND_DOMAIN}`,
+  description: `Legal notice and company information for ${BRAND_DOMAIN}.`,
   alternates: {
-    canonical: "https://cleverprices.com/legal-notice",
+    canonical: getSiteUrl("/legal-notice"),
     languages: getAlternateLanguages(
       "legal-notice",
       {
@@ -16,9 +17,9 @@ export const metadata: Metadata = {
     ),
   },
   openGraph: getOpenGraph({
-    title: "Legal Notice | cleverprices.com",
-    description: "Legal notice and company information for cleverprices.com.",
-    url: "https://cleverprices.com/legal-notice",
+    title: `Legal Notice | ${BRAND_DOMAIN}`,
+    description: `Legal notice and company information for ${BRAND_DOMAIN}.`,
+    url: getSiteUrl("/legal-notice"),
   }),
 };
 
@@ -45,7 +46,7 @@ export default function LegalNoticePage() {
         <section>
           <h2 className="mb-4 text-2xl font-semibold">Contact</h2>
           <div className="bg-card/50 border-primary/20 rounded-lg border p-6">
-            <p className="mb-2">Email: info@cleverprices.com</p>
+            <p className="mb-2">Email: {CONTACT_EMAIL}</p>
           </div>
         </section>
 
@@ -55,7 +56,7 @@ export default function LegalNoticePage() {
           </h2>
           <div className="bg-card/50 border-primary/20 rounded-lg border p-6">
             <p>
-              cleverprices.com is a participant in the Amazon Services LLC
+              {BRAND_DOMAIN} is a participant in the Amazon Services LLC
               Associates Program, an affiliate advertising program designed to
               provide a means for sites to earn advertising fees by advertising
               and linking to Amazon.com and affiliated sites.

@@ -1,14 +1,14 @@
-import type { Metadata } from "next";
-import { getOpenGraph, getAlternateLanguages } from "@/lib/metadata";
 import { LanguageSwitcher } from "@/components/LanguageSwitcher";
 import { BUILD_TIME } from "@/lib/build-config";
+import { getAlternateLanguages, getOpenGraph } from "@/lib/metadata";
+import { BRAND_DOMAIN, CONTACT_EMAIL, getSiteUrl } from "@/lib/site-config";
+import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Datenschutzerklärung | cleverprices.com",
-  description:
-    "Datenschutzerklärung für cleverprices.com. Erfahren Sie alles über Datenschutz, Ihre Rechte und unsere cookiefreie Analyse.",
+  title: `Datenschutzerklärung | ${BRAND_DOMAIN}`,
+  description: `Datenschutzerklärung für ${BRAND_DOMAIN}. Erfahren Sie alles über Datenschutz, Ihre Rechte und unsere cookiefreie Analyse.`,
   alternates: {
-    canonical: "https://cleverprices.com/datenschutz",
+    canonical: getSiteUrl("/datenschutz"),
     languages: getAlternateLanguages(
       "privacy",
       {
@@ -18,9 +18,9 @@ export const metadata: Metadata = {
     ),
   },
   openGraph: getOpenGraph({
-    title: "Datenschutzerklärung | cleverprices.com",
+    title: `Datenschutzerklärung | ${BRAND_DOMAIN}`,
     description: "Datenschutzerklärung und Informationen zum Datenschutz.",
-    url: "https://cleverprices.com/datenschutz",
+    url: getSiteUrl("/datenschutz"),
   }),
 };
 
@@ -64,7 +64,7 @@ export default function DatenschutzPage() {
             </p>
             <p className="mb-2">Boberger Anger 87</p>
             <p className="mb-2">21031 Hamburg</p>
-            <p className="mb-4">E-Mail: info@cleverprices.com</p>
+            <p className="mb-4">E-Mail: {CONTACT_EMAIL}</p>
           </div>
 
           <h3 className="mb-3 text-xl font-semibold">

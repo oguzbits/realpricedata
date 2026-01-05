@@ -1,5 +1,17 @@
 import type { Metadata } from "next";
 import { Category } from "./categories";
+import {
+  BRAND_DOMAIN,
+  BRAND_NAME,
+  DEFAULT_TITLE,
+  LOGO,
+  SITE_AUTHOR,
+  SITE_DESCRIPTION,
+  SITE_URL,
+  TITLE_TEMPLATE,
+  TWITTER_AT,
+  getCountryUrl,
+} from "./site-config";
 
 export const coreKeywords = [
   "Amazon price tracker",
@@ -8,21 +20,20 @@ export const coreKeywords = [
   "true value finder",
   "best value hardware",
   "Amazon hardware deals",
-  "cleverprices",
+  BRAND_NAME.toLowerCase(),
 ];
 
 export const siteMetadata: Metadata = {
-  metadataBase: new URL("https://cleverprices.com"),
+  metadataBase: new URL(SITE_URL),
   title: {
-    default: "Amazon Unit Price Tracker & Deals | cleverprices.com",
-    template: "%s | cleverprices.com",
+    default: DEFAULT_TITLE,
+    template: TITLE_TEMPLATE,
   },
-  description:
-    "Amazon price tracker for hardware & storage. Compare HDD, SSD, and RAM by true cost per TB/GB. Find the best value hardware deals instantly.",
+  description: SITE_DESCRIPTION,
   keywords: coreKeywords,
-  authors: [{ name: "cleverprices.com Team" }],
-  creator: "cleverprices.com Team",
-  applicationName: "cleverprices.com",
+  authors: [{ name: SITE_AUTHOR }],
+  creator: SITE_AUTHOR,
+  applicationName: BRAND_DOMAIN,
   manifest: "/site.webmanifest",
   icons: {
     icon: [
@@ -31,17 +42,15 @@ export const siteMetadata: Metadata = {
       { url: "/favicon-144x144.png", sizes: "144x144", type: "image/png" },
       { url: "/favicon-16x16.png", sizes: "16x16", type: "image/png" },
       { url: "/favicon-32x32.png", sizes: "32x32", type: "image/png" },
-      { url: "/icon-192.png", sizes: "192x192", type: "image/png" },
-      { url: "/icon-512.png", sizes: "512x512", type: "image/png" },
+      { url: LOGO.icon192, sizes: "192x192", type: "image/png" },
+      { url: LOGO.icon512, sizes: "512x512", type: "image/png" },
     ],
-    shortcut: "/favicon-48x48.png",
-    apple: [
-      { url: "/apple-touch-icon.png", sizes: "180x180", type: "image/png" },
-    ],
+    shortcut: LOGO.favicon,
+    apple: [{ url: LOGO.appleTouchIcon, sizes: "180x180", type: "image/png" }],
     other: [
       {
         rel: "mask-icon",
-        url: "/icon-512.png",
+        url: LOGO.icon512,
         color: "#3B82F6",
       },
     ],
@@ -49,32 +58,32 @@ export const siteMetadata: Metadata = {
   openGraph: {
     type: "website",
     locale: "en_US",
-    title: "cleverprices.com - Unit Price Tracker",
+    title: `${BRAND_DOMAIN} - Unit Price Tracker`,
     description:
       "Compare Amazon hardware by true cost per TB/GB. Track HDD, SSD, and RAM prices to find the best value deals instantly.",
-    siteName: "cleverprices.com",
+    siteName: BRAND_DOMAIN,
     images: [
       {
-        url: "/og-image.png",
+        url: LOGO.ogImage,
         width: 1200,
         height: 630,
-        alt: "cleverprices.com - Find the best value on Amazon US",
+        alt: `${BRAND_DOMAIN} - Find the best value on Amazon US`,
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "cleverprices.com - Unit Price Tracker",
+    title: `${BRAND_DOMAIN} - Unit Price Tracker`,
     description:
       "Compare Amazon hardware by true cost per TB/GB. Track HDD, SSD, and RAM prices to find the best value deals instantly.",
-    images: ["/og-image.png"],
-    creator: "@cleverprices",
-    site: "@cleverprices",
+    images: [LOGO.ogImage],
+    creator: TWITTER_AT,
+    site: TWITTER_AT,
   },
   appleWebApp: {
     capable: true,
     statusBarStyle: "default",
-    title: "cleverprices.com",
+    title: BRAND_DOMAIN,
   },
   formatDetection: {
     telephone: false,
@@ -106,19 +115,18 @@ export function getAlternateLanguages(
   customTranslations: Record<string, string> = {},
   includeRegions: boolean = true,
 ) {
-  const baseUrl = "https://cleverprices.com";
   const normalizedPath = path.startsWith("/") ? path : `/${path}`;
   const cleanPath = normalizedPath === "/" ? "" : normalizedPath;
 
   const liveCountries = getAllCountries().filter((c) => c.isLive);
   const alternates: Record<string, string> = {
     // x-default should point to our primary/landing version (US)
-    "x-default": `${baseUrl}${cleanPath}`,
+    "x-default": `${SITE_URL}${cleanPath}`,
   };
 
   // Add custom translations first
   Object.entries(customTranslations).forEach(([lang, url]) => {
-    alternates[lang] = url.startsWith("http") ? url : `${baseUrl}${url}`;
+    alternates[lang] = url.startsWith("http") ? url : `${SITE_URL}${url}`;
   });
 
   if (includeRegions) {
@@ -132,16 +140,16 @@ export function getAlternateLanguages(
 
       // For US, we use the root domain for all pages
       if (country.code === "us") {
-        alternates[hreflang] = `${baseUrl}${cleanPath}`;
+        alternates[hreflang] = `${SITE_URL}${cleanPath}`;
       } else {
-        alternates[hreflang] = `${baseUrl}/${country.code}${cleanPath}`;
+        alternates[hreflang] = `${SITE_URL}/${country.code}${cleanPath}`;
       }
     });
   }
 
   // Root domain also serves as the general 'en' version if not already set
   if (!alternates["en"]) {
-    alternates["en"] = `${baseUrl}${cleanPath}`;
+    alternates["en"] = `${SITE_URL}${cleanPath}`;
   }
 
   return alternates;
@@ -219,8 +227,8 @@ export function getHomePageMetadata(
 
   // Canonical URL: US uses root domain, others use /{country}
   const canonicalUrl = isUS
-    ? "https://cleverprices.com"
-    : `https://cleverprices.com/${countryCode.toLowerCase()}`;
+    ? SITE_URL
+    : getCountryUrl(countryCode.toLowerCase());
 
   // Consistent title pattern for all marketplaces
   const title = `Price Tracker - Amazon ${code}`;

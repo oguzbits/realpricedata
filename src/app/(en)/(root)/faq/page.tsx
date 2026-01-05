@@ -4,22 +4,22 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
-import { getOpenGraph, getAlternateLanguages } from "@/lib/metadata";
+import { getAlternateLanguages, getOpenGraph } from "@/lib/metadata";
+import { BRAND_DOMAIN, getSiteUrl } from "@/lib/site-config";
 import type { Metadata } from "next";
 import Link from "next/link";
 
 export const metadata: Metadata = {
   title: "FAQ - Frequently Asked Questions",
-  description:
-    "Find answers to common questions about cleverprices.com, price per unit comparison, and how to find the best deals.",
+  description: `Find answers to common questions about ${BRAND_DOMAIN}, price per unit comparison, and how to find the best deals.`,
   alternates: {
-    canonical: "https://cleverprices.com/faq",
+    canonical: getSiteUrl("/faq"),
     languages: getAlternateLanguages("faq", {}, false),
   },
   openGraph: getOpenGraph({
     title: "FAQ - Frequently Asked Questions",
-    description: "Find answers to common questions about cleverprices.com.",
-    url: "https://cleverprices.com/faq",
+    description: `Find answers to common questions about ${BRAND_DOMAIN}.`,
+    url: getSiteUrl("/faq"),
   }),
 };
 
@@ -37,15 +37,15 @@ export default function FAQPage() {
       <Accordion type="single" collapsible className="w-full">
         <AccordionItem value="item-1">
           <AccordionTrigger className="text-left font-semibold">
-            What is cleverprices.com?
+            What is {BRAND_DOMAIN}?
           </AccordionTrigger>
           <AccordionContent className="text-muted-foreground leading-relaxed">
-            cleverprices.com is a specialized price comparison engine that
-            focuses on the &quot;price per unit&quot; (e.g., price per Terabyte,
-            price per Gigabyte, or price per item). Unlike standard price
-            comparison sites that just show the total price, we help you find
-            the true best value by standardizing the cost across different
-            package sizes and capacities.
+            {BRAND_DOMAIN} is a specialized price comparison engine that focuses
+            on the &quot;price per unit&quot; (e.g., price per Terabyte, price
+            per Gigabyte, or price per item). Unlike standard price comparison
+            sites that just show the total price, we help you find the true best
+            value by standardizing the cost across different package sizes and
+            capacities.
           </AccordionContent>
         </AccordionItem>
 
@@ -182,7 +182,7 @@ export default function FAQPage() {
 
         <AccordionItem value="item-10">
           <AccordionTrigger className="text-left font-semibold">
-            Is cleverprices.com free to use?
+            Is {BRAND_DOMAIN} free to use?
           </AccordionTrigger>
           <AccordionContent className="text-muted-foreground leading-relaxed">
             Yes, it is completely free for users. We are supported by the Amazon

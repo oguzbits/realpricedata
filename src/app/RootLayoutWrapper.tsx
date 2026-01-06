@@ -1,6 +1,5 @@
 import "@/app/globals.css";
 
-import { PromoBanner } from "@/components/layout/PromoBanner";
 import { ThemeProvider } from "@/components/theme-provider";
 import { NuqsProvider } from "@/providers/nuqs-provider";
 import { QueryProvider } from "@/providers/query-provider";
@@ -40,10 +39,7 @@ export default function RootLayout({
         >
           <QueryProvider>
             <NuqsProvider>
-              <div className="flex min-h-screen flex-col">
-                <PromoBanner />
-                {children}
-              </div>
+              <div className="flex min-h-screen flex-col">{children}</div>
               <SpeedInsights />
               <Analytics />
             </NuqsProvider>

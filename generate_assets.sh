@@ -25,4 +25,7 @@ echo "🖼️ Generating OG image from $OG_SVG..."
 # OG Image size
 inkscape "$OG_SVG" --export-type=png --export-filename="$PUBLIC_DIR/og-image.png" --export-width=1200 --export-height=630
 
-echo "✅ Done! All assets generated in $PUBLIC_DIR"
+# Next.js App Router auto-icons
+inkscape "$FAVICON_SVG" --export-type=png --export-filename="src/app/icon.png" --export-width=512 --export-height=512
+
+echo "✅ Done! All assets generated in $PUBLIC_DIR and src/app/"

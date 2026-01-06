@@ -6,6 +6,7 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import { cn } from "@/lib/utils";
 import { Moon, Sun } from "lucide-react";
 import { useTheme } from "next-themes";
 import * as React from "react";
@@ -30,11 +31,11 @@ export function ThemeToggle({ variant = "default" }: ThemeToggleProps) {
         <Button
           variant={isDark ? "ghost" : "outline"}
           size="icon-sm"
-          className={`cursor-pointer ${
-            isDark
-              ? "border-white/20 text-white/80 hover:bg-white/10 hover:text-white"
-              : ""
-          }`}
+          className={cn(
+            "cursor-pointer",
+            isDark &&
+              "border-white/20 text-white/80 hover:bg-white/10 hover:text-white",
+          )}
           onClick={() => {
             const newTheme = theme === "light" ? "dark" : "light";
             setTheme(newTheme);

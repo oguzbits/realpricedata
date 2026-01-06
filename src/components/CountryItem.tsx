@@ -1,5 +1,6 @@
 import { Badge } from "@/components/ui/badge";
 import { getFlag } from "@/lib/countries";
+import { cn } from "@/lib/utils";
 import Image from "next/image";
 
 interface CountryItemProps {
@@ -18,32 +19,36 @@ export function CountryItem({
   isActive,
 }: CountryItemProps) {
   return (
-    <div className="flex w-full items-center justify-between">
-      <div className="flex items-center gap-3">
+    <div className={cn("flex w-full items-center justify-between")}>
+      <div className={cn("flex items-center gap-3")}>
         <Image
           src={getFlag(code)}
           alt={name}
           width={24}
           height={16}
-          className="h-4 w-6 object-cover shadow-sm"
+          className={cn("h-4 w-6 object-cover shadow-sm")}
         />
-        <div className="flex flex-col">
-          <span className="font-medium">{name}</span>
-          <span className="text-muted-foreground text-sm">{domain}</span>
+        <div className={cn("flex flex-col")}>
+          <span className={cn("font-medium")}>{name}</span>
+          <span className={cn("text-muted-foreground text-sm")}>{domain}</span>
         </div>
       </div>
-      <div className="flex items-center gap-2">
+      <div className={cn("flex items-center gap-2")}>
         {isActive ? (
           <Badge
             variant="secondary"
-            className="bg-emerald-100 text-sm text-emerald-700 dark:bg-emerald-500/20 dark:text-emerald-300"
+            className={cn(
+              "bg-emerald-100 text-sm text-emerald-700 dark:bg-emerald-500/20 dark:text-emerald-300",
+            )}
           >
             Active
           </Badge>
         ) : !isLive ? (
           <Badge
             variant="outline"
-            className="text-muted-foreground text-[10px] font-medium uppercase"
+            className={cn(
+              "text-muted-foreground text-[10px] font-medium uppercase",
+            )}
           >
             Soon
           </Badge>

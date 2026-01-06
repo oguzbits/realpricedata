@@ -7,6 +7,7 @@ import { Analytics } from "@vercel/analytics/next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { Inter } from "next/font/google";
 import * as React from "react";
+import { cn } from "@/lib/utils";
 
 const inter = Inter({
   subsets: ["latin", "latin-ext"],
@@ -29,7 +30,11 @@ export default function RootLayout({
         <link rel="dns-prefetch" href="https://m.media-amazon.com" />
       </head>
       <body
-        className={`${inter.variable} ${inter.className} bg-background min-h-screen antialiased`}
+        className={cn(
+          inter.variable,
+          inter.className,
+          "bg-background min-h-screen antialiased",
+        )}
       >
         <ThemeProvider
           attribute="class"

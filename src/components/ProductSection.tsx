@@ -7,6 +7,7 @@ import { Product } from "@/types";
 import { getCountryByCode } from "@/lib/countries";
 import { calculateProductBadges, parseUnitValue } from "@/lib/utils/products";
 import React, { useRef } from "react";
+import { cn } from "@/lib/utils";
 
 interface ProductSectionProps {
   title: string;
@@ -55,7 +56,7 @@ export function ProductSection({
   );
 
   return (
-    <section className="mb-16">
+    <section className={cn("mb-16")}>
       <SectionHeader
         title={title}
         description={description}

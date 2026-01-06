@@ -14,6 +14,7 @@ import {
   DEFAULT_COUNTRY,
   isValidCountryCode,
 } from "@/lib/countries";
+import { cn } from "@/lib/utils";
 import { BookOpen, Home, LayoutGrid, Search, TrendingUp } from "lucide-react";
 import { usePathname, useRouter } from "next/navigation";
 import * as React from "react";
@@ -114,29 +115,35 @@ export function SearchModal({ open, onOpenChange }: SearchModalProps) {
     <CommandDialog
       open={open}
       onOpenChange={onOpenChange}
-      className="max-w-[650px]"
+      className={cn("max-w-[650px]")}
     >
       <CommandInput
         placeholder="What are you looking for?"
         value={search}
         onValueChange={setSearch}
       />
-      <CommandList className="min-h-[300px]">
+      <CommandList className={cn("min-h-[300px]")}>
         <CommandEmpty>No results found for &quot;{search}&quot;.</CommandEmpty>
 
         {!search && (
           <>
-            <div className="p-4 pb-2">
-              <h4 className="text-muted-foreground mb-3 flex items-center gap-2 px-1 text-base font-semibold tracking-wider uppercase">
-                <TrendingUp className="h-5 w-5" />
+            <div className={cn("p-4 pb-2")}>
+              <h4
+                className={cn(
+                  "text-muted-foreground mb-3 flex items-center gap-2 px-1 text-base font-semibold tracking-wider uppercase",
+                )}
+              >
+                <TrendingUp className={cn("h-5 w-5")} />
                 Popular Searches
               </h4>
-              <div className="flex flex-wrap gap-2">
+              <div className={cn("flex flex-wrap gap-2")}>
                 {POPULAR_SEARCH_CONFIG.map(({ label, category, params }) => (
                   <button
                     key={label}
                     onClick={() => handlePopularSearch(category, params)}
-                    className="bg-accent hover:bg-accent/80 text-accent-foreground cursor-pointer rounded-full px-4 py-2 text-base font-medium transition-colors"
+                    className={cn(
+                      "bg-accent hover:bg-accent/80 text-accent-foreground cursor-pointer rounded-full px-4 py-2 text-base font-medium transition-colors",
+                    )}
                   >
                     {label}
                   </button>
@@ -150,7 +157,7 @@ export function SearchModal({ open, onOpenChange }: SearchModalProps) {
                   handleSelect(country === "us" ? "/" : `/${country}`)
                 }
               >
-                <Home className="mr-2 h-4 w-4" />
+                <Home className={cn("mr-2 h-4 w-4")} />
                 Home
               </CommandItem>
               <CommandItem
@@ -158,7 +165,7 @@ export function SearchModal({ open, onOpenChange }: SearchModalProps) {
                   handleSelect(country === "us" ? "/blog" : `/${country}/blog`)
                 }
               >
-                <BookOpen className="mr-2 h-4 w-4" />
+                <BookOpen className={cn("mr-2 h-4 w-4")} />
                 Blog & Buying Guides
               </CommandItem>
             </CommandGroup>
@@ -173,7 +180,7 @@ export function SearchModal({ open, onOpenChange }: SearchModalProps) {
                       handleSelect(getCategoryPath(cat.slug, country))
                     }
                   >
-                    <LayoutGrid className="mr-2 h-4 w-4" />
+                    <LayoutGrid className={cn("mr-2 h-4 w-4")} />
                     {cat.name}
                   </CommandItem>
                 ))}
@@ -192,12 +199,12 @@ export function SearchModal({ open, onOpenChange }: SearchModalProps) {
                       `${getCategoryPath(cat.slug, country)}?search=${encodeURIComponent(search)}`,
                     )
                   }
-                  className="py-3"
+                  className={cn("py-3")}
                 >
-                  <Search className="mr-2 h-4 w-4" />
-                  <div className="flex items-center gap-1.5">
-                    <span className="font-semibold">{search}</span>
-                    <span className="text-muted-foreground">in</span>
+                  <Search className={cn("mr-2 h-4 w-4")} />
+                  <div className={cn("flex items-center gap-1.5")}>
+                    <span className={cn("font-semibold")}>{search}</span>
+                    <span className={cn("text-muted-foreground")}>in</span>
                     <span>{cat.name}</span>
                   </div>
                 </CommandItem>
@@ -208,14 +215,16 @@ export function SearchModal({ open, onOpenChange }: SearchModalProps) {
                     `${country === "us" ? "/" : `/${country}`}?search=${encodeURIComponent(search)}`,
                   )
                 }
-                className="py-3"
+                className={cn("py-3")}
               >
-                <Search className="mr-2 h-4 w-4" />
-                <div className="flex items-center gap-1.5">
-                  <span className="text-muted-foreground">
+                <Search className={cn("mr-2 h-4 w-4")} />
+                <div className={cn("flex items-center gap-1.5")}>
+                  <span className={cn("text-muted-foreground")}>
                     Search globally for
                   </span>
-                  <span className="font-semibold">&quot;{search}&quot;</span>
+                  <span className={cn("font-semibold")}>
+                    &quot;{search}&quot;
+                  </span>
                 </div>
               </CommandItem>
             </CommandGroup>
@@ -229,7 +238,7 @@ export function SearchModal({ open, onOpenChange }: SearchModalProps) {
                       handleSelect(getCategoryPath(cat.slug, country))
                     }
                   >
-                    <LayoutGrid className="mr-2 h-4 w-4" />
+                    <LayoutGrid className={cn("mr-2 h-4 w-4")} />
                     {cat.name}
                   </CommandItem>
                 ))}

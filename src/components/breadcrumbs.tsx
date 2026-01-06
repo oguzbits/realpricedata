@@ -17,7 +17,11 @@ export function Breadcrumbs({
 }: BreadcrumbsProps) {
   return (
     <nav className={cn("mb-4", className)} aria-label="Breadcrumb">
-      <ol className="text-muted-foreground flex flex-wrap items-center gap-1.5 gap-y-1 text-sm leading-normal sm:gap-2">
+      <ol
+        className={cn(
+          "text-muted-foreground flex flex-wrap items-center gap-1.5 gap-y-1 text-sm leading-normal sm:gap-2",
+        )}
+      >
         {items.map((item, index) => {
           const isLast = index === items.length - 1;
           const Icon = item.icon;
@@ -32,20 +36,27 @@ export function Breadcrumbs({
             >
               {isHome ? (
                 <>
-                  <Home className="h-4 w-4 translate-y-px" aria-hidden="true" />
+                  <Home
+                    className={cn("h-4 w-4 translate-y-px")}
+                    aria-hidden="true"
+                  />
                   <span className="sr-only">{item.name}</span>
                 </>
               ) : (
                 <>
                   {Icon && (
                     <Icon
-                      className="h-3.5 w-3.5 opacity-70"
+                      className={cn("h-3.5 w-3.5 opacity-70")}
                       aria-hidden="true"
                     />
                   )}
                   <span>{item.name}</span>
                   {item.suffix && (
-                    <span className="text-muted-foreground/50 ml-1 font-medium lowercase">
+                    <span
+                      className={cn(
+                        "text-muted-foreground/50 ml-1 font-medium lowercase",
+                      )}
+                    >
                       {item.suffix}
                     </span>
                   )}
@@ -58,17 +69,19 @@ export function Breadcrumbs({
             <React.Fragment key={index}>
               {index > 0 && (
                 <li
-                  className="text-muted-foreground/30 flex items-center"
+                  className={cn("text-muted-foreground/30 flex items-center")}
                   aria-hidden="true"
                 >
-                  <span className="text-[10px]">/</span>
+                  <span className={cn("text-[10px]")}>/</span>
                 </li>
               )}
-              <li className="flex items-center">
+              <li className={cn("flex items-center")}>
                 {item.href && !isLast ? (
                   <Link
                     href={item.href}
-                    className="text-muted-foreground font-bold no-underline transition-colors hover:text-[#ff6200]"
+                    className={cn(
+                      "text-muted-foreground font-bold no-underline transition-colors hover:text-[#ff6200]",
+                    )}
                     prefetch={true}
                   >
                     {content}

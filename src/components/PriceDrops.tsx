@@ -1,6 +1,7 @@
 "use client";
 
 import { ProductSection } from "@/components/ProductSection";
+import { cn } from "@/lib/utils";
 import { Product } from "@/types";
 import { parseAsString, useQueryStates } from "nuqs";
 
@@ -49,21 +50,23 @@ export function PriceDrops({ products, country }: PriceDropsProps) {
       <div className="-mt-2 mb-6 flex gap-2">
         <button
           onClick={() => setPeriod("daily")}
-          className={`cursor-pointer rounded-xl border px-4 py-1.5 text-sm font-bold transition-all duration-300 ${
+          className={cn(
+            "cursor-pointer rounded-xl border px-4 py-1.5 text-sm font-bold transition-all duration-300",
             period === "daily"
               ? "bg-primary text-primary-foreground border-primary shadow-sm"
-              : "bg-secondary/50 text-muted-foreground border-border hover:border-primary/30 hover:bg-secondary/70"
-          }`}
+              : "bg-secondary/50 text-muted-foreground border-border hover:border-primary/30 hover:bg-secondary/70",
+          )}
         >
           Daily Drops
         </button>
         <button
           onClick={() => setPeriod("weekly")}
-          className={`cursor-pointer rounded-xl border px-4 py-1.5 text-sm font-bold transition-all duration-300 ${
+          className={cn(
+            "cursor-pointer rounded-xl border px-4 py-1.5 text-sm font-bold transition-all duration-300",
             period === "weekly"
               ? "bg-primary text-primary-foreground border-primary shadow-sm"
-              : "bg-secondary/50 text-muted-foreground border-border hover:border-primary/30 hover:bg-secondary/70"
-          }`}
+              : "bg-secondary/50 text-muted-foreground border-border hover:border-primary/30 hover:bg-secondary/70",
+          )}
         >
           Weekly Drops
         </button>

@@ -1,10 +1,9 @@
 "use client";
 
-import { getFlag } from "@/lib/countries";
-import { saveCountryPreference } from "@/lib/countries";
+import { getFlag, saveCountryPreference, type Country } from "@/lib/countries";
+import { cn } from "@/lib/utils";
 import Image from "next/image";
 import Link from "next/link";
-import { type Country } from "@/lib/countries";
 
 export function SupportedMarketplaces({
   allCountries,
@@ -35,19 +34,21 @@ export function SupportedMarketplaces({
                   saveCountryPreference(c.code);
                 }
               }}
-              className={`group relative flex flex-col items-center no-underline transition-all ${
+              className={cn(
+                "group relative flex flex-col items-center no-underline transition-all",
                 c.isLive
                   ? "cursor-pointer"
-                  : "pointer-events-none cursor-not-allowed opacity-20 grayscale"
-              }`}
+                  : "pointer-events-none cursor-not-allowed opacity-20 grayscale",
+              )}
               aria-disabled={!c.isLive}
             >
               <div
-                className={`flex items-center justify-center overflow-hidden border-2 transition-all duration-300 ${
+                className={cn(
+                  "flex items-center justify-center overflow-hidden border-2 transition-all duration-300",
                   isActive
                     ? "border-primary/30 bg-primary/10 rounded-2xl p-4 shadow-sm"
-                    : "border-transparent bg-transparent p-4"
-                }`}
+                    : "border-transparent bg-transparent p-4",
+                )}
               >
                 <Image
                   src={flagUrl}

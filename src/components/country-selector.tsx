@@ -52,11 +52,11 @@ export function CountrySelector({
         <Button
           variant={isDark ? "ghost" : "outline"}
           size="sm"
-          className={`min-w-auto gap-1 px-2 sm:min-w-[140px] sm:gap-2 sm:px-3 ${
-            isDark
-              ? "border-white/20 text-white/80 hover:bg-white/10 hover:text-white"
-              : ""
-          }`}
+          className={cn(
+            "min-w-auto gap-1 px-2 sm:min-w-[140px] sm:gap-2 sm:px-3",
+            isDark &&
+              "border-white/20 text-white/80 hover:bg-white/10 hover:text-white",
+          )}
           aria-label="Select country"
         >
           <Globe className="h-4 w-4" />

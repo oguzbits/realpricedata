@@ -1,3 +1,4 @@
+import { cn } from "@/lib/utils";
 import Link from "next/link";
 
 interface LogoProps {
@@ -11,7 +12,7 @@ export function Logo({ country = "us", className = "" }: LogoProps) {
   return (
     <Link
       href={href}
-      className={`flex items-center no-underline ${className}`}
+      className={cn("flex items-center no-underline", className)}
       title="Amazon Price Per Unit Tracker, Storage Deals & True Value"
       aria-label="CleverPrices Home - Amazon Price Per Unit Tracker"
       prefetch={true}

@@ -15,7 +15,7 @@ export function Navbar({ country: propCountry }: { country?: string }) {
     <>
       {/* Main Header */}
       <header
-        className="sticky top-0 z-50 w-full border-b border-white/10"
+        className="z-50 w-full border-b border-white/10"
         style={{ backgroundColor: "var(--header-bg)" }}
       >
         <div className="relative container mx-auto flex h-20 items-center justify-between px-4">

@@ -61,7 +61,7 @@ export function CategoryNav({ country }: { country: string }) {
   }
 
   return (
-    <div className="sticky top-20 z-40 border-b border-zinc-200 bg-zinc-50 dark:border-zinc-800 dark:bg-zinc-800">
+    <div className="z-40 border-b border-zinc-200 bg-zinc-50 dark:border-zinc-800 dark:bg-zinc-800">
       <div className="relative container mx-auto px-4">
         {/* Left scroll button */}
         {canScrollLeft && (

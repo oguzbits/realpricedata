@@ -1,5 +1,3 @@
-"use cache";
-
 import { BlogFrontmatter, BlogPost } from "@/types/blog";
 import fs from "fs";
 import matter from "gray-matter";
@@ -22,8 +20,13 @@ export async function getAllBlogPosts(): Promise<BlogPost[]> {
       const { data, content } = matter(fileContents);
       const frontmatter = data as BlogFrontmatter;
 
+      const readingTime =
+        frontmatter.readingTime || calculateReadingTimeSync(content);
+
       return {
         ...frontmatter,
+        description: frontmatter.description || "",
+        readingTime,
         content,
         author: {
           name: frontmatter.authorName,
@@ -71,9 +74,13 @@ export async function getBlogPostBySlug(
   } as BlogPost;
 }
 
-export async function calculateReadingTime(content: string): Promise<string> {
+export function calculateReadingTimeSync(content: string): string {
   const wordsPerMinute = 200;
   const words = content.trim().split(/\s+/).length;
   const time = Math.ceil(words / wordsPerMinute);
   return `${time} min read`;
+}
+
+export async function calculateReadingTime(content: string): Promise<string> {
+  return calculateReadingTimeSync(content);
 }

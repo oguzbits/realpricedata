@@ -1,11 +1,4 @@
-import {
-  Cpu,
-  HardDrive,
-  MemoryStick,
-  Monitor,
-  Zap,
-  type LucideIcon,
-} from "lucide-react";
+import { HardDrive, MemoryStick, Zap, type LucideIcon } from "lucide-react";
 import { DEFAULT_COUNTRY, type CountryCode } from "./countries";
 import { BRAND_DOMAIN } from "./site-config";
 
@@ -104,7 +97,7 @@ const CATEGORY_MAP: Record<CategorySlug, Omit<Category, "slug">> = {
   cpu: {
     name: "CPUs",
     description: "Compare processors by core count and speed",
-    icon: Cpu,
+    icon: HardDrive,
     parent: "electronics",
     hidden: true,
     metaTitle: `Processors (CPUs) - Compare Prices | ${BRAND_DOMAIN}`,
@@ -120,7 +113,7 @@ const CATEGORY_MAP: Record<CategorySlug, Omit<Category, "slug">> = {
   gpu: {
     name: "Graphics Cards",
     description: "Compare GPUs by VRAM and performance",
-    icon: Monitor,
+    icon: HardDrive,
     parent: "electronics",
     hidden: true,
     unitType: "GB",

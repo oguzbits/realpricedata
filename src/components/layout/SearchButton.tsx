@@ -13,7 +13,7 @@ import * as React from "react";
 const SearchModal = dynamic(
   () => import("@/components/SearchModal").then((mod) => mod.SearchModal),
   {
-    ssr: true,
+    ssr: false,
   },
 );
 

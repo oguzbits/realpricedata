@@ -9,43 +9,34 @@ import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { getAffiliateRedirectPath } from "@/lib/affiliate-utils";
 import {
-  getBreadcrumbs,
   getCategoryBySlug,
   getCategoryPath,
   type CategorySlug,
 } from "@/lib/categories";
 import { getCountryByCode, type CountryCode } from "@/lib/countries";
-import type {
-  UnifiedProduct,
-  ProductOffer,
-  PriceAnalysis,
-} from "@/lib/data-sources";
+import type { ProductOffer, UnifiedProduct } from "@/lib/data-sources";
 import { Product } from "@/lib/product-registry";
 import { cn } from "@/lib/utils";
 import {
   ArrowRight,
-  ExternalLink,
-  Star,
-  TrendingDown,
-  TrendingUp,
-  Minus,
-  ShieldCheck,
-  Truck,
   Clock,
+  ExternalLink,
+  ShieldCheck,
+  Star,
+  Truck,
 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 
 import { Breadcrumbs } from "@/components/breadcrumbs";
 import {
-  ProductSchema,
   BreadcrumbSchema,
+  ProductSchema,
 } from "@/components/seo/ProductSchema";
+import { getSimilarProducts } from "@/lib/product-registry";
 import { OfferComparisonTable } from "./OfferComparisonTable";
-import { PriceAnalysisBadge } from "./PriceAnalysisBadge";
 import { SimilarProducts } from "./SimilarProducts";
 import { SpecificationsTable } from "./SpecificationsTable";
-import { getSimilarProducts } from "@/lib/product-registry";
 
 interface ProductDetailViewProps {
   product: Product;
@@ -117,9 +108,6 @@ export function ProductDetailView({
     });
   }
 
-  // Price analysis from unified product
-  const priceAnalysis = unifiedProduct?.priceAnalysis;
-
   return (
     <>
       {/* Schema.org Structured Data */}
@@ -187,9 +175,6 @@ export function ProductDetailView({
                 )}
               </div>
             </div>
-
-            {/* Price Analysis Badge */}
-            {priceAnalysis && <PriceAnalysisBadge analysis={priceAnalysis} />}
 
             {/* Best Price Card */}
             <Card className="border-primary/20 bg-primary/5">
@@ -297,30 +282,6 @@ export function ProductDetailView({
             </Card>
           </div>
         </div>
-
-        {/* Price History Section - Placeholder */}
-        {priceAnalysis && (
-          <section className="mt-12">
-            <h2 className="mb-6 text-xl font-bold">Price History (90 Days)</h2>
-            <Card>
-              <CardContent className="p-6">
-                <div className="flex h-64 items-center justify-center rounded-lg border border-dashed">
-                  <div className="text-center">
-                    <p className="text-muted-foreground">
-                      Price history chart will be displayed here when Keepa API
-                      is connected.
-                    </p>
-                    <p className="text-muted-foreground mt-2 text-sm">
-                      Average: {formatCurrency(priceAnalysis.averagePrice)} •
-                      Lowest: {formatCurrency(priceAnalysis.lowestPrice)} •
-                      Highest: {formatCurrency(priceAnalysis.highestPrice)}
-                    </p>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-          </section>
-        )}
 
         {/* Price Comparison Section */}
         <section className="mt-12">

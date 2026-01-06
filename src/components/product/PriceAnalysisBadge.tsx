@@ -7,7 +7,7 @@
 
 import type { PriceAnalysis } from "@/lib/data-sources";
 import { cn } from "@/lib/utils";
-import { TrendingDown, TrendingUp, Minus, Sparkles } from "lucide-react";
+import { Minus, Sparkles, TrendingDown, TrendingUp } from "lucide-react";
 
 interface PriceAnalysisBadgeProps {
   analysis: PriceAnalysis;
@@ -58,7 +58,7 @@ export function PriceAnalysisBadge({
     bgClass,
     textClass,
     borderClass,
-  } = config[recommendation];
+  } = config[recommendation] || config.unknown;
 
   return (
     <div

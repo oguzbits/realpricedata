@@ -7,144 +7,237 @@ import {
   CommandInput,
   CommandItem,
   CommandList,
-  CommandSeparator,
 } from "@/components/ui/command";
-import { DEFAULT_COUNTRY, isValidCountryCode } from "@/lib/countries";
-import { useQuery } from "@tanstack/react-query";
+import { allCategories, getCategoryPath } from "@/lib/categories";
 import {
-  BookOpen,
-  FileText,
-  Home,
-  LayoutGrid,
-  Package,
-  Search,
-} from "lucide-react";
+  CountryCode,
+  DEFAULT_COUNTRY,
+  isValidCountryCode,
+} from "@/lib/countries";
+import { BookOpen, Home, LayoutGrid, Search, TrendingUp } from "lucide-react";
 import { usePathname, useRouter } from "next/navigation";
+import * as React from "react";
 
 interface SearchModalProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
 }
 
-interface SearchItem {
-  id: string;
-  title: string;
-  description?: string;
-  group: string;
-  url: string;
-  icon?: string;
-  meta?: { price?: number; currency?: string };
-}
-
-const ICON_MAP: Record<string, typeof Search> = {
-  LayoutGrid,
-  FileText,
-  Package,
-  Home,
-  BookOpen,
-};
-
-const GROUP_ORDER = [
-  "Categories",
-  "Products",
-  "Calculators",
-  "Articles",
-  "Navigation",
+// Map popular keywords to specific filters for precise results
+const POPULAR_SEARCH_CONFIG = [
+  {
+    label: "32GB DDR5 RAM",
+    category: "ram",
+    params: { technology: "DDR5", minCapacity: "32", maxCapacity: "32" },
+  },
+  {
+    label: "DDR4 16GB",
+    category: "ram",
+    params: { technology: "DDR4", minCapacity: "16", maxCapacity: "16" },
+  },
+  {
+    label: "2TB NVMe SSD",
+    category: "hard-drives",
+    params: {
+      technology: "SSD",
+      formFactor: "M.2 NVMe",
+      minCapacity: "2",
+      maxCapacity: "2",
+    },
+  },
+  {
+    label: "Samsung 990 Pro",
+    category: "hard-drives",
+    params: { search: "990 Pro" },
+  },
+  {
+    label: "Crucial P310",
+    category: "hard-drives",
+    params: { search: "P310" },
+  },
+  {
+    label: "850W Gold PSU",
+    category: "power-supplies",
+    params: { technology: "80+ Gold", minCapacity: "850", maxCapacity: "850" },
+  },
 ];
-
-// Simple fetch function
-const fetchSearchIndex = async (country: string): Promise<SearchItem[]> => {
-  const res = await fetch(`/api/search?country=${country}`);
-  return res.json();
-};
 
 export function SearchModal({ open, onOpenChange }: SearchModalProps) {
   const pathname = usePathname();
   const router = useRouter();
+  const [search, setSearch] = React.useState("");
+
   const pathSegments = pathname.split("/").filter(Boolean);
   const country = isValidCountryCode(pathSegments[0] || "")
-    ? pathSegments[0]
+    ? (pathSegments[0] as CountryCode)
     : DEFAULT_COUNTRY;
 
-  // React Query handles caching automatically
-  const { data: items = [], isLoading } = useQuery({
-    queryKey: ["search", country],
-    queryFn: () => fetchSearchIndex(country),
-    enabled: open, // Only fetch when modal is open
-  });
+  // Reset search when modal closes
+  React.useEffect(() => {
+    if (!open) setSearch("");
+  }, [open]);
 
-  // Group items by category
-  const groupedItems = items.reduce<Record<string, SearchItem[]>>(
-    (acc, item) => {
-      (acc[item.group] ??= []).push(item);
-      return acc;
-    },
-    {},
-  );
-
-  // Navigate and close modal
   const handleSelect = (url: string) => {
     onOpenChange(false);
     router.push(url);
   };
 
-  return (
-    <CommandDialog open={open} onOpenChange={onOpenChange}>
-      <CommandInput placeholder="Search for products, categories, or guides..." />
-      <CommandList>
-        <CommandEmpty>No results found.</CommandEmpty>
-        {isLoading && (
-          <div className="text-muted-foreground p-4 text-center text-sm">
-            Loading...
-          </div>
-        )}
-        {!isLoading &&
-          GROUP_ORDER.map((group) => {
-            const groupItems = groupedItems[group];
-            if (!groupItems?.length) return null;
+  const handlePopularSearch = (
+    categorySlug: string,
+    params: Record<string, any>,
+  ) => {
+    const basePath = getCategoryPath(categorySlug as any, country);
+    const searchParams = new URLSearchParams();
+    Object.entries(params).forEach(([key, value]) => {
+      if (value !== undefined && value !== null) {
+        searchParams.set(key, String(value));
+      }
+    });
 
-            return (
-              <div key={group}>
-                <CommandGroup heading={group}>
-                  {groupItems.map((item) => {
-                    const Icon = (item.icon && ICON_MAP[item.icon]) || Search;
-                    return (
-                      <CommandItem
-                        key={item.id}
-                        value={`${item.title} ${item.description || ""} ${item.group} ${item.url}`}
-                        onSelect={() => handleSelect(item.url)}
-                      >
-                        <Icon className="mr-2 h-4 w-4" />
-                        <div className="flex flex-col">
-                          <span className="text-base">{item.title}</span>
-                          {item.description && (
-                            <span className="text-muted-foreground text-xs">
-                              {item.description}
-                            </span>
-                          )}
-                        </div>
-                        {item.meta?.price && (
-                          <span className="text-muted-foreground ml-auto font-medium">
-                            {new Intl.NumberFormat(undefined, {
-                              style: "currency",
-                              currency: item.meta.currency || "USD",
-                            }).format(item.meta.price)}
-                          </span>
-                        )}
-                      </CommandItem>
-                    );
-                  })}
-                </CommandGroup>
-                <CommandSeparator />
+    const url = `${basePath}?${searchParams.toString()}`;
+    handleSelect(url);
+  };
+
+  // Filter categories based on search
+  const filteredCategories = React.useMemo(() => {
+    if (!search) return Object.values(allCategories).filter((c) => !c.hidden);
+    const s = search.toLowerCase();
+    return Object.values(allCategories).filter(
+      (c) =>
+        !c.hidden &&
+        (c.name.toLowerCase().includes(s) ||
+          c.description.toLowerCase().includes(s)),
+    );
+  }, [search]);
+
+  return (
+    <CommandDialog
+      open={open}
+      onOpenChange={onOpenChange}
+      className="max-w-[650px]"
+    >
+      <CommandInput
+        placeholder="What are you looking for?"
+        value={search}
+        onValueChange={setSearch}
+      />
+      <CommandList className="min-h-[300px]">
+        <CommandEmpty>No results found for &quot;{search}&quot;.</CommandEmpty>
+
+        {!search && (
+          <>
+            <div className="p-4 pb-2">
+              <h4 className="text-muted-foreground mb-3 flex items-center gap-2 px-1 text-base font-semibold tracking-wider uppercase">
+                <TrendingUp className="h-5 w-5" />
+                Popular Searches
+              </h4>
+              <div className="flex flex-wrap gap-2">
+                {POPULAR_SEARCH_CONFIG.map(({ label, category, params }) => (
+                  <button
+                    key={label}
+                    onClick={() => handlePopularSearch(category, params)}
+                    className="bg-accent hover:bg-accent/80 text-accent-foreground cursor-pointer rounded-full px-4 py-2 text-base font-medium transition-colors"
+                  >
+                    {label}
+                  </button>
+                ))}
               </div>
-            );
-          })}
+            </div>
+
+            <CommandGroup heading="Quick Navigation">
+              <CommandItem
+                onSelect={() =>
+                  handleSelect(country === "us" ? "/" : `/${country}`)
+                }
+              >
+                <Home className="mr-2 h-4 w-4" />
+                Home
+              </CommandItem>
+              <CommandItem
+                onSelect={() =>
+                  handleSelect(country === "us" ? "/blog" : `/${country}/blog`)
+                }
+              >
+                <BookOpen className="mr-2 h-4 w-4" />
+                Blog & Buying Guides
+              </CommandItem>
+            </CommandGroup>
+
+            <CommandGroup heading="Browse Categories">
+              {Object.values(allCategories)
+                .filter((c) => !c.hidden)
+                .map((cat) => (
+                  <CommandItem
+                    key={cat.slug}
+                    onSelect={() =>
+                      handleSelect(getCategoryPath(cat.slug, country))
+                    }
+                  >
+                    <LayoutGrid className="mr-2 h-4 w-4" />
+                    {cat.name}
+                  </CommandItem>
+                ))}
+            </CommandGroup>
+          </>
+        )}
+
+        {search && (
+          <>
+            <CommandGroup heading="Search Suggestions">
+              {filteredCategories.slice(0, 5).map((cat) => (
+                <CommandItem
+                  key={cat.slug}
+                  onSelect={() =>
+                    handleSelect(
+                      `${getCategoryPath(cat.slug, country)}?search=${encodeURIComponent(search)}`,
+                    )
+                  }
+                  className="py-3"
+                >
+                  <Search className="mr-2 h-4 w-4" />
+                  <div className="flex items-center gap-1.5">
+                    <span className="font-semibold">{search}</span>
+                    <span className="text-muted-foreground">in</span>
+                    <span>{cat.name}</span>
+                  </div>
+                </CommandItem>
+              ))}
+              <CommandItem
+                onSelect={() =>
+                  handleSelect(
+                    `${country === "us" ? "/" : `/${country}`}?search=${encodeURIComponent(search)}`,
+                  )
+                }
+                className="py-3"
+              >
+                <Search className="mr-2 h-4 w-4" />
+                <div className="flex items-center gap-1.5">
+                  <span className="text-muted-foreground">
+                    Search globally for
+                  </span>
+                  <span className="font-semibold">&quot;{search}&quot;</span>
+                </div>
+              </CommandItem>
+            </CommandGroup>
+
+            {filteredCategories.length > 0 && (
+              <CommandGroup heading="Jump to Category">
+                {filteredCategories.map((cat) => (
+                  <CommandItem
+                    key={`jump-${cat.slug}`}
+                    onSelect={() =>
+                      handleSelect(getCategoryPath(cat.slug, country))
+                    }
+                  >
+                    <LayoutGrid className="mr-2 h-4 w-4" />
+                    {cat.name}
+                  </CommandItem>
+                ))}
+              </CommandGroup>
+            )}
+          </>
+        )}
       </CommandList>
     </CommandDialog>
   );
 }
-
-// Prefetch function for hover
-export const prefetchSearchIndex = (country: string = DEFAULT_COUNTRY) => {
-  fetch(`/api/search?country=${country}`).catch(() => {});
-};

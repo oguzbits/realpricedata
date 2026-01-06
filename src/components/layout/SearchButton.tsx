@@ -6,9 +6,7 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { DEFAULT_COUNTRY, isValidCountryCode } from "@/lib/countries";
 import { Search } from "lucide-react";
-import { usePathname } from "next/navigation";
 import * as React from "react";
 
 // Detect Mac once on client
@@ -21,18 +19,6 @@ export function SearchButton({
 }: {
   mode?: "mobile" | "desktop";
 }) {
-  const pathname = usePathname();
-
-  // Get country from URL for prefetch
-  const pathSegments = pathname.split("/").filter(Boolean);
-  const country = isValidCountryCode(pathSegments[0] || "")
-    ? pathSegments[0]
-    : DEFAULT_COUNTRY;
-
-  const prefetch = () => {
-    fetch(`/api/search?country=${country}`).catch(() => {});
-  };
-
   const handleOpen = (e: React.MouseEvent) => {
     e.preventDefault();
     window.triggerSearch?.();
@@ -45,7 +31,6 @@ export function SearchButton({
           <button
             type="button"
             onClick={handleOpen}
-            onMouseEnter={prefetch}
             className="border-border bg-card hover:bg-card/80 hover:border-primary/50 hidden w-[320px] cursor-pointer items-center gap-3 rounded-md border px-4 py-2 shadow-sm sm:flex lg:w-[400px]"
             aria-label="Search all products"
           >
@@ -68,7 +53,6 @@ export function SearchButton({
               size="icon-sm"
               className="cursor-pointer sm:hidden"
               onClick={handleOpen}
-              onMouseEnter={prefetch}
               aria-label="Open search"
             >
               <Search className="h-4 w-4" />

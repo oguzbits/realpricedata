@@ -1,7 +1,9 @@
 import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { cn } from "@/lib/utils";
 import { getCategoryFilterOptions } from "@/lib/utils/category-utils";
+import { RotateCcw } from "lucide-react";
 
 interface FilterPanelProps {
   filters: {
@@ -10,9 +12,11 @@ interface FilterPanelProps {
     formFactor: string[];
     minCapacity: number | null;
     maxCapacity: number | null;
+    search: string;
   };
   onFilterChange: (name: string, value: string) => void;
   onCapacityChange: (min: number | null, max: number | null) => void;
+  onReset: () => void;
   unitLabel: string;
   categorySlug: string;
 }
@@ -21,15 +25,37 @@ export function FilterPanel({
   filters,
   onFilterChange,
   onCapacityChange,
+  onReset,
   unitLabel,
   categorySlug,
 }: FilterPanelProps) {
   const { techOptions, formFactorOptions } =
     getCategoryFilterOptions(categorySlug);
 
+  const hasActiveFilters =
+    filters.condition.length > 0 ||
+    filters.technology.length > 0 ||
+    filters.formFactor.length > 0 ||
+    filters.minCapacity !== null ||
+    filters.maxCapacity !== null ||
+    filters.search !== "";
+
   return (
     <div className="flex flex-col gap-4">
-      <h2 className="sr-only">Filters</h2>
+      <div className="flex h-9 items-center justify-between border-b">
+        <h2 className="text-sm font-bold sm:text-base">Filters</h2>
+        <button
+          type="button"
+          onClick={onReset}
+          className={cn(
+            "text-primary flex cursor-pointer items-center gap-1.5 rounded-md px-3 py-1.5 text-base font-semibold transition-colors hover:bg-blue-500/10",
+            !hasActiveFilters && "invisible",
+          )}
+        >
+          <RotateCcw className="h-4 w-4" />
+          Reset All
+        </button>
+      </div>
       {/* Condition Filter */}
       <div className="border-b">
         <div className="py-2.5 text-sm font-bold sm:text-base">Condition</div>

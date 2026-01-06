@@ -30,6 +30,7 @@ export function FilterPanelClient({
       formFactor: parseAsArrayOf(parseAsString).withDefault([]),
       minCapacity: parseAsFloat,
       maxCapacity: parseAsFloat,
+      search: parseAsString.withDefault(""),
     },
     {
       shallow: false,
@@ -53,11 +54,23 @@ export function FilterPanelClient({
     setFilters({ minCapacity: min, maxCapacity: max });
   };
 
+  const handleReset = () => {
+    setFilters({
+      condition: null,
+      technology: null,
+      formFactor: null,
+      minCapacity: null,
+      maxCapacity: null,
+      search: null,
+    });
+  };
+
   return (
     <FilterPanel
       filters={filters}
       onFilterChange={toggleArrayFilter}
       onCapacityChange={setCapacityRange}
+      onReset={handleReset}
       unitLabel={unitLabel}
       categorySlug={categorySlug}
     />

@@ -96,6 +96,10 @@ export const categoryFAQs: Record<CategorySlug, FAQItem[]> = {
         "ATX is the standard desktop size (150mm x 86mm x 140-180mm). SFX is smaller (125mm x 63.5mm x 100mm) for compact builds. SFX-L is slightly larger than SFX with better cooling. Choose based on your case compatibility.",
     },
   ],
+
+  // Hidden categories - no FAQs needed
+  cpu: [],
+  gpu: [],
 };
 
 /**

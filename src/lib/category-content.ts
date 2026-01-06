@@ -66,6 +66,16 @@ export const categoryContent: Record<CategorySlug, CategoryContent> = {
       },
     ],
   },
+  cpu: {
+    title: "Best CPUs (Compare Processors)",
+    intro:
+      "Compare Intel and AMD processors by price, core count, and performance. Find the best CPU deals for gaming, content creation, and workstation builds.",
+  },
+  gpu: {
+    title: "Best Graphics Cards (Compare GPUs)",
+    intro:
+      "Compare NVIDIA GeForce and AMD Radeon graphics cards by price and VRAM. Find the best GPU deals for gaming and creative workloads.",
+  },
 };
 
 export function getCategoryContent(

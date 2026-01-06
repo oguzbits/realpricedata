@@ -18,9 +18,9 @@
   <!-- Zinc-800 background -->
   <rect width="48" height="48" fill="#27272a"/>
   
-  <!-- White "c" using Inter Bold - larger -->
-  <text x="24" y="38" class="logo-text" font-size="60" text-anchor="middle">c</text>
+  <!-- White "c" centered with more safe-area -->
+  <text x="24" y="35" class="logo-text" font-size="44" text-anchor="middle">c</text>
   
-  <!-- Orange underline - matching c width -->
-  <rect x="9" y="42" width="30" height="3" fill="#FF6200"/>
+  <!-- Orange underline - centered and higher -->
+  <rect x="13" y="39" width="22" height="4" fill="#FF6200"/>
 </svg>

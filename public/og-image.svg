@@ -18,9 +18,9 @@
   <!-- Zinc-800 background -->
   <rect width="1200" height="630" fill="#27272a"/>
   
-  <!-- White "cleverprices" text - larger -->
-  <text x="600" y="350" class="logo-text" font-size="180" text-anchor="middle">cleverprices</text>
+  <!-- White "cleverprices" text - centered with generous margins -->
+  <text x="600" y="330" class="logo-text" font-size="150" text-anchor="middle">cleverprices</text>
   
-  <!-- Orange underline - matching text width -->
-  <rect x="60" y="420" width="1080" height="30" fill="#FF6200"/>
+  <!-- Orange underline - proportionally matched to favicon -->
+  <rect x="150" y="385" width="900" height="15" fill="#FF6200"/>
 </svg>

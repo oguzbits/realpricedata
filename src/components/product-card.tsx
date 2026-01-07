@@ -111,7 +111,10 @@ export function ProductCard({
       {/* Price Section */}
       <div className="mt-auto space-y-3">
         <div className="flex flex-col gap-2">
-          <span className="text-foreground text-xl leading-none font-bold tracking-tight">
+          <span
+            className="text-foreground text-xl leading-none font-bold tracking-tight"
+            suppressHydrationWarning
+          >
             {formatCurrency(price)}
           </span>
 
@@ -120,7 +123,10 @@ export function ProductCard({
               <span className="text-muted-foreground/80 text-sm font-black tracking-widest uppercase">
                 Unit Price
               </span>
-              <span className="text-primary bg-primary/5 rounded-md px-1.5 py-0.5 font-mono text-base font-bold">
+              <span
+                className="text-primary bg-primary/5 rounded-md px-1.5 py-0.5 font-mono text-base font-bold"
+                suppressHydrationWarning
+              >
                 {pricePerUnit}
               </span>
             </div>

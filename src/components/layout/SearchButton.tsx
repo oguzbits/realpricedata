@@ -14,17 +14,6 @@ export function SearchButton({
 }: {
   mode?: "mobile" | "desktop";
 }) {
-  const [mounted, setMounted] = React.useState(false);
-  const [isMac, setIsMac] = React.useState(false);
-
-  React.useEffect(() => {
-    setMounted(true);
-    setIsMac(
-      typeof navigator !== "undefined" &&
-        /Mac|iPod|iPhone|iPad/.test(navigator.platform),
-    );
-  }, []);
-
   const handleOpen = (e: React.MouseEvent) => {
     e.preventDefault();
     window.triggerSearch?.();
@@ -44,12 +33,6 @@ export function SearchButton({
             <span className="flex-1 text-left text-base text-zinc-500">
               Search products, categories...
             </span>
-            <kbd
-              className="hidden items-center gap-1 rounded-md border border-zinc-200 bg-zinc-100 px-2 py-0.5 text-sm font-medium text-zinc-600 lg:inline-flex"
-              suppressHydrationWarning
-            >
-              {!mounted ? "Ctrl+K" : isMac ? "⌘K" : "Ctrl+K"}
-            </kbd>
           </button>
         </div>
       )}

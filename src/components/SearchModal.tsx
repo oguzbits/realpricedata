@@ -209,24 +209,6 @@ export function SearchModal({ open, onOpenChange }: SearchModalProps) {
                   </div>
                 </CommandItem>
               ))}
-              <CommandItem
-                onSelect={() =>
-                  handleSelect(
-                    `${country === "us" ? "/" : `/${country}`}?search=${encodeURIComponent(search)}`,
-                  )
-                }
-                className={cn("py-3")}
-              >
-                <Search className={cn("mr-2 h-4 w-4")} />
-                <div className={cn("flex items-center gap-1.5")}>
-                  <span className={cn("text-muted-foreground")}>
-                    Search globally for
-                  </span>
-                  <span className={cn("font-semibold")}>
-                    &quot;{search}&quot;
-                  </span>
-                </div>
-              </CommandItem>
             </CommandGroup>
 
             {filteredCategories.length > 0 && (

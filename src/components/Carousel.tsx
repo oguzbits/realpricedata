@@ -27,12 +27,14 @@ export const Carousel = ({
   ref,
 }: CarouselProps) => {
   const scrollContainerRef = useRef<HTMLDivElement>(null);
+  const [mounted, setMounted] = useState(false);
   const [scrollState, setScrollState] = useState({
     canScrollLeft: false,
     canScrollRight: false,
   });
 
   useEffect(() => {
+    setMounted(true);
     const container = scrollContainerRef.current;
     if (!container) return;
 
@@ -109,15 +111,17 @@ export const Carousel = ({
       </div>
 
       {/* Mobile visual indicator for scroll */}
-      <div className="bg-muted/20 absolute right-0 bottom-0 left-0 h-1 overflow-hidden rounded-full sm:hidden">
-        <div
-          className="bg-primary/20 h-full rounded-full transition-all duration-300"
-          style={{
-            width: "33%",
-            transform: `translateX(${scrollState.canScrollLeft ? (scrollState.canScrollRight ? "100%" : "200%") : "0%"})`,
-          }}
-        />
-      </div>
+      {mounted && (
+        <div className="bg-muted/20 absolute right-0 bottom-0 left-0 h-1 overflow-hidden rounded-full sm:hidden">
+          <div
+            className="bg-primary/20 h-full rounded-full transition-all duration-300"
+            style={{
+              width: "33%",
+              transform: `translateX(${scrollState.canScrollLeft ? (scrollState.canScrollRight ? "100%" : "200%") : "0%"})`,
+            }}
+          />
+        </div>
+      )}
     </div>
   );
 };

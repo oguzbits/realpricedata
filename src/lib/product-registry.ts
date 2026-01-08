@@ -1,10 +1,11 @@
+import { db } from "@/db";
+import { products, prices, type Product as DbProduct } from "@/db/schema";
 import { calculateProductMetrics } from "./utils/products";
-import productsData from "@/data/products.json";
+import { eq, inArray } from "drizzle-orm";
 
 /**
- * Product Registry - Single source of truth for all products
- * This centralizes product data and affiliate links in one place.
- * Future: This will integrate with Amazon PA API for real-time pricing.
+ * Product Registry - DB Adapter
+ * Fetches data from SQLite database seeded with realistic data.
  */
 
 export interface Product {
@@ -15,9 +16,9 @@ export interface Product {
   category: string;
   image?: string;
   affiliateUrl: string;
-  prices: Record<string, number>; // New multi-market prices
+  prices: Record<string, number>;
   capacity: number;
-  capacityUnit: "GB" | "TB" | "W";
+  capacityUnit: "GB" | "TB" | "W" | "core";
   normalizedCapacity?: number;
   pricePerUnit?: number;
   warranty: string;
@@ -26,87 +27,125 @@ export interface Product {
   condition: "New" | "Used" | "Renewed";
   brand: string;
   certification?: string;
-  modularityTyp?: string;
+  modularityTyp?: string; // Kept 'Typ' to match legacy usage if any
 }
 
-// Type assertion and dynamic calculation of metrics
-const products = (productsData as Product[]).map(
-  (p) => calculateProductMetrics(p) as Product,
-);
+// Helper to map DB to Interface
+function mapDbProduct(p: any, pricesList: any[]): Product {
+  const pricesObj: Record<string, number> = {};
+  if (pricesList) {
+    pricesList.forEach((pr) => {
+      if (pr.productId === p.id && pr.amazonPrice) {
+        pricesObj[pr.country] = pr.amazonPrice;
+      }
+    });
+  }
 
-/**
- * Get a product by its slug
- * @param slug - The product slug (e.g., "samsung-990-pro-2tb")
- * @returns The product or undefined if not found
- */
-export function getProductBySlug(slug: string): Product | undefined {
-  return products.find((p) => p.slug === slug);
+  const item: Product = {
+    id: p.id,
+    slug: p.slug,
+    asin: p.asin,
+    title: p.title,
+    category: p.category,
+    image: p.imageUrl || "",
+    affiliateUrl: `https://www.amazon.de/dp/${p.asin}?tag=cleverprices-21`,
+    prices: pricesObj,
+    capacity: p.capacity || 0,
+    capacityUnit: (p.capacityUnit as any) || "TB",
+    normalizedCapacity: p.normalizedCapacity || 0,
+    warranty: p.warranty || "2 Years",
+    formFactor: p.formFactor || "Standard",
+    technology: p.technology || "",
+    condition: (p.condition as any) || "New",
+    brand: p.brand || "Generic",
+    certification: p.certification || undefined,
+    modularityTyp: p.modularityType || undefined,
+  };
+
+  return calculateProductMetrics(item) as Product;
 }
 
-/**
- * Get all products for a specific category
- * @param category - The category slug (e.g., "hard-drives")
- * @returns Array of products in that category
- */
-export function getProductsByCategory(category: string): Product[] {
-  return products.filter((p) => p.category === category);
+export async function getAllProducts(): Promise<Product[]> {
+  const allProducts = await db.select().from(products);
+  const allPrices = await db.select().from(prices);
+
+  return allProducts.map((p) =>
+    mapDbProduct(
+      p,
+      allPrices.filter((pr) => pr.productId === p.id),
+    ),
+  );
 }
 
-/**
- * Get all products in the registry
- * @returns All products
- */
-export function getAllProducts(): Product[] {
-  return [...products];
+export async function getProductsByCategory(
+  category: string,
+): Promise<Product[]> {
+  const prods = await db
+    .select()
+    .from(products)
+    .where(eq(products.category, category));
+  if (prods.length === 0) return [];
+
+  const ids = prods.map((p) => p.id);
+  const prs = await db
+    .select()
+    .from(prices)
+    .where(inArray(prices.productId, ids));
+
+  return prods.map((p) =>
+    mapDbProduct(
+      p,
+      prs.filter((pr) => pr.productId === p.id),
+    ),
+  );
 }
 
-/**
- * Get similar products (same category, different product)
- * @param product - The current product
- * @param limit - Maximum number of similar products to return
- * @param countryCode - Country code for price comparison
- * @returns Array of similar products sorted by price similarity
- */
-export function getSimilarProducts(
+export async function getProductBySlug(
+  slug: string,
+): Promise<Product | undefined> {
+  const [p] = await db.select().from(products).where(eq(products.slug, slug));
+  if (!p) return undefined;
+
+  const prs = await db.select().from(prices).where(eq(prices.productId, p.id));
+  return mapDbProduct(p, prs);
+}
+
+export async function getSimilarProducts(
   product: Product,
   limit: number = 4,
-  countryCode: string = "us",
-): Product[] {
-  // Get products in same category with valid prices
-  const categoryProducts = products.filter(
+  countryCode: string = "de",
+): Promise<Product[]> {
+  // Fetch category products
+  const categoryProducts = await getProductsByCategory(product.category);
+
+  const valid = categoryProducts.filter(
     (p) =>
-      p.category === product.category &&
       p.slug !== product.slug &&
       p.prices[countryCode] !== undefined &&
-      p.prices[countryCode] !== null &&
       p.prices[countryCode] > 0,
   );
 
-  // Sort by price similarity to current product
   const currentPrice = product.prices[countryCode] || 0;
 
-  const sorted = categoryProducts.sort((a, b) => {
+  const sorted = valid.sort((a, b) => {
     const priceA = a.prices[countryCode] || 0;
     const priceB = b.prices[countryCode] || 0;
-
-    // Sort by absolute difference from current price
     return Math.abs(priceA - currentPrice) - Math.abs(priceB - currentPrice);
   });
 
   return sorted.slice(0, limit);
 }
 
-/**
- * Get products by brand
- * @param brand - The brand name
- * @param excludeSlug - Optional slug to exclude (current product)
- * @returns Array of products from that brand
- */
-export function getProductsByBrand(
+export async function getProductsByBrand(
   brand: string,
   excludeSlug?: string,
-): Product[] {
-  return products.filter(
+): Promise<Product[]> {
+  // Naive implementation: fetch all is safe for 40 products.
+  // Ideally query DB filtering by brand.
+  // Using SQL like operator or simple equal if exact match.
+  // DB stores 'brand'.
+  const all = await getAllProducts(); // reuse mapped
+  return all.filter(
     (p) =>
       p.brand.toLowerCase() === brand.toLowerCase() && p.slug !== excludeSlug,
   );

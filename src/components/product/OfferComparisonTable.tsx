@@ -103,7 +103,7 @@ export function OfferComparisonTable({
   }
 
   return (
-    <div className="space-y-3">
+    <div className="divide-y divide-zinc-200">
       {sortedOffers.map((offer, index) => {
         const sourceConfig =
           SOURCE_CONFIG[offer.source] || SOURCE_CONFIG.static;
@@ -112,106 +112,121 @@ export function OfferComparisonTable({
         const isBestPrice = index === 0;
 
         return (
-          <Card
+          <div
             key={`${offer.source}-${offer.condition}-${index}`}
             className={cn(
-              "group relative overflow-hidden transition-all",
-              sourceConfig.color,
-              isBestPrice && "ring-2 ring-emerald-500/50",
+              "group relative flex flex-col items-center gap-4 p-5 transition-all hover:bg-zinc-50/50 sm:flex-row",
+              isBestPrice && "bg-orange-50/20",
             )}
           >
-            <div className="flex items-center gap-4 p-4">
-              {/* Source Logo */}
-              <div className="bg-background flex h-12 w-16 shrink-0 items-center justify-center rounded-lg border p-2">
+            {/* Merchant Branding Area */}
+            <div className="flex w-full shrink-0 items-center justify-between gap-4 sm:w-auto sm:min-w-[180px] sm:justify-start">
+              <div className="flex h-12 w-20 shrink-0 items-center justify-center rounded-sm border border-zinc-100 bg-white p-2.5 shadow-sm">
                 {sourceConfig.logo ? (
-                  <Image
-                    src={sourceConfig.logo}
-                    alt={sourceConfig.name}
-                    width={48}
-                    height={24}
-                    className="h-6 w-auto object-contain dark:invert"
-                  />
+                  <div className="relative h-full w-full">
+                    <Image
+                      src={sourceConfig.logo}
+                      alt={sourceConfig.name}
+                      fill
+                      className="object-contain"
+                    />
+                  </div>
                 ) : (
-                  <span className="text-xs font-medium">
+                  <span className="text-[10px] font-bold tracking-wider text-zinc-400 uppercase">
                     {sourceConfig.name}
                   </span>
                 )}
               </div>
+              <div className="flex flex-col items-end sm:hidden">
+                <p className="text-lg leading-tight font-black text-zinc-900">
+                  {formatCurrency(offer.price)}
+                </p>
+                <p className="text-[10px] font-bold text-zinc-400 uppercase">
+                  inkl. Versand
+                </p>
+              </div>
+            </div>
 
-              {/* Seller Info */}
-              <div className="min-w-0 flex-1">
-                <div className="flex items-center gap-2">
-                  <span className="font-medium">{sourceConfig.name}</span>
-                  {offer.seller && offer.seller !== "Amazon" && (
-                    <span className="text-muted-foreground text-sm">
-                      – {offer.seller}
+            {/* Price & Offer Detail Area */}
+            <div className="hidden flex-1 flex-col items-center gap-4 sm:flex sm:flex-row">
+              <div className="flex flex-1 flex-col">
+                <div className="mb-0.5 flex items-center gap-2">
+                  <h4 className="text-[13px] leading-tight font-bold text-zinc-800 transition-colors group-hover:text-[#f97316]">
+                    {sourceConfig.name}{" "}
+                    {offer.seller &&
+                      offer.seller !== "Amazon" &&
+                      `– ${offer.seller}`}
+                  </h4>
+                  {isBestPrice && (
+                    <span className="rounded-full bg-blue-100 px-2 py-0.5 text-[9px] leading-none font-black tracking-widest text-blue-700 uppercase">
+                      Bester Preis
                     </span>
                   )}
-                  {isBestPrice && <Badge variant="default">Best Price</Badge>}
                 </div>
-                <div className="text-muted-foreground mt-1 flex flex-wrap items-center gap-3 text-sm">
-                  {offer.freeShipping && (
-                    <span className="flex items-center gap-1">
-                      <Truck className="h-3.5 w-3.5" />
-                      Free shipping
+                <div className="flex items-center gap-4 text-[11px] text-zinc-500">
+                  {offer.freeShipping ? (
+                    <span className="flex items-center gap-1 font-bold text-zinc-400">
+                      <Truck className="h-3 w-3" /> Gratis Versand
                     </span>
+                  ) : (
+                    <span>+ Versand</span>
                   )}
-                  {offer.availability === "in_stock" && (
-                    <span className="flex items-center gap-1 text-emerald-600 dark:text-emerald-400">
-                      <Check className="h-3.5 w-3.5" />
-                      In Stock
-                    </span>
-                  )}
+                  <span className="flex items-center gap-1 font-bold tracking-tighter text-emerald-600 uppercase">
+                    <Check className="h-3 w-3 stroke-[3]" /> Auf Lager
+                  </span>
                 </div>
               </div>
 
-              {/* Condition */}
-              <div className="hidden shrink-0 sm:block">
-                <Badge variant="outline" className={conditionConfig.className}>
-                  {conditionConfig.label}
-                </Badge>
-              </div>
-
-              {/* Price */}
-              <div className="shrink-0 text-right">
-                <p className="text-foreground text-xl font-bold">
+              {/* Price Block */}
+              <div className="flex min-w-[120px] flex-col items-end">
+                <p className="text-xl leading-tight font-black text-zinc-900">
                   {formatCurrency(offer.price)}
                 </p>
                 {offer.listPrice && offer.listPrice > offer.price && (
-                  <p className="text-muted-foreground text-sm line-through">
+                  <p className="text-[11px] font-medium text-zinc-400 line-through decoration-zinc-300">
                     {formatCurrency(offer.listPrice)}
                   </p>
                 )}
               </div>
+            </div>
 
-              {/* Action Button */}
+            {/* Action Area */}
+            <div className="flex w-full min-w-[150px] items-center justify-between gap-4 sm:w-auto sm:justify-end">
+              {/* Merchant Rating Placeholder */}
+              <div className="flex flex-col items-start sm:items-end">
+                <div className="mb-0.5 flex">
+                  {[1, 2, 3, 4, 5].map((s) => (
+                    <Star
+                      key={s}
+                      className="h-2.5 w-2.5 fill-[#ff6000] text-[#ff6000]"
+                    />
+                  ))}
+                </div>
+                <span className="text-[10px] font-bold text-zinc-400">
+                  Shop Rating
+                </span>
+              </div>
+
               <a
                 href={offer.affiliateLink}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="shrink-0 no-underline"
+                className="flex-1 no-underline sm:flex-none"
               >
                 <button
                   className={cn(
-                    "flex cursor-pointer items-center gap-2 rounded-xl px-4 py-2.5 text-sm font-bold transition-all active:scale-[0.98]",
-                    offer.source === "ebay"
-                      ? "border border-[#E53238]/50 bg-[#E53238] text-white hover:bg-[#CC2D32]"
-                      : "border border-[#FCD200]/50 bg-[#FFD814] text-black hover:bg-[#F7CA00]",
+                    "flex w-full cursor-pointer items-center justify-center gap-1.5 rounded-sm px-6 py-2.5 text-[13px] font-black tracking-wide uppercase transition-all active:scale-[0.98] sm:w-auto",
+                    isBestPrice
+                      ? "bg-[#65a30d] text-white hover:bg-[#4d7c0f]" // Professional green for CTA
+                      : "bg-[#f97316] text-white hover:bg-[#ea580c]", // Orange theme
                   )}
                 >
-                  View Deal
-                  <ExternalLink className="h-4 w-4" />
+                  Zum Shop
+                  <ExternalLink className="h-3.5 w-3.5 stroke-[3]" />
                 </button>
               </a>
             </div>
-
-            {/* Mobile condition */}
-            <div className="border-t px-4 py-2 sm:hidden">
-              <Badge variant="outline" className={conditionConfig.className}>
-                {conditionConfig.label}
-              </Badge>
-            </div>
-          </Card>
+          </div>
         );
       })}
     </div>

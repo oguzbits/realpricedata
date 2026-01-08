@@ -28,6 +28,7 @@ export interface FilterParams {
   maxCapacity?: string;
   sortBy?: string;
   sortOrder?: string;
+  view?: string; // grid or list
 }
 
 /**
@@ -43,7 +44,7 @@ export async function getCategoryProducts(
   cacheLife("prices");
 
   // Load raw products for this category
-  const rawProducts = getProductsByCategory(categorySlug);
+  const rawProducts = await getProductsByCategory(categorySlug);
   const category = allCategories[categorySlug as CategorySlug];
   const unitLabel = category?.unitType || "TB";
 

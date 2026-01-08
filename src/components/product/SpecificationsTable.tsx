@@ -6,6 +6,7 @@
 
 import { Card, CardContent } from "@/components/ui/card";
 import { Product } from "@/lib/product-registry";
+import { cn } from "@/lib/utils";
 
 interface SpecificationsTableProps {
   product: Product;
@@ -25,26 +26,27 @@ export function SpecificationsTable({ product }: SpecificationsTableProps) {
   ].filter((spec) => spec.value); // Remove empty values
 
   return (
-    <Card>
-      <CardContent className="p-0">
-        <table className="w-full">
-          <tbody>
-            {specs.map((spec, index) => (
-              <tr
-                key={spec.label}
-                className={index % 2 === 0 ? "bg-muted/30" : "bg-background"}
-              >
-                <td className="text-muted-foreground w-1/3 px-4 py-3 text-sm font-medium">
-                  {spec.label}
-                </td>
-                <td className="text-foreground px-4 py-3 text-sm">
-                  {spec.value}
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </CardContent>
-    </Card>
+    <div className="overflow-hidden">
+      <table className="w-full border-collapse border-t border-zinc-100">
+        <tbody>
+          {specs.map((spec, index) => (
+            <tr
+              key={spec.label}
+              className={cn(
+                "transition-colors hover:bg-zinc-50/80",
+                index % 2 === 0 ? "bg-zinc-50/40" : "bg-white",
+              )}
+            >
+              <td className="w-2/5 px-6 py-3.5 text-[13px] font-bold tracking-wider text-zinc-400 uppercase">
+                {spec.label}
+              </td>
+              <td className="border-l border-zinc-50 px-6 py-3.5 text-[13px] font-bold text-zinc-900">
+                {spec.value}
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
   );
 }

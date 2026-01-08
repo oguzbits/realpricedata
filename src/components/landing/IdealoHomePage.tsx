@@ -1,0 +1,56 @@
+"use client";
+
+import { IdealoHero } from "./IdealoHero";
+import { IdealoProductCarousel } from "./IdealoProductCarousel";
+import { IdealoSection } from "./IdealoSection";
+
+interface Product {
+  title: string;
+  price: number;
+  slug: string;
+  image?: string;
+  badgeText?: string;
+}
+
+interface IdealoHomePageProps {
+  products: Product[];
+}
+
+export function IdealoHomePage({ products }: IdealoHomePageProps) {
+  // Split products for different sections
+  const bestsellers = products.slice(0, 8);
+  const recommendations = products.slice(4, 12);
+  const deals = products
+    .slice(0, 6)
+    .map((p) => ({ ...p, badgeText: "Top Deal" }));
+
+  return (
+    <div className="bg-[#f5f5f5]">
+      {/* Hero Section - light blue bg */}
+      <IdealoSection variant="lightBlue" className="py-4">
+        <IdealoHero products={products} />
+      </IdealoSection>
+
+      {/* Bestseller Carousel - white bg */}
+      <IdealoSection variant="white">
+        <IdealoProductCarousel title="Bestseller" products={bestsellers} />
+      </IdealoSection>
+
+      {/* Top Deals - light blue bg (alternating) */}
+      <IdealoSection variant="lightBlue">
+        <IdealoProductCarousel
+          title="Aktuelle Deals für dich"
+          products={deals}
+        />
+      </IdealoSection>
+
+      {/* Recommendations - white bg (alternating) */}
+      <IdealoSection variant="white">
+        <IdealoProductCarousel
+          title="Unsere Empfehlungen"
+          products={recommendations}
+        />
+      </IdealoSection>
+    </div>
+  );
+}

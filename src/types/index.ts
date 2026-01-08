@@ -17,6 +17,7 @@ export type Currency = "USD" | "GBP" | "CAD" | "EUR";
  */
 export interface Product {
   asin: string;
+  slug: string;
   title: string;
   price: {
     amount: number;

@@ -133,6 +133,7 @@ export function adaptToUIModel(
 
   return {
     asin,
+    slug: p.slug, // Add slug for internal navigation
     title,
     price: {
       amount: finalPrice,

@@ -69,7 +69,6 @@ export function ParentCategoryView({
                   (cat.popularFilters || []).map((filter) => {
                     const categoryPath = getCategoryPath(
                       cat.slug as CategorySlug,
-                      countryCode,
                     );
                     return (
                       <Link

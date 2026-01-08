@@ -14,7 +14,7 @@ export function CategoryCard({ category, Icon, country }: CategoryCardProps) {
   return (
     <Link
       className="group no-underline"
-      href={getCategoryPath(category.slug as CategorySlug, country)}
+      href={getCategoryPath(category.slug as CategorySlug)}
       aria-label={`Browse ${category.name}: ${category.description}`}
       prefetch={true}
     >

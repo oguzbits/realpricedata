@@ -17,11 +17,6 @@ export const SITE_DOMAIN = "cleverprices.com";
  */
 export const SITE_URL = `https://${SITE_DOMAIN}`;
 
-/**
- * Site protocol
- */
-export const SITE_PROTOCOL = "https";
-
 // =============================================================================
 // BRANDING
 // =============================================================================
@@ -35,11 +30,6 @@ export const BRAND_NAME = "CleverPrices";
  * Brand name with domain (for titles, headers)
  */
 export const BRAND_DOMAIN = "cleverprices.com";
-
-/**
- * Site tagline/slogan
- */
-export const SITE_TAGLINE = "Compare Price Per Unit";
 
 /**
  * Full site description for SEO

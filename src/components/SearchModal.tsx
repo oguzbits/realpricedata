@@ -87,7 +87,7 @@ export function SearchModal({ open, onOpenChange }: SearchModalProps) {
     categorySlug: string,
     params: Record<string, any>,
   ) => {
-    const basePath = getCategoryPath(categorySlug as any, country);
+    const basePath = getCategoryPath(categorySlug as any);
     const searchParams = new URLSearchParams();
     Object.entries(params).forEach(([key, value]) => {
       if (value !== undefined && value !== null) {
@@ -118,12 +118,12 @@ export function SearchModal({ open, onOpenChange }: SearchModalProps) {
       className={cn("max-w-[650px]")}
     >
       <CommandInput
-        placeholder="What are you looking for?"
+        placeholder="Wonach suchst du?"
         value={search}
         onValueChange={setSearch}
       />
       <CommandList className={cn("min-h-[300px]")}>
-        <CommandEmpty>No results found for &quot;{search}&quot;.</CommandEmpty>
+        <CommandEmpty>Keine Ergebnisse für &quot;{search}&quot;.</CommandEmpty>
 
         {!search && (
           <>
@@ -134,7 +134,7 @@ export function SearchModal({ open, onOpenChange }: SearchModalProps) {
                 )}
               >
                 <TrendingUp className={cn("h-5 w-5")} />
-                Popular Searches
+                Beliebte Suchen
               </h4>
               <div className={cn("flex flex-wrap gap-2")}>
                 {POPULAR_SEARCH_CONFIG.map(({ label, category, params }) => (
@@ -151,14 +151,14 @@ export function SearchModal({ open, onOpenChange }: SearchModalProps) {
               </div>
             </div>
 
-            <CommandGroup heading="Quick Navigation">
+            <CommandGroup heading="Schnellzugriff">
               <CommandItem
                 onSelect={() =>
                   handleSelect(country === "us" ? "/" : `/${country}`)
                 }
               >
                 <Home className={cn("mr-2 h-4 w-4")} />
-                Home
+                Startseite
               </CommandItem>
               <CommandItem
                 onSelect={() =>
@@ -166,19 +166,17 @@ export function SearchModal({ open, onOpenChange }: SearchModalProps) {
                 }
               >
                 <BookOpen className={cn("mr-2 h-4 w-4")} />
-                Blog & Buying Guides
+                Blog & Ratgeber
               </CommandItem>
             </CommandGroup>
 
-            <CommandGroup heading="Browse Categories">
+            <CommandGroup heading="Kategorien">
               {Object.values(allCategories)
                 .filter((c) => !c.hidden)
                 .map((cat) => (
                   <CommandItem
                     key={cat.slug}
-                    onSelect={() =>
-                      handleSelect(getCategoryPath(cat.slug, country))
-                    }
+                    onSelect={() => handleSelect(getCategoryPath(cat.slug))}
                   >
                     <LayoutGrid className={cn("mr-2 h-4 w-4")} />
                     {cat.name}
@@ -190,13 +188,13 @@ export function SearchModal({ open, onOpenChange }: SearchModalProps) {
 
         {search && (
           <>
-            <CommandGroup heading="Search Suggestions">
+            <CommandGroup heading="Vorschläge">
               {filteredCategories.slice(0, 5).map((cat) => (
                 <CommandItem
                   key={cat.slug}
                   onSelect={() =>
                     handleSelect(
-                      `${getCategoryPath(cat.slug, country)}?search=${encodeURIComponent(search)}`,
+                      `${getCategoryPath(cat.slug)}?search=${encodeURIComponent(search)}`,
                     )
                   }
                   className={cn("py-3")}
@@ -212,13 +210,11 @@ export function SearchModal({ open, onOpenChange }: SearchModalProps) {
             </CommandGroup>
 
             {filteredCategories.length > 0 && (
-              <CommandGroup heading="Jump to Category">
+              <CommandGroup heading="Zur Kategorie">
                 {filteredCategories.map((cat) => (
                   <CommandItem
                     key={`jump-${cat.slug}`}
-                    onSelect={() =>
-                      handleSelect(getCategoryPath(cat.slug, country))
-                    }
+                    onSelect={() => handleSelect(getCategoryPath(cat.slug))}
                   >
                     <LayoutGrid className={cn("mr-2 h-4 w-4")} />
                     {cat.name}

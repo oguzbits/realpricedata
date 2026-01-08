@@ -9,7 +9,7 @@ import type { NextRequest } from "next/server";
  * which redirects to the affiliate URL stored in the Product Registry.
  */
 
-import { getAllProducts } from "@/lib/product-registry";
+import { getProductBySlug } from "@/lib/product-registry";
 
 export async function GET(
   request: NextRequest,
@@ -19,8 +19,7 @@ export async function GET(
   const { slug } = params;
 
   // Look up product from the registry (single source of truth)
-  const products = getAllProducts();
-  const product = products.find((p) => p.slug === slug);
+  const product = await getProductBySlug(slug);
 
   if (!product) {
     // Product not found - redirect to hard-drives page

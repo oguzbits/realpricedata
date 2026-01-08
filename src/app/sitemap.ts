@@ -128,7 +128,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       Object.values(allCategories)
         .filter((cat) => cat.parent) // Only categories with parents
         .forEach((category) => {
-          const fullPath = getCategoryPath(category.slug, country);
+          const fullPath = getCategoryPath(category.slug);
           const alternatesPath = `/${category.parent}/${category.slug}`;
 
           countryRoutes.push({
@@ -182,7 +182,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       Object.values(allCategories)
         .filter((cat) => cat.parent) // Only categories with parents
         .forEach((category) => {
-          const fullPath = getCategoryPath(category.slug, country);
+          const fullPath = getCategoryPath(category.slug);
           const alternatesPath = `/${category.parent}/${category.slug}`;
 
           countryRoutes.push({

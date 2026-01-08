@@ -1,21 +1,32 @@
 "use client";
 
+import { getCategoryPath, type CategorySlug } from "@/lib/categories";
+import {
+  ChevronLeft,
+  Cpu,
+  Grid3X3,
+  HardDrive,
+  MemoryStick,
+  Monitor,
+  MousePointer2,
+  Zap,
+} from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { getCategoryPath, type CategorySlug } from "@/lib/categories";
-import { type CountryCode } from "@/lib/countries";
-import { HardDrive, MemoryStick, Zap, Grid3X3 } from "lucide-react";
-import { useRef, useState, useEffect } from "react";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
 
 const categories: {
-  slug: CategorySlug;
+  slug: CategorySlug | null;
   label: string;
-  icon: typeof HardDrive;
+  icon: any;
 }[] = [
-  { slug: "hard-drives", label: "Hard Drives & SSDs", icon: HardDrive },
-  { slug: "ram", label: "RAM & Memory", icon: MemoryStick },
-  { slug: "power-supplies", label: "Power Supplies", icon: Zap },
+  { slug: null, label: "Alle Kategorien", icon: Grid3X3 },
+  { slug: "hard-drives", label: "Festplatten", icon: HardDrive },
+  { slug: "ram", label: "Arbeitsspeicher", icon: MemoryStick },
+  { slug: "cpu", label: "Prozessoren", icon: Cpu },
+  { slug: "monitors", label: "Monitore", icon: Monitor },
+  { slug: "mice", label: "Mäuse", icon: MousePointer2 },
+  { slug: "power-supplies", label: "Netzteile", icon: Zap },
 ];
 
 export function CategoryNav({ country }: { country: string }) {
@@ -61,16 +72,16 @@ export function CategoryNav({ country }: { country: string }) {
   }
 
   return (
-    <div className="z-40 border-b border-zinc-200 bg-zinc-50 dark:border-zinc-800 dark:bg-zinc-800">
-      <div className="relative container mx-auto px-4">
+    <div className="z-40 border-b border-white/10 bg-[var(--sub-header-bg)] dark:bg-[var(--sub-header-bg)]">
+      <div className="relative mx-auto max-w-[1200px] px-4">
         {/* Left scroll button */}
         {canScrollLeft && (
           <button
             onClick={() => scroll("left")}
-            className="absolute top-1/2 left-0 z-10 flex h-full -translate-y-1/2 items-center bg-linear-to-r from-white via-white to-transparent pr-4 pl-2 dark:from-zinc-900 dark:via-zinc-900"
+            className="absolute top-1/2 left-0 z-10 flex h-full -translate-y-1/2 items-center bg-linear-to-r from-[#27272a] via-[#27272a] to-transparent pr-4 pl-2"
             aria-label="Scroll left"
           >
-            <ChevronLeft className="h-5 w-5 text-zinc-600 dark:text-zinc-400" />
+            <ChevronLeft className="h-5 w-5 text-zinc-400" />
           </button>
         )}
 
@@ -83,8 +94,8 @@ export function CategoryNav({ country }: { country: string }) {
         >
           {/* All Categories Button */}
           <Link
-            href={country === "us" ? "/categories" : `/${country}/categories`}
-            className="flex shrink-0 flex-col items-center gap-2 rounded-xl px-4 py-2 text-sm font-medium text-zinc-700 no-underline transition-all hover:bg-zinc-100 hover:text-(--ccc-orange) dark:text-zinc-300 dark:hover:bg-zinc-800"
+            href="/categories"
+            className="flex shrink-0 flex-col items-center gap-2 rounded-xl px-4 py-2 text-sm font-medium text-white/80 no-underline transition-all hover:bg-white/10 hover:text-(--ccc-orange)"
             prefetch={true}
           >
             <Grid3X3 className="h-8 w-8" />
@@ -92,32 +103,23 @@ export function CategoryNav({ country }: { country: string }) {
           </Link>
 
           {/* Category Pills - Icons on top */}
-          {categories.map((cat) => {
-            const Icon = cat.icon;
-            return (
-              <Link
-                key={cat.slug}
-                href={getCategoryPath(cat.slug, country as CountryCode)}
-                className="flex shrink-0 flex-col items-center gap-2 rounded-xl px-4 py-2 text-sm font-medium text-zinc-700 no-underline transition-all hover:bg-zinc-100 hover:text-(--ccc-orange) dark:text-zinc-300 dark:hover:bg-zinc-800"
-                prefetch={true}
-              >
-                <Icon className="h-8 w-8" />
-                <span className="whitespace-nowrap">{cat.label}</span>
-              </Link>
-            );
-          })}
+          {categories
+            .filter((cat) => cat.slug !== null)
+            .map((cat) => {
+              const Icon = cat.icon;
+              return (
+                <Link
+                  key={cat.slug}
+                  href={getCategoryPath(cat.slug!)}
+                  className="flex shrink-0 flex-col items-center gap-2 rounded-xl px-4 py-2 text-sm font-medium text-white/80 no-underline transition-all hover:bg-white/10 hover:text-(--ccc-orange)"
+                  prefetch={true}
+                >
+                  <Icon className="h-8 w-8" />
+                  <span className="whitespace-nowrap">{cat.label}</span>
+                </Link>
+              );
+            })}
         </div>
-
-        {/* Right scroll button */}
-        {canScrollRight && (
-          <button
-            onClick={() => scroll("right")}
-            className="absolute top-1/2 right-0 z-10 flex h-full -translate-y-1/2 items-center bg-linear-to-l from-white via-white to-transparent pr-2 pl-4 dark:from-zinc-900 dark:via-zinc-900"
-            aria-label="Scroll right"
-          >
-            <ChevronRight className="h-5 w-5 text-zinc-600 dark:text-zinc-400" />
-          </button>
-        )}
       </div>
     </div>
   );

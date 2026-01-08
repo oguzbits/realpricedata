@@ -30,87 +30,65 @@
 }
 
 :root {
-  --radius: 0.75rem;
+  --radius: 0.125rem;
 
-  /* Light Mode - Zinc Palette (Neutral Modern) */
-  --background: oklch(0.985 0 0);
-  --foreground: oklch(0.141 0.005 285.82);
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0.141 0.005 285.82);
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.141 0.005 285.82);
+  /* CleverPrices Brand Palette - Zinc & Orange */
+  --background: #ffffff;
+  --foreground: #09090b;
+  --card: #ffffff;
+  --card-foreground: #09090b;
+  --popover: #ffffff;
+  --popover-foreground: #09090b;
 
-  /* Primary - Link Blue */
-  --primary: oklch(0.45 0.2 260);
-  --primary-foreground: oklch(0.985 0 0);
+  /* Primary Action - Vibrant Orange */
+  --primary: #f97316;
+  --primary-foreground: #ffffff;
 
-  /* Secondary - Zinc 100 */
-  --secondary: oklch(0.967 0.001 286.37);
-  --secondary-foreground: oklch(0.45 0.2 260);
+  /* Secondary / Meta - Zinc */
+  --secondary: #f4f4f5;
+  --secondary-foreground: #18181b;
 
-  /* Muted - Zinc 600 in light mode for better contrast */
-  --muted: oklch(0.967 0.001 286.37);
-  --muted-foreground: oklch(0.35 0.015 285.93);
+  /* Muted - Darkened for high contrast accessibility */
+  --muted: #f4f4f5;
+  --muted-foreground: #52525b; /* Zinc-600 instead of 500 */
 
-  /* Accent - Zinc 100 */
-  --accent: oklch(0.967 0.001 286.37);
-  --accent-foreground: oklch(0.45 0.2 260);
+  /* Accent */
+  --accent: #f4f4f5;
+  --accent-foreground: #09090b;
 
-  --destructive: oklch(0.637 0.193 26.14);
-  --destructive-foreground: oklch(0.985 0 0);
+  --destructive: #ef4444;
+  --destructive-foreground: #fafafa;
 
-  --border: oklch(0.85 0.004 286.32);
-  --input: oklch(0.85 0.004 286.32);
-  --ring: oklch(0.45 0.2 260);
+  --border: #d4d4d8; /* Zinc-300 instead of E4E4E7 */
+  --input: #d4d4d8;
+  --ring: #f97316;
 
-  /* Branding - Kept but refined */
-  --ccc-red: #e52a00;
-  --ccc-orange: #ff6200;
-  --ccc-yellow: #ff9a03;
-  --hero-emphasis: #ff6200;
-
-  --header-bg: oklch(0.21 0.006 285.88); /* zinc-900 */
+  /* Structural Colors - Zinc 900 for Header/Footer */
+  --header-bg: #18181b;
   --header-fg: #ffffff;
-  --footer-bg: oklch(0.21 0.006 285.88); /* zinc-900 */
+  --footer-bg: #18181b;
   --footer-fg: #ffffff;
-  --section-bg: oklch(0.967 0.001 286.37); /* zinc-100 */
+  --sub-header-bg: #27272a;
+  --section-bg: #fafafa;
   --section-alt-bg: #ffffff;
-  --accent-orange: #ff6000;
+  --accent-orange: #f97316;
+  --ccc-orange: #f97316;
+
+  /* Typography */
+  --font-sans:
+    var(--font-inter), ui-sans-serif, system-ui, -apple-system,
+    BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
 }
 
 .dark {
-  /* Dark Mode - Zinc 950 Foundation */
-  --background: oklch(0.141 0.005 285.82);
-  --foreground: oklch(0.985 0 0);
-
-  /* Lighter Cards - Zinc 900 */
-  --card: oklch(0.211 0.006 285.88);
-  --card-foreground: oklch(0.985 0 0);
-  --popover: oklch(0.211 0.006 285.88);
-  --popover-foreground: oklch(0.985 0 0);
-
-  /* Primary - Sky Blue for Dark Mode */
-  --primary: oklch(0.7 0.15 250);
-  --primary-foreground: oklch(0.141 0.005 285.82);
-
-  /* Secondary - Zinc 800 */
-  --secondary: oklch(0.274 0.006 286.03);
-  --secondary-foreground: oklch(0.985 0 0);
-
-  /* Muted - Zinc 400 in dark mode for better contrast */
-  --muted: oklch(0.274 0.006 286.03);
-  --muted-foreground: oklch(0.82 0.01 286.06);
-
-  /* Accent - Zinc 800 */
-  --accent: oklch(0.274 0.006 286.03);
-  --accent-foreground: oklch(0.985 0 0);
-
-  --destructive: oklch(0.396 0.141 25.72);
-  --destructive-foreground: oklch(0.985 0 0);
-
-  --border: oklch(0.274 0.006 286.03);
-  --input: oklch(0.274 0.006 286.03);
-  --ring: oklch(0.7 0.15 250);
+  /* Keep a neutral dark mode if requested, but focus is light mode for now */
+  --background: #0f172a;
+  --foreground: #f8fafc;
+  --card: #1e293b;
+  --card-foreground: #f8fafc;
+  --primary: #ff6000;
+  --primary-foreground: #ffffff;
+  --border: #334155;
 }
 
 @layer base {
@@ -121,25 +99,18 @@
     @apply border-border outline-ring/50;
   }
   body {
-    @apply bg-background text-foreground text-base;
+    @apply bg-background text-foreground font-sans text-sm antialiased;
+    font-family: var(--font-sans);
     overflow-x: clip;
   }
 
-  /* Link styling: Blue with underline only on hover */
+  /* Link styling */
   a:not(.no-underline) {
-    color: var(--primary);
+    color: #1967d2; /* Search Blue */
     text-decoration: none;
   }
 
   a:not(.no-underline):hover {
     text-decoration: underline;
-    text-decoration-thickness: 1px;
-    text-underline-offset: 4px;
-  }
-
-  /* Improved focus indicators for keyboard navigation */
-  *:focus-visible {
-    outline: 2px solid var(--ring);
-    outline-offset: 2px;
   }
 }

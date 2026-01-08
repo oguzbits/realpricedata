@@ -2,30 +2,22 @@ import { cn } from "@/lib/utils";
 import Link from "next/link";
 
 interface LogoProps {
-  country?: string;
   className?: string;
 }
 
-export function Logo({ country = "us", className = "" }: LogoProps) {
-  const href = country === "us" ? "/" : `/${country}`;
-
+export function Logo({ className = "" }: LogoProps) {
   return (
     <Link
-      href={href}
+      href="/"
       className={cn("flex items-center no-underline", className)}
       title="Amazon Price Per Unit Tracker, Storage Deals & True Value"
       aria-label="CleverPrices Home - Amazon Price Per Unit Tracker"
       prefetch={true}
     >
-      <div className="relative">
+      <div className="border-b-[3px] border-(--ccc-orange) pb-0.5">
         <span className="text-xl font-bold tracking-tight text-white sm:text-2xl">
           cleverprices
         </span>
-        {/* Orange underline accent */}
-        <div
-          className="absolute right-0 -bottom-1.5 left-0 h-[3px]"
-          style={{ backgroundColor: "var(--ccc-orange)" }}
-        />
       </div>
     </Link>
   );

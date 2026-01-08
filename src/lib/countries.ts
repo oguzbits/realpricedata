@@ -22,7 +22,7 @@ export const countries: Record<CountryCode, Country> = {
     currency: "USD",
     symbol: "$",
     locale: "en-US",
-    isLive: true,
+    isLive: false, // Phase 3: Enable after PA API access
   },
   uk: {
     code: "uk",
@@ -32,7 +32,7 @@ export const countries: Record<CountryCode, Country> = {
     currency: "GBP",
     symbol: "£",
     locale: "en-GB",
-    isLive: true,
+    isLive: false, // Future expansion
   },
   ca: {
     code: "ca",
@@ -42,7 +42,7 @@ export const countries: Record<CountryCode, Country> = {
     currency: "CAD",
     symbol: "$",
     locale: "en-CA",
-    isLive: true,
+    isLive: false, // Future expansion
   },
   de: {
     code: "de",
@@ -52,7 +52,7 @@ export const countries: Record<CountryCode, Country> = {
     currency: "EUR",
     symbol: "€",
     locale: "de-DE",
-    isLive: true,
+    isLive: true, // Primary market
   },
   es: {
     code: "es",
@@ -62,7 +62,7 @@ export const countries: Record<CountryCode, Country> = {
     currency: "EUR",
     symbol: "€",
     locale: "es-ES",
-    isLive: true,
+    isLive: false, // Future expansion
   },
   it: {
     code: "it",
@@ -72,7 +72,7 @@ export const countries: Record<CountryCode, Country> = {
     currency: "EUR",
     symbol: "€",
     locale: "it-IT",
-    isLive: true,
+    isLive: false, // Future expansion
   },
   fr: {
     code: "fr",
@@ -82,11 +82,11 @@ export const countries: Record<CountryCode, Country> = {
     currency: "EUR",
     symbol: "€",
     locale: "fr-FR",
-    isLive: true,
+    isLive: false, // Future expansion
   },
 };
 
-export const DEFAULT_COUNTRY: CountryCode = "us";
+export const DEFAULT_COUNTRY: CountryCode = "de"; // Germany-first strategy
 
 // Get all countries as array
 export function getAllCountries(): Country[] {

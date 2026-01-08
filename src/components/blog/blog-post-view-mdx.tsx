@@ -29,8 +29,8 @@ export async function BlogPostViewMDX({ slug, country }: BlogPostViewMDXProps) {
   }
 
   const breadcrumbItems = [
-    { name: "Home", href: country === "us" ? "/" : `/${country}` },
-    { name: "Blog", href: country === "us" ? "/blog" : `/${country}/blog` },
+    { name: "Home", href: "/" },
+    { name: "Blog", href: "/blog" },
     { name: post.title },
   ];
 

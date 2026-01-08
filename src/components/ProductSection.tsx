@@ -13,10 +13,7 @@ interface ProductSectionProps {
   title: string;
   description: string;
   products: Product[];
-  country: string; // Add country prop
-  categories?: { label: string; value: string }[];
-  selectedCategory?: string;
-  onCategoryChange?: (category: string) => void;
+  country: string;
   children?: React.ReactNode;
   productCardProps?: Partial<React.ComponentProps<typeof ProductCard>>;
   priorityIndices?: number[];
@@ -26,10 +23,7 @@ export function ProductSection({
   title,
   description,
   products,
-  country, // Use the prop
-  categories,
-  selectedCategory,
-  onCategoryChange,
+  country,
   children,
   productCardProps,
   priorityIndices,
@@ -41,33 +35,23 @@ export function ProductSection({
     canScrollRight: false,
   });
 
-  const filteredProducts =
-    !onCategoryChange || !selectedCategory || selectedCategory === "all"
-      ? products
-      : products.filter(
-          (p) => p.category.toLowerCase() === selectedCategory.toLowerCase(),
-        );
-
   const processedProducts = calculateProductBadges(
-    filteredProducts.map((p) => ({
+    products.map((p) => ({
       ...p,
       unitValue: parseUnitValue(p.pricePerUnit),
     })),
   );
 
   return (
-    <section className={cn("mb-16")}>
+    <section className={cn("mb-8 md:mb-10")}>
+      {/* Simplified header: no categories select, no link on title */}
       <SectionHeader
         title={title}
         description={description}
-        href={`/${country}/categories`}
         onScrollLeft={() => carouselRef.current?.scrollLeft()}
         onScrollRight={() => carouselRef.current?.scrollRight()}
         canScrollLeft={scrollState.canScrollLeft}
         canScrollRight={scrollState.canScrollRight}
-        categories={categories}
-        selectedCategory={selectedCategory}
-        onCategoryChange={onCategoryChange}
       />
 
       {children}
@@ -79,7 +63,7 @@ export function ProductSection({
             title={product.title}
             price={product.price.amount}
             currency={countryConfig?.currency || "USD"}
-            url={product.url}
+            slug={product.slug}
             image={product.image}
             pricePerUnit={product.pricePerUnit}
             countryCode={country}

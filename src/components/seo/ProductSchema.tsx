@@ -95,9 +95,7 @@ export function ProductSchema({
           "@type": "Organization",
           name: "Amazon",
         },
-        priceValidUntil: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000)
-          .toISOString()
-          .split("T")[0], // 7 days from now
+        priceValidUntil: "2026-12-31", // Static date to avoid dynamic server usage errors
       };
     }
   }

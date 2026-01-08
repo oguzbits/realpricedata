@@ -121,10 +121,7 @@ export function QuickPicks({
       </div>
       <div className="bg-muted/10 dark:bg-muted/5 border-border/30 border-t px-6 py-4 text-center">
         <Link
-          href={getCategoryPath(
-            category as CategorySlug,
-            country as CountryCode,
-          )}
+          href={getCategoryPath(category as CategorySlug)}
           className="text-muted-foreground hover:text-primary group flex items-center justify-center gap-2 text-xs font-black tracking-[0.2em] uppercase transition-all"
           prefetch={true}
         >
@@ -148,8 +145,7 @@ export function LocalizedLink({
   country: string;
 }) {
   const isInternal = href.startsWith("/");
-  const finalHref =
-    isInternal && country !== "us" ? `/${country}${href}` : href;
+  const finalHref = href;
 
   return (
     <Link

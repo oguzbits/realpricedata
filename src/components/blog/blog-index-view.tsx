@@ -9,10 +9,7 @@ interface BlogIndexViewProps {
 export async function BlogIndexView({ country }: BlogIndexViewProps) {
   const posts = await getAllBlogPosts();
 
-  const breadcrumbItems = [
-    { name: "Home", href: country === "us" ? "/" : `/${country}` },
-    { name: "Blog" },
-  ];
+  const breadcrumbItems = [{ name: "Home", href: "/" }, { name: "Blog" }];
 
   return (
     <div className="bg-background flex min-h-screen flex-col gap-0 pb-16">

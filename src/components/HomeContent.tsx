@@ -1,53 +1,31 @@
-import { HeroCategoryPills } from "@/components/hero-category-pills";
-import { HeroDealCards } from "@/components/hero-deal-cards";
-import { HeroTableDemo } from "@/components/hero-table-demo";
-import { PopularProducts } from "@/components/PopularProducts";
-import { PriceDrops } from "@/components/PriceDrops";
-import { SupportedMarketplaces } from "@/components/SupportedMarketplaces";
+import { IdealoHomePage } from "@/components/landing/IdealoHomePage";
 import { type CountryCode } from "@/lib/countries";
-import {
-  getAllCountries,
-  getCountryByCode,
-} from "@/lib/server/cached-countries";
+import { getCountryByCode } from "@/lib/server/cached-countries";
 import { getAllProducts } from "@/lib/server/cached-products";
-import { adaptToUIModel, getLocalizedProductData } from "@/lib/utils/products";
+import { getLocalizedProductData } from "@/lib/utils/products";
 import Script from "next/script";
 
 export async function HomeContent({ country }: { country: CountryCode }) {
   const countryConfig = await getCountryByCode(country);
-  const allCountries = await getAllCountries();
   const allProducts = await getAllProducts();
 
-  // Adapt products to UI model
-  const uiProducts = allProducts
+  // Transform products for the new idealo-style homepage
+  const products = allProducts
     .map((p) => {
-      const { price } = getLocalizedProductData(
+      const { price, title } = getLocalizedProductData(
         p,
         countryConfig?.code || country,
       );
       if (price === null || price === 0) return null;
 
-      return adaptToUIModel(
-        p,
-        countryConfig?.code || country,
-        countryConfig?.currency,
-        countryConfig?.symbol,
-      );
+      return {
+        title: title || p.title,
+        price,
+        slug: p.slug,
+        image: p.image,
+      };
     })
     .filter((p): p is NonNullable<typeof p> => p !== null);
-
-  const mockPriceDrops = uiProducts.slice(2, 6).map((p) => {
-    const hash = p.asin
-      .split("")
-      .reduce((acc: number, char: string) => acc + char.charCodeAt(0), 0);
-    const dropPercentage = (hash % 10) + 5;
-    const oldPrice = p.price.amount / (1 - dropPercentage / 100);
-    return {
-      ...p,
-      dropPercentage,
-      oldPrice,
-    };
-  });
 
   const jsonLd = {
     "@context": "https://schema.org",
@@ -62,65 +40,16 @@ export async function HomeContent({ country }: { country: CountryCode }) {
   };
 
   return (
-    <div className="bg-background flex flex-col gap-0 pb-8 md:pb-16">
+    <>
       <Script
         id="json-ld"
         type="application/ld+json"
         dangerouslySetInnerHTML={{
-          // The following snippet uses JSON.stringify, which does not sanitize malicious strings used in XSS injection.
-          // To prevent this type of vulnerability, you can scrub HTML tags from the JSON-LD payload, for example, by replacing the character, <, with its unicode equivalent, \u003c.
           __html: JSON.stringify(jsonLd).replace(/</g, "\\u003c"),
         }}
       />
-
-      <div className="flex flex-col gap-2 pt-4 sm:gap-4 md:gap-8">
-        <section className="container mx-auto px-4 pt-4 sm:pt-8 md:pt-12">
-          {/* Hero Section */}
-          <div className="mb-16 grid grid-cols-1 items-center gap-8 lg:grid-cols-2 lg:gap-12">
-            <div className="order-1 max-w-2xl text-left lg:order-1">
-              <h1 className="dark:text-foreground mb-6 text-4xl leading-[1.05] font-black tracking-tighter text-[#1a1a1a] sm:text-5xl md:text-6xl">
-                Save money on your <br />
-                <span className="text-(--hero-emphasis)">
-                  next Amazon purchase.
-                </span>
-              </h1>
-              <p className="text-muted-foreground mb-8 max-w-xl text-lg leading-relaxed md:text-xl">
-                <span className="relative inline-flex items-baseline">
-                  <strong className="text-foreground font-bold tracking-tight">
-                    cleverprices
-                  </strong>
-                  <span
-                    className="absolute right-0 -bottom-[3px] left-0 h-[3px] w-full"
-                    style={{ backgroundColor: "var(--ccc-orange)" }}
-                  />
-                </span>{" "}
-                is an Amazon price tracker and unit-price calculator to ensure
-                you never overpay again.
-              </p>
-
-              <div className="flex flex-col gap-6">
-                <div className="text-muted-foreground flex items-center gap-2 text-base">
-                  <HeroCategoryPills country={country} />
-                </div>
-              </div>
-            </div>
-            <div className="relative order-2 mx-auto hidden w-full max-w-[800px] lg:order-2 lg:ml-auto lg:block">
-              <HeroTableDemo />
-            </div>
-          </div>
-
-          {/* Country Flag Selection Wrapper */}
-          <SupportedMarketplaces
-            allCountries={allCountries}
-            currentCountry={country}
-          />
-
-          <HeroDealCards country={country} />
-          <PopularProducts products={uiProducts} country={country} />
-          <PriceDrops products={mockPriceDrops} country={country} />
-        </section>
-      </div>
-    </div>
+      <IdealoHomePage products={products} />
+    </>
   );
 }
 

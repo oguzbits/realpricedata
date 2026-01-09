@@ -29,6 +29,10 @@ export async function generateStaticParams() {
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
 
+  if (slug === "[slug]" || slug === "%5Bslug%5D") {
+    return { title: BRAND_DOMAIN };
+  }
+
   const product = await getProductBySlug(slug);
   if (!product) {
     return { title: "Product Not Found" };
@@ -72,16 +76,16 @@ export default async function ProductPage({ params }: Props) {
   const { slug } = await params;
   const countryCode = DEFAULT_COUNTRY;
 
+  // Handle static collection for the dynamic template route
+  if (slug === "[slug]" || slug === "%5Bslug%5D") {
+    return null;
+  }
+
   const product = await getProductBySlug(slug);
 
   if (!product) {
     notFound();
   }
-
-  // Check if this product has pricing for this country
-  const price = product.prices[countryCode];
-  // Allow rendering even without price, maybe? Or keep strict.
-  // Mock data has prices.
 
   // Try to get unified product data with multi-source offers
   let unifiedProduct = null;

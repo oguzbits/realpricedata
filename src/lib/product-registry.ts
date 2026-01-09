@@ -2,6 +2,7 @@ import { db } from "@/db";
 import { products, prices, type Product as DbProduct } from "@/db/schema";
 import { calculateProductMetrics } from "./utils/products";
 import { eq, inArray } from "drizzle-orm";
+import { cacheLife } from "next/cache";
 
 /**
  * Product Registry - DB Adapter
@@ -66,6 +67,8 @@ function mapDbProduct(p: any, pricesList: any[]): Product {
 }
 
 export async function getAllProducts(): Promise<Product[]> {
+  "use cache";
+  cacheLife("prices");
   const allProducts = await db.select().from(products);
   const allPrices = await db.select().from(prices);
 
@@ -80,6 +83,8 @@ export async function getAllProducts(): Promise<Product[]> {
 export async function getProductsByCategory(
   category: string,
 ): Promise<Product[]> {
+  "use cache";
+  cacheLife("prices");
   const prods = await db
     .select()
     .from(products)
@@ -103,6 +108,9 @@ export async function getProductsByCategory(
 export async function getProductBySlug(
   slug: string,
 ): Promise<Product | undefined> {
+  "use cache";
+  cacheLife("prices");
+
   const [p] = await db.select().from(products).where(eq(products.slug, slug));
   if (!p) return undefined;
 

@@ -26,69 +26,67 @@ export function ProductGrid({ products, countryCode }: ProductGridProps) {
   };
 
   return (
-    <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
+    <div className="-mx-px grid auto-rows-fr grid-cols-2 sm:grid-cols-3 lg:grid-cols-4">
       {products.map((product) => (
         <Link
           key={product.id || product.slug}
           href={`/p/${product.slug}`}
           className={cn(
-            "group relative flex flex-col overflow-hidden rounded-[6px] border border-[#dcdcdc] bg-white no-underline transition-all hover:border-zinc-400 hover:shadow-lg",
+            "group relative -mr-px -mb-px flex flex-col border border-[#b4b4b4] bg-white no-underline transition-shadow hover:z-10 hover:shadow-lg",
           )}
         >
-          {/* Image */}
-          <div className="relative aspect-square w-full bg-white p-4">
+          {/* Image - using aspect ratio for natural sizing */}
+          <div className="relative aspect-4/3 w-full bg-white">
             {product.image ? (
               <Image
                 src={product.image}
                 alt={product.title}
                 fill
-                className="object-contain p-2"
+                className="object-contain p-3"
                 sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
               />
             ) : (
               <div className="flex h-full w-full items-center justify-center bg-zinc-50 text-zinc-300">
-                <span className="text-sm">Kein Bild</span>
+                <span className="text-base">Kein Bild</span>
               </div>
             )}
           </div>
 
-          {/* Content */}
-          <div className="flex flex-1 flex-col p-3 pt-0">
-            {/* Title */}
-            <h3 className="mb-1 line-clamp-2 text-[12px] leading-tight font-bold text-zinc-900 group-hover:text-[#0066cc] sm:text-[13px]">
+          {/* Content - flex-1 to push price to bottom */}
+          <div className="flex flex-1 flex-col p-4">
+            {/* Title - 14px for readability */}
+            <h3 className="mb-1.5 line-clamp-2 text-[14px] leading-snug font-normal text-[#0066cc] group-hover:underline">
               {product.title}
             </h3>
 
-            {/* Specs */}
-            <p className="mb-2 line-clamp-1 text-[10px] text-zinc-500 sm:text-[11px]">
+            {/* Specs - 13px */}
+            <p className="mb-2 line-clamp-1 text-[13px] text-zinc-500">
               {product.capacity} {product.capacityUnit} • {product.formFactor}
             </p>
 
-            {/* Rating */}
-            <div className="mb-2 flex items-center gap-1 text-[10px]">
-              <span className="font-semibold text-zinc-600">Note ∅ 1,5</span>
+            {/* Rating - 12px */}
+            <div className="mb-3 flex items-center gap-1.5 text-[12px]">
               <div className="flex">
                 {[1, 2, 3, 4, 5].map((s) => (
                   <Star
                     key={s}
-                    className="h-2.5 w-2.5 fill-[#f97316] text-[#f97316]"
+                    className="h-3 w-3 fill-[#f97316] text-[#f97316]"
                   />
                 ))}
               </div>
+              <span className="text-zinc-500">∅ 1,5</span>
             </div>
 
-            {/* Price */}
+            {/* Price - pushed to bottom with mt-auto */}
             <div className="mt-auto flex items-baseline gap-1">
-              <span className="text-[10px] font-semibold text-zinc-500">
-                ab
-              </span>
-              <span className="text-[15px] font-bold text-[#f97316] sm:text-[16px]">
+              <span className="text-[13px] text-zinc-400">ab</span>
+              <span className="text-[18px] font-bold text-[#f97316]">
                 {formatCurrency(product.price)}
               </span>
             </div>
 
-            {/* Produktdetails link */}
-            <div className="mt-1.5 text-[10px] font-semibold text-[#0066cc]">
+            {/* Produktdetails link - 13px */}
+            <div className="mt-2 text-[13px] text-[#0066cc] group-hover:underline">
               Produktdetails
             </div>
           </div>

@@ -28,13 +28,13 @@ import { FAQSchema } from "@/components/category/FAQSchema";
 import { FAQSection } from "@/components/category/FAQSection";
 
 // Product views
-import { ProductGrid } from "@/components/category/ProductGrid";
+import { IdealoProductGrid } from "@/components/category/IdealoProductGrid";
 import { ProductTable } from "@/components/category/ProductTable";
 import { ViewControls } from "@/components/category/ViewControls";
 
 // Client components
 import { Breadcrumbs } from "@/components/breadcrumbs";
-import { FilterPanelClient } from "@/components/category/FilterPanelClient";
+import { IdealoFilterPanel } from "@/components/category/IdealoFilterPanel";
 
 interface CategoryProductsViewProps {
   category: Omit<Category, "icon">;
@@ -110,8 +110,10 @@ export async function CategoryProductsView({
           <SheetTitle className="text-lg font-bold">Filter</SheetTitle>
         </SheetHeader>
         <div className="px-4 py-4">
-          <FilterPanelClient
+          <IdealoFilterPanel
             categorySlug={categorySlug}
+            categoryName={category.name}
+            productCount={products.length}
             unitLabel={unitLabel}
           />
         </div>
@@ -121,54 +123,59 @@ export async function CategoryProductsView({
 
   // Main render - Idealo style layout
   return (
-    <div className="min-h-screen bg-[#f4f4f4]">
-      <div className="mx-auto max-w-[1200px] px-4 py-4">
+    <div className="min-h-screen bg-white">
+      <div className="mx-auto max-w-[1200px] px-4 py-6">
         {/* Breadcrumbs */}
         <Breadcrumbs
           items={breadcrumbItems}
-          className="mb-4 text-[11px] text-zinc-400"
+          className="mb-4 text-[14px] text-zinc-400"
         />
 
-        {/* Main content area */}
-        <div className="flex gap-6">
+        {/* Top bar with title and controls - Idealo style */}
+        {hasProducts && (
+          <div className="mr-[15px] mb-2 flex flex-col justify-between md:flex-row md:items-center">
+            <h1 className="text-lg font-bold text-zinc-900">
+              {category.name}
+              <span className="ml-1.5 text-[14px] font-normal text-zinc-400">
+                ({filteredCount.toLocaleString("de-DE")})*
+              </span>
+            </h1>
+            <ViewControls
+              productCount={filteredCount}
+              categoryName={category.name}
+            />
+          </div>
+        )}
+
+        {/* Main content area - Idealo style flex-wrap layout */}
+        <div className="relative mb-[45px] flex flex-row flex-wrap">
           {hasProducts ? (
             <>
-              {/* Desktop Filters Sidebar - Idealo style */}
-              <aside className="hidden w-[240px] shrink-0 lg:block">
-                <div className="rounded-[6px] border border-[#dcdcdc] bg-white p-4 shadow-sm">
-                  <FilterPanelClient
-                    categorySlug={categorySlug}
-                    unitLabel={unitLabel}
-                  />
-                </div>
+              {/* Desktop Filters Sidebar - Idealo responsive widths */}
+              <aside
+                className="hidden w-full md:block md:max-w-[33.33333%] md:flex-[0_0_33.33333%] lg:max-w-[25%] lg:flex-[0_0_25%]"
+                style={{
+                  containerType: "inline-size",
+                  containerName: "filter-sidebar",
+                }}
+              >
+                <IdealoFilterPanel
+                  categorySlug={categorySlug}
+                  categoryName={category.name}
+                  productCount={products.length}
+                  unitLabel={unitLabel}
+                />
               </aside>
 
-              {/* Main Content */}
-              <div className="min-w-0 flex-1">
-                {/* View Controls - Title, Sort, Grid/List toggle */}
-                <div className="mb-4 rounded-[6px] border border-[#dcdcdc] bg-white p-4 shadow-sm">
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-3">
-                      {mobileFilterTrigger}
-                      <h1 className="text-lg font-bold text-zinc-900">
-                        {category.name}
-                        <span className="ml-1.5 text-[14px] font-normal text-zinc-400">
-                          ({filteredCount.toLocaleString("de-DE")})*
-                        </span>
-                      </h1>
-                    </div>
-                    <ViewControls
-                      productCount={filteredCount}
-                      categoryName={category.name}
-                    />
-                  </div>
-                </div>
+              {/* Main Content - takes remaining space */}
+              <div className="relative w-full md:max-w-[66.66667%] md:flex-[0_0_66.66667%] md:px-[15px] lg:max-w-[75%] lg:flex-[0_0_75%]">
+                {/* Mobile filter trigger */}
+                <div className="mb-4 md:hidden">{mobileFilterTrigger}</div>
 
-                {/* Products - Grid or List view */}
                 {products.length > 0 ? (
-                  <div className="rounded-[6px] border border-[#dcdcdc] bg-white p-4 shadow-sm">
+                  <div>
                     {viewMode === "grid" ? (
-                      <ProductGrid
+                      <IdealoProductGrid
                         products={products}
                         countryCode={countryCode}
                       />
@@ -189,33 +196,38 @@ export async function CategoryProductsView({
                   <NoProductsMatchingFilters />
                 )}
 
-                <div className="mt-4 text-center text-[11px] text-zinc-400">
+                <div className="mt-4 text-center text-[14px] text-zinc-400">
                   Preise inkl. MwSt., ggf. zzgl. Versand. Preise und
                   Verfügbarkeit können sich ändern.
                 </div>
 
                 {/* Related Categories for SEO/PR */}
-                <div className="mt-8 rounded-[6px] border border-[#dcdcdc] bg-white p-6 shadow-sm">
-                  <h3 className="mb-4 text-[14px] font-bold text-zinc-900">
+                <div className="mt-8 border-t border-zinc-200 pt-4">
+                  <h3 className="mb-3 text-base font-bold text-zinc-900">
                     Ähnliche Kategorien
                   </h3>
-                  <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+                  <div className="grid grid-cols-1 gap-1 sm:grid-cols-2">
                     {getChildCategories(category.parent || "electronics")
                       .filter((c) => c.slug !== categorySlug)
-                      .map((related) => (
-                        <CategoryCard
-                          key={related.slug}
-                          category={related}
-                          Icon={getCategoryIcon(related.slug)}
-                          country={countryCode}
-                        />
-                      ))}
+                      .map((related) => {
+                        const Icon = getCategoryIcon(related.slug);
+                        return (
+                          <a
+                            key={related.slug}
+                            href={`/${related.slug}`}
+                            className="flex items-center gap-2 px-1 py-1.5 text-base text-zinc-600 transition-colors hover:text-[#0066cc]"
+                          >
+                            <Icon className="h-4 w-4 text-zinc-400" />
+                            <span>{related.name}</span>
+                          </a>
+                        );
+                      })}
                   </div>
                 </div>
 
                 {/* Intro & Buying Guide for SEO */}
                 {content && (
-                  <div className="mt-6 rounded-[6px] border border-[#dcdcdc] bg-white p-6 shadow-sm">
+                  <div className="mt-8 border-t border-zinc-200 pt-6">
                     <h2 className="mb-4 text-lg font-bold text-zinc-900">
                       {content.title || `Über ${category.name}`}
                     </h2>

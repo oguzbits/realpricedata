@@ -25,10 +25,9 @@ import {
   stripCategoryIcon,
   type CategorySlug,
 } from "@/lib/categories";
-import { getCategoryIcon } from "@/lib/category-icons";
 import { getCategoryFAQs } from "@/lib/category-faqs";
-import { getCategoryContent } from "@/lib/category-content";
-import { getCountryByCode, type CountryCode } from "@/lib/countries";
+import { getCategoryIcon } from "@/lib/category-icons";
+import { type CountryCode } from "@/lib/countries";
 import {
   FilterParams,
   getCategoryProducts,
@@ -37,8 +36,8 @@ import { cn } from "@/lib/utils";
 import Link from "next/link";
 
 // Sub-components
-import { IdealoProductCard } from "./IdealoProductCard";
 import { IdealoFilterPanel } from "./IdealoFilterPanel";
+import { IdealoResultList } from "./IdealoResultList";
 import { IdealoTopBar } from "./IdealoTopBar";
 
 // FAQ components for SEO
@@ -64,8 +63,6 @@ export async function IdealoCategoryPage({
     ...stripCategoryIcon(crumb),
     Icon: getCategoryIcon(crumb.slug),
   }));
-  const countryConfig = getCountryByCode(countryCode);
-  const content = getCategoryContent(categorySlug);
   const viewMode = searchParams.view || "grid";
 
   // Get filtered products
@@ -184,38 +181,14 @@ export async function IdealoCategoryPage({
                 </div>
 
                 {/* ============================================ */}
-                {/* PRODUCT GRID - sr-resultList */}
+                {/* PRODUCT GRID/LIST - sr-resultList */}
+                {/* Uses new isolated Idealo components */}
                 {/* ============================================ */}
-                {products.length > 0 ? (
-                  <div
-                    className={cn(
-                      "sr-resultList",
-                      viewMode === "grid"
-                        ? [
-                            "grid w-full",
-                            "grid-cols-2",
-                            "min-[640px]:grid-cols-3",
-                            "min-[1024px]:grid-cols-4",
-                          ]
-                        : ["flex w-full flex-col"],
-                    )}
-                  >
-                    {products.map((product) => (
-                      <IdealoProductCard
-                        key={product.id || product.slug}
-                        product={product}
-                        countryCode={countryCode}
-                        viewMode={viewMode}
-                      />
-                    ))}
-                  </div>
-                ) : (
-                  <div className="flex flex-col items-center justify-center rounded border border-[#b4b4b4] bg-white py-12 text-center">
-                    <p className="text-[14px] text-[#767676]">
-                      Keine Produkte gefunden. Bitte passe deine Filter an.
-                    </p>
-                  </div>
-                )}
+                <IdealoResultList
+                  products={products}
+                  countryCode={countryCode}
+                  viewMode={viewMode as "grid" | "list"}
+                />
 
                 {/* ============================================ */}
                 {/* DISCLAIMER */}

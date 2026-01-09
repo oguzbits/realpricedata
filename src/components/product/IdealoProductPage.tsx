@@ -574,7 +574,7 @@ export async function IdealoProductPage({
                           "productOffers-listItemTitleInner",
                           "block max-h-[4.8em] overflow-hidden text-ellipsis",
                           "text-[12px] font-bold underline",
-                          "text-[#0771d0] hover:no-underline",
+                          "text-[#2d2d2d] hover:no-underline",
                           "sm:max-h-18 sm:bg-white sm:text-[12px] sm:leading-normal",
                           "sm:line-clamp-4",
                         )}
@@ -711,7 +711,7 @@ export async function IdealoProductPage({
                             href="#"
                             className="productOffers-listItemOfferShopV2StarsLink hover:underline"
                           >
-                            <div className="starAndRatingWrapper flex items-center gap-1">
+                            <div className="starAndRatingWrapper flex items-center gap-1 text-black">
                               <Star className="h-4 w-4 fill-[#96DC50] text-[#96DC50]" />
                               <span>
                                 <b>3,8</b>
@@ -729,7 +729,7 @@ export async function IdealoProductPage({
                         </div>
                       </div>
 
-                      <button className="productOffers-listItemOfferShopV2Info hidden text-[11px] text-[#0771d0] underline hover:no-underline xl:block">
+                      <button className="productOffers-listItemOfferShopV2Info hidden text-[11px] text-[#2d2d2d] underline hover:no-underline xl:block">
                         Shop-Details
                       </button>
                     </div>
@@ -753,7 +753,7 @@ export async function IdealoProductPage({
 
                     {/* Mobile Delivery Info */}
                     <div className="flex w-full items-center gap-4 border-t border-[#e5e5e5] pt-3 xl:hidden">
-                      <button className="text-[#0771d0]">Details</button>
+                      <button className="text-[#2d2d2d]">Details</button>
                       <div className="h-4 w-px bg-[#e5e5e5]" />
                       <div className="flex items-center gap-1.5 text-[#666]">
                         <svg

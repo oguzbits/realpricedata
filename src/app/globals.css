@@ -74,6 +74,16 @@
   --accent-orange: #f97316;
   --ccc-orange: #f97316;
 
+  /* Idealo Design Tokens */
+  --idealo-blue: #0771d0;
+  --idealo-blue-hover: #0665bb;
+  --idealo-text-primary: #2d2d2d;
+  --idealo-text-secondary: #767676;
+  --idealo-border: #b4b4b4;
+  --idealo-filter-bg: #e8f4fc;
+  --idealo-shop-green: #38bf84;
+  --idealo-shop-green-hover: #32ac77;
+
   /* Typography */
   --font-sans:
     var(--font-inter), ui-sans-serif, system-ui, -apple-system,

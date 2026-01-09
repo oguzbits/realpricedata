@@ -1,4 +1,4 @@
-import { CategoryProductsView } from "@/components/category/CategoryProductsView.server";
+import { IdealoCategoryPage } from "@/components/category/IdealoCategoryPage";
 import { ParentCategoryView } from "@/components/category/ParentCategoryView";
 import {
   getCategoryBySlug,
@@ -77,10 +77,10 @@ export default async function DedicatedCategoryPage({
     );
   }
 
-  // If it's a child category, show the products view
+  // If it's a child category, show the NEW Idealo-style products view
   const filters = await searchParams;
   return (
-    <CategoryProductsView
+    <IdealoCategoryPage
       category={stripCategoryIcon(category)}
       countryCode={DEFAULT_COUNTRY}
       searchParams={filters}

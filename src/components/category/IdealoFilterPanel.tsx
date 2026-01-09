@@ -1,60 +1,68 @@
+/**
+ * Idealo Filter Bar - sr-filterBar_t26b_
+ *
+ * Based on actual Idealo HTML structure:
+ * - sr-filterBox_Kcxex - Filter section container
+ * - sr-boxTitle_Edq1D - Section title
+ * - sr-filterBox__content_sBZlc - Section content
+ * - sr-priceSlider_xVACy - Price range slider
+ */
+
 "use client";
 
 import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
 import { getCategoryFilterOptions } from "@/lib/utils/category-utils";
-import { ChevronDown, ChevronUp, RotateCcw } from "lucide-react";
+import { ChevronDown, ChevronUp } from "lucide-react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useState, useCallback } from "react";
 
-interface IdealoFilterPanelProps {
+interface IdealoFilterBarProps {
   categorySlug: string;
-  categoryName: string;
-  productCount: number;
   unitLabel: string;
 }
 
-interface FilterSectionProps {
+interface FilterBoxProps {
   title: string;
-  count?: number | null;
+  count?: number;
   defaultOpen?: boolean;
   children: React.ReactNode;
 }
 
-function FilterSection({
+function FilterBox({
   title,
   count,
   defaultOpen = true,
   children,
-}: FilterSectionProps) {
+}: FilterBoxProps) {
   const [isOpen, setIsOpen] = useState(defaultOpen);
 
   return (
-    <div className="border-b border-zinc-200 py-3">
+    <div className="sr-filterBox border-b border-[#dcdcdc] py-3">
       <button
         type="button"
         onClick={() => setIsOpen(!isOpen)}
-        className="flex w-full cursor-pointer items-center justify-between text-left"
+        className="sr-boxTitle flex w-full cursor-pointer items-center justify-between text-left"
       >
-        <span className="text-base font-bold text-zinc-800">
+        <span className="text-[14px] font-bold text-[#2d2d2d]">
           {title}
-          {count !== null && count !== undefined && (
-            <span className="ml-1 font-normal text-zinc-400">({count})</span>
+          {count !== undefined && (
+            <span className="ml-1 font-normal text-[#767676]">({count})</span>
           )}
         </span>
         {isOpen ? (
-          <ChevronUp className="h-4 w-4 text-zinc-400" />
+          <ChevronUp className="h-4 w-4 text-[#767676]" />
         ) : (
-          <ChevronDown className="h-4 w-4 text-zinc-400" />
+          <ChevronDown className="h-4 w-4 text-[#767676]" />
         )}
       </button>
-      {isOpen && <div className="mt-3">{children}</div>}
+      {isOpen && <div className="sr-filterBox__content mt-3">{children}</div>}
     </div>
   );
 }
 
-interface FilterCheckboxProps {
+interface FilterOptionProps {
   id: string;
   label: string;
   count?: number;
@@ -62,28 +70,32 @@ interface FilterCheckboxProps {
   onChange: () => void;
 }
 
-function FilterCheckbox({
+function FilterOption({
   id,
   label,
   count,
   checked,
   onChange,
-}: FilterCheckboxProps) {
+}: FilterOptionProps) {
   return (
-    <div className="flex items-center gap-2.5 py-1">
+    <div className="sr-filterOption flex items-center gap-2.5 py-1">
       <Checkbox
         id={id}
         checked={checked}
         onCheckedChange={onChange}
-        className="h-4 w-4 rounded-none border-zinc-400 bg-white data-[state=checked]:border-[#0066cc] data-[state=checked]:bg-[#0066cc]"
+        className={cn(
+          "h-4 w-4 rounded-none",
+          "border-[#b4b4b4] bg-white",
+          "data-[state=checked]:border-[#0771d0] data-[state=checked]:bg-[#0771d0]",
+        )}
       />
       <label
         htmlFor={id}
-        className="flex flex-1 cursor-pointer items-center justify-between text-base text-zinc-700"
+        className="flex flex-1 cursor-pointer items-center justify-between text-[14px] text-[#2d2d2d]"
       >
         <span>{label}</span>
         {count !== undefined && (
-          <span className="text-zinc-500">({count})</span>
+          <span className="text-[#767676]">({count})</span>
         )}
       </label>
     </div>
@@ -92,19 +104,16 @@ function FilterCheckbox({
 
 export function IdealoFilterPanel({
   categorySlug,
-  categoryName,
-  productCount,
   unitLabel,
-}: IdealoFilterPanelProps) {
+}: IdealoFilterBarProps) {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
 
-  // Get filter options for this category
   const { techOptions, formFactorOptions } =
     getCategoryFilterOptions(categorySlug);
 
-  // Parse current filters from URL
+  // Current filter values from URL
   const currentConditions = searchParams.get("condition")?.split(",") || [];
   const currentTech = searchParams.get("technology")?.split(",") || [];
   const currentFormFactor = searchParams.get("formFactor")?.split(",") || [];
@@ -118,14 +127,12 @@ export function IdealoFilterPanel({
     minPrice !== "" ||
     maxPrice !== "";
 
-  // Update URL with new filter value
   const updateFilter = useCallback(
     (filterName: string, value: string) => {
       const params = new URLSearchParams(searchParams.toString());
       const current = params.get(filterName)?.split(",").filter(Boolean) || [];
 
       if (current.includes(value)) {
-        // Remove value
         const updated = current.filter((v) => v !== value);
         if (updated.length > 0) {
           params.set(filterName, updated.join(","));
@@ -133,7 +140,6 @@ export function IdealoFilterPanel({
           params.delete(filterName);
         }
       } else {
-        // Add value
         params.set(filterName, [...current, value].join(","));
       }
 
@@ -145,16 +151,10 @@ export function IdealoFilterPanel({
   const updatePriceRange = useCallback(
     (min: string, max: string) => {
       const params = new URLSearchParams(searchParams.toString());
-      if (min) {
-        params.set("minPrice", min);
-      } else {
-        params.delete("minPrice");
-      }
-      if (max) {
-        params.set("maxPrice", max);
-      } else {
-        params.delete("maxPrice");
-      }
+      if (min) params.set("minPrice", min);
+      else params.delete("minPrice");
+      if (max) params.set("maxPrice", max);
+      else params.delete("maxPrice");
       router.push(`${pathname}?${params.toString()}`, { scroll: false });
     },
     [router, pathname, searchParams],
@@ -165,47 +165,43 @@ export function IdealoFilterPanel({
   }, [router, pathname]);
 
   return (
-    <div className="w-full rounded-sm bg-[#e8f4fc] p-4">
-      {/* Price Filter - with Zurücksetzen link like Idealo */}
-      <div className="border-b border-zinc-200 pb-4">
+    <div className="sr-filterBar__content w-full rounded-[2px] bg-[#e8f4fc] p-4">
+      {/* Price Filter - sr-priceSlider */}
+      <div className="sr-priceSlider border-b border-[#dcdcdc] pb-4">
         <div className="mb-3 flex items-center justify-between">
-          <span className="text-base font-bold text-zinc-800">Preis</span>
+          <span className="text-[14px] font-bold text-[#2d2d2d]">Preis</span>
           <button
             type="button"
             onClick={resetFilters}
             className={cn(
-              "cursor-pointer text-base text-[#0066cc] hover:underline",
+              "text-[14px] text-[#0771d0] hover:underline",
               !hasActiveFilters && "pointer-events-none opacity-0",
             )}
           >
             Zurücksetzen
           </button>
         </div>
-        {/* Price Inputs */}
-        <div className="flex items-center gap-2">
-          <div className="relative flex-1">
-            <Input
-              type="number"
-              placeholder="0 €"
-              value={minPrice}
-              onChange={(e) => updatePriceRange(e.target.value, maxPrice)}
-              className="h-9 rounded-none border-zinc-300 bg-white text-base"
-            />
-          </div>
-          <span className="text-zinc-400">–</span>
-          <div className="relative flex-1">
-            <Input
-              type="number"
-              placeholder="∞"
-              value={maxPrice}
-              onChange={(e) => updatePriceRange(minPrice, e.target.value)}
-              className="h-9 rounded-none border-zinc-300 bg-white text-base"
-            />
-          </div>
+
+        <div className="flex h-10 items-center gap-2">
+          <Input
+            type="number"
+            placeholder="0 €"
+            value={minPrice}
+            onChange={(e) => updatePriceRange(e.target.value, maxPrice)}
+            className="h-10 flex-1 rounded-none border-[#b4b4b4] bg-white text-[14px]"
+          />
+          <span className="text-[#767676]">–</span>
+          <Input
+            type="number"
+            placeholder="∞"
+            value={maxPrice}
+            onChange={(e) => updatePriceRange(minPrice, e.target.value)}
+            className="h-10 flex-1 rounded-none border-[#b4b4b4] bg-white text-[14px]"
+          />
           <button
             type="button"
             onClick={() => updatePriceRange(minPrice, maxPrice)}
-            className="flex h-9 w-9 items-center justify-center rounded-sm bg-[#0066cc] text-white"
+            className="flex h-10 w-10 items-center justify-center rounded-[2px] bg-[#0771d0] text-white hover:bg-[#0665bb]"
           >
             →
           </button>
@@ -213,14 +209,14 @@ export function IdealoFilterPanel({
       </div>
 
       {/* Condition Filter */}
-      <FilterSection title="Zustand" count={3}>
+      <FilterBox title="Zustand" count={3}>
         <div className="space-y-0.5">
           {[
             { value: "New", label: "Neu", count: 128 },
             { value: "Used", label: "Gebraucht", count: 45 },
             { value: "Renewed", label: "B-Ware", count: 12 },
           ].map((condition) => (
-            <FilterCheckbox
+            <FilterOption
               key={condition.value}
               id={`condition-${condition.value}`}
               label={condition.label}
@@ -230,37 +226,37 @@ export function IdealoFilterPanel({
             />
           ))}
         </div>
-      </FilterSection>
+      </FilterBox>
 
       {/* Capacity Filter */}
-      <FilterSection title={`Kapazität (${unitLabel})`}>
+      <FilterBox title={`Kapazität (${unitLabel})`}>
         <div className="flex items-center gap-2">
           <div className="relative flex-1">
             <Input
               type="number"
               placeholder="Min"
-              className="h-9 rounded-none border-zinc-300 bg-white pr-10 text-base"
+              className="h-10 rounded-none border-[#b4b4b4] bg-white pr-10 text-[14px]"
             />
-            <span className="pointer-events-none absolute top-2 right-2 text-[13px] text-zinc-400">
+            <span className="pointer-events-none absolute top-2.5 right-2 text-[13px] text-[#767676]">
               {unitLabel}
             </span>
           </div>
-          <span className="text-zinc-400">–</span>
+          <span className="text-[#767676]">–</span>
           <div className="relative flex-1">
             <Input
               type="number"
               placeholder="Max"
-              className="h-9 rounded-none border-zinc-300 bg-white pr-10 text-base"
+              className="h-10 rounded-none border-[#b4b4b4] bg-white pr-10 text-[14px]"
             />
-            <span className="pointer-events-none absolute top-2 right-2 text-[13px] text-zinc-400">
+            <span className="pointer-events-none absolute top-2.5 right-2 text-[13px] text-[#767676]">
               {unitLabel}
             </span>
           </div>
         </div>
-      </FilterSection>
+      </FilterBox>
 
       {/* Technology Filter */}
-      <FilterSection
+      <FilterBox
         title={
           categorySlug === "power-supplies" ? "Zertifizierung" : "Technologie"
         }
@@ -268,33 +264,33 @@ export function IdealoFilterPanel({
       >
         <div className="space-y-0.5">
           {techOptions.map((tech, idx) => (
-            <FilterCheckbox
+            <FilterOption
               key={tech}
               id={`tech-${tech}`}
               label={tech}
-              count={50 + idx * 10} // Placeholder counts
+              count={50 + idx * 10}
               checked={currentTech.includes(tech)}
               onChange={() => updateFilter("technology", tech)}
             />
           ))}
         </div>
-      </FilterSection>
+      </FilterBox>
 
       {/* Form Factor Filter */}
-      <FilterSection title="Bauform" count={formFactorOptions.length}>
+      <FilterBox title="Bauform" count={formFactorOptions.length}>
         <div className="space-y-0.5">
           {formFactorOptions.map((ff, idx) => (
-            <FilterCheckbox
+            <FilterOption
               key={ff}
               id={`ff-${ff}`}
               label={ff}
-              count={30 + idx * 5} // Placeholder counts
+              count={30 + idx * 5}
               checked={currentFormFactor.includes(ff)}
               onChange={() => updateFilter("formFactor", ff)}
             />
           ))}
         </div>
-      </FilterSection>
+      </FilterBox>
     </div>
   );
 }

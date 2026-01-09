@@ -30,14 +30,14 @@ export function SpecificationsTable({ product }: SpecificationsTableProps) {
         <li
           key={spec.label}
           className={cn(
-            "datasheet-listItem flex w-full border-b border-[#f5f5f5] py-2",
+            "datasheet-listItem flex w-full flex-col border-b border-[#f5f5f5] py-2 md:flex-row",
             "last:border-0",
           )}
         >
-          <span className="datasheet-listItemKey w-[35%] shrink-0 text-[#767676] md:w-[40%]">
+          <span className="datasheet-listItemKey mb-1 w-full shrink-0 text-[#767676] md:mb-0 md:w-[40%]">
             {spec.label}
           </span>
-          <span className="datasheet-listItemValue flex-1 text-[#2d2d2d]">
+          <span className="datasheet-listItemValue min-w-0 flex-1 text-[#2d2d2d]">
             {spec.value}
           </span>
         </li>

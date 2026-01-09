@@ -528,22 +528,24 @@ export async function IdealoProductPage({
               id="offer-list-with-pagination"
               className="rounded-b-md border border-[#b4b4b4] border-t-[#dcdcdc]"
             >
-              {/* Column Headers - Desktop only */}
-              <div className="productOffers-listHeadline hidden border-b border-[#dcdcdc] bg-white text-[11px] font-bold text-[#2d2d2d] xl:flex">
-                <div className="w-1/6 min-w-0 px-[15px] py-2">
+              {/* Column Headers - Desktop only (Shown at 960px+) */}
+              <div className="productOffers-listHeadline hidden border-b border-[#dcdcdc] bg-white text-[11px] font-bold text-[#2d2d2d] min-[960px]:flex">
+                <div className="w-[18%] min-w-0 px-[15px] py-2">
                   Angebotsbezeichnung
                 </div>
-                <div className="w-1/6 min-w-0 px-[15px] py-2">
+                <div className="w-[14%] min-w-0 px-[15px] py-2">
                   Preis & Versand
                 </div>
-                <div className="w-1/6 min-w-0 px-[15px] py-2">
+                <div className="w-[14%] min-w-0 px-[15px] py-2">
                   Zahlungsarten*
                 </div>
-                <div className="w-1/6 min-w-0 px-[15px] py-2">Lieferung</div>
-                <div className="w-1/6 min-w-0 px-[15px] py-2">
+                <div className="w-[16%] min-w-0 px-[15px] py-2 text-center">
+                  Lieferung
+                </div>
+                <div className="w-[20%] min-w-0 px-[15px] py-2">
                   Shop & Shopbewertung
                 </div>
-                <div className="w-1/6 py-2"></div>
+                <div className="w-[18%] py-2"></div>
               </div>
 
               {/* Offer Rows */}
@@ -553,17 +555,30 @@ export async function IdealoProductPage({
                     key={`${offer.source}-${index}`}
                     className={cn(
                       "productOffers-listItem",
-                      "flex flex-wrap border-b border-[#dcdcdc] bg-white p-4",
+                      "group flex flex-col border-b border-[#dcdcdc] bg-white p-3.5",
                       "text-xs leading-[1.4] text-[#2d2d2d]",
                       "hover:bg-[#fafafa]",
-                      "xl:flex-nowrap xl:gap-0 xl:px-0 xl:py-[15px]",
+                      // Desktop Transition at 600px (37.5em)
+                      "min-[600px]:flex-row min-[600px]:flex-wrap min-[600px]:gap-0 min-[600px]:px-0 min-[600px]:py-[15px]",
                     )}
                   >
-                    {/* Title Column */}
+                    {/* Mobile: Title Link (Full Width Block at Top) */}
+                    <div className="mb-2 w-full min-[600px]:hidden">
+                      <a
+                        href={offer.affiliateLink}
+                        target="_blank"
+                        rel="noopener nofollow"
+                        className="text-[12px] font-bold text-[#0771d0] underline decoration-[#dcdcdc] hover:no-underline"
+                      >
+                        {product.title}
+                      </a>
+                    </div>
+
+                    {/* Desktop: Title Column (Visible from 600px) */}
                     <div
                       className={cn(
                         "productOffers-listItemTitleWrapper",
-                        "w-full self-start pl-2.5 xl:block xl:w-1/6 xl:min-w-0 xl:self-start xl:py-0 xl:pt-[7px] xl:pr-[15px] xl:pl-[15px]",
+                        "hidden min-[600px]:block min-[600px]:w-full min-[600px]:min-w-0 min-[600px]:self-start min-[600px]:px-[15px] min-[600px]:pt-[7px] min-[840px]:w-[18%]",
                       )}
                     >
                       <a
@@ -572,193 +587,181 @@ export async function IdealoProductPage({
                         rel="noopener nofollow"
                         className={cn(
                           "productOffers-listItemTitleInner",
-                          "block max-h-[4.8em] overflow-hidden text-ellipsis",
-                          "text-[12px] font-bold underline",
-                          "text-[#2d2d2d] hover:no-underline",
-                          "sm:max-h-18 sm:bg-white sm:text-[12px] sm:leading-normal",
-                          "sm:line-clamp-4",
+                          "line-clamp-4 block max-h-[4.8em] overflow-hidden font-bold text-ellipsis text-[#0771d0] underline decoration-[#dcdcdc] transition-colors hover:no-underline",
+                          "text-[11px] leading-normal min-[840px]:text-[12px]",
                         )}
                       >
                         {product.title}
                       </a>
                     </div>
 
-                    {/* Price & Shipping Column */}
-                    <div className="price-column relative z-6 w-auto min-w-0 p-0 xl:w-1/6 xl:shrink-0 xl:self-start xl:px-[15px]">
-                      <a
-                        href={offer.affiliateLink}
-                        target="_blank"
-                        rel="noopener nofollow"
-                        className={cn(
-                          "productOffers-listItemOfferPrice",
-                          "relative z-1 text-2xl font-bold text-[#2d2d2d] no-underline",
-                          "xl:cursor-pointer",
-                        )}
-                      >
-                        {offer.displayPrice || formatCurrency(offer.price)}
-                      </a>
-                      {index === 0 && (
-                        <div className="amazon-prime__wrapper mt-[3px]">
-                          <div className="best-total-price-box relative z-6 h-max w-[145px] cursor-pointer rounded border border-[#f60] p-[5px]">
-                            <div className="productOffers-listItemOfferBestTotalPrice text-[#f60]">
-                              Günstigster Gesamtpreis
-                            </div>
-                            <div className="productOffers-listItemOfferShippingDetails relative z-1 m-[1px_0_-4px] border-spacing-[0_4px] text-xs leading-[16px] text-[#2d2d2d]">
-                              {offer.freeShipping
-                                ? `${offer.displayPrice || formatCurrency(offer.price)} inkl. Versand`
-                                : "zzgl. Versand"}
-                            </div>
-                          </div>
-                        </div>
-                      )}
-                      {index !== 0 && (
-                        <div className="productOffers-listItemOfferShippingDetails mt-1 text-[#666]">
-                          {offer.freeShipping
-                            ? `${offer.displayPrice || formatCurrency(offer.price)} inkl. Versand`
-                            : "zzgl. Versand"}
-                        </div>
-                      )}
-                    </div>
-
-                    {/* Payment Methods - Desktop only */}
-                    <div className="payment-column hidden min-w-0 flex-col p-0 pt-4 xl:flex xl:w-1/6 xl:shrink-0 xl:self-start xl:px-[15px] xl:pt-4">
-                      <div className="flex flex-wrap gap-[-1px]">
-                        {["Visa", "PayPal", "Rechnung"].map((method) => (
-                          <div
-                            key={method}
+                    {/* Mid Section for Mobile (Price + Shop + CTA side-by-side) */}
+                    <div className="flex w-full items-center justify-between min-[600px]:contents">
+                      {/* Price & Shipping Column */}
+                      <div className="price-column relative z-10 w-auto min-w-0 p-0 min-[600px]:w-[18%] min-[600px]:shrink-0 min-[600px]:self-start min-[600px]:px-[15px] min-[840px]:w-[14%]">
+                        <div className="flex flex-col">
+                          <a
+                            href={offer.affiliateLink}
+                            target="_blank"
+                            rel="noopener nofollow"
                             className={cn(
-                              "productOffers-listItemOfferShippingDetailsRightItem",
-                              "inline-block h-[17px] w-[52px] min-w-[52px] overflow-hidden text-ellipsis whitespace-nowrap",
-                              "border border-[#e6e6e6] bg-white p-px text-center text-[0.5625rem] leading-[13px]",
-                              "m-[0_-1px_-1px_0]",
+                              "productOffers-listItemOfferPrice",
+                              "relative z-1 font-bold text-[#2d2d2d] no-underline min-[600px]:text-[20px] lg:text-2xl",
+                              "cursor-pointer",
                             )}
                           >
-                            <span className="text-inherit">{method}</span>
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-
-                    {/* Delivery Column - Desktop only */}
-                    <div className="hidden min-w-0 shrink-0 xl:block xl:w-1/6 xl:self-center xl:px-[15px]">
-                      <ul
-                        className="productOffers-listItemOfferDeliveryBlock list-none pl-[0.6em]"
-                        style={
-                          {
-                            "--list-spacing": "0.8rem",
-                            "--dot-size": "0.5em",
-                          } as React.CSSProperties
-                        }
-                      >
-                        <li className="relative mb-(--list-spacing) pl-(--list-spacing) leading-normal">
-                          <svg
-                            className="absolute top-[0.3em] left-0 h-(--dot-size) w-(--dot-size) fill-[#38bf84]"
-                            viewBox="0 0 4 4"
-                          >
-                            <circle cx="2" cy="2" r="2" />
-                          </svg>
-                          <div className="productOffers-listItemOfferDeliveryStatus line-clamp-3 cursor-pointer overflow-hidden text-xs leading-[1.2] text-[#2d2d2d]">
-                            <span className="productOffers-listItemOfferDeliveryStatusDates font-bold">
-                              {offer.availability === "in_stock"
-                                ? "Auf Lager "
-                                : "2-5 Tage "}
-                            </span>
-                            <span className="productOffers-listItemOfferDeliveryStatusDatesTitle block font-normal">
-                              Lieferung bis morgen
-                            </span>
-                          </div>
-                        </li>
-                        <li className="relative mb-(--list-spacing) pl-(--list-spacing)">
-                          <div className="productOffers-listItemOfferDeliveryProviderWrapper mb-[5px] text-[0px]">
-                            <div className="productOffers-listItemOfferDeliveryProvider mt-0 -mr-px mb-0 ml-0 inline-block border border-[#e6e6e6] bg-white">
-                              <span className="productOffers-listItemOfferGreyBadge inline-block cursor-pointer rounded-[2px] bg-[#f5f5f5] px-[6px] py-[0.5px] text-[9px] whitespace-nowrap">
-                                DHL
-                              </span>
+                            {offer.displayPrice || formatCurrency(offer.price)}
+                          </a>
+                          {index === 0 && (
+                            <div className="amazon-prime__wrapper mt-[2px] min-[600px]:mt-[3px]">
+                              <div className="best-total-price-box relative z-10 h-max max-w-full cursor-pointer rounded border border-[#f60] p-[4px_6px]">
+                                <div className="productOffers-listItemOfferBestTotalPrice overflow-hidden text-[9px] font-bold text-ellipsis whitespace-nowrap text-[#f60] sm:text-[10px]">
+                                  Günstigster Gesamtpreis
+                                </div>
+                                <div className="productOffers-listItemOfferShippingDetails relative z-1 mt-0.5 border-spacing-[0_4px] text-[9px] leading-[12px] text-[#2d2d2d] sm:text-[10px]">
+                                  {offer.freeShipping
+                                    ? `${offer.displayPrice || formatCurrency(offer.price)} inkl. Versand`
+                                    : "zzgl. Versand"}
+                                </div>
+                              </div>
                             </div>
-                          </div>
-                        </li>
-                      </ul>
-                    </div>
+                          )}
+                          {index !== 0 && (
+                            <div className="productOffers-listItemOfferShippingDetails mt-1 text-[11px] text-[#666]">
+                              {offer.freeShipping
+                                ? "inkl. Versand"
+                                : "zzgl. Versand"}
+                            </div>
+                          )}
+                        </div>
+                      </div>
 
-                    {/* Shop & Rating Column */}
-                    <div
-                      className={cn(
-                        "productOffers-listItemOfferShopV2Block",
-                        "flex flex-1 flex-wrap items-center justify-start gap-3 text-left",
-                        "text-xs leading-[14px]",
-                        "xl:w-1/6 xl:min-w-0 xl:flex-none xl:shrink-0 xl:self-center xl:px-[15px]",
-                      )}
-                      data-offerlist-column="shop"
-                    >
-                      <div className="productOffers-listItemOfferShopV2 flex items-center gap-3">
-                        <div className="productOffers-listItemOfferShopV2LogoContainer">
-                          <div className="productOffers-listItemOfferShopV2Logo">
+                      {/* Shop & Rating Column (Mobile: middle) */}
+                      <div
+                        className={cn(
+                          "productOffers-listItemOfferShopV2Block",
+                          "flex flex-col items-center gap-1.5 min-[600px]:w-[24%] min-[600px]:flex-none min-[600px]:justify-center min-[600px]:px-[15px] min-[600px]:text-center min-[840px]:w-[20%]",
+                        )}
+                        data-offerlist-column="shop"
+                      >
+                        <div className="productOffers-listItemOfferShopV2 flex flex-col items-center min-[600px]:gap-2">
+                          <a
+                            href={offer.affiliateLink}
+                            className="productOffers-listItemOfferShopV2LogoLink relative z-10 inline-block h-[22px] w-[60px] overflow-hidden rounded border border-[#eee] bg-[#f5f5f5] text-center min-[600px]:h-[30px] min-[600px]:w-[80px]"
+                            target="_blank"
+                            rel="noopener nofollow"
+                          >
+                            <div className="flex h-full w-full items-center justify-center text-[9px] font-semibold text-[#333] min-[600px]:text-[10px]">
+                              {offer.seller || "Shop"}
+                            </div>
+                          </a>
+
+                          <div className="productOffers-listItemOfferShopV2RatingsContainer flex flex-col items-center">
                             <a
-                              href={offer.affiliateLink}
-                              className="productOffers-listItemOfferShopV2LogoLink relative z-6 inline-block h-[30px] w-[80px] overflow-hidden text-center text-[#0771d0]"
-                              target="_blank"
-                              rel="noopener nofollow"
+                              href="#"
+                              className="productOffers-listItemOfferShopV2StarsLink hover:underline"
                             >
-                              <div className="flex h-full w-full items-center justify-center bg-[#f5f5f5] text-[10px] font-semibold text-[#333]">
-                                {offer.seller || "Shop"}
+                              <div className="starAndRatingWrapper flex items-center gap-1 text-[#2d2d2d]">
+                                <Star className="h-3 w-3 fill-[#96DC50] text-[#96DC50] min-[600px]:h-3.5 min-[600px]:w-3.5" />
+                                <span className="text-[12px] font-bold">
+                                  3,8
+                                </span>
                               </div>
                             </a>
                           </div>
                         </div>
+                        <button className="hidden text-[11px] text-[#2d2d2d] underline hover:no-underline min-[600px]:block">
+                          Shop-Details
+                        </button>
+                      </div>
 
-                        <div className="productOffers-listItemOfferShopV2RatingsContainer flex flex-col justify-center">
-                          <a
-                            href="#"
-                            className="productOffers-listItemOfferShopV2StarsLink hover:underline"
-                          >
-                            <div className="starAndRatingWrapper flex items-center gap-1 text-black">
-                              <Star className="h-4 w-4 fill-[#96DC50] text-[#96DC50]" />
-                              <span>
-                                <b>3,8</b>
-                              </span>
+                      {/* Payment Methods - Hidden ONLY below 600px */}
+                      <div className="payment-column hidden min-w-0 flex-col p-0 min-[600px]:flex min-[600px]:w-[18%] min-[600px]:shrink-0 min-[600px]:self-start min-[600px]:px-[15px] min-[600px]:pt-4 min-[840px]:w-[14%]">
+                        <div className="flex flex-wrap gap-[-1px]">
+                          {["Visa", "PayPal", "Rechnung"].map((method) => (
+                            <div
+                              key={method}
+                              className={cn(
+                                "productOffers-listItemOfferShippingDetailsRightItem",
+                                "inline-block h-[17px] w-[52px] min-w-[52px] overflow-hidden text-ellipsis whitespace-nowrap",
+                                "border border-[#e6e6e6] bg-white p-px text-center text-[0.5625rem] leading-[13px]",
+                                "m-[0_-1px_-1px_0]",
+                              )}
+                            >
+                              <span className="text-inherit">{method}</span>
                             </div>
-                          </a>
-                          <a
-                            href="#"
-                            className="productOffers-listItemOfferShopV2NORatings text-[#666] hover:underline"
-                          >
-                            <span className="productOffers-listItemOfferShopV2NORatings--numberOfRatings">
-                              2262
-                            </span>
-                          </a>
+                          ))}
                         </div>
                       </div>
 
-                      <button className="productOffers-listItemOfferShopV2Info hidden text-[11px] text-[#2d2d2d] underline hover:no-underline xl:block">
-                        Shop-Details
+                      {/* Delivery Column - Hidden ONLY below 600px */}
+                      <div className="hidden min-w-0 shrink-0 min-[600px]:block min-[600px]:w-[18%] min-[600px]:self-center min-[600px]:px-[15px] min-[840px]:w-[16%]">
+                        <ul
+                          className="productOffers-listItemOfferDeliveryBlock list-none pl-[0.6em]"
+                          style={
+                            {
+                              "--list-spacing": "0.8rem",
+                              "--dot-size": "0.5em",
+                            } as React.CSSProperties
+                          }
+                        >
+                          <li className="relative mb-[var(--list-spacing)] pl-[var(--list-spacing)] leading-normal">
+                            <svg
+                              className="absolute top-[0.3em] left-0 h-[var(--dot-size)] w-[var(--dot-size)] fill-[#38bf84]"
+                              viewBox="0 0 4 4"
+                            >
+                              <circle cx="2" cy="2" r="2" />
+                            </svg>
+                            <div className="productOffers-listItemOfferDeliveryStatus line-clamp-3 cursor-pointer overflow-hidden text-xs leading-[1.2] text-[#2d2d2d]">
+                              <span className="productOffers-listItemOfferDeliveryStatusDates font-bold">
+                                {offer.availability === "in_stock"
+                                  ? "Auf Lager "
+                                  : "2-5 Tage "}
+                              </span>
+                              <span className="productOffers-listItemOfferDeliveryStatusDatesTitle block font-normal">
+                                Lieferung bis morgen
+                              </span>
+                            </div>
+                          </li>
+                          <li className="relative mb-[var(--list-spacing)] pl-[var(--list-spacing)]">
+                            <div className="productOffers-listItemOfferDeliveryProviderWrapper mb-[5px] text-[0px]">
+                              <div className="productOffers-listItemOfferDeliveryProvider mt-0 -mr-px mb-0 ml-0 inline-block border border-[#e6e6e6] bg-white">
+                                <span className="productOffers-listItemOfferGreyBadge inline-block cursor-pointer rounded-[2px] bg-[#f5f5f5] px-[6px] py-[0.5px] text-[9px] whitespace-nowrap">
+                                  DHL
+                                </span>
+                              </div>
+                            </div>
+                          </li>
+                        </ul>
+                      </div>
+
+                      {/* CTA Button (Stay on right for mobile, far right for desktop) */}
+                      <div className="flex min-w-0 shrink-0 justify-center min-[600px]:w-[22%] min-[600px]:px-[15px] min-[840px]:w-[18%]">
+                        <a
+                          href={offer.affiliateLink}
+                          target="_blank"
+                          rel="noopener nofollow"
+                          className={cn(
+                            "inline-flex items-center justify-center",
+                            "rounded-[2px] bg-[#38bf84] px-[20px] font-bold text-white transition-colors hover:bg-[#2fa372]",
+                            "h-[30px] max-h-[30px] w-full text-[13px] min-[600px]:w-[110px] min-[600px]:px-[10px] min-[600px]:text-[13px]",
+                          )}
+                        >
+                          Zum Shop
+                        </a>
+                      </div>
+                    </div>
+
+                    {/* Mobile Card Footer (Delivery Info + Details link) */}
+                    <div className="mt-3 flex w-full items-center gap-4 border-t border-[#e5e5e5] pt-3 min-[600px]:hidden">
+                      <button className="text-[12px] font-bold text-[#2d2d2d] underline decoration-[#dcdcdc] hover:no-underline">
+                        Details
                       </button>
-                    </div>
-
-                    {/* CTA Button */}
-                    <div className="ml-auto min-w-0 self-center xl:ml-0 xl:flex xl:w-1/6 xl:shrink-0 xl:justify-center xl:self-center">
-                      <a
-                        href={offer.affiliateLink}
-                        target="_blank"
-                        rel="noopener nofollow"
-                        className={cn(
-                          "inline-flex items-center justify-center",
-                          "rounded-[2px] bg-[#38bf84] px-[15px] py-[5px] text-sm font-semibold text-white",
-                          "transition-colors hover:bg-[#2fa372]",
-                          "xl:w-[120px]",
-                        )}
-                      >
-                        Zum Shop
-                      </a>
-                    </div>
-
-                    {/* Mobile Delivery Info */}
-                    <div className="flex w-full items-center gap-4 border-t border-[#e5e5e5] pt-3 xl:hidden">
-                      <button className="text-[#2d2d2d]">Details</button>
                       <div className="h-4 w-px bg-[#e5e5e5]" />
-                      <div className="flex items-center gap-1.5 text-[#666]">
+                      <div className="flex items-center gap-1.5 text-[12px] text-[#2d2d2d]">
                         <svg
                           className={cn(
-                            "h-2 w-2 fill-current",
+                            "h-1.5 w-1.5 fill-current",
                             offer.availability === "in_stock"
                               ? "text-[#38BF84]"
                               : "text-[#FEC002]",
@@ -767,7 +770,7 @@ export async function IdealoProductPage({
                         >
                           <circle cx="2" cy="2" r="2" />
                         </svg>
-                        <span>
+                        <span className="font-medium">
                           {offer.availability === "in_stock"
                             ? "Auf Lager"
                             : "2-5 Tage"}

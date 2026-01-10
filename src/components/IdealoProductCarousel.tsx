@@ -53,7 +53,8 @@ export function IdealoProductCarousel({
   const scroll = (direction: "left" | "right") => {
     const container = scrollContainerRef.current;
     if (container) {
-      const scrollAmount = 240; // Card width + gap
+      // Scroll by the visible width of the container (page-based scrolling)
+      const scrollAmount = container.clientWidth - 48; // Subtract padding
       container.scrollBy({
         left: direction === "left" ? -scrollAmount : scrollAmount,
         behavior: "smooth",
@@ -69,66 +70,69 @@ export function IdealoProductCarousel({
   return (
     <div className={cn("cn-productCarousel", "mb-8", className)}>
       {/* Section Header */}
-      <div className="cn-productCarousel__header mb-4 flex items-center justify-between">
+      <div className="cn-productCarousel__header mb-4">
         <h2 className="text-[20px] font-bold text-[#2d2d2d]">{title}</h2>
-
-        {/* Scroll Controls */}
-        <div className="cn-productCarousel__controls flex gap-1">
-          <button
-            onClick={() => scroll("left")}
-            disabled={!canScrollLeft}
-            className={cn(
-              "flex h-8 w-8 items-center justify-center rounded border border-[#b4b4b4]",
-              "transition-colors",
-              canScrollLeft
-                ? "bg-white text-[#2d2d2d] hover:bg-[#f5f5f5]"
-                : "cursor-not-allowed bg-[#f5f5f5] text-[#b4b4b4]",
-            )}
-            aria-label="Scroll left"
-          >
-            <ChevronLeft className="h-5 w-5" />
-          </button>
-          <button
-            onClick={() => scroll("right")}
-            disabled={!canScrollRight}
-            className={cn(
-              "flex h-8 w-8 items-center justify-center rounded border border-[#b4b4b4]",
-              "transition-colors",
-              canScrollRight
-                ? "bg-white text-[#2d2d2d] hover:bg-[#f5f5f5]"
-                : "cursor-not-allowed bg-[#f5f5f5] text-[#b4b4b4]",
-            )}
-            aria-label="Scroll right"
-          >
-            <ChevronRight className="h-5 w-5" />
-          </button>
-        </div>
       </div>
 
-      {/* Product Carousel */}
-      <div
-        ref={scrollContainerRef}
-        onScroll={checkScrollState}
-        className={cn(
-          "cn-productCarousel__container",
-          "scrollbar-hide flex gap-4 overflow-x-auto",
-          "scroll-smooth",
-          "-mx-4 px-4", // Extend beyond container for edge cards
-        )}
-        style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
-      >
-        {products.map((product) => (
-          <IdealoProductCard
-            key={product.slug}
-            title={product.title}
-            price={product.price}
-            slug={product.slug}
-            image={product.image}
-            rating={product.rating}
-            ratingCount={product.ratingCount}
-            badgeText={product.badgeText}
-          />
-        ))}
+      {/* Product Carousel with Navigation */}
+      <div className="group/carousel relative">
+        {/* Left Navigation Button */}
+        <button
+          onClick={() => scroll("left")}
+          disabled={!canScrollLeft}
+          className={cn(
+            "absolute top-1/2 left-0 z-10 -translate-y-1/2",
+            "flex h-10 w-10 items-center justify-center rounded-full",
+            "bg-[#6b6b6b] text-white hover:bg-[#5a5a5a]",
+            "opacity-0 transition-opacity duration-200 group-hover/carousel:opacity-100",
+            !canScrollLeft && "pointer-events-none opacity-0!",
+          )}
+          aria-label="Scroll left"
+        >
+          <ChevronLeft className="h-6 w-6" />
+        </button>
+
+        {/* Right Navigation Button */}
+        <button
+          onClick={() => scroll("right")}
+          disabled={!canScrollRight}
+          className={cn(
+            "absolute top-1/2 right-0 z-10 -translate-y-1/2",
+            "flex h-10 w-10 items-center justify-center rounded-full",
+            "bg-[#6b6b6b] text-white hover:bg-[#5a5a5a]",
+            "opacity-0 transition-opacity duration-200 group-hover/carousel:opacity-100",
+            !canScrollRight && "pointer-events-none opacity-0!",
+          )}
+          aria-label="Scroll right"
+        >
+          <ChevronRight className="h-6 w-6" />
+        </button>
+
+        {/* Scrollable Container */}
+        <div
+          ref={scrollContainerRef}
+          onScroll={checkScrollState}
+          className={cn(
+            "cn-productCarousel__container",
+            "scrollbar-hide flex gap-4 overflow-x-auto",
+            "scroll-smooth",
+            "px-6", // Padding for buttons
+          )}
+          style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
+        >
+          {products.map((product) => (
+            <IdealoProductCard
+              key={product.slug}
+              title={product.title}
+              price={product.price}
+              slug={product.slug}
+              image={product.image}
+              rating={product.rating}
+              ratingCount={product.ratingCount}
+              badgeText={product.badgeText}
+            />
+          ))}
+        </div>
       </div>
     </div>
   );

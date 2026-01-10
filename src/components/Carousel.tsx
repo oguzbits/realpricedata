@@ -62,18 +62,20 @@ export const Carousel = React.forwardRef<CarouselRef, CarouselProps>(
     useImperativeHandle(ref, () => ({
       scrollLeft: () => {
         if (scrollContainerRef.current) {
-          const cardWidth = scrollContainerRef.current.offsetWidth * 0.8;
+          // Scroll by the visible width of the container (page-based scrolling)
+          const scrollAmount = scrollContainerRef.current.clientWidth - 48;
           scrollContainerRef.current.scrollBy({
-            left: -cardWidth,
+            left: -scrollAmount,
             behavior: "smooth",
           });
         }
       },
       scrollRight: () => {
         if (scrollContainerRef.current) {
-          const cardWidth = scrollContainerRef.current.offsetWidth * 0.8;
+          // Scroll by the visible width of the container (page-based scrolling)
+          const scrollAmount = scrollContainerRef.current.clientWidth - 48;
           scrollContainerRef.current.scrollBy({
-            left: cardWidth,
+            left: scrollAmount,
             behavior: "smooth",
           });
         }

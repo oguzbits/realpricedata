@@ -4,6 +4,7 @@ import { getAffiliateRedirectPath } from "@/lib/affiliate-utils";
 import { DEFAULT_COUNTRY, type CountryCode } from "@/lib/countries";
 import { LocalizedProduct } from "@/lib/server/category-products";
 import { cn } from "@/lib/utils";
+import { formatCurrency, formatPricePerUnit } from "@/lib/utils/formatting";
 import Link from "next/link";
 
 interface ProductTableProps {
@@ -13,8 +14,6 @@ interface ProductTableProps {
   countryCode: CountryCode;
   sortBy: string;
   sortOrder: string;
-  formatCurrency: (value: number, fractionDigits?: number) => string;
-  formatPricePerUnit: (value: number) => string;
 }
 
 export function ProductTable({
@@ -24,8 +23,6 @@ export function ProductTable({
   countryCode,
   sortBy,
   sortOrder,
-  formatCurrency,
-  formatPricePerUnit,
 }: ProductTableProps) {
   return (
     <div className="bg-card w-full overflow-x-auto rounded-md border">
@@ -85,10 +82,14 @@ export function ProductTable({
               className="hover:bg-muted/30 data-[state=selected]:bg-muted group border-b transition-colors"
             >
               <td className="text-foreground p-2 align-middle font-mono text-[13px] font-bold whitespace-nowrap sm:text-base">
-                {formatPricePerUnit(product.pricePerUnit || 0)}
+                {formatPricePerUnit(
+                  product.pricePerUnit || 0,
+                  unitLabel,
+                  countryCode,
+                )}
               </td>
               <td className="text-muted-foreground hidden p-2 pr-4 align-middle font-mono whitespace-nowrap sm:table-cell sm:pr-12">
-                {formatCurrency(product.price)}
+                {formatCurrency(product.price, countryCode)}
               </td>
               <td className="text-muted-foreground hidden p-2 align-middle font-mono whitespace-nowrap sm:table-cell">
                 {product.capacity} {product.capacityUnit}
@@ -106,7 +107,7 @@ export function ProductTable({
                     {product.title}
                   </Link>
                   <div className="text-muted-foreground mt-1 flex items-center gap-1.5 font-mono text-[10px] sm:hidden">
-                    <span>{formatCurrency(product.price)}</span>
+                    <span>{formatCurrency(product.price, countryCode)}</span>
                     <span className="text-muted-foreground/30">•</span>
                     <span>
                       {product.capacity} {product.capacityUnit}

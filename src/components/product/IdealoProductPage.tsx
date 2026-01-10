@@ -12,12 +12,11 @@
  */
 
 import { Breadcrumbs } from "@/components/breadcrumbs";
-import { IdealoPriceChart } from "./IdealoPriceChart";
-import { SpecificationsTable } from "./SpecificationsTable";
 import {
   BreadcrumbSchema,
   ProductSchema,
 } from "@/components/seo/ProductSchema";
+import { getAffiliateRedirectPath } from "@/lib/affiliate-utils";
 import {
   getCategoryBySlug,
   getCategoryPath,
@@ -26,11 +25,13 @@ import {
 import { getCountryByCode, type CountryCode } from "@/lib/countries";
 import type { ProductOffer, UnifiedProduct } from "@/lib/data-sources";
 import { Product, getSimilarProducts } from "@/lib/product-registry";
-import { getAffiliateRedirectPath } from "@/lib/affiliate-utils";
 import { cn } from "@/lib/utils";
-import { Check, ChevronRight, Heart, Info, Package, Star } from "lucide-react";
+import { formatCurrency } from "@/lib/utils/formatting";
+import { Check, ChevronRight, Heart, Package, Star } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
+import { IdealoPriceChart } from "./IdealoPriceChart";
+import { SpecificationsTable } from "./SpecificationsTable";
 
 interface IdealoProductPageProps {
   product: Product;
@@ -47,16 +48,6 @@ export async function IdealoProductPage({
   const category = getCategoryBySlug(product.category);
   const similarProducts = await getSimilarProducts(product, 6, countryCode);
   const price = product.prices[countryCode];
-
-  // Format currency helper
-  const formatCurrency = (value: number | undefined | null) => {
-    if (value === undefined || value === null) return "N.A.";
-    return new Intl.NumberFormat(countryConfig?.locale || "de-DE", {
-      style: "currency",
-      currency: countryConfig?.currency || "EUR",
-      minimumFractionDigits: 2,
-    }).format(value);
-  };
 
   // Build breadcrumbs
   const breadcrumbItems = [
@@ -79,7 +70,7 @@ export async function IdealoProductPage({
       source: "amazon" as const,
       price,
       currency: countryConfig?.currency || "EUR",
-      displayPrice: formatCurrency(price),
+      displayPrice: formatCurrency(price, countryCode),
       affiliateLink: getAffiliateRedirectPath(product.slug),
       condition: product.condition.toLowerCase() as "new" | "renewed" | "used",
       availability: "in_stock" as const,
@@ -186,7 +177,7 @@ export async function IdealoProductPage({
                   className="flex items-center justify-between"
                 >
                   <p className="text-lg font-bold text-[#333]">
-                    {formatCurrency(bestPrice)}
+                    {formatCurrency(bestPrice, countryCode)}
                   </p>
                   <span className="text-sm font-semibold text-[#0066cc]">
                     {offers.length} Angebote vergleichen
@@ -337,7 +328,7 @@ export async function IdealoProductPage({
                     <div className="text-sm text-[#666]">
                       ab{" "}
                       <strong className="text-[#333]">
-                        {formatCurrency(bestPrice)}
+                        {formatCurrency(bestPrice, countryCode)}
                       </strong>
                     </div>
                   </div>
@@ -435,7 +426,7 @@ export async function IdealoProductPage({
                         {p.title}
                       </Link>
                       <div className="text-xs text-[#2d2d2d]">
-                        ab {formatCurrency(p.prices[countryCode])}
+                        ab {formatCurrency(p.prices[countryCode], countryCode)}
                       </div>
                     </div>
                   </li>
@@ -610,7 +601,8 @@ export async function IdealoProductPage({
                               "cursor-pointer",
                             )}
                           >
-                            {offer.displayPrice || formatCurrency(offer.price)}
+                            {offer.displayPrice ||
+                              formatCurrency(offer.price, countryCode)}
                           </a>
                           {index === 0 && (
                             <div className="amazon-prime__wrapper mt-[2px] min-[600px]:mt-[3px]">
@@ -620,7 +612,7 @@ export async function IdealoProductPage({
                                 </div>
                                 <div className="productOffers-listItemOfferShippingDetails relative z-1 mt-0.5 border-spacing-[0_4px] text-[9px] leading-[12px] text-[#2d2d2d] sm:text-[10px]">
                                   {offer.freeShipping
-                                    ? `${offer.displayPrice || formatCurrency(offer.price)} inkl. Versand`
+                                    ? `${offer.displayPrice || formatCurrency(offer.price, countryCode)} inkl. Versand`
                                     : "zzgl. Versand"}
                                 </div>
                               </div>
@@ -705,9 +697,9 @@ export async function IdealoProductPage({
                             } as React.CSSProperties
                           }
                         >
-                          <li className="relative mb-[var(--list-spacing)] pl-[var(--list-spacing)] leading-normal">
+                          <li className="relative mb-(--list-spacing) pl-(--list-spacing) leading-normal">
                             <svg
-                              className="absolute top-[0.3em] left-0 h-[var(--dot-size)] w-[var(--dot-size)] fill-[#38bf84]"
+                              className="absolute top-[0.3em] left-0 h-(--dot-size) w-(--dot-size) fill-[#38bf84]"
                               viewBox="0 0 4 4"
                             >
                               <circle cx="2" cy="2" r="2" />
@@ -723,7 +715,7 @@ export async function IdealoProductPage({
                               </span>
                             </div>
                           </li>
-                          <li className="relative mb-[var(--list-spacing)] pl-[var(--list-spacing)]">
+                          <li className="relative mb-(--list-spacing) pl-(--list-spacing)">
                             <div className="productOffers-listItemOfferDeliveryProviderWrapper mb-[5px] text-[0px]">
                               <div className="productOffers-listItemOfferDeliveryProvider mt-0 -mr-px mb-0 ml-0 inline-block border border-[#e6e6e6] bg-white">
                                 <span className="productOffers-listItemOfferGreyBadge inline-block cursor-pointer rounded-[2px] bg-[#f5f5f5] px-[6px] py-[0.5px] text-[9px] whitespace-nowrap">

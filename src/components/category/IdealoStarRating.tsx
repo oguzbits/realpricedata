@@ -13,6 +13,7 @@
  */
 
 import { cn } from "@/lib/utils";
+import { formatRatingDE } from "@/lib/utils/formatting";
 
 interface IdealoStarRatingProps {
   /** Rating value (e.g., 1.5, 1.9, 2.2) */
@@ -32,12 +33,7 @@ export function IdealoStarRating({
   const percentage = rating ? Math.min(100, Math.round((rating / 5) * 100)) : 0;
 
   // Format rating as German decimal (e.g., 1,5)
-  const formattedRating = rating
-    ? rating.toLocaleString("de-DE", {
-        minimumFractionDigits: 1,
-        maximumFractionDigits: 1,
-      })
-    : null;
+  const formattedRating = rating ? formatRatingDE(rating) : null;
 
   return (
     <div className={cn("sr-productRating flex items-center gap-1", className)}>

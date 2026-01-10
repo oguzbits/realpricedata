@@ -1,5 +1,6 @@
 import { getCountryByCode } from "@/lib/countries";
 import { cn } from "@/lib/utils";
+import { formatCurrency } from "@/lib/utils/formatting";
 import { Heart, Star } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
@@ -34,15 +35,6 @@ export function ProductCard({
   specs,
 }: ProductCardProps) {
   const countryConfig = getCountryByCode(countryCode);
-
-  const formatCurrency = (value: number) => {
-    return new Intl.NumberFormat(countryConfig?.locale || "de-DE", {
-      style: "currency",
-      currency: currency || countryConfig?.currency || "EUR",
-      minimumFractionDigits: 2,
-      maximumFractionDigits: 2,
-    }).format(value);
-  };
 
   // Navigate to product page, NOT affiliate link
   const productUrl = `/p/${slug}`;
@@ -125,7 +117,7 @@ export function ProductCard({
           <div className="flex items-baseline gap-1">
             <span className="text-[12px] font-semibold text-zinc-500">ab</span>
             <span className="text-[18px] font-bold text-[#f97316]">
-              {formatCurrency(price)}
+              {formatCurrency(price, countryCode)}
             </span>
           </div>
 

@@ -3,9 +3,10 @@
 import { getCountryByCode, type CountryCode } from "@/lib/countries";
 import { LocalizedProduct } from "@/lib/server/category-products";
 import { cn } from "@/lib/utils";
-import Link from "next/link";
-import Image from "next/image";
+import { formatCurrency } from "@/lib/utils/formatting";
 import { Star } from "lucide-react";
+import Image from "next/image";
+import Link from "next/link";
 
 interface ProductGridProps {
   products: LocalizedProduct[];
@@ -14,16 +15,6 @@ interface ProductGridProps {
 
 export function ProductGrid({ products, countryCode }: ProductGridProps) {
   const countryConfig = getCountryByCode(countryCode);
-
-  // Format currency locally in the client component
-  const formatCurrency = (value: number) => {
-    return new Intl.NumberFormat(countryConfig?.locale || "de-DE", {
-      style: "currency",
-      currency: countryConfig?.currency || "EUR",
-      minimumFractionDigits: 2,
-      maximumFractionDigits: 2,
-    }).format(value);
-  };
 
   return (
     <div className="-mx-px grid auto-rows-fr grid-cols-2 sm:grid-cols-3 lg:grid-cols-4">
@@ -81,7 +72,7 @@ export function ProductGrid({ products, countryCode }: ProductGridProps) {
             <div className="mt-auto flex items-baseline gap-1">
               <span className="text-[13px] text-zinc-400">ab</span>
               <span className="text-[18px] font-bold text-[#f97316]">
-                {formatCurrency(product.price)}
+                {formatCurrency(product.price, countryCode)}
               </span>
             </div>
 

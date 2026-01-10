@@ -1,7 +1,7 @@
 "use client";
 
+import { IdealoProductCarousel } from "@/components/IdealoProductCarousel";
 import { IdealoHero } from "./IdealoHero";
-import { IdealoProductCarousel } from "./IdealoProductCarousel";
 import { IdealoSection } from "./IdealoSection";
 
 interface Product {

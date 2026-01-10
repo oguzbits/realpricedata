@@ -1,7 +1,7 @@
 "use client";
 
+import { IdealoProductCarousel } from "@/components/IdealoProductCarousel";
 import Link from "next/link";
-import { IdealoProductCarousel } from "./IdealoProductCarousel";
 
 interface Product {
   title: string;

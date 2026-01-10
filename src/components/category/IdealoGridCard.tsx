@@ -25,6 +25,7 @@ import Image from "next/image";
 import Link from "next/link";
 
 import { type LocalizedProduct } from "@/lib/server/category-products";
+import { formatCurrency } from "@/lib/utils/formatting";
 import { IdealoWishlistHeart } from "./IdealoWishlistHeart";
 
 interface IdealoGridCardProps {
@@ -39,15 +40,6 @@ export function IdealoGridCard({
   className,
 }: IdealoGridCardProps) {
   const countryConfig = getCountryByCode(countryCode);
-
-  const formatCurrency = (value: number) => {
-    return new Intl.NumberFormat(countryConfig?.locale || "de-DE", {
-      style: "currency",
-      currency: countryConfig?.currency || "EUR",
-      minimumFractionDigits: 2,
-      maximumFractionDigits: 2,
-    }).format(value);
-  };
 
   // Build description parts
   const descriptionParts = [
@@ -170,7 +162,7 @@ export function IdealoGridCard({
                 ab
               </span>
               <span className="text-[20px] font-bold text-[#f97316]">
-                {formatCurrency(product.price)}
+                {formatCurrency(product.price, countryCode)}
               </span>
             </div>
           </div>

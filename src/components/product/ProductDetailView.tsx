@@ -1,5 +1,3 @@
-import { Badge } from "@/components/ui/badge";
-import { Card, CardContent } from "@/components/ui/card";
 import { getAffiliateRedirectPath } from "@/lib/affiliate-utils";
 import {
   getCategoryBySlug,
@@ -11,10 +9,8 @@ import type { ProductOffer, UnifiedProduct } from "@/lib/data-sources";
 import { Product } from "@/lib/product-registry";
 import { cn } from "@/lib/utils";
 import {
-  ArrowRight,
   Check,
   ChevronRight,
-  ExternalLink,
   Info,
   Package,
   ShieldCheck,
@@ -30,8 +26,8 @@ import {
   ProductSchema,
 } from "@/components/seo/ProductSchema";
 import { getSimilarProducts } from "@/lib/product-registry";
+import { formatCurrency } from "@/lib/utils/formatting";
 import { OfferComparisonTable } from "./OfferComparisonTable";
-import { SimilarProducts } from "./SimilarProducts";
 import { SpecificationsTable } from "./SpecificationsTable";
 
 interface ProductDetailViewProps {
@@ -53,16 +49,6 @@ export async function ProductDetailView({
 
   // Get price for current country
   const price = product.prices[countryCode];
-
-  // Format currency helper
-  const formatCurrency = (value: number | undefined | null) => {
-    if (value === undefined || value === null) return "N.A.";
-    return new Intl.NumberFormat(countryConfig?.locale || "de-DE", {
-      style: "currency",
-      currency: countryConfig?.currency || "EUR",
-      minimumFractionDigits: 2,
-    }).format(value);
-  };
 
   // Build breadcrumbs
   const breadcrumbItems = [
@@ -93,7 +79,7 @@ export async function ProductDetailView({
       source: "amazon" as const,
       price,
       currency: countryConfig?.currency || "EUR",
-      displayPrice: formatCurrency(price),
+      displayPrice: formatCurrency(price, countryCode),
       affiliateLink: getAffiliateRedirectPath(product.slug),
       condition: product.condition.toLowerCase() as "new" | "renewed" | "used",
       availability: "in_stock" as const,
@@ -274,13 +260,14 @@ export async function ProductDetailView({
                         ab
                       </span>
                       <span className="text-3xl leading-none font-black tracking-tighter text-zinc-900">
-                        {formatCurrency(offers[0]?.price || price)}
+                        {formatCurrency(offers[0]?.price || price, countryCode)}
                       </span>
                     </div>
 
                     {pricePerUnit && (
                       <p className="mb-5 text-[11px] font-bold text-zinc-400">
-                        {formatCurrency(pricePerUnit)} / {unitLabel}
+                        {formatCurrency(pricePerUnit, countryCode)} /{" "}
+                        {unitLabel}
                       </p>
                     )}
 
@@ -379,7 +366,7 @@ export async function ProductDetailView({
           </div>
           <OfferComparisonTable
             offers={offers}
-            formatCurrency={formatCurrency}
+            formatCurrency={(val) => formatCurrency(val, countryCode)}
           />
         </div>
 
@@ -433,7 +420,7 @@ export async function ProductDetailView({
                         {p.title}
                       </h4>
                       <p className="mt-1 text-[13px] font-black tracking-tighter text-zinc-900">
-                        {formatCurrency(p.prices[countryCode])}
+                        {formatCurrency(p.prices[countryCode], countryCode)}
                       </p>
                     </div>
                   </Link>

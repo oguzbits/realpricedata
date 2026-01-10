@@ -62,3 +62,24 @@ export function formatNumber(
 export function formatPercentage(value: number, decimals: number = 1): string {
   return `${formatNumber(value, decimals)}%`;
 }
+
+/**
+ * Null-safe currency formatter for component use
+ */
+export function formatCurrencySafe(
+  value: number | undefined | null,
+  countryCode: string,
+): string {
+  if (value === undefined || value === null) return "–";
+  return formatCurrency(value, countryCode);
+}
+
+/**
+ * Format rating as German decimal (e.g., 1,5)
+ */
+export function formatRatingDE(rating: number): string {
+  return rating.toLocaleString("de-DE", {
+    minimumFractionDigits: 1,
+    maximumFractionDigits: 1,
+  });
+}

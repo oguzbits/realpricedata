@@ -1,5 +1,6 @@
 "use client";
 
+import { formatCurrency } from "@/lib/utils/formatting";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -24,14 +25,6 @@ export function IdealoProductCard({
   ratingCount = 8,
   badgeText,
 }: IdealoProductCardProps) {
-  const formatPrice = (value: number) => {
-    return new Intl.NumberFormat("de-DE", {
-      style: "currency",
-      currency,
-      minimumFractionDigits: 2,
-    }).format(value);
-  };
-
   return (
     <Link
       href={`/p/${slug}`}
@@ -90,7 +83,7 @@ export function IdealoProductCard({
       <div className="mt-auto flex items-baseline gap-1">
         <span className="text-[12px] text-gray-500">ab</span>
         <span className="text-[20px] font-bold text-[#ff6600]">
-          {formatPrice(price)}
+          {formatCurrency(price, "de")}
         </span>
       </div>
     </Link>

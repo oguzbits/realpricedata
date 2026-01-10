@@ -23,11 +23,12 @@ interface IdealoTopBarProps {
 }
 
 const SORT_OPTIONS = [
-  { value: "price", label: "Preis/Einheit" },
-  { value: "price-desc", label: "Preis absteigend" },
-  { value: "name", label: "Name A-Z" },
-  { value: "name-desc", label: "Name Z-A" },
-  { value: "rating", label: "Bewertung" },
+  { value: "popular", label: "Beliebteste zuerst" },
+  { value: "savings", label: "Größte Ersparnis zuerst" },
+  { value: "price", label: "Preis: Günstigster zuerst" },
+  { value: "price-desc", label: "Preis: Höchster zuerst" },
+  { value: "newest", label: "Neuheiten zuerst" },
+  { value: "price-per-unit", label: "Preis/Einheit" },
 ];
 
 export function IdealoTopBar({
@@ -52,7 +53,7 @@ export function IdealoTopBar({
   const setSort = useCallback(
     (sort: string) => {
       const params = new URLSearchParams(searchParams.toString());
-      if (sort === "price") {
+      if (sort === "popular") {
         params.delete("sort"); // Default, no need to set
       } else {
         params.set("sort", sort);

@@ -108,7 +108,7 @@ export async function IdealoCategoryPage({
             currentSort={
               typeof searchParams === "object" && "sort" in searchParams
                 ? (searchParams.sort as string)
-                : "price"
+                : "popular"
             }
           />
         )}

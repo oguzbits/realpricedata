@@ -1,6 +1,6 @@
-import { AllCategoriesView } from "@/components/category/AllCategoriesView";
-import { getCategoryHierarchy } from "@/lib/categories";
-import { DEFAULT_COUNTRY } from "@/lib/countries";
+import { Breadcrumbs } from "@/components/breadcrumbs";
+import { IdealoCategoryOverview } from "@/components/categories/IdealoCategoryOverview";
+import { getCategoriesForDisplay } from "@/lib/data/categoryData";
 import { getAlternateLanguages, getOpenGraph } from "@/lib/metadata";
 import { getSiteUrl } from "@/lib/site-config";
 import { Metadata } from "next";
@@ -8,8 +8,8 @@ import { Metadata } from "next";
 export async function generateMetadata(): Promise<Metadata> {
   const canonicalUrl = getSiteUrl("/categories");
 
-  const title = `All Categories - Amazon ${DEFAULT_COUNTRY.toUpperCase()}`;
-  const description = `Browse all tracked product categories on Amazon ${DEFAULT_COUNTRY.toUpperCase()}. Compare hardware prices by true cost per TB/GB to find the best value deals.`;
+  const title = `Alle Kategorien - Preisvergleich`;
+  const description = `Durchsuchen Sie alle Produktkategorien. Vergleichen Sie Preise und finden Sie die besten Angebote.`;
 
   return {
     title,
@@ -22,18 +22,53 @@ export async function generateMetadata(): Promise<Metadata> {
       title,
       description,
       url: canonicalUrl,
-      locale: `en_${DEFAULT_COUNTRY.toUpperCase()}`,
+      locale: `de_DE`,
     }),
   };
 }
 
 export default function CategoriesPage() {
-  const categoryHierarchy = getCategoryHierarchy();
+  // Get categories from the actual supported categories
+  const categories = getCategoriesForDisplay();
+
+  // Breadcrumb items for Idealo-style navigation
+  const breadcrumbItems = [
+    {
+      name: "Startseite",
+      href: "/",
+    },
+    {
+      name: "Alle Kategorien",
+    },
+  ];
 
   return (
-    <AllCategoriesView
-      categoryHierarchy={categoryHierarchy}
-      countryCode={DEFAULT_COUNTRY}
-    />
+    <div className="min-h-screen bg-white">
+      {/* Main Content Container */}
+      <div className="mx-auto max-w-[1280px] px-4">
+        {/* Breadcrumbs */}
+        <Breadcrumbs
+          items={breadcrumbItems}
+          className="py-3 text-[13px] text-[#666]"
+        />
+
+        {/* Page Title Section */}
+        <div className="mb-6">
+          <h1 className="text-[24px] font-bold text-[#2d2d2d]">
+            Alle Kategorien
+          </h1>
+          <p className="mt-1 text-[14px] text-[#666]">
+            Durchsuchen Sie unsere {categories.length} Produktkategorien und
+            finden Sie die besten Preise.
+          </p>
+        </div>
+
+        {/* Category Grid */}
+        <IdealoCategoryOverview
+          categories={categories}
+          className="mb-8 border-t border-l border-[#e5e5e5]"
+        />
+      </div>
+    </div>
   );
 }

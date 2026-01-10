@@ -28,7 +28,31 @@ export interface FilterParams {
   maxCapacity?: string;
   sortBy?: string;
   sortOrder?: string;
+  sort?: string; // Combined sort param from TopBar (e.g., "price", "price-desc", "popular")
   view?: string; // grid or list
+}
+
+/**
+ * Maps the IdealoTopBar sort parameter to sortBy and sortOrder values
+ */
+function mapSortParam(sort?: string): { sortBy: string; sortOrder: string } {
+  switch (sort) {
+    case "price":
+      return { sortBy: "price", sortOrder: "asc" };
+    case "price-desc":
+      return { sortBy: "price", sortOrder: "desc" };
+    case "price-per-unit":
+      return { sortBy: "pricePerUnit", sortOrder: "asc" };
+    case "newest":
+      return { sortBy: "createdAt", sortOrder: "desc" };
+    case "savings":
+      // Sort by highest discount/savings - using pricePerUnit as proxy
+      return { sortBy: "pricePerUnit", sortOrder: "asc" };
+    case "popular":
+    default:
+      // Default: sort by price per unit (best value)
+      return { sortBy: "pricePerUnit", sortOrder: "asc" };
+  }
 }
 
 /**
@@ -65,6 +89,11 @@ export async function getCategoryProducts(
     })
     .filter((p): p is LocalizedProduct => p !== null);
 
+  // Map the sort parameter from TopBar to sortBy/sortOrder
+  const mappedSort = filterParams.sort
+    ? mapSortParam(filterParams.sort)
+    : { sortBy: filterParams.sortBy, sortOrder: filterParams.sortOrder };
+
   // Parse filter params into FilterState format
   const filters = {
     search: filterParams.search || "",
@@ -89,8 +118,8 @@ export async function getCategoryProducts(
     maxCapacity: filterParams.maxCapacity
       ? parseFloat(filterParams.maxCapacity)
       : null,
-    sortBy: filterParams.sortBy || "pricePerUnit",
-    sortOrder: filterParams.sortOrder || "asc",
+    sortBy: mappedSort.sortBy || "pricePerUnit",
+    sortOrder: mappedSort.sortOrder || "asc",
   };
 
   // Apply filtering

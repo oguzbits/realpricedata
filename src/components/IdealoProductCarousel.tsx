@@ -64,7 +64,16 @@ export function IdealoProductCarousel({
   };
 
   if (products.length === 0) {
-    return null;
+    return (
+      <div className={cn("cn-productCarousel", "mb-8", className)}>
+        <div className="cn-productCarousel__header mb-4">
+          <h2 className="text-[20px] font-bold text-[#2d2d2d]">{title}</h2>
+        </div>
+        <div className="flex items-center justify-center rounded bg-[#f9f9f9] py-12 text-center">
+          <p className="text-sm text-[#999]">Keine Produkte verfügbar</p>
+        </div>
+      </div>
+    );
   }
 
   return (

@@ -22,19 +22,17 @@ export function SearchButton({
   return (
     <>
       {mode === "desktop" && (
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
-          <button
-            type="button"
-            onClick={handleOpen}
-            className="hidden w-[320px] cursor-pointer items-center gap-3 rounded-full border border-white/20 bg-white px-5 py-2.5 shadow-lg transition-all hover:shadow-xl sm:flex lg:w-[450px]"
-            aria-label="Search all products"
-          >
-            <Search className="h-5 w-5 text-zinc-500" />
-            <span className="flex-1 text-left text-base text-zinc-500">
-              Search products, categories...
-            </span>
-          </button>
-        </div>
+        <button
+          type="button"
+          onClick={handleOpen}
+          className="hidden w-[320px] cursor-pointer items-center gap-3 rounded-full border border-white/20 bg-white px-5 py-2.5 shadow-lg transition-all hover:shadow-xl sm:flex lg:w-[450px]"
+          aria-label="Search all products"
+        >
+          <Search className="h-5 w-5 text-zinc-500" />
+          <span className="flex-1 text-left text-base text-zinc-500">
+            Search products, categories...
+          </span>
+        </button>
       )}
 
       {mode === "mobile" && (

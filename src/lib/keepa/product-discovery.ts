@@ -68,11 +68,20 @@ export interface KeepaProductRaw {
   asin: string;
   title?: string;
   brand?: string;
+  manufacturer?: string; // Fallback for brand
+  model?: string; // Product model
   productType?: number;
   imagesCSV?: string;
   features?: string[];
   description?: string;
   rootCategory?: number;
+
+  // Identifiers for multi-source matching
+  eanList?: string[]; // EAN-13 barcodes (European)
+  upcList?: string[]; // UPC-12 barcodes (US/Canada)
+  mpn?: string; // Manufacturer Part Number
+
+  // Price and stats
   stats?: {
     current?: (number | null)[];
     avg?: (number | null)[];
@@ -81,6 +90,12 @@ export interface KeepaProductRaw {
     min?: (number | null)[];
     max?: (number | null)[];
   };
+
+  // Sales and availability
+  monthlySold?: number; // Estimated monthly sales
+  fbaFees?: object; // Presence indicates FBA/Prime eligible
+  availabilityAmazon?: number; // Amazon stock status
+
   salesRanks?: Record<number, number[][]>;
   lastUpdate?: number;
   parentAsin?: string;
@@ -176,7 +191,11 @@ export async function searchProducts(
     params.set("sort", sortMap[options.sort]);
   }
 
-  const response = await fetch(`${BASE_URL}/search?${params}`);
+  const requestUrl = `${BASE_URL}/search?${params}`;
+  console.log(
+    `[Keepa Input] Search URL: ${requestUrl.replace(KEEPA_API_KEY, "KEY")}`,
+  );
+  const response = await fetch(requestUrl);
   const data: KeepaSearchResponse = await response.json();
 
   if (data.error) {

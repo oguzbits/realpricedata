@@ -1,339 +1,131 @@
-import { db } from "../src/db";
-import {
-  products,
-  prices,
-  priceHistory,
-  productOffers,
-  type NewProduct,
-  type NewPrice,
-  type NewProductOffer,
-} from "../src/db/schema";
+import { createClient } from "@libsql/client";
+import { drizzle } from "drizzle-orm/libsql";
+import * as schema from "@/db/schema";
+import { products, prices, priceHistory, productOffers } from "@/db/schema";
 import { sql } from "drizzle-orm";
 
-const CATEGORIES = [
-  "hard-drives",
-  "ram",
-  "power-supplies",
-  "cpu",
-  "gpu",
-  "external-storage",
-  "pc-cases",
-  "cpu-coolers",
-  "case-fans",
-  "thermal-paste",
-  "monitors",
-  "keyboards",
-  "mice",
-  "mouse-pads",
-  "headphones",
-  "speakers",
-  "microphones",
-  "webcams",
-  "routers",
-  "nas",
-  "usb-hubs",
-  "docking-stations",
-  "network-switches",
-  "network-cards",
-  "cables",
-  "laptop-stands",
-  "ups",
-  "cable-management",
-  "monitor-arms",
-  "desk-accessories",
-  "office-chairs",
-  "standing-desks",
-  "tablets",
-  "smartwatches",
-  "tablet-accessories",
-  "phone-accessories",
-  "game-controllers",
-  "vr-headsets",
-  "capture-cards",
-];
+const client = createClient({ url: "file:./data/cleverprices.db" });
+const db = drizzle(client, { schema });
 
-async function seed() {
-  console.log("🌱 Clearing existing data...");
-  // Clear tables - simplistic approach
-  await db.delete(productOffers);
-  await db.delete(priceHistory);
-  await db.delete(prices);
-  await db.delete(products);
+async function main() {
+  console.log("🌱 Seeding mock data...");
 
-  console.log("🚀 Starting seed...");
+  const now = new Date();
+  const oneMonthAgo = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000);
 
-  // --- SSDs ---
-  await createProduct({
-    asin: "B099RHVB42",
-    title: "Samsung 990 PRO NVMe M.2 SSD 2TB",
-    category: "hard-drives",
-    description: "PCIe 4.0, up to 7,450 MB/s, for PS5 and PC",
-    image: "https://m.media-amazon.com/images/I/81abc.jpg",
+  // Mock Product: Samsung 990 PRO 2TB
+  const product = {
+    asin: "B0BHK1VPK8",
+    slug: "samsung-990-pro-2tb",
+    title:
+      "Samsung 990 PRO M.2 NVMe SSD 2 tb, PCIe 4.0, 7.450 MB/s Lesegeschwindigkeit, Interne SSD, Für Gaming und Videobearbeitung, Festplatte für Konsole und PC, MZ-V9P2T0BW",
     brand: "Samsung",
+    category: "ssd",
+    imageUrl:
+      "https://images-na.ssl-images-amazon.com/images/I/71W690L%2B5cL._AC_SL1500_.jpg",
     capacity: 2,
     capacityUnit: "TB",
-    price: 169.9,
-    offers: [
-      { source: "amazon", merchant: "Amazon", price: 169.9, shipping: 0 },
-      {
-        source: "awin_mediamarkt",
-        merchant: "MediaMarkt",
-        price: 179.0,
-        shipping: 4.99,
-      },
-      {
-        source: "awin_cyberport",
-        merchant: "Cyberport",
-        price: 174.9,
-        shipping: 5.99,
-      },
-    ],
-  });
+    formFactor: "M.2",
+    technology: "NVMe",
+    condition: "New",
+    description:
+      "The ultimate SSD for gamers and creators. Reach near max performance with PCIe 4.0.",
+    features: JSON.stringify([
+      "PCIe 4.0 NVMe",
+      "7450 MB/s Read",
+      "6900 MB/s Write",
+    ]),
+    salesRank: 1,
+    rating: 4.8,
+    reviewCount: 12500,
+  };
 
-  await createProduct({
-    asin: "B0B7CMZ3QH",
-    title: "WD_BLACK SN850X NVMe SSD 4TB",
-    category: "hard-drives",
-    description: "Gaming Storage, PCIe Gen4, up to 7,300 MB/s",
-    image: "https://m.media-amazon.com/images/I/71abc.jpg",
-    brand: "Western Digital",
-    capacity: 4,
-    capacityUnit: "TB",
-    price: 329.0,
-    offers: [
-      { source: "amazon", merchant: "Amazon", price: 329.0, shipping: 0 },
-      { source: "awin_saturn", merchant: "Saturn", price: 339.0, shipping: 0 },
-    ],
-  });
+  try {
+    // 1. Insert Product
+    const [insertedProduct] = await db
+      .insert(products)
+      .values({
+        ...product,
+        updatedAt: now,
+      })
+      .returning({ id: products.id });
 
-  // --- GBP ---
-  await createProduct({
-    asin: "B0BUD9S3",
-    title: "ASUS TUF Gaming GeForce RTX 4090 OC Edition 24GB",
-    category: "gpu",
-    description: "DLSS 3, PCIe 4.0, 24GB GDDR6X, HDMI 2.1a",
-    image: "https://m.media-amazon.com/images/I/4090.jpg",
-    brand: "ASUS",
-    price: 1949.0,
-    capacity: 24,
-    capacityUnit: "GB",
-    offers: [
-      { source: "amazon", merchant: "Amazon", price: 1999.0, shipping: 0 },
-      {
-        source: "awin_notebooksbilliger",
-        merchant: "NBB",
-        price: 1949.0,
-        shipping: 7.99,
-      },
-    ],
-  });
+    console.log(
+      `Included product: ${product.slug} (ID: ${insertedProduct.id})`,
+    );
 
-  // --- CPU ---
-  await createProduct({
-    asin: "B0BCF54SR1",
-    title: "AMD Ryzen 7 7800X3D Processor",
-    category: "cpu",
-    description: "8 Cores, 16 Threads, 5.0 GHz Max Boost, 104MB Cache",
-    image: "https://m.media-amazon.com/images/I/7800x3d.jpg",
-    brand: "AMD",
-    price: 369.0,
-    capacity: 8,
-    capacityUnit: "core",
-    offers: [
-      { source: "amazon", merchant: "Amazon", price: 375.0, shipping: 0 },
-      {
-        source: "awin_mindfactory",
-        merchant: "Mindfactory",
-        price: 369.0,
-        shipping: 8.99,
-      },
-    ],
-  });
-
-  // --- Monitors ---
-  await createProduct({
-    asin: "B0C65E5S",
-    title: "LG OLED42C37LA 42 Inch 4K OLED evo TV",
-    category: "monitors",
-    description: "120Hz, HDMI 2.1, G-Sync, perfect for PC gaming",
-    image: "https://m.media-amazon.com/images/I/lgc3.jpg",
-    brand: "LG",
-    price: 899.0,
-    offers: [
-      { source: "amazon", merchant: "Amazon", price: 929.0, shipping: 0 },
-      { source: "awin_otto", merchant: "OTTO", price: 899.0, shipping: 29.9 },
-    ],
-  });
-
-  // --- Keyboards ---
-  await createProduct({
-    asin: "B07W5JK6",
-    title: "Keychron Q1 Pro Wireless Custom Mechanical Keyboard",
-    category: "keyboards",
-    description: "QMK/VIA, Aluminium, Hot-swappable, RGB",
-    image: "https://m.media-amazon.com/images/I/q1pro.jpg",
-    brand: "Keychron",
-    price: 199.0,
-    offers: [
-      { source: "amazon", merchant: "Amazon", price: 219.0, shipping: 0 },
-      {
-        source: "awin_alternate",
-        merchant: "Alternate",
-        price: 199.0,
-        shipping: 5.99,
-      },
-    ],
-  });
-
-  // --- Mice ---
-  await createProduct({
-    asin: "B0B11L6",
-    title: "Logitech MX Master 3S - Performance Wireless Mouse",
-    category: "mice",
-    description: "Ultra-fast scrolling, Ergo, 8K DPI, Quiet Clicks",
-    image: "https://m.media-amazon.com/images/I/mxmaster.jpg",
-    brand: "Logitech",
-    price: 89.9,
-    offers: [
-      { source: "amazon", merchant: "Amazon", price: 89.9, shipping: 0 },
-      {
-        source: "awin_mediamarkt",
-        merchant: "MediaMarkt",
-        price: 99.0,
-        shipping: 4.99,
-      },
-    ],
-  });
-
-  // --- Fill remaining categories with generic items ---
-  for (const cat of CATEGORIES) {
-    // Skip if we already added explicit items (simple check)
-    if (
-      ["hard-drives", "gpu", "cpu", "monitors", "keyboards", "mice"].includes(
-        cat,
-      )
-    )
-      continue;
-
-    await createProduct({
-      asin: `GENERIC-${cat}-1`,
-      title: `Top Rated ${toTitleCase(cat).replace("-", " ")} Pro Model`,
-      category: cat,
-      description: `High performance ${cat.replace("-", " ")} with premium features. Best value 2025.`,
-      brand: "GenericBrand",
-      price: 99.99,
-      offers: [
-        { source: "amazon", merchant: "Amazon", price: 99.99, shipping: 0 },
-        {
-          source: "awin_generic",
-          merchant: "Other Store",
-          price: 109.99,
-          shipping: 4.99,
-        },
-      ],
-    });
-  }
-
-  console.log("✅ Seed complete!");
-}
-
-function toTitleCase(str: string) {
-  return str.replace(/-/g, " ").replace(/\b\w/g, (c) => c.toUpperCase());
-}
-
-async function createProduct(data: {
-  asin: string;
-  title: string;
-  category: string;
-  description: string;
-  brand: string;
-  price: number;
-  offers: {
-    source: string;
-    merchant: string;
-    price: number;
-    shipping: number;
-  }[];
-  image?: string;
-  capacity?: number;
-  capacityUnit?: string;
-}) {
-  const [product] = await db
-    .insert(products)
-    .values({
-      asin: data.asin,
-      slug: data.title
-        .toLowerCase()
-        .replace(/[^a-z0-9]+/g, "-")
-        .replace(/^-|-$/g, ""),
-      title: data.title,
-      category: data.category,
-      description: data.description,
-      brand: data.brand,
-      imageUrl: data.image, // Corrected property name
-      capacity: data.capacity,
-      capacityUnit: data.capacityUnit,
-      normalizedCapacity: data.capacity,
-      currency: "EUR",
-      availability: "in_stock",
-      lastUpdated: new Date(),
-    } as NewProduct)
-    .returning();
-
-  // Insert Price
-  await db.insert(prices).values({
-    productId: product.id,
-    country: "de",
-    amazonPrice: data.price,
-    currency: "EUR",
-    source: "seed",
-    lastUpdated: new Date(),
-  } as NewPrice);
-
-  // Insert Offers
-  for (const offer of data.offers) {
-    await db.insert(productOffers).values({
-      productId: product.id,
-      source: offer.source,
-      merchantName: offer.merchant,
-      price: offer.price,
-      shippingCost: offer.shipping,
-      totalPrice: offer.price + offer.shipping,
-      currency: "EUR",
-      affiliateUrl: "https://example.com",
-      availability: "in_stock",
-      deliveryTime: "2-3 Days",
-      lastUpdated: new Date(),
-    } as NewProductOffer);
-  }
-
-  // Generate Price History (Past 90 days)
-  const history = [];
-  let currentPrice = data.price * 1.1; // Started 10% higher
-  const now = new Date();
-
-  for (let i = 90; i >= 0; i--) {
-    const date = new Date(now);
-    date.setDate(date.getDate() - i);
-
-    // Random fluctuation
-    if (Math.random() > 0.8) currentPrice += (Math.random() - 0.5) * 5;
-
-    // Ensure price doesn't go below minimum
-    if (currentPrice < data.price * 0.5) currentPrice = data.price * 0.5;
-
-    history.push({
-      productId: product.id,
+    // 2. Insert Price Info
+    await db.insert(prices).values({
+      productId: insertedProduct.id,
       country: "de",
-      price: parseFloat(currentPrice.toFixed(2)),
+      amazonPrice: 169.9,
+      newPrice: 169.9,
+      usedPrice: 145.0,
       currency: "EUR",
-      priceType: "best",
-      recordedAt: date,
+      source: "mock",
+      lastUpdated: now,
     });
-  }
 
-  await db.insert(priceHistory).values(history);
-  console.log(`Added: ${data.title}`);
+    // 3. Insert Price History (Simulated 90 days)
+    const historyPoints = [];
+    let currentPrice = 189.9;
+    for (let i = 90; i >= 0; i--) {
+      const date = new Date(now.getTime() - i * 24 * 60 * 60 * 1000);
+
+      // Random walk price
+      const change = (Math.random() - 0.5) * 5;
+      currentPrice += change;
+      if (currentPrice < 140) currentPrice = 140;
+      if (currentPrice > 210) currentPrice = 210;
+
+      historyPoints.push({
+        productId: insertedProduct.id,
+        country: "de",
+        price: parseFloat(currentPrice.toFixed(2)),
+        currency: "EUR",
+        priceType: "amazon",
+        recordedAt: date,
+      });
+    }
+
+    // Batch insert history
+    // SQLite limit might be hit if too many rows, so chunk it just in case, but 90 is fine.
+    await db.insert(priceHistory).values(historyPoints);
+
+    // 4. Insert Offers
+    await db.insert(productOffers).values([
+      {
+        productId: insertedProduct.id,
+        source: "amazon",
+        merchantName: "Amazon.de",
+        price: 169.9,
+        currency: "EUR",
+        shippingCost: 0,
+        totalPrice: 169.9,
+        affiliateUrl: "https://amazon.de",
+        availability: "in_stock",
+        deliveryTime: "Morgen",
+      },
+      {
+        productId: insertedProduct.id,
+        source: "mindfactory",
+        merchantName: "Mindfactory",
+        price: 165.0,
+        currency: "EUR",
+        shippingCost: 8.99,
+        totalPrice: 173.99,
+        affiliateUrl: "https://mindfactory.de",
+        availability: "in_stock",
+        deliveryTime: "3-5 Tage",
+      },
+    ]);
+
+    console.log("✅ Mock data seeded successfully!");
+    process.exit(0);
+  } catch (error) {
+    console.error("Seeding failed:", error);
+    process.exit(1);
+  }
 }
 
-seed().catch(console.error);
+main();

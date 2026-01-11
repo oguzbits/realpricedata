@@ -56,6 +56,10 @@ export const products = sqliteTable(
     // Keepa data
     salesRank: integer("sales_rank"),
     salesRankReference: integer("sales_rank_reference"), // Category sales rank
+    monthlySold: integer("monthly_sold"), // Estimated monthly sales
+    offerCountNew: integer("offer_count_new"), // Number of new offers
+    offerCountUsed: integer("offer_count_used"), // Number of used offers
+    primeEligible: integer("prime_eligible", { mode: "boolean" }), // FBA available
 
     // Features/Description
     features: text("features"), // JSON array
@@ -98,6 +102,12 @@ export const prices = sqliteTable(
     newPrice: real("new_price"), // Marketplace new
     usedPrice: real("used_price"), // Marketplace used
     warehousePrice: real("warehouse_price"), // Amazon Warehouse
+    listPrice: real("list_price"), // MSRP for discount calculation
+
+    // Price statistics (from Keepa)
+    priceMin: real("price_min"), // All-time lowest
+    priceMax: real("price_max"), // All-time highest
+    priceAvg30: real("price_avg_30"), // 30-day average
 
     // Calculated
     pricePerUnit: real("price_per_unit"), // Price per GB/TB/W
@@ -105,8 +115,11 @@ export const prices = sqliteTable(
     // Currency
     currency: text("currency").notNull(), // "USD", "EUR", etc.
 
-    // Availability
+    // Availability & Delivery (for future PA API / Awin)
     availability: text("availability"), // "in_stock", "out_of_stock", "unknown"
+    deliveryTime: text("delivery_time"), // e.g., "1-2 Werktage"
+    deliveryCost: real("delivery_cost"), // Shipping cost
+    deliveryFree: integer("delivery_free", { mode: "boolean" }), // Free shipping?
 
     // Source info
     source: text("source").notNull(), // "keepa", "amazon-paapi", "static"

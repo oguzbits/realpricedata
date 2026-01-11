@@ -1,6 +1,7 @@
 "use client";
 
 import { IdealoProductCarousel } from "@/components/IdealoProductCarousel";
+import { EmptyState } from "@/components/ui/EmptyState";
 import { IdealoHero } from "./IdealoHero";
 import { IdealoSection } from "./IdealoSection";
 
@@ -17,6 +18,24 @@ interface IdealoHomePageProps {
 }
 
 export function IdealoHomePage({ products }: IdealoHomePageProps) {
+  // Handle empty products state
+  if (products.length === 0) {
+    return (
+      <div className="bg-[#f5f5f5]">
+        <IdealoSection variant="white" className="py-12">
+          <EmptyState
+            title="Willkommen bei cleverprices!"
+            description="Wir bauen gerade unseren Produktkatalog auf. Schauen Sie sich in der Zwischenzeit unsere Kategorien an."
+            action={{
+              label: "Kategorien entdecken",
+              href: "/categories",
+            }}
+          />
+        </IdealoSection>
+      </div>
+    );
+  }
+
   // Split products for different sections
   const bestsellers = products.slice(0, 8);
   const recommendations = products.slice(4, 12);

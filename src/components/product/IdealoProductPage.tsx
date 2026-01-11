@@ -364,7 +364,7 @@ export async function IdealoProductPage({
             )}
           >
             <div id="price-chart-wrapper" className="sticky top-4">
-              <IdealoPriceChart />
+              <IdealoPriceChart history={product.priceHistory} />
             </div>
           </div>
         </div>

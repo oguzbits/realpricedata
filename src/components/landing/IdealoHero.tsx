@@ -21,13 +21,22 @@ export function IdealoHero({ products }: IdealoHeroProps) {
 
   return (
     <div className="flex gap-4">
-      {/* Left side - Featured products carousel */}
-      <div className="min-w-0 flex-1 rounded bg-white p-4">
-        <IdealoProductCarousel
-          title="Beliebte Produkte"
-          products={heroProducts}
-        />
-      </div>
+      {/* Left side - Featured products carousel (only if products exist) */}
+      {heroProducts.length > 0 ? (
+        <div className="min-w-0 flex-1 rounded bg-white p-4">
+          <IdealoProductCarousel
+            title="Beliebte Produkte"
+            products={heroProducts}
+          />
+        </div>
+      ) : (
+        <div className="flex min-w-0 flex-1 items-center justify-center rounded bg-white p-8">
+          <div className="text-center text-[#666]">
+            <p className="text-lg font-semibold">Produkte werden geladen...</p>
+            <p className="text-sm">Entdecken Sie bald unsere besten Angebote</p>
+          </div>
+        </div>
+      )}
 
       {/* Right side - Promo banner */}
       <div className="hidden w-[280px] shrink-0 overflow-hidden rounded bg-linear-to-br from-[#0066cc] to-[#004499] lg:block">

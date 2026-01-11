@@ -290,7 +290,13 @@ class AmazonPaApiSource implements DataSourceProvider {
   name = "Amazon PA API";
 
   isAvailable(): boolean {
-    return Boolean(ACCESS_KEY && SECRET_KEY && PARTNER_TAG);
+    if (!ACCESS_KEY || !SECRET_KEY || !PARTNER_TAG) return false;
+    if (
+      ACCESS_KEY.includes("your_access_key") ||
+      SECRET_KEY.includes("your_secret_key")
+    )
+      return false;
+    return true;
   }
 
   async fetchProducts(

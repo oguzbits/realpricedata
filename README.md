@@ -87,6 +87,9 @@ src/
 - **Language**: [TypeScript](https://www.typescriptlang.org/)
 - **Styling**: [Tailwind CSS 4](https://tailwindcss.com/)
 - **UI Components**: [shadcn/ui](https://ui.shadcn.com/) (Radix UI)
+- **Database**: [Turso](https://turso.tech/) (SQLite at the edge)
+- **ORM**: [Drizzle ORM](https://orm.drizzle.team/)
+- **Data Source**: [Keepa API](https://keepa.com/) (Amazon price data)
 - **Content**: [MDX](https://mdxjs.com/) with remark-gfm and frontmatter
 - **State Management**: [nuqs](https://nuqs.47ng.com/) (URL-based sync)
 - **Analytics**: [Vercel Analytics](https://vercel.com/analytics)

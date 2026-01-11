@@ -27,52 +27,27 @@ export function proxy(request: NextRequest) {
   const firstSegment = segments.length > 0 ? segments[0].toLowerCase() : "";
   const isExplicitCountryPath = isValidCountryCode(firstSegment);
 
+  // NEW: Redirect country code paths to root
+  // Since we only support German market, paths like /de, /de/categories, /us, etc.
+  // should redirect to the equivalent path without the country code prefix
+  if (isExplicitCountryPath) {
+    const url = request.nextUrl.clone();
+    // Remove the country code and redirect to the remaining path
+    const remainingPath = segments.slice(1).join("/");
+    url.pathname = remainingPath ? `/${remainingPath}` : "/";
+    return NextResponse.redirect(url, 301);
+  }
+
   // 2. SEO Category Aliases (Root Level)
   // e.g., /storage -> /hard-drives
-  if (!isExplicitCountryPath) {
-    for (const category of Object.values(allCategories)) {
-      if (category.aliases?.includes(firstSegment)) {
-        const url = request.nextUrl.clone();
-        const remainingPath = segments.slice(1).join("/");
-        url.pathname = remainingPath
-          ? `/${category.slug}/${remainingPath}`
-          : `/${category.slug}`;
-        return NextResponse.redirect(url, 301);
-      }
-    }
-  }
-
-  // 3. SEO Category Aliases (Localized Level)
-  // e.g., /de/storage -> /de/hard-drives
-  if (isExplicitCountryPath && segments.length > 1) {
-    const secondSegment = segments[1].toLowerCase();
-    for (const category of Object.values(allCategories)) {
-      if (category.aliases?.includes(secondSegment)) {
-        const url = request.nextUrl.clone();
-        const remainingPath = segments.slice(2).join("/");
-        url.pathname = remainingPath
-          ? `/${firstSegment}/${category.slug}/${remainingPath}`
-          : `/${firstSegment}/${category.slug}`;
-        return NextResponse.redirect(url, 301);
-      }
-    }
-  }
-
-  // 4. Cookie Enforcement for US Paths
-  // If we are on a US path (e.g. / or /electronics) BUT the user prefers a different country,
-  // redirect them to that country's localized path.
-  if (!isExplicitCountryPath) {
-    const countryCookie = request.cookies.get("country")?.value;
-
-    if (
-      countryCookie &&
-      isValidCountryCode(countryCookie) &&
-      countryCookie !== DEFAULT_COUNTRY
-    ) {
-      // User prefers DE but is visiting /electronics -> Redirect to /de/electronics
+  for (const category of Object.values(allCategories)) {
+    if (category.aliases?.includes(firstSegment)) {
       const url = request.nextUrl.clone();
-      url.pathname = `/${countryCookie}${pathname}`;
-      return NextResponse.redirect(url);
+      const remainingPath = segments.slice(1).join("/");
+      url.pathname = remainingPath
+        ? `/${category.slug}/${remainingPath}`
+        : `/${category.slug}`;
+      return NextResponse.redirect(url, 301);
     }
   }
 

@@ -149,7 +149,9 @@ export class KeepaDataSource implements DataSourceProvider {
   private baseUrl = "https://api.keepa.com";
 
   isAvailable(): boolean {
-    return Boolean(KEEPA_API_KEY);
+    if (!KEEPA_API_KEY) return false;
+    if (KEEPA_API_KEY.includes("your_keepa_api_key")) return false;
+    return true;
   }
 
   /**

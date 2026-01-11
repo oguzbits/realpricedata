@@ -1,5 +1,10 @@
 import { db } from "@/db";
-import { products, prices, type Product as DbProduct } from "@/db/schema";
+import {
+  products,
+  prices,
+  priceHistory,
+  type Product as DbProduct,
+} from "@/db/schema";
 import { calculateProductMetrics } from "./utils/products";
 import { eq, inArray } from "drizzle-orm";
 import { cacheLife } from "next/cache";
@@ -29,10 +34,15 @@ export interface Product {
   brand: string;
   certification?: string;
   modularityTyp?: string; // Kept 'Typ' to match legacy usage if any
+  priceHistory?: { date: string; price: number }[];
 }
 
 // Helper to map DB to Interface
-function mapDbProduct(p: any, pricesList: any[]): Product {
+function mapDbProduct(
+  p: any,
+  pricesList: any[],
+  historyList: any[] = [],
+): Product {
   const pricesObj: Record<string, number> = {};
   if (pricesList) {
     pricesList.forEach((pr) => {
@@ -61,6 +71,10 @@ function mapDbProduct(p: any, pricesList: any[]): Product {
     brand: p.brand || "Generic",
     certification: p.certification || undefined,
     modularityTyp: p.modularityType || undefined,
+    priceHistory: historyList.map((h) => ({
+      date: new Date(h.recordedAt * 1000).toISOString(),
+      price: h.price,
+    })),
   };
 
   return calculateProductMetrics(item) as Product;
@@ -115,7 +129,15 @@ export async function getProductBySlug(
   if (!p) return undefined;
 
   const prs = await db.select().from(prices).where(eq(prices.productId, p.id));
-  return mapDbProduct(p, prs);
+
+  // Fetch price history (limit to last 90 days or 100 points to keep it light)
+  const history = await db
+    .select()
+    .from(priceHistory)
+    .where(eq(priceHistory.productId, p.id))
+    .orderBy(priceHistory.recordedAt);
+
+  return mapDbProduct(p, prs, history);
 }
 
 export async function getSimilarProducts(

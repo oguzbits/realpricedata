@@ -3,7 +3,85 @@
 import { cn } from "@/lib/utils";
 import { Bell } from "lucide-react";
 
-export function IdealoPriceChart() {
+interface IdealoPriceChartProps {
+  history?: { date: string; price: number }[];
+}
+
+export function IdealoPriceChart({ history = [] }: IdealoPriceChartProps) {
+  // 1. Process Data
+  const data = history
+    .map((h) => ({
+      date: new Date(h.date).getTime(),
+      price: h.price,
+    }))
+    .sort((a, b) => a.date - b.date);
+
+  // 2. Fallback for no data
+  if (data.length < 2) {
+    return (
+      <div className="w-full max-w-[290px]">
+        <div className="embedded-chart-container relative mb-4 flex h-[195px] w-full items-center justify-center border border-[#e5e5e5] bg-white text-xs text-[#999]">
+          Keine Preisdaten verfügbar
+        </div>
+      </div>
+    );
+  }
+
+  // 3. Calculate Scales
+  const minPrice = Math.min(...data.map((d) => d.price));
+  const maxPrice = Math.max(...data.map((d) => d.price));
+  const minDate = data[0].date;
+  const maxDate = data[data.length - 1].date;
+
+  const width = 290;
+  const height = 150;
+  const padding = 5; // Internal padding to avoid cutting off stroke
+
+  const getX = (date: number) => {
+    return ((date - minDate) / (maxDate - minDate)) * width;
+  };
+
+  const getY = (price: number) => {
+    // Invert Y axis (0 is top), add padding
+    const range = maxPrice - minPrice || 1; // Avoid division by zero
+    // Using 90% of height to keep line within bounds
+    return height - ((price - minPrice) / range) * (height - 20) - 10;
+  };
+
+  // 4. Generate SVG Path
+  const points = data.map((d) => `${getX(d.date)},${getY(d.price)}`).join(" ");
+  // Smooth line using a simple polyline for now (or improve with curves if needed)
+  // For simplicity and robustness, using Polyline is fine for price charts.
+  // Ideally, use a helper for bezier curves if "faithful" look requires it.
+  const linePath = `M${points}`;
+
+  // Fill path: Close the loop (down to bottom right, over to bottom left)
+  const fillPath = `${linePath} L${width},${height} L0,${height} Z`;
+
+  // 5. Generate Axis Labels (Simple)
+  const months = [
+    "Jan",
+    "Feb",
+    "Mär",
+    "Apr",
+    "Mai",
+    "Jun",
+    "Jul",
+    "Aug",
+    "Sep",
+    "Okt",
+    "Nov",
+    "Dez",
+  ];
+
+  // Get 4 evenly spaced labels
+  const dateLabels = [];
+  const step = (maxDate - minDate) / 3;
+  for (let i = 0; i <= 3; i++) {
+    const d = new Date(minDate + step * i);
+    dateLabels.push(months[d.getMonth()]);
+  }
+
   return (
     <div className="w-full max-w-[290px]">
       {/* Container matching .embedded-chart-container */}
@@ -32,7 +110,7 @@ export function IdealoPriceChart() {
         <div className="relative h-[150px] w-full bg-white">
           <svg
             className="h-full w-full"
-            viewBox="0 0 290 150"
+            viewBox={`0 0 ${width} ${height}`}
             preserveAspectRatio="none"
           >
             <defs>
@@ -47,21 +125,20 @@ export function IdealoPriceChart() {
                 <stop offset="100%" stopColor="#ff6600" stopOpacity="0" />
               </linearGradient>
             </defs>
+            {/* Fill */}
+            <path d={fillPath} fill="url(#priceGradientIdealo)" />
             {/* Line */}
             <path
-              d="M0,100 Q50,95 80,85 T140,60 T200,70 T290,40"
+              d={linePath}
               fill="none"
               stroke="#ff6600"
               strokeWidth="2"
-            />
-            {/* Fill */}
-            <path
-              d="M0,100 Q50,95 80,85 T140,60 T200,70 T290,40 L290,150 L0,150 Z"
-              fill="url(#priceGradientIdealo)"
+              strokeLinejoin="round"
+              strokeLinecap="round"
             />
           </svg>
 
-          {/* Grid lines (mock) */}
+          {/* Grid lines (simple overlay) */}
           <div className="pointer-events-none absolute inset-0 flex flex-col justify-between py-2 opacity-5">
             <div className="h-px w-full bg-black"></div>
             <div className="h-px w-full bg-black"></div>
@@ -72,10 +149,9 @@ export function IdealoPriceChart() {
 
         {/* Date Axis */}
         <div className="mt-1 flex justify-between px-1 text-[10px] text-[#767676]">
-          <span>Okt</span>
-          <span>Nov</span>
-          <span>Dez</span>
-          <span>Jan</span>
+          {dateLabels.map((label, i) => (
+            <span key={i}>{label}</span>
+          ))}
         </div>
       </div>
 

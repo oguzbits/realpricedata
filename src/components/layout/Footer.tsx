@@ -32,17 +32,26 @@ export function Footer() {
             </div>
           </div>
 
-          {/* Categories Column */}
-          <nav className="text-sm" aria-label="Beliebte Kategorien">
-            <h4 className="mb-4 font-semibold text-white">Kategorien</h4>
+          {/* Categories Column - Core PC Components */}
+          <nav className="text-sm" aria-label="PC-Komponenten">
+            <h4 className="mb-4 font-semibold text-white">PC-Komponenten</h4>
             <ul className="space-y-3">
               <li>
                 <Link
-                  href="/hard-drives"
+                  href="/cpu"
                   className="text-white/70 no-underline transition-colors hover:text-white"
                   prefetch={true}
                 >
-                  Festplatten & SSDs
+                  Prozessoren (CPU)
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/gpu"
+                  className="text-white/70 no-underline transition-colors hover:text-white"
+                  prefetch={true}
+                >
+                  Grafikkarten (GPU)
                 </Link>
               </li>
               <li>
@@ -56,11 +65,11 @@ export function Footer() {
               </li>
               <li>
                 <Link
-                  href="/power-supplies"
+                  href="/hard-drives"
                   className="text-white/70 no-underline transition-colors hover:text-white"
                   prefetch={true}
                 >
-                  Netzteile
+                  Festplatten & SSDs
                 </Link>
               </li>
               <li>

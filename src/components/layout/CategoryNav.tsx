@@ -8,25 +8,26 @@ import {
   HardDrive,
   MemoryStick,
   Monitor,
-  MousePointer2,
+  Video,
   Zap,
 } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 
+// Core PC component categories - prioritized for focus
 const categories: {
   slug: CategorySlug | null;
   label: string;
   icon: any;
 }[] = [
   { slug: null, label: "Alle Kategorien", icon: Grid3X3 },
-  { slug: "hard-drives", label: "Festplatten", icon: HardDrive },
-  { slug: "ram", label: "Arbeitsspeicher", icon: MemoryStick },
   { slug: "cpu", label: "Prozessoren", icon: Cpu },
-  { slug: "monitors", label: "Monitore", icon: Monitor },
-  { slug: "mice", label: "Mäuse", icon: MousePointer2 },
+  { slug: "gpu", label: "Grafikkarten", icon: Video },
+  { slug: "ram", label: "Arbeitsspeicher", icon: MemoryStick },
+  { slug: "hard-drives", label: "Festplatten", icon: HardDrive },
   { slug: "power-supplies", label: "Netzteile", icon: Zap },
+  { slug: "monitors", label: "Monitore", icon: Monitor },
 ];
 
 export function CategoryNav({ country }: { country: string }) {

@@ -1,20 +1,12 @@
-import { LanguageSwitcher } from "@/components/LanguageSwitcher";
-import { getAlternateLanguages, getOpenGraph } from "@/lib/metadata";
+import { getOpenGraph } from "@/lib/metadata";
 import { BRAND_DOMAIN, CONTACT_EMAIL, getSiteUrl } from "@/lib/site-config";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: `Impressum | ${BRAND_DOMAIN}`,
-  description: `Impressum und rechtliche Angaben für ${BRAND_DOMAIN}. Informationen gemäß § 5 DDG, Kontakt details und Haftungsausschluss.`,
+  description: `Impressum und rechtliche Angaben für ${BRAND_DOMAIN}. Informationen gemäß § 5 DDG, Kontaktdaten und Haftungsausschluss.`,
   alternates: {
     canonical: getSiteUrl("/impressum"),
-    languages: getAlternateLanguages(
-      "legal-notice",
-      {
-        de: "/impressum",
-      },
-      false,
-    ),
   },
   openGraph: getOpenGraph({
     title: `Impressum | ${BRAND_DOMAIN}`,
@@ -27,8 +19,6 @@ export default function ImpressumPage() {
   return (
     <div className="container mx-auto max-w-4xl px-4 py-12">
       <h1 className="mb-8 text-4xl font-bold">Impressum</h1>
-
-      <LanguageSwitcher currentLang="de" currentPath="legal-notice" />
 
       <div className="prose dark:prose-invert max-w-none space-y-8">
         <section>
@@ -58,7 +48,8 @@ export default function ImpressumPage() {
               Umsatzsteuergesetz:
             </p>
             <p className="text-muted-foreground">
-              Nicht zutreffend (Kleingewerbe / Privatperson)
+              Gewerbeanmeldung als Einzelunternehmen beantragt. Umsatzsteuer-ID
+              wird nach Erteilung hier ergänzt.
             </p>
           </div>
         </section>
@@ -67,7 +58,7 @@ export default function ImpressumPage() {
           <h2 className="mb-4 text-2xl font-semibold">Handelsregister</h2>
           <div className="bg-card/50 border-primary/20 rounded-lg border p-6">
             <p className="text-muted-foreground">
-              Nicht eingetragen (Kleingewerbe / Privatperson)
+              Einzelunternehmen (Gewerbeanmeldung beantragt)
             </p>
           </div>
         </section>

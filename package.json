@@ -18,6 +18,7 @@
     "collect-history": "bun run scripts/collect-price-history.ts"
   },
   "dependencies": {
+    "@libsql/client": "^0.17.0",
     "@mdx-js/loader": "^3.1.1",
     "@mdx-js/react": "^3.1.1",
     "@next/mdx": "^16.1.1",

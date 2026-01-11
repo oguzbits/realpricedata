@@ -1,6 +1,5 @@
-import { LanguageSwitcher } from "@/components/LanguageSwitcher";
 import { BUILD_TIME } from "@/lib/build-config";
-import { getAlternateLanguages, getOpenGraph } from "@/lib/metadata";
+import { getOpenGraph } from "@/lib/metadata";
 import { BRAND_DOMAIN, CONTACT_EMAIL, getSiteUrl } from "@/lib/site-config";
 import type { Metadata } from "next";
 
@@ -9,13 +8,6 @@ export const metadata: Metadata = {
   description: `Datenschutzerklärung für ${BRAND_DOMAIN}. Erfahren Sie alles über Datenschutz, Ihre Rechte und unsere cookiefreie Analyse.`,
   alternates: {
     canonical: getSiteUrl("/datenschutz"),
-    languages: getAlternateLanguages(
-      "privacy",
-      {
-        de: "/datenschutz",
-      },
-      false,
-    ),
   },
   openGraph: getOpenGraph({
     title: `Datenschutzerklärung | ${BRAND_DOMAIN}`,
@@ -34,8 +26,6 @@ export default function DatenschutzPage() {
   return (
     <div className="container mx-auto max-w-4xl px-4 py-12">
       <h1 className="mb-8 text-4xl font-bold">Datenschutzerklärung</h1>
-
-      <LanguageSwitcher currentLang="de" currentPath="privacy" />
 
       <div className="prose dark:prose-invert max-w-none space-y-8">
         <section>
@@ -130,11 +120,11 @@ export default function DatenschutzPage() {
             </h3>
             <p>
               Wir nutzen den &quot;Local Storage&quot; Ihres Browsers, um Ihre
-              regionale Präferenz (z. B. den gewählten Marktplatz wie USA oder
-              Deutschland) zu speichern. Dies dient ausschließlich der technisch
-              korrekten Darstellung von Währungen, Preisen und regionalen
-              Inhalten. Diese Daten sind rein funktional und werden nicht zu
-              Tracking-Zwecken oder zur Erstellung von Nutzerprofilen verwendet.
+              Einstellungen (z. B. Filter-Präferenzen auf Produktseiten) zu
+              speichern. Dies dient ausschließlich der technischen
+              Funktionalität und verbesserten Nutzererfahrung. Diese Daten sind
+              rein funktional und werden nicht zu Tracking-Zwecken oder zur
+              Erstellung von Nutzerprofilen verwendet.
             </p>
 
             <h3 className="text-lg font-semibold">Affiliate-Links (Amazon)</h3>

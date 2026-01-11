@@ -35,7 +35,7 @@ export const BRAND_DOMAIN = "cleverprices.com";
  * Full site description for SEO
  */
 export const SITE_DESCRIPTION =
-  "Amazon price tracker for hardware & storage. Compare HDD, SSD, and RAM by true cost per TB/GB. Find the best value hardware deals instantly.";
+  "Preisvergleich für Hardware & Technik. Vergleichen Sie Festplatten, SSDs und RAM nach dem echten Preis pro TB/GB. Finden Sie sofort die besten Hardware-Angebote.";
 
 // =============================================================================
 // CONTACT
@@ -73,7 +73,7 @@ export const TITLE_SUFFIX = BRAND_DOMAIN;
 /**
  * Default meta title for homepage
  */
-export const DEFAULT_TITLE = `Amazon Unit Price Tracker & Deals | ${BRAND_DOMAIN}`;
+export const DEFAULT_TITLE = `Preisvergleich für Hardware & Technik | ${BRAND_DOMAIN}`;
 
 /**
  * Title template for Next.js metadata

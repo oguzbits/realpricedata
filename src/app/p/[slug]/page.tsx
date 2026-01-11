@@ -1,10 +1,6 @@
 import { IdealoProductPage } from "@/components/product/IdealoProductPage";
 import { allCategories, type CategorySlug } from "@/lib/categories";
-import {
-  DEFAULT_COUNTRY,
-  getAllCountries,
-  type CountryCode,
-} from "@/lib/countries";
+import { DEFAULT_COUNTRY, getAllCountries } from "@/lib/countries";
 import { dataAggregator } from "@/lib/data-sources";
 import { getAlternateLanguages, getOpenGraph } from "@/lib/metadata";
 import { getAllProducts, getProductBySlug } from "@/lib/product-registry";
@@ -21,6 +17,13 @@ interface Props {
 // Generate static params for all products (Germany only)
 export async function generateStaticParams() {
   const products = await getAllProducts();
+
+  // Cache Components requires at least one result
+  // If no products in DB yet, return a placeholder that will 404
+  if (products.length === 0) {
+    return [{ slug: "[slug]" }];
+  }
+
   return products.map((product) => ({
     slug: product.slug,
   }));

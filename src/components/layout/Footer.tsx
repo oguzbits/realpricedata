@@ -127,7 +127,11 @@ export function Footer() {
         {/* Bottom Bar */}
         <div className="mt-10 border-t border-white/10 pt-6">
           <div className="flex flex-col items-center justify-between gap-4 text-sm text-white/60 sm:flex-row">
-            <p>Als Amazon-Partner verdienen wir an qualifizierten Verkäufen.</p>
+            <p>
+              * Affiliate-Hinweis: Wir erhalten bei qualifizierten Käufen über
+              unsere Links eine kleine Provision. Dies hat keinen Einfluss auf
+              den Preis für Sie.
+            </p>
             <p>© {COPYRIGHT_YEAR} cleverprices.com. Alle Rechte vorbehalten.</p>
           </div>
         </div>

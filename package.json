@@ -4,8 +4,9 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "db:setup": "mkdir -p data && npx drizzle-kit push --force && npx tsx scripts/seed-mock-data.ts",
-    "build": "bun run db:setup && next build",
+    "db:setup": "mkdir -p data && DATABASE_PATH=file:./data/cleverprices.db npx drizzle-kit push && DATABASE_PATH=file:./data/cleverprices.db npx tsx scripts/seed-mock-data.ts",
+    "db:reset": "rm -f data/cleverprices.db && bun run db:setup",
+    "build": "mkdir -p data && DATABASE_PATH=file:./data/cleverprices.db npx drizzle-kit push && DATABASE_PATH=file:./data/cleverprices.db npx tsx scripts/seed-mock-data.ts && DATABASE_PATH=file:./data/cleverprices.db next build",
     "start": "next start",
     "lint": "eslint",
     "format": "prettier --write .",

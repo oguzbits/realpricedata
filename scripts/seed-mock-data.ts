@@ -4,7 +4,8 @@ import * as schema from "@/db/schema";
 import { products, prices, priceHistory, productOffers } from "@/db/schema";
 import { sql } from "drizzle-orm";
 
-const client = createClient({ url: "file:./data/cleverprices.db" });
+const dbPath = process.env.DATABASE_PATH || "file:./data/cleverprices.db";
+const client = createClient({ url: dbPath });
 const db = drizzle(client, { schema });
 
 async function main() {
@@ -41,7 +42,18 @@ async function main() {
   };
 
   try {
-    // 1. Insert Product
+    // 1. Check if product already exists
+    const existing = await db.query.products.findFirst({
+      where: (products, { eq }) => eq(products.slug, product.slug),
+    });
+
+    if (existing) {
+      console.log(`ℹ️ Product ${product.slug} already exists. Skipping seed.`);
+      process.exit(0);
+      return;
+    }
+
+    // 2. Insert Product
     const [insertedProduct] = await db
       .insert(products)
       .values({
@@ -51,7 +63,7 @@ async function main() {
       .returning({ id: products.id });
 
     console.log(
-      `Included product: ${product.slug} (ID: ${insertedProduct.id})`,
+      `✅ Seeded product: ${product.slug} (ID: ${insertedProduct.id})`,
     );
 
     // 2. Insert Price Info

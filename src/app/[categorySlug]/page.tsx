@@ -112,7 +112,6 @@ export default async function DedicatedCategoryPage({
       <ParentCategoryView
         parentCategory={stripCategoryIcon(category)}
         childCategories={childCategories.map(stripCategoryIcon)}
-        countryCode={DEFAULT_COUNTRY}
         bestsellers={bestsellers.map(transformProduct)}
         newProducts={newProducts.map(transformProduct)}
         deals={deals.map(transformProduct)}

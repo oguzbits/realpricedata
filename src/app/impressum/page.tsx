@@ -22,43 +22,56 @@ export default function ImpressumPage() {
 
       <div className="prose dark:prose-invert max-w-none space-y-8">
         <section>
-          <h2 className="mb-4 text-2xl font-semibold">Angaben gemäß § 5 DDG</h2>
-          <div className="bg-card/50 border-primary/20 rounded-lg border p-6">
-            <p className="mb-2">
+          <h2 className="mb-4 text-2xl font-semibold text-[#2d2d2d]">
+            Angaben gemäß § 5 DDG
+          </h2>
+          <div className="rounded border border-[#e5e5e5] bg-white p-6 shadow-sm">
+            <p className="mb-2 text-[#333]">
               <strong>Oguz Öztürk</strong>
             </p>
-            <p className="mb-2">Boberger Anger 87</p>
-            <p className="mb-2">21031 Hamburg</p>
-            <p className="mb-2">Deutschland</p>
+            <p className="mb-2 text-[#555]">Boberger Anger 87</p>
+            <p className="mb-2 text-[#555]">21031 Hamburg</p>
+            <p className="mb-2 text-[#555]">Deutschland</p>
           </div>
         </section>
 
         <section>
-          <h2 className="mb-4 text-2xl font-semibold">Kontakt</h2>
-          <div className="bg-card/50 border-primary/20 rounded-lg border p-6">
-            <p className="mb-2">E-Mail: {CONTACT_EMAIL}</p>
+          <h2 className="mb-4 text-2xl font-semibold text-[#2d2d2d]">
+            Kontakt
+          </h2>
+          <div className="rounded border border-[#e5e5e5] bg-white p-6 shadow-sm">
+            <p className="mb-2 text-[#555]">
+              E-Mail:{" "}
+              <a
+                href={`mailto:${CONTACT_EMAIL}`}
+                className="text-[#0771d0] hover:underline"
+              >
+                {CONTACT_EMAIL}
+              </a>
+            </p>
           </div>
         </section>
 
         <section>
-          <h2 className="mb-4 text-2xl font-semibold">Umsatzsteuer-ID</h2>
-          <div className="bg-card/50 border-primary/20 rounded-lg border p-6">
-            <p className="mb-2">
+          <h2 className="mb-4 text-2xl font-semibold text-[#2d2d2d]">
+            Umsatzsteuer-ID
+          </h2>
+          <div className="rounded border border-[#e5e5e5] bg-white p-6 shadow-sm">
+            <p className="mb-2 text-[#555]">
               Umsatzsteuer-Identifikationsnummer gemäß § 27 a
               Umsatzsteuergesetz:
             </p>
-            <p className="text-muted-foreground">
-              Gewerbeanmeldung als Einzelunternehmen beantragt. Umsatzsteuer-ID
-              wird nach Erteilung hier ergänzt.
-            </p>
+            <p className="text-[#767676] italic">(Beantragt / In Gründung)</p>
           </div>
         </section>
 
         <section>
-          <h2 className="mb-4 text-2xl font-semibold">Handelsregister</h2>
-          <div className="bg-card/50 border-primary/20 rounded-lg border p-6">
-            <p className="text-muted-foreground">
-              Einzelunternehmen (Gewerbeanmeldung beantragt)
+          <h2 className="mb-4 text-2xl font-semibold text-[#2d2d2d]">
+            Handelsregister
+          </h2>
+          <div className="rounded border border-[#e5e5e5] bg-white p-6 shadow-sm">
+            <p className="text-[#767676]">
+              Einzelunternehmen (Kleingewerbe nach § 19 UStG Regelung möglich)
             </p>
           </div>
         </section>

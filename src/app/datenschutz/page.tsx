@@ -29,15 +29,15 @@ export default function DatenschutzPage() {
 
       <div className="prose dark:prose-invert max-w-none space-y-8">
         <section>
-          <h2 className="mb-4 text-2xl font-semibold">
+          <h2 className="mb-4 text-2xl font-semibold text-[#2d2d2d]">
             1. Datenschutz auf einen Blick
           </h2>
 
-          <h3 className="mt-6 mb-3 text-xl font-semibold">
+          <h3 className="mt-6 mb-3 text-xl font-semibold text-[#333]">
             Allgemeine Hinweise
           </h3>
-          <div className="bg-card/50 border-primary/20 mb-6 rounded-lg border p-6">
-            <p className="mb-4">
+          <div className="mb-6 rounded border border-[#e5e5e5] bg-white p-6 shadow-sm">
+            <p className="mb-4 text-[#555]">
               Die folgenden Hinweise geben einen einfachen Überblick darüber,
               was mit Ihren personenbezogenen Daten passiert, wenn Sie diese
               Website besuchen. Personenbezogene Daten sind alle Daten, mit
@@ -45,23 +45,31 @@ export default function DatenschutzPage() {
             </p>
           </div>
 
-          <h3 className="mb-3 text-xl font-semibold">
+          <h3 className="mb-3 text-xl font-semibold text-[#333]">
             Wer ist verantwortlich?
           </h3>
-          <div className="bg-card/50 border-primary/20 mb-6 rounded-lg border p-6">
-            <p className="mb-4">
+          <div className="mb-6 rounded border border-[#e5e5e5] bg-white p-6 shadow-sm">
+            <p className="mb-4 text-[#333]">
               <strong>Oguz Öztürk</strong>
             </p>
-            <p className="mb-2">Boberger Anger 87</p>
-            <p className="mb-2">21031 Hamburg</p>
-            <p className="mb-4">E-Mail: {CONTACT_EMAIL}</p>
+            <p className="mb-2 text-[#555]">Boberger Anger 87</p>
+            <p className="mb-2 text-[#555]">21031 Hamburg</p>
+            <p className="mb-4 text-[#555]">
+              E-Mail:{" "}
+              <a
+                href={`mailto:${CONTACT_EMAIL}`}
+                className="text-[#0771d0] hover:underline"
+              >
+                {CONTACT_EMAIL}
+              </a>
+            </p>
           </div>
 
-          <h3 className="mb-3 text-xl font-semibold">
+          <h3 className="mb-3 text-xl font-semibold text-[#333]">
             Welche Rechte haben Sie?
           </h3>
-          <div className="bg-card/50 border-primary/20 rounded-lg border p-6">
-            <p>
+          <div className="rounded border border-[#e5e5e5] bg-white p-6 shadow-sm">
+            <p className="text-[#555]">
               Sie haben jederzeit das Recht auf unentgeltliche Auskunft,
               Berichtigung, Löschung, Einschränkung der Verarbeitung oder
               Widerruf Ihrer Einwilligung. Außerdem steht Ihnen ein
@@ -71,13 +79,15 @@ export default function DatenschutzPage() {
         </section>
 
         <section>
-          <h2 className="mb-4 text-2xl font-semibold">2. Server-Log-Dateien</h2>
-          <div className="bg-card/50 border-primary/20 rounded-lg border p-6">
-            <p className="mb-4">
+          <h2 className="mb-4 text-2xl font-semibold text-[#2d2d2d]">
+            2. Server-Log-Dateien
+          </h2>
+          <div className="rounded border border-[#e5e5e5] bg-white p-6 shadow-sm">
+            <p className="mb-4 text-[#555]">
               Beim Besuch dieser Website werden automatisch Informationen
               erfasst:
             </p>
-            <ul className="mb-4 list-inside list-disc space-y-2">
+            <ul className="mb-4 list-inside list-disc space-y-2 text-[#555]">
               <li>Browsertyp und -version</li>
               <li>Verwendetes Betriebssystem</li>
               <li>Referrer URL</li>
@@ -85,7 +95,7 @@ export default function DatenschutzPage() {
               <li>Uhrzeit der Anfrage</li>
               <li>IP-Adresse</li>
             </ul>
-            <p>
+            <p className="text-[#555]">
               Rechtsgrundlage: Art. 6 Abs. 1 lit. f DSGVO (berechtigtes
               Interesse an technisch fehlerfreier Darstellung)
             </p>
@@ -93,11 +103,11 @@ export default function DatenschutzPage() {
         </section>
 
         <section>
-          <h2 className="mb-4 text-2xl font-semibold">
+          <h2 className="mb-4 text-2xl font-semibold text-[#2d2d2d]">
             3. Cookies & Analyse-Tools
           </h2>
-          <div className="bg-card/50 border-primary/20 space-y-4 rounded-lg border p-6">
-            <p>
+          <div className="space-y-4 rounded border border-[#e5e5e5] bg-white p-6 shadow-sm">
+            <p className="text-[#555]">
               Diese Website ist so konzipiert, dass sie **keine eigenen
               Cookies** für das Tracking oder die Funktionalität auf Ihrem
               Endgerät speichert. Wir legen großen Wert auf Datenschutz und
@@ -105,20 +115,20 @@ export default function DatenschutzPage() {
               herkömmlichen Analyse-Tools.
             </p>
 
-            <h3 className="text-lg font-semibold">
+            <h3 className="text-lg font-semibold text-[#333]">
               Vercel Analytics & Speed Insights (Cookieless)
             </h3>
-            <p>
+            <p className="text-[#555]">
               Wir nutzen Vercel Analytics und Speed Insights, um die technische
               Performance und Nutzung unserer Website anonym zu analysieren.
               Dabei werden **keine Cookies gesetzt**. Die Daten werden
               vollständig anonymisiert erhoben und dienen ausschließlich der
               Verbesserung der Website-Geschwindigkeit und Nutzererfahrung.
             </p>
-            <h3 className="text-lg font-semibold">
+            <h3 className="text-lg font-semibold text-[#333]">
               Local Storage (Funktionale Speicherung)
             </h3>
-            <p>
+            <p className="text-[#555]">
               Wir nutzen den &quot;Local Storage&quot; Ihres Browsers, um Ihre
               Einstellungen (z. B. Filter-Präferenzen auf Produktseiten) zu
               speichern. Dies dient ausschließlich der technischen
@@ -127,8 +137,10 @@ export default function DatenschutzPage() {
               Erstellung von Nutzerprofilen verwendet.
             </p>
 
-            <h3 className="text-lg font-semibold">Affiliate-Links (Amazon)</h3>
-            <p>
+            <h3 className="text-lg font-semibold text-[#333]">
+              Affiliate-Links (Amazon)
+            </h3>
+            <p className="text-[#555]">
               Obwohl diese Website selbst keine Cookies setzt, führt das
               Anklicken eines Affiliate-Links (z. B. zu Amazon) dazu, dass Sie
               auf die Website des Anbieters weitergeleitet werden. In diesem

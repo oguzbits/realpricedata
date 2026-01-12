@@ -67,8 +67,14 @@ export async function IdealoCategoryPage({
   const viewMode = searchParams.view || "grid";
 
   // Get filtered products
-  const { products, filteredCount, unitLabel, hasProducts, filters } =
-    await getCategoryProducts(category.slug, countryCode, searchParams);
+  const {
+    products,
+    filteredCount,
+    unitLabel,
+    hasProducts,
+    filters,
+    lastUpdated,
+  } = await getCategoryProducts(category.slug, countryCode, searchParams);
 
   // Breadcrumb items
   const breadcrumbItems = [
@@ -181,9 +187,21 @@ export async function IdealoCategoryPage({
                 {/* ============================================ */}
                 {/* DISCLAIMER */}
                 {/* ============================================ */}
-                <div className="mt-4 text-center text-[14px] text-[#767676]">
-                  Preise inkl. MwSt., ggf. zzgl. Versand. Preise und
+                <div className="mt-4 text-center text-[12px] text-[#767676]">
+                  * Preise inkl. MwSt., ggf. zzgl. Versand. Preise und
                   Verfügbarkeit können sich ändern.
+                  {lastUpdated && (
+                    <span className="mt-1 block">
+                      Zuletzt aktualisiert:{" "}
+                      {new Date(lastUpdated).toLocaleString("de-DE", {
+                        day: "2-digit",
+                        month: "2-digit",
+                        year: "numeric",
+                        hour: "2-digit",
+                        minute: "2-digit",
+                      })}
+                    </span>
+                  )}
                 </div>
 
                 {/* ============================================ */}

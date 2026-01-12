@@ -162,9 +162,15 @@ export function IdealoGridCard({
                 ab
               </span>
               <span className="text-[20px] font-bold text-[#f97316]">
-                {formatCurrency(product.price, countryCode)}
+                {formatCurrency(product.price, countryCode)} *
               </span>
             </div>
+            {product.pricePerUnit && (
+              <div className="mt-1 text-right text-[12px] text-[#767676]">
+                ({formatCurrency(product.pricePerUnit, countryCode)} /{" "}
+                {product.capacityUnit || "Einheit"})
+              </div>
+            )}
           </div>
 
           {/* ============================================ */}

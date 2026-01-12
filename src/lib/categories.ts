@@ -20,10 +20,12 @@ import {
   Package,
   Router,
   Server,
+  Search,
   Smartphone,
   Speaker,
   Tablet,
   Thermometer,
+  Tv,
   Usb,
   Video,
   Watch,
@@ -51,6 +53,7 @@ export type CategorySlug =
   | "gpu"
   | "external-storage"
   // PC Components
+  | "motherboards"
   | "pc-cases"
   | "cpu-coolers"
   | "case-fans"
@@ -90,7 +93,13 @@ export type CategorySlug =
   // Gaming
   | "game-controllers"
   | "vr-headsets"
-  | "capture-cards";
+  | "vr-headsets"
+  | "capture-cards"
+  // High Priority Consumer Tech
+  | "smartphones"
+  | "tvs"
+  | "laptops"
+  | "consoles";
 
 export interface Category {
   name: string;
@@ -107,6 +116,7 @@ export interface Category {
   /** Display label for unit (e.g., "per TB", "per GB") */
   unitLabel?: string;
   hidden?: boolean;
+  isFeatured?: boolean; // Show in popular categories on homepage
   popularFilters?: { label: string; params: string }[];
   aliases?: string[]; // SEO and URL aliases
 }
@@ -138,6 +148,7 @@ const CATEGORY_MAP: Record<CategorySlug, Omit<Category, "slug">> = {
     categoryType: "analytical",
     unitType: "TB",
     unitLabel: "pro TB",
+    isFeatured: true,
     metaTitle: `Festplatten & SSDs - Preis pro TB vergleichen | ${BRAND_DOMAIN}`,
     metaDescription:
       "Finden Sie die besten Festplatten- und SSD-Angebote durch Preisvergleich pro Terabyte. Vergleichen Sie interne und externe Speicher von Top-Marken.",
@@ -210,7 +221,9 @@ const CATEGORY_MAP: Record<CategorySlug, Omit<Category, "slug">> = {
     categoryType: "analytical",
     unitType: "GB",
     unitLabel: "pro GB VRAM",
+
     hidden: false, // Unhide when ready to launch
+    isFeatured: true,
     metaTitle: `Grafikkarten (GPUs) - Preise vergleichen | ${BRAND_DOMAIN}`,
     metaDescription:
       "Finden Sie die besten Grafikkarten-Angebote. Vergleichen Sie NVIDIA GeForce und AMD Radeon GPUs nach Preis und Leistung.",
@@ -232,7 +245,9 @@ const CATEGORY_MAP: Record<CategorySlug, Omit<Category, "slug">> = {
     icon: Monitor,
     parent: "electronics",
     categoryType: "standard",
+
     hidden: false, // Unhide when ready to launch
+    isFeatured: true,
     metaTitle: `Monitore - Preise vergleichen | ${BRAND_DOMAIN}`,
     metaDescription:
       "Finden Sie die besten Monitor-Angebote. Vergleichen Sie 4K-, Ultrawide- und Gaming-Monitore von LG, Samsung, Dell und ASUS.",
@@ -463,6 +478,86 @@ const CATEGORY_MAP: Record<CategorySlug, Omit<Category, "slug">> = {
     aliases: ["tablet-pc"],
   },
 
+  smartphones: {
+    name: "Smartphones",
+    description: "Android-Smartphones und iPhones",
+    icon: Smartphone,
+    parent: "electronics",
+    categoryType: "standard",
+
+    hidden: false,
+    isFeatured: true,
+    metaTitle: `Smartphones - Preise vergleichen | ${BRAND_DOMAIN}`,
+    metaDescription:
+      "Vergleichen Sie Smartphones von Samsung, Apple, Xiaomi und Google. Finden Sie die besten Preise für iPhones und Galaxy-Modelle.",
+    popularFilters: [
+      { label: "iPhone", params: "brand=Apple" },
+      { label: "Samsung Galaxy", params: "brand=Samsung" },
+      { label: "5G", params: "features=5g" },
+    ],
+    aliases: ["handys", "mobiles"],
+  },
+
+  laptops: {
+    name: "Laptops",
+    description: "Notebooks, Ultrabooks und Gaming-Laptops",
+    icon: Laptop,
+    parent: "electronics",
+    categoryType: "standard",
+
+    hidden: false,
+    isFeatured: true,
+    metaTitle: `Laptops & Notebooks - Preise vergleichen | ${BRAND_DOMAIN}`,
+    metaDescription:
+      "Vergleichen Sie Laptops von Apple, Lenovo, Dell und ASUS. Gaming-Notebooks, Business-Laptops und MacBooks.",
+    popularFilters: [
+      { label: "Gaming-Laptops", params: "type=gaming" },
+      { label: "MacBook", params: "brand=Apple" },
+      { label: "Ultrabooks", params: "type=ultrabook" },
+    ],
+    aliases: ["notebooks"],
+  },
+
+  tvs: {
+    name: "Fernseher",
+    description: "4K, OLED und QLED Fernseher",
+    icon: Tv,
+    parent: "electronics",
+    categoryType: "standard",
+
+    hidden: false,
+    isFeatured: true,
+    metaTitle: `Fernseher (TVs) - Preise vergleichen | ${BRAND_DOMAIN}`,
+    metaDescription:
+      "Vergleichen Sie 4K-, OLED- und QLED-Fernseher von LG, Samsung, Sony und Philips. Finden Sie die besten TV-Angebote.",
+    popularFilters: [
+      { label: "55 Zoll", params: "size=55" },
+      { label: "65 Zoll", params: "size=65" },
+      { label: "OLED", params: "technology=oled" },
+    ],
+    aliases: ["tv", "fernseher"],
+  },
+
+  consoles: {
+    name: "Spielekonsolen",
+    description: "PlayStation, Xbox und Nintendo Switch",
+    icon: Gamepad2,
+    parent: "electronics",
+    categoryType: "standard",
+
+    hidden: false,
+    isFeatured: true,
+    metaTitle: `Spielekonsolen - Preise vergleichen | ${BRAND_DOMAIN}`,
+    metaDescription:
+      "Vergleichen Sie Preise für PS5, Xbox Series X und Nintendo Switch. Konsolen-Bundles und Angebote.",
+    popularFilters: [
+      { label: "PlayStation 5", params: "platform=ps5" },
+      { label: "Nintendo Switch", params: "platform=switch" },
+      { label: "Xbox Series X", params: "platform=xbox" },
+    ],
+    aliases: ["konsolen", "gaming-consoles"],
+  },
+
   smartwatches: {
     name: "Smartwatches",
     description: "Smartwatches und Fitness-Tracker",
@@ -565,6 +660,24 @@ const CATEGORY_MAP: Record<CategorySlug, Omit<Category, "slug">> = {
       { label: "1000VA+", params: "capacity=1000" },
     ],
     aliases: ["usv", "notstrom"],
+  },
+
+  motherboards: {
+    name: "Mainboards",
+    description: "ATX, Micro-ATX und Mini-ITX Mainboards für Intel und AMD",
+    icon: Server, // Ideally use a CircuitBoard icon if available, Server is fallback
+    parent: "electronics",
+    categoryType: "standard",
+    hidden: false,
+    metaTitle: `Mainboards - Preise vergleichen | ${BRAND_DOMAIN}`,
+    metaDescription:
+      "Vergleichen Sie Mainboards für Intel und AMD Prozessoren. Finden Sie die besten Angebote für Z790, B650 und X670 Boards.",
+    popularFilters: [
+      { label: "Sockel 1700", params: "socket=lga1700" },
+      { label: "AM5", params: "socket=am5" },
+      { label: "Z790", params: "chipset=z790" },
+    ],
+    aliases: ["motherboards", "hauptplatine"],
   },
 
   "pc-cases": {

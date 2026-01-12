@@ -5,6 +5,7 @@
  * Focuses on bestsellers and products with good data coverage.
  */
 
+import { updateTokenStatus } from "./token-tracker";
 import type { CountryCode } from "@/lib/countries";
 
 // Environment variable
@@ -27,11 +28,11 @@ export const CATEGORY_BROWSE_NODES: Record<string, Record<string, string>> = {
   // Hard Drives & SSDs
   "hard-drives": {
     us: "1292116011", // Internal SSDs
-    de: "430516031",
+    de: "430168031", // Interne Festplatten / SSDs
   },
   ssd: {
     us: "1292116011",
-    de: "430516031",
+    de: "430168031",
   },
   hdd: {
     us: "1254762011",
@@ -40,7 +41,7 @@ export const CATEGORY_BROWSE_NODES: Record<string, Record<string, string>> = {
   // RAM
   ram: {
     us: "172500",
-    de: "430469031",
+    de: "430178031", // Arbeitsspeicher
   },
   // Power Supplies
   "power-supplies": {
@@ -54,14 +55,48 @@ export const CATEGORY_BROWSE_NODES: Record<string, Record<string, string>> = {
   // CPUs (future)
   cpu: {
     us: "229189",
-    de: "428657031",
+    de: "430177031", // Prozessoren (CPUs)
   },
   // GPUs (future)
   gpu: {
     us: "284822",
-    de: "430502031",
+    de: "430161031", // Grafikkarten
   },
+  // Smartphones
+  smartphones: {
+    us: "7072561011",
+    de: "3468301",
+  },
+  // Laptops
+  laptops: {
+    us: "565108",
+    de: "427957031",
+  },
+  // Monitors
+  monitors: {
+    us: "1292115011",
+    de: "429868031",
+  },
+  // Keyboards & Mice
+  keyboards: { de: "430485031" },
+  mice: { de: "430486031" },
+  // Audio
+  headphones: { de: "570040" },
+  // Mobile
+  tablets: { de: "427958031" },
+  smartwatches: { de: "403290031" },
+  // Home Tech
+  tvs: { de: "1197292" },
+  consoles: { de: "160279031" },
+  // PC Cases
+  "pc-cases": { de: "430174031" },
+  // Motherboards
+  motherboards: { de: "430172031" },
 };
+
+// ... (in getCategoryKeywords function)
+
+// High Priority Consumer Tech
 
 // Keepa product interface (relevant fields for discovery)
 export interface KeepaProductRaw {
@@ -101,6 +136,7 @@ export interface KeepaProductRaw {
   parentAsin?: string;
   variationCSV?: string;
   categories?: number[];
+  categoryTree?: { catId: number; name: string }[];
 }
 
 // Search results type
@@ -138,6 +174,20 @@ interface KeepaBestSellersResponse {
   error?: { type: string; message: string };
 }
 
+interface KeepaDealResponse {
+  tokensConsumed?: number;
+  tokensLeft?: number;
+  deals?: {
+    asin?: string;
+    title?: string;
+    delta?: number;
+    deltaPercent?: number;
+    price?: number;
+    current?: number;
+  }[];
+  error?: { type: string; message: string };
+}
+
 const BASE_URL = "https://api.keepa.com";
 
 /**
@@ -149,6 +199,11 @@ export async function getTokenStatus(): Promise<{
 }> {
   const response = await fetch(`${BASE_URL}/token?key=${KEEPA_API_KEY}`);
   const data = await response.json();
+
+  if (data.tokensLeft !== undefined) {
+    updateTokenStatus(data.tokensLeft);
+  }
+
   return {
     tokensLeft: data.tokensLeft || 0,
     refillRate: data.refillRate || 0,
@@ -202,6 +257,10 @@ export async function searchProducts(
     throw new Error(`Keepa search error: ${data.error.message}`);
   }
 
+  if (data.tokensLeft !== undefined) {
+    updateTokenStatus(data.tokensLeft);
+  }
+
   console.log(
     `[Keepa] Search "${keyword}": ${data.asinList?.length || 0} results, ${data.tokensLeft} tokens left`,
   );
@@ -211,7 +270,7 @@ export async function searchProducts(
 
 /**
  * Get bestsellers for a category
- * Cost: ~1 token
+ * Cost: 50 tokens (for list of up to 500)
  */
 export async function getBestsellers(
   categorySlug: string,
@@ -229,35 +288,107 @@ export async function getBestsellers(
 
   const categoryId = CATEGORY_BROWSE_NODES[categorySlug]?.[country];
   if (!categoryId) {
-    console.warn(
-      `No browse node for ${categorySlug} in ${country}, using search instead`,
+    throw new Error(
+      `No Browse Node mapping found for category "${categorySlug}" in ${country}. Add it to product-discovery.ts.`,
     );
-    // Fallback to keyword search
-    return searchProducts(categorySlug.replace(/-/g, " "), country, {
-      limit,
-      sort: "sales",
-    });
   }
-
   const params = new URLSearchParams({
     key: KEEPA_API_KEY,
     domain: domain.toString(),
     category: categoryId,
   });
 
-  const response = await fetch(`${BASE_URL}/bestsellers?${params}`);
+  const requestUrl = `${BASE_URL}/bestsellers?${params}`;
+  const response = await fetch(requestUrl);
   const data: KeepaBestSellersResponse = await response.json();
 
   if (data.error) {
     throw new Error(`Keepa bestsellers error: ${data.error.message}`);
   }
 
+  if (data.tokensLeft !== undefined) {
+    updateTokenStatus(data.tokensLeft);
+  }
+
   const asins = data.bestSellersList?.asinList || [];
   console.log(
-    `[Keepa] Bestsellers ${categorySlug}/${country}: ${asins.length} ASINs, token info: ${data.tokensLeft}`,
+    `[Keepa] Bestsellers ${categorySlug}/${country}: ${asins.length} ASINs found`,
   );
 
   return asins.slice(0, limit);
+}
+
+/**
+ * Get deals (price drops) for a category
+ * Cost: 5 tokens per 150 items
+ */
+export async function getDeals(
+  categorySlug: string,
+  country: CountryCode = "us",
+  limit: number = 150,
+): Promise<string[]> {
+  if (!KEEPA_API_KEY) {
+    throw new Error("KEEPA_API_KEY not configured");
+  }
+
+  const domain = KEEPA_DOMAINS[country];
+  if (!domain) {
+    throw new Error(`Country ${country} not supported by Keepa`); // Should be domainId
+  }
+
+  const categoryId = CATEGORY_BROWSE_NODES[categorySlug]?.[country];
+  if (!categoryId) {
+    console.warn(
+      `No browse node for ${categorySlug} in ${country}, skipping deals`,
+    );
+    return [];
+  }
+
+  // Define deal query params (looking for significant drops)
+  // This is a complex object in Keepa API usually sent as JSON body
+  try {
+    const dealQuery = {
+      page: 0,
+      domainId: domain,
+      includeCategories: [parseInt(categoryId)],
+      priceTypes: [0, 1], // Amazon and Marketplace New
+      deltaPercentRange: [20, 100],
+      isPrime: true,
+    };
+
+    const response = await fetch(`${BASE_URL}/deal?key=${KEEPA_API_KEY}`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        selection: dealQuery,
+      }),
+    });
+
+    const data: KeepaDealResponse = await response.json();
+
+    if (data.error) {
+      console.warn(
+        `[Keepa] Deals failed for ${categorySlug}: ${data.error.message}`,
+      );
+      return [];
+    }
+
+    if (data.tokensLeft !== undefined) {
+      updateTokenStatus(data.tokensLeft);
+    }
+
+    const asins = data.deals?.map((d) => d.asin!) || [];
+    console.log(
+      `[Keepa] Deals ${categorySlug}/${country}: ${asins.length} ASINs found`,
+    );
+
+    return asins.slice(0, limit);
+  } catch (error) {
+    console.warn(`[Keepa] Deals error for ${categorySlug}:`, error);
+    return [];
+  }
 }
 
 /**
@@ -290,17 +421,24 @@ export async function getProducts(
     key: KEEPA_API_KEY,
     domain: domain.toString(),
     asin: batch.join(","),
-    stats: options.days?.toString() || "90",
     history: options.includeHistory ? "1" : "0",
-    buybox: "0",
-    offers: "0",
   });
+
+  if (options.days && options.days > 0) {
+    params.set("stats", options.days.toString());
+  } else if (options.days === undefined) {
+    params.set("stats", "90");
+  }
 
   const response = await fetch(`${BASE_URL}/product?${params}`);
   const data: KeepaProductResponse = await response.json();
 
   if (data.error) {
     throw new Error(`Keepa product error: ${data.error.message}`);
+  }
+
+  if (data.tokensLeft !== undefined) {
+    updateTokenStatus(data.tokensLeft);
   }
 
   console.log(
@@ -431,6 +569,75 @@ function getCategoryKeywords(categorySlug: string): string[] {
       "NVIDIA RTX 4070",
       "AMD Radeon RX 7900",
       "AMD Radeon RX 7800",
+    ],
+    motherboards: [
+      "Z790 Mainboard",
+      "B650 Mainboard",
+      "X670 Mainboard",
+      "B760 Mainboard",
+      "ASUS ROG Strix",
+      "MSI MAG Tomahawk",
+      "Gigabyte Aorus",
+    ],
+    // High Priority Consumer Tech
+    smartphones: [
+      "iPhone 15 Pro",
+      "Samsung Galaxy S24 Ultra",
+      "Google Pixel 8 Pro",
+      "iPhone 14",
+      "Samsung Galaxy A54",
+      "Xiaomi Redmi Note 13",
+    ],
+    laptops: [
+      "MacBook Air M2",
+      "MacBook Pro M3",
+      "Lenovo ThinkPad X1",
+      "ASUS ROG Zephyrus",
+      "Dell XPS 13",
+      "Gaming Laptop RTX 4060",
+    ],
+    tvs: [
+      "LG OLED C3",
+      "Samsung Neo QLED",
+      "Sony Bravia XR",
+      "Philips Ambilight TV",
+      "4K TV 55 Zoll",
+      "OLED TV 65 Zoll",
+    ],
+    consoles: [
+      "PlayStation 5 Slim",
+      "Xbox Series X",
+      "Nintendo Switch OLED",
+      "Nintendo Switch Lite",
+      "PS5 Bundle",
+    ],
+    monitors: [
+      "Gaming Monitor 144Hz",
+      "4K Monitor 27 Zoll",
+      "Curved Monitor",
+      "LG UltraGear",
+      "Samsung Odyssey",
+      "Dell UltraSharp",
+    ],
+    headphones: [
+      "Sony WH-1000XM5",
+      "Bose QuietComfort Ultra",
+      "Apple AirPods Pro 2",
+      "Sennheiser Momentum 4",
+      "Beyerdynamic DT 770 Pro",
+    ],
+    keyboards: [
+      "Logitech MX Keys",
+      "Keychron K2",
+      "Razer BlackWidow",
+      "Mechanical Keyboard",
+      "Corsair K70",
+    ],
+    mice: [
+      "Logitech MX Master 3S",
+      "Razer DeathAdder V3",
+      "Logitech G502 X",
+      "Gaming Mouse Wireless",
     ],
   };
 

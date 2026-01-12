@@ -60,7 +60,7 @@ export function IdealoHomePage({ products }: IdealoHomePageProps) {
         </h2>
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
           {Object.values(allCategories)
-            .filter((c) => !c.parent && !c.hidden)
+            .filter((c) => !c.hidden && (c.isFeatured || !c.parent))
             .map((cat) => (
               <CategoryCard
                 key={cat.slug}

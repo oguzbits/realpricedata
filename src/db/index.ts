@@ -4,9 +4,8 @@ import { drizzle, type LibSQLDatabase } from "drizzle-orm/libsql";
 import * as schema from "./schema";
 
 // Environment detection
-// Only treat as production if VERCEL is set AND not in dev mode
-const isVercelProduction =
-  process.env.VERCEL === "1" && process.env.VERCEL_ENV === "production";
+// Treat any Vercel environment (production or preview) as production-like for DB connection
+const isVercelProduction = process.env.VERCEL === "1";
 
 /**
  * Database Configuration

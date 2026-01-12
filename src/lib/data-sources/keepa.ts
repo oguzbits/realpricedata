@@ -223,6 +223,14 @@ export class KeepaDataSource implements DataSourceProvider {
       );
     } catch (error) {
       console.warn("Keepa fetch failed:", error);
+      // Log more details in production to debug "no data" issue
+      if (process.env.VERCEL) {
+        console.error("Keepa Debug Error Details:", {
+          message: error instanceof Error ? error.message : "Unknown error",
+          cause: error instanceof Error ? error.cause : undefined,
+          apiKeyConfigured: !!this.isAvailable(),
+        });
+      }
       return [];
     }
   }

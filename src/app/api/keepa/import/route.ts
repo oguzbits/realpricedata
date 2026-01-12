@@ -13,7 +13,7 @@ import {
   getActiveCategories,
 } from "@/lib/keepa/sync-service";
 import { isKeepaConfigured } from "@/lib/keepa/product-discovery";
-import { getTokenStatus, hasTokenBudget } from "@/lib/keepa/token-tracker";
+import { checkBudget, estimateCurrentTokens } from "@/lib/keepa/token-tracker";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(request: NextRequest): Promise<NextResponse> {
@@ -47,14 +47,14 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
   }
 
   // Check token budget
-  if (!hasTokenBudget(limit + 10)) {
-    const status = getTokenStatus();
+  const budget = checkBudget(limit + 10);
+  if (!budget.allowed && budget.waitTimeMs > 30000) {
     return NextResponse.json(
       {
         success: false,
-        error: "Insufficient token budget",
-        tokensUsedToday: status.tokensUsedToday,
-        tokensRemaining: status.tokensRemaining,
+        error: "Bucket low. Please wait for refill.",
+        waitTimeSeconds: Math.ceil(budget.waitTimeMs / 1000),
+        tokensRemaining: estimateCurrentTokens(),
       },
       { status: 429 },
     );
@@ -77,8 +77,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
       tokensUsed: result.tokensUsed,
       errors: result.errors.length > 0 ? result.errors : undefined,
       tokenStatus: {
-        tokensUsedToday: getTokenStatus().tokensUsedToday,
-        tokensRemaining: getTokenStatus().tokensRemaining,
+        tokensRemaining: estimateCurrentTokens(),
       },
     });
   } catch (error) {

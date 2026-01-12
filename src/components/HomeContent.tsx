@@ -1,30 +1,50 @@
 import { IdealoHomePage } from "@/components/landing/IdealoHomePage";
 import { type CountryCode } from "@/lib/countries";
 import { getCountryByCode } from "@/lib/server/cached-countries";
-import { getAllProducts } from "@/lib/server/cached-products";
+import {
+  getBestDeals,
+  getMostPopular,
+  getNewArrivals,
+} from "@/lib/server/cached-products";
 import { getLocalizedProductData } from "@/lib/utils/products";
 import Script from "next/script";
 
 export async function HomeContent({ country }: { country: CountryCode }) {
   const countryConfig = await getCountryByCode(country);
-  const allProducts = await getAllProducts();
+  const countryCode = countryConfig?.code || country;
 
-  // Transform products for the new idealo-style homepage
-  const products = allProducts
+  // Fetch specialized lists directly from DB for better performance and accuracy
+  const [bestDealsData, mostPopularData, newArrivalsData] = await Promise.all([
+    getBestDeals(6, countryCode),
+    getMostPopular(10, countryCode),
+    getNewArrivals(8, countryCode),
+  ]);
+
+  // Helper to transform to display format
+  const transform = (p: any) => {
+    const { price, title } = getLocalizedProductData(p, countryCode);
+    if (price === null || price === 0) return null;
+    return {
+      title: title || p.title,
+      price,
+      slug: p.slug,
+      image: p.image,
+    };
+  };
+
+  const deals = bestDealsData
     .map((p) => {
-      const { price, title } = getLocalizedProductData(
-        p,
-        countryConfig?.code || country,
-      );
-      if (price === null || price === 0) return null;
-
-      return {
-        title: title || p.title,
-        price,
-        slug: p.slug,
-        image: p.image,
-      };
+      const t = transform(p);
+      return t ? { ...t, badgeText: "Top Deal" } : null;
     })
+    .filter((p): p is NonNullable<typeof p> => p !== null);
+
+  const bestsellers = mostPopularData
+    .map(transform)
+    .filter((p): p is NonNullable<typeof p> => p !== null);
+
+  const newArrivals = newArrivalsData
+    .map(transform)
     .filter((p): p is NonNullable<typeof p> => p !== null);
 
   const jsonLd = {
@@ -48,7 +68,11 @@ export async function HomeContent({ country }: { country: CountryCode }) {
           __html: JSON.stringify(jsonLd).replace(/</g, "\\u003c"),
         }}
       />
-      <IdealoHomePage products={products} />
+      <IdealoHomePage
+        deals={deals}
+        bestsellers={bestsellers}
+        newArrivals={newArrivals}
+      />
     </>
   );
 }

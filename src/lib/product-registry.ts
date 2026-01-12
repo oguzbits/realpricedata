@@ -7,7 +7,7 @@ import {
   type Price,
 } from "@/db/schema";
 import { calculateProductMetrics } from "./utils/products";
-import { eq, like, or, inArray } from "drizzle-orm";
+import { eq, like, or, inArray, desc, and, gt, sql, asc } from "drizzle-orm";
 import { cacheLife } from "next/cache";
 
 /**
@@ -243,5 +243,107 @@ export async function getProductsByBrand(
   return all.filter(
     (p) =>
       p.brand.toLowerCase() === brand.toLowerCase() && p.slug !== excludeSlug,
+  );
+}
+
+export async function getBestDeals(
+  limit: number = 8,
+  countryCode: string = "de",
+): Promise<Product[]> {
+  "use cache";
+  cacheLife("prices");
+
+  // Find products with significant price drop compared to 30-day average
+  // We use raw SQL for the calculation for efficiency
+  // Discount = (avg30 - current) / avg30
+  // We prioritize Amazon price, then New price.
+  const results = await db
+    .select({
+      product: products,
+      price: prices,
+    })
+    .from(products)
+    .innerJoin(prices, eq(products.id, prices.productId))
+    .where(
+      and(
+        eq(prices.country, countryCode),
+        gt(prices.priceAvg30, 0),
+        // Ensure we have a valid current price
+        or(gt(prices.amazonPrice, 0), gt(prices.newPrice, 0)),
+      ),
+    )
+    .orderBy(
+      // Sort by discount percentage descending
+      sql`(
+        ${prices.priceAvg30} - COALESCE(${prices.amazonPrice}, ${prices.newPrice})
+      ) / ${prices.priceAvg30} DESC`,
+    )
+    .limit(limit);
+
+  return results.map((r) => mapDbProduct(r.product, [r.price]));
+}
+
+export async function getMostPopular(
+  limit: number = 8,
+  countryCode: string = "de",
+): Promise<Product[]> {
+  "use cache";
+  cacheLife("prices");
+
+  // Use salesRank (lower is better).
+  // Filter out products with no sales rank (0 or null)
+  const prods = await db
+    .select()
+    .from(products)
+    .where(gt(products.salesRank, 0))
+    .orderBy(asc(products.salesRank))
+    .limit(limit);
+
+  if (prods.length === 0) return [];
+
+  const ids = prods.map((p) => p.id);
+  const prs = await db
+    .select()
+    .from(prices)
+    .where(
+      and(inArray(prices.productId, ids), eq(prices.country, countryCode)),
+    );
+
+  return prods.map((p) =>
+    mapDbProduct(
+      p,
+      prs.filter((pr) => pr.productId === p.id),
+    ),
+  );
+}
+
+export async function getNewArrivals(
+  limit: number = 8,
+  countryCode: string = "de",
+): Promise<Product[]> {
+  "use cache";
+  cacheLife("prices");
+
+  const prods = await db
+    .select()
+    .from(products)
+    .orderBy(desc(products.createdAt))
+    .limit(limit);
+
+  if (prods.length === 0) return [];
+
+  const ids = prods.map((p) => p.id);
+  const prs = await db
+    .select()
+    .from(prices)
+    .where(
+      and(inArray(prices.productId, ids), eq(prices.country, countryCode)),
+    );
+
+  return prods.map((p) =>
+    mapDbProduct(
+      p,
+      prs.filter((pr) => pr.productId === p.id),
+    ),
   );
 }

@@ -2,7 +2,9 @@
 
 import {
   getAllProducts as getAllProductsSync,
-  getProductsByCategory as getProductsByCategorySync,
+  getBestDeals as getBestDealsSync,
+  getMostPopular as getMostPopularSync,
+  getNewArrivals as getNewArrivalsSync,
   type Product,
 } from "../product-registry";
 
@@ -15,8 +17,23 @@ export async function getAllProducts(): Promise<Product[]> {
   return getAllProductsSync();
 }
 
-export async function getProductsByCategory(
-  category: string,
+export async function getBestDeals(
+  limit: number = 8,
+  countryCode: string = "de",
 ): Promise<Product[]> {
-  return getProductsByCategorySync(category);
+  return getBestDealsSync(limit, countryCode);
+}
+
+export async function getMostPopular(
+  limit: number = 8,
+  countryCode: string = "de",
+): Promise<Product[]> {
+  return getMostPopularSync(limit, countryCode);
+}
+
+export async function getNewArrivals(
+  limit: number = 8,
+  countryCode: string = "de",
+): Promise<Product[]> {
+  return getNewArrivalsSync(limit, countryCode);
 }

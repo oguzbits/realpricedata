@@ -17,12 +17,22 @@ interface Product {
 }
 
 interface IdealoHomePageProps {
-  products: Product[];
+  deals: Product[];
+  bestsellers: Product[];
+  newArrivals: Product[];
 }
 
-export function IdealoHomePage({ products }: IdealoHomePageProps) {
-  // Handle empty products state
-  if (products.length === 0) {
+export function IdealoHomePage({
+  deals,
+  bestsellers,
+  newArrivals,
+}: IdealoHomePageProps) {
+  // Handle empty state if all lists are empty
+  if (
+    deals.length === 0 &&
+    bestsellers.length === 0 &&
+    newArrivals.length === 0
+  ) {
     return (
       <div className="bg-[#f5f5f5]">
         <IdealoSection variant="white" className="py-12">
@@ -39,18 +49,12 @@ export function IdealoHomePage({ products }: IdealoHomePageProps) {
     );
   }
 
-  // Split products for different sections
-  const bestsellers = products.slice(0, 8);
-  const recommendations = products.slice(4, 12);
-  const deals = products
-    .slice(0, 6)
-    .map((p) => ({ ...p, badgeText: "Top Deal" }));
-
   return (
     <div className="bg-[#f5f5f5]">
       {/* Hero Section - light blue bg */}
       <IdealoSection variant="lightBlue" className="py-4">
-        <IdealoHero products={products} />
+        {/* Pass bestsellers to Hero for now */}
+        <IdealoHero products={bestsellers} />
       </IdealoSection>
 
       {/* Popular Categories Grid */}
@@ -85,12 +89,9 @@ export function IdealoHomePage({ products }: IdealoHomePageProps) {
         />
       </IdealoSection>
 
-      {/* Recommendations - white bg (alternating) */}
+      {/* New Arrivals - white bg (alternating) */}
       <IdealoSection variant="white">
-        <IdealoProductCarousel
-          title="Unsere Empfehlungen"
-          products={recommendations}
-        />
+        <IdealoProductCarousel title="Neuheiten" products={newArrivals} />
       </IdealoSection>
     </div>
   );

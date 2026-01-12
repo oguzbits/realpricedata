@@ -4,20 +4,20 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "db:setup": "mkdir -p data && DATABASE_PATH=file:./data/cleverprices.db npx drizzle-kit push && DATABASE_PATH=file:./data/cleverprices.db npx tsx scripts/seed-mock-data.ts",
-    "db:reset": "rm -f data/cleverprices.db && bun run db:setup",
+    "db:push": "drizzle-kit push",
+    "db:reset": "rm -f data/cleverprices.db && bun run db:push",
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
     "format": "prettier --write .",
     "check": "prettier --check .",
     "db:generate": "drizzle-kit generate",
-    "db:push": "drizzle-kit push",
     "db:studio": "drizzle-kit studio",
     "import": "bun run scripts/import-products.ts",
     "update-prices": "bun run scripts/update-prices.ts",
     "collect-history": "bun run scripts/collect-price-history.ts",
-    "db:deploy": "bun run scripts/deploy-data.ts"
+    "db:deploy": "bun run scripts/deploy-data.ts",
+    "worker": "bun run scripts/keepa-worker.ts"
   },
   "dependencies": {
     "@libsql/client": "^0.17.0",

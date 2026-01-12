@@ -44,9 +44,10 @@
   - `prices`: Current prices per country (Amazon, New, Used).
   - `price_history`: Historical price points for charts.
 - **Sync Strategy**:
-  - **Source**: Keepa API (via Cron Jobs).
-  - **Frequency**: Twice daily (6 AM, 6 PM).
-  - **Token Management**: Budget-aware tracking for €49/month plan.
+  - **Discovery**: `bun run worker` (Keepa API) - Finds new products.
+  - **History**: `bun run collect-history` (Cron) - Daily price snapshots.
+  - **Reference**: See `docs/DATA_SYNC.md` for full details.
+  - **Token Management**: Auto-throttling in worker script.
 
 ### 2. Localization & Routing
 

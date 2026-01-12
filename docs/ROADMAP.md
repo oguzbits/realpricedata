@@ -150,7 +150,7 @@
 1. ✅ FAQ Schema (done)
 2. ✅ PS5 SSD Article (done)
 3. ✅ PA API Scaffold (done)
-4. 🔲 Add "Best Value" badge to top products
+4. ✅ Add "Best Value" badge to top products (done)
 
 ### Next Week
 

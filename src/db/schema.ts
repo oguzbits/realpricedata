@@ -44,6 +44,7 @@ export const products = sqliteTable(
     modularityType: text("modularity_type"),
 
     // CPU/GPU-specific (for future)
+    socket: text("socket"),
     cores: integer("cores"),
     threads: integer("threads"),
     baseClock: text("base_clock"),

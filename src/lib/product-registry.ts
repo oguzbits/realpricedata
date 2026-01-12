@@ -39,7 +39,10 @@ export interface Product {
   condition: "New" | "Used" | "Renewed";
   brand: string;
   certification?: string;
-  modularityTyp?: string; // Kept 'Typ' to match legacy usage if any
+  modularityTyp?: string;
+  socket?: string;
+  cores?: number;
+  threads?: number;
   priceHistory?: { date: string; price: number }[];
   rating?: number;
   reviewCount?: number;
@@ -89,6 +92,9 @@ function mapDbProduct(
     brand: p.brand || "Generic",
     certification: p.certification || undefined,
     modularityTyp: p.modularityType || undefined,
+    socket: (p as any).socket || undefined,
+    cores: p.cores || undefined,
+    threads: p.threads || undefined,
     priceHistory: historyList.map((h) => ({
       date: (h.recordedAt || new Date()).toISOString(),
       price: h.price,

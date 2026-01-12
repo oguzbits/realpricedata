@@ -24,8 +24,14 @@ export interface FilterParams {
   condition?: string | string[];
   technology?: string | string[];
   formFactor?: string | string[];
+  brand?: string | string[];
   minCapacity?: string;
   maxCapacity?: string;
+  socket?: string[];
+  cores?: string[];
+  capacity?: string[];
+  minPrice?: string;
+  maxPrice?: string;
   sortBy?: string;
   sortOrder?: string;
   sort?: string; // Combined sort param from TopBar (e.g., "price", "price-desc", "popular")
@@ -78,9 +84,32 @@ export async function getCategoryProducts(
       const { price, title, asin } = getLocalizedProductData(p, countryCode);
       if (price === null || price === 0) return null;
 
+      // Extract socket and cores from title as fallback for CPUs
+      let socket = (p as any).socket;
+      let cores = (p as any).cores;
+
+      if (categorySlug === "cpu") {
+        if (!socket) {
+          const socketMatch = title.match(
+            /(AM[45]|LGA\s?(\d{4})|sTRX4|sWRX8|Socket\s?[A-Z0-9]+|TR4|FM[12]|LGA\s?115[0156])/i,
+          );
+          if (socketMatch) {
+            socket = socketMatch[0].toUpperCase().replace(/\s+/, "");
+          }
+        }
+        if (!cores) {
+          const coreMatch = title.match(/(\d+)\s?-?\s?(Core|Kerne)/i);
+          if (coreMatch) {
+            cores = parseInt(coreMatch[1]).toString();
+          }
+        }
+      }
+
       const enhanced = calculateProductMetrics(p, price || 0);
       return {
         ...p,
+        socket,
+        cores,
         price,
         title,
         asin,
@@ -94,33 +123,50 @@ export async function getCategoryProducts(
     ? mapSortParam(filterParams.sort)
     : { sortBy: filterParams.sortBy, sortOrder: filterParams.sortOrder };
 
-  // Parse filter params into FilterState format
-  const filters = {
+  // Parse filter params into FilterState format (generic)
+  const filters: any = {
     search: filterParams.search || "",
-    condition: Array.isArray(filterParams.condition)
-      ? filterParams.condition
-      : filterParams.condition
-        ? filterParams.condition.split(",")
-        : [],
-    technology: Array.isArray(filterParams.technology)
-      ? filterParams.technology
-      : filterParams.technology
-        ? filterParams.technology.split(",")
-        : [],
-    formFactor: Array.isArray(filterParams.formFactor)
-      ? filterParams.formFactor
-      : filterParams.formFactor
-        ? filterParams.formFactor.split(",")
-        : [],
+    sortBy: mappedSort.sortBy || "pricePerUnit",
+    sortOrder: mappedSort.sortOrder || "asc",
+    minPrice: filterParams.minPrice ? parseFloat(filterParams.minPrice) : null,
+    maxPrice: filterParams.maxPrice ? parseFloat(filterParams.maxPrice) : null,
     minCapacity: filterParams.minCapacity
       ? parseFloat(filterParams.minCapacity)
       : null,
     maxCapacity: filterParams.maxCapacity
       ? parseFloat(filterParams.maxCapacity)
       : null,
-    sortBy: mappedSort.sortBy || "pricePerUnit",
-    sortOrder: mappedSort.sortOrder || "asc",
+    socket: filterParams.socket || [],
+    cores: filterParams.cores || [],
+    capacity: filterParams.capacity || [],
   };
+
+  // Dynamically add all other filter params (handled as arrays/comma-separated strings)
+  Object.keys(filterParams).forEach((key) => {
+    if (
+      [
+        "search",
+        "sortBy",
+        "sortOrder",
+        "sort",
+        "view",
+        "minPrice",
+        "maxPrice",
+        "minCapacity",
+        "maxCapacity",
+        "socket",
+        "cores",
+      ].includes(key)
+    ) {
+      return;
+    }
+    const value = filterParams[key as keyof FilterParams];
+    if (value) {
+      filters[key] = Array.isArray(value) ? value : value.split(",");
+    } else {
+      filters[key] = [];
+    }
+  });
 
   // Apply filtering
   const filtered = filterProducts(

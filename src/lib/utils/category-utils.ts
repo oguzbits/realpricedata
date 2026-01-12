@@ -1,14 +1,17 @@
 import { Product } from "@/lib/product-registry";
+import { allCategories, CategorySlug } from "@/lib/categories";
 
 export interface FilterState {
   search: string;
-  condition: string[];
-  technology: string[];
-  formFactor: string[];
+  brand: string[];
+  socket: string[];
+  cores: string[];
+  capacity: string[];
+  minPrice: number | null;
+  maxPrice: number | null;
   minCapacity: number | null;
   maxCapacity: number | null;
-  sortBy: string;
-  sortOrder: string;
+  [key: string]: string | string[] | number | null | undefined;
 }
 
 /**
@@ -23,7 +26,7 @@ export function filterProducts(
   let filtered = [...products];
 
   // 1. Search Filter
-  if (filters.search) {
+  if (filters.search && typeof filters.search === "string") {
     const searchLower = filters.search.toLowerCase();
     filtered = filtered.filter((p) => {
       const title = p.title;
@@ -31,50 +34,75 @@ export function filterProducts(
     });
   }
 
-  // 2. Condition Filter
-  if (filters.condition && filters.condition.length > 0) {
-    filtered = filtered.filter((p) => filters.condition.includes(p.condition));
-  }
+  const category = allCategories[categorySlug as CategorySlug];
 
-  // 3. Technology / Certification Filter
-  if (filters.technology && filters.technology.length > 0) {
-    filtered = filtered.filter((p) => {
-      const techVal = p.technology || "";
-      const certVal = (p as Product).certification || "";
+  // 2. Main Filters
+  filtered = filtered.filter((p) => {
+    // Brand
+    if (filters.brand?.length > 0 && !filters.brand.includes(p.brand || "")) {
+      return false;
+    }
 
-      if (categorySlug === "power-supplies") {
-        return (
-          filters.technology.includes(techVal) ||
-          filters.technology.includes(certVal)
-        );
+    // Socket
+    if (
+      filters.socket?.length > 0 &&
+      !filters.socket.includes((p as any).socket || "")
+    ) {
+      return false;
+    }
+
+    // Cores
+    if (
+      filters.cores?.length > 0 &&
+      !filters.cores.includes(((p as any).cores || "").toString())
+    ) {
+      return false;
+    }
+
+    // Capacity (as exact choice, e.g. for GPU)
+    if (
+      filters.capacity?.length > 0 &&
+      !filters.capacity.includes(((p as any).capacity || "").toString())
+    ) {
+      return false;
+    }
+
+    // Price
+    const price = (p as any).price || 0;
+    if (filters.minPrice !== null && price < filters.minPrice) return false;
+    if (filters.maxPrice !== null && (price === 0 || price > filters.maxPrice))
+      return false;
+
+    // Capacity Range (Storage/PSU)
+    const cap = p.normalizedCapacity ?? p.capacity;
+    if (filters.minCapacity !== null) {
+      const minValReal =
+        unitLabel === "TB" ? filters.minCapacity * 1000 : filters.minCapacity;
+      if (cap < minValReal) return false;
+    }
+    if (filters.maxCapacity !== null) {
+      const maxValReal =
+        unitLabel === "TB" ? filters.maxCapacity * 1000 : filters.maxCapacity;
+      if (cap > maxValReal) return false;
+    }
+
+    // Dynamic filters (Technology, Form Factor, Condition, etc.)
+    if (category?.filterGroups) {
+      for (const group of category.filterGroups) {
+        // Skip already handled main filters
+        if (["brand", "socket", "cores", "capacity"].includes(group.field))
+          continue;
+
+        const selected = filters[group.field];
+        if (Array.isArray(selected) && selected.length > 0) {
+          const pVal = String((p as any)[group.field] || "");
+          if (!selected.includes(pVal)) return false;
+        }
       }
-      return filters.technology.includes(techVal);
-    });
-  }
+    }
 
-  // 4. Form Factor Filter
-  if (filters.formFactor && filters.formFactor.length > 0) {
-    filtered = filtered.filter((p) =>
-      filters.formFactor.includes(p.formFactor),
-    );
-  }
-
-  // 5. Capacity Filters
-  if (filters.minCapacity !== null) {
-    const minValReal =
-      unitLabel === "TB" ? filters.minCapacity * 1000 : filters.minCapacity;
-    filtered = filtered.filter(
-      (p) => (p.normalizedCapacity ?? p.capacity) >= minValReal,
-    );
-  }
-
-  if (filters.maxCapacity !== null) {
-    const maxValReal =
-      unitLabel === "TB" ? filters.maxCapacity * 1000 : filters.maxCapacity;
-    filtered = filtered.filter(
-      (p) => (p.normalizedCapacity ?? p.capacity) <= maxValReal,
-    );
-  }
+    return true;
+  });
 
   return filtered;
 }
@@ -83,21 +111,28 @@ export function filterProducts(
  * Utility to sort products based on the current filter state
  */
 export function sortProducts(
-  products: Product[],
+  products: any[], // Use any to allow localized products with 'price' field
   sortBy: string,
   sortOrder: string,
-): Product[] {
+): any[] {
   return [...products].sort((a, b) => {
-    let key = sortBy as keyof Product;
+    let key = sortBy as string;
 
-    // Default to pricePerUnit if key is missing or is legacy 'pricePerUnit'
-    if (!key) {
+    // Default to price if key is missing
+    if (!key || key === "popular") {
       key = "pricePerUnit";
     }
 
-    // Map 'capacity' sort request to 'normalizedCapacity' for correct unit-aware sorting
+    // Map 'price' sort request
+    if (key === "price") {
+      const aVal = a.price || 0;
+      const bVal = b.price || 0;
+      return sortOrder === "asc" ? aVal - bVal : bVal - aVal;
+    }
+
+    // Map 'capacity' sort request
     if (key === "capacity") {
-      key = "normalizedCapacity" as keyof Product;
+      key = "normalizedCapacity";
     }
 
     const aValue = a[key];
@@ -119,30 +154,29 @@ export function sortProducts(
 }
 
 /**
- * Category-specific filter options
+ * Utility to discover all unique values for a field in a list of products
  */
-export function getCategoryFilterOptions(categorySlug: string) {
-  const isRAM = categorySlug === "ram";
-  const isPSU = categorySlug === "power-supplies";
+export function getUniqueFieldValues(
+  products: Product[],
+  field: string,
+): string[] {
+  const values = new Set<string>();
 
-  const techOptions = isRAM
-    ? ["DDR4", "DDR5"]
-    : isPSU
-      ? ["80+ Bronze", "80+ Gold", "80+ Platinum", "80+"]
-      : ["HDD", "SSD", "SAS"];
+  products.forEach((p) => {
+    const val = (p as any)[field];
+    if (val === undefined || val === null || val === "") return;
 
-  const formFactorOptions = isRAM
-    ? ["DIMM", "SO-DIMM"]
-    : isPSU
-      ? ["ATX", "SFX", "SFX-L", "Mini-ITX"]
-      : [
-          'Internal 3.5"',
-          'Internal 2.5"',
-          'External 3.5"',
-          'External 2.5"',
-          "M.2 NVMe",
-          "M.2 SATA",
-        ];
+    if (Array.isArray(val)) {
+      val.forEach((v) => v && values.add(v.toString()));
+    } else if (typeof val === "string" && val.includes(",")) {
+      val.split(",").forEach((v) => {
+        const trimmed = v.trim();
+        if (trimmed) values.add(trimmed);
+      });
+    } else {
+      values.add(val.toString());
+    }
+  });
 
-  return { techOptions, formFactorOptions };
+  return Array.from(values).sort();
 }

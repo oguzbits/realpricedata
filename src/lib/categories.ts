@@ -101,6 +101,13 @@ export type CategorySlug =
   | "laptops"
   | "consoles";
 
+export interface FilterGroup {
+  label: string;
+  field: string;
+  type: "checkbox" | "range";
+  options?: string[]; // Hardcoded options if needed
+}
+
 export interface Category {
   name: string;
   slug: CategorySlug;
@@ -119,6 +126,8 @@ export interface Category {
   isFeatured?: boolean; // Show in popular categories on homepage
   popularFilters?: { label: string; params: string }[];
   aliases?: string[]; // SEO and URL aliases
+  /** Tailwind filter groups for this category */
+  filterGroups?: FilterGroup[];
 }
 
 export interface CategoryHierarchy {
@@ -158,6 +167,11 @@ const CATEGORY_MAP: Record<CategorySlug, Omit<Category, "slug">> = {
       { label: "NVMe SSDs", params: "formFactor=M.2+NVMe" },
     ],
     aliases: ["disks", "storage", "hdd", "ssd"],
+    filterGroups: [
+      { label: "Zustand", field: "condition", type: "checkbox" },
+      { label: "Technologie", field: "technology", type: "checkbox" },
+      { label: "Bauform", field: "formFactor", type: "checkbox" },
+    ],
   },
 
   ram: {
@@ -177,6 +191,11 @@ const CATEGORY_MAP: Record<CategorySlug, Omit<Category, "slug">> = {
       { label: "Laptop RAM", params: "formFactor=SO-DIMM" },
     ],
     aliases: ["memory"],
+    filterGroups: [
+      { label: "Zustand", field: "condition", type: "checkbox" },
+      { label: "Typ", field: "technology", type: "checkbox" },
+      { label: "Bauform", field: "formFactor", type: "checkbox" },
+    ],
   },
 
   "power-supplies": {
@@ -189,9 +208,14 @@ const CATEGORY_MAP: Record<CategorySlug, Omit<Category, "slug">> = {
     unitLabel: "pro Watt",
     metaTitle: `Netzteile - Preis pro Watt vergleichen | ${BRAND_DOMAIN}`,
     metaDescription:
-      "Finden Sie die besten Netzteil-Angebote durch Preisvergleich pro Watt. Vergleichen Sie 80+ Bronze, Gold und Platinum PSUs von Top-Marken.",
+      "Finden Sie die besten Netzteil-Angebote durch Preisvergleich pro Watt. Vergleichen Sie 80+ Bronze, Gold and Platinum PSUs von Top-Marken.",
     popularFilters: [{ label: "80+ Gold", params: "technology=80%2B+Gold" }],
     aliases: ["psu"],
+    filterGroups: [
+      { label: "Zustand", field: "condition", type: "checkbox" },
+      { label: "Zertifizierung", field: "technology", type: "checkbox" },
+      { label: "Bauform", field: "formFactor", type: "checkbox" },
+    ],
   },
 
   cpu: {
@@ -211,6 +235,12 @@ const CATEGORY_MAP: Record<CategorySlug, Omit<Category, "slug">> = {
       { label: "AMD Ryzen 7", params: "brand=AMD&series=Ryzen+7" },
     ],
     aliases: ["processors", "chips"],
+    filterGroups: [
+      { label: "Zustand", field: "condition", type: "checkbox" },
+      { label: "Marke", field: "brand", type: "checkbox" },
+      { label: "Sockel", field: "socket", type: "checkbox" },
+      { label: "Kerne", field: "cores", type: "checkbox" },
+    ],
   },
 
   gpu: {
@@ -232,6 +262,11 @@ const CATEGORY_MAP: Record<CategorySlug, Omit<Category, "slug">> = {
       { label: "12GB+ VRAM", params: "min_memory=12" },
     ],
     aliases: ["video-cards", "vga"],
+    filterGroups: [
+      { label: "Zustand", field: "condition", type: "checkbox" },
+      { label: "Marke", field: "brand", type: "checkbox" },
+      { label: "Speicher", field: "capacity", type: "checkbox" },
+    ],
   },
 
   // ======================

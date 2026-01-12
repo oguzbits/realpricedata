@@ -44,6 +44,7 @@ import { IdealoTopBar } from "./IdealoTopBar";
 import { FAQSchema } from "@/components/category/FAQSchema";
 import { FAQSection } from "@/components/category/FAQSection";
 import { MobileFilterDrawer } from "./MobileFilterDrawer";
+import { X } from "lucide-react";
 
 interface Props {
   category: Omit<Category, "icon">;
@@ -88,37 +89,39 @@ export async function IdealoCategoryPage({
   ).filter((c) => c.slug !== categorySlug);
 
   return (
-    <div className="sr-searchResult min-h-screen bg-white">
+    <div className="sr-searchResult min-h-screen bg-[#f6f6f6]">
       {/* ============================================ */}
       {/* MAIN CONTAINER - max-width 1280px */}
       {/* ============================================ */}
-      <div className="mx-auto max-w-[1280px] px-[15px]">
-        {/* ============================================ */}
-        {/* BREADCRUMB - sr-breadcrumb */}
-        {/* ============================================ */}
-        <div className="sr-breadcrumb py-3">
-          <Breadcrumbs
-            items={breadcrumbItems}
-            className="mb-0 text-[14px] text-[#767676]"
-          />
-        </div>
+      <div className="mx-auto max-w-[1280px]">
+        <div className="border-b border-[#dcdcdc] bg-white px-[15px]">
+          {/* ============================================ */}
+          {/* BREADCRUMB - sr-breadcrumb */}
+          {/* ============================================ */}
+          <div className="sr-breadcrumb py-3">
+            <Breadcrumbs
+              items={breadcrumbItems}
+              className="mb-0 text-[14px] text-[#767676]"
+            />
+          </div>
 
-        {/* ============================================ */}
-        {/* TOP BAR - sr-topBar_iwPzv */}
-        {/* Title, Sort, View Switch */}
-        {/* ============================================ */}
-        {hasProducts && (
-          <IdealoTopBar
-            categoryName={category.name}
-            productCount={filteredCount}
-            currentView={viewMode}
-            currentSort={
-              typeof searchParams === "object" && "sort" in searchParams
-                ? (searchParams.sort as string)
-                : "popular"
-            }
-          />
-        )}
+          {/* ============================================ */}
+          {/* TOP BAR - sr-topBar_iwPzv */}
+          {/* Title, Sort, View Switch */}
+          {/* ============================================ */}
+          {hasProducts && (
+            <IdealoTopBar
+              categoryName={category.name}
+              productCount={filteredCount}
+              currentView={viewMode}
+              currentSort={
+                typeof searchParams === "object" && "sort" in searchParams
+                  ? (searchParams.sort as string)
+                  : "popular"
+              }
+            />
+          )}
+        </div>
 
         {/* ============================================ */}
         {/* PRODUCTS + FILTERS CONTAINER */}
@@ -127,7 +130,7 @@ export async function IdealoCategoryPage({
         <div
           className={cn(
             "sr-searchResult__products",
-            "relative mb-[45px] flex flex-row flex-wrap",
+            "relative mt-[15px] mb-[45px] flex flex-row flex-wrap min-[840px]:mt-[20px]",
           )}
         >
           {hasProducts ? (
@@ -139,7 +142,7 @@ export async function IdealoCategoryPage({
               <aside
                 className={cn(
                   "sr-filterBar",
-                  "w-full pr-[15px]",
+                  "w-full bg-transparent pl-0",
                   // Hidden below 840px
                   "hidden min-[840px]:block",
                   // 33.33% at 840px
@@ -151,6 +154,17 @@ export async function IdealoCategoryPage({
                 <IdealoFilterPanel
                   categorySlug={categorySlug}
                   unitLabel={unitLabel}
+                  products={
+                    hasProducts
+                      ? (
+                          await getCategoryProducts(
+                            category.slug,
+                            countryCode,
+                            {},
+                          )
+                        ).products
+                      : []
+                  }
                 />
               </aside>
 
@@ -160,8 +174,8 @@ export async function IdealoCategoryPage({
               {/* ============================================ */}
               <div
                 className={cn(
-                  "sr-resultList__container",
-                  "relative w-full",
+                  "sr-searchResult__resultPanel",
+                  "relative w-full pr-0 pl-[15px]",
                   // Width at breakpoints
                   "min-[840px]:max-w-[66.66667%] min-[840px]:basis-[66.66667%]",
                   "min-[960px]:max-w-[75%] min-[960px]:basis-[75%]",
@@ -172,12 +186,116 @@ export async function IdealoCategoryPage({
                   categorySlug={categorySlug}
                   unitLabel={unitLabel}
                   categoryName={category.name}
+                  productCount={filteredCount}
+                  products={
+                    hasProducts
+                      ? (
+                          await getCategoryProducts(
+                            category.slug,
+                            countryCode,
+                            {},
+                          )
+                        ).products
+                      : []
+                  }
                 />
 
                 {/* ============================================ */}
                 {/* PRODUCT GRID/LIST - sr-resultList */}
                 {/* Uses new isolated Idealo components */}
                 {/* ============================================ */}
+                {/* ============================================ */}
+                {/* ACTIVE FILTER TAGS */}
+                {/* ============================================ */}
+                {filteredCount < products.length && (
+                  <div className="mb-4 flex flex-wrap items-center gap-2">
+                    {Object.entries(filters).map(([field, value]) => {
+                      if (
+                        !value ||
+                        (Array.isArray(value) && value.length === 0)
+                      )
+                        return null;
+                      if (
+                        [
+                          "sortBy",
+                          "sortOrder",
+                          "search",
+                          "minCapacity",
+                          "maxCapacity",
+                        ].includes(field)
+                      )
+                        return null;
+
+                      // Display tags for array filters (brand, socket, etc.)
+                      if (Array.isArray(value)) {
+                        return value.map((v) => (
+                          <Link
+                            key={`${field}-${v}`}
+                            href={{
+                              pathname: `/${category.slug}`,
+                              query: {
+                                ...searchParams,
+                                [field]: (
+                                  searchParams[
+                                    field as keyof FilterParams
+                                  ] as string[]
+                                )?.filter((val) => val !== v),
+                              },
+                            }}
+                            className="flex items-center gap-1 rounded-[4px] border border-[#B4B4B4] bg-white px-3 py-1 text-[13px] text-[#2d2d2d] no-underline hover:bg-gray-50"
+                          >
+                            <span>{v}</span>
+                            <X className="h-3 w-3 text-[#767676]" />
+                          </Link>
+                        ));
+                      }
+
+                      // Price range tags
+                      if (
+                        (field === "minPrice" || field === "maxPrice") &&
+                        value !== null
+                      ) {
+                        // Only show one tag for price range
+                        if (field === "maxPrice" && filters.minPrice !== null)
+                          return null;
+                        const label =
+                          filters.minPrice !== null && filters.maxPrice !== null
+                            ? `${filters.minPrice}€ - ${filters.maxPrice}€`
+                            : filters.minPrice !== null
+                              ? `ab ${filters.minPrice}€`
+                              : `bis ${filters.maxPrice}€`;
+
+                        return (
+                          <Link
+                            key="price-range"
+                            href={{
+                              pathname: `/${category.slug}`,
+                              query: {
+                                ...searchParams,
+                                minPrice: undefined,
+                                maxPrice: undefined,
+                              },
+                            }}
+                            className="flex items-center gap-1 rounded-[4px] border border-[#B4B4B4] bg-white px-3 py-1 text-[13px] text-[#2d2d2d] no-underline hover:bg-gray-50"
+                          >
+                            <span>{label}</span>
+                            <X className="h-3 w-3 text-[#767676]" />
+                          </Link>
+                        );
+                      }
+
+                      return null;
+                    })}
+
+                    <Link
+                      href={`/${category.slug}`}
+                      className="ml-2 text-[13px] font-bold text-[#0771D0] hover:underline"
+                    >
+                      Alle zurücksetzen
+                    </Link>
+                  </div>
+                )}
+
                 <IdealoResultList
                   products={products}
                   countryCode={countryCode}

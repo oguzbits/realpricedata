@@ -24,11 +24,10 @@ interface IdealoTopBarProps {
 
 const SORT_OPTIONS = [
   { value: "popular", label: "Beliebteste zuerst" },
-  { value: "savings", label: "Größte Ersparnis zuerst" },
-  { value: "price", label: "Preis: Günstigster zuerst" },
-  { value: "price-desc", label: "Preis: Höchster zuerst" },
+  { value: "deal", label: "Größte Ersparnis zuerst" },
+  { value: "price_asc", label: "Preis: Günstigster zuerst" },
+  { value: "price_desc", label: "Preis: Höchster zuerst" },
   { value: "newest", label: "Neuheiten zuerst" },
-  { value: "price-per-unit", label: "Preis/Einheit" },
 ];
 
 export function IdealoTopBar({

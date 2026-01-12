@@ -4,8 +4,13 @@ import * as schema from "@/db/schema";
 import { products, prices, priceHistory, productOffers } from "@/db/schema";
 import { sql } from "drizzle-orm";
 
-const dbPath = process.env.DATABASE_PATH || "file:./data/cleverprices.db";
-const client = createClient({ url: dbPath });
+const url =
+  process.env.DATABASE_PATH ||
+  process.env.TURSO_DATABASE_URL ||
+  "file:./data/cleverprices.db";
+const authToken = process.env.TURSO_AUTH_TOKEN;
+
+const client = createClient({ url, authToken });
 const db = drizzle(client, { schema });
 
 async function main() {

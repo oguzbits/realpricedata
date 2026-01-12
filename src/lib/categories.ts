@@ -177,6 +177,7 @@ const CATEGORY_MAP: Record<CategorySlug, Omit<Category, "slug">> = {
     icon: Home,
     parent: "elektroartikel",
     categoryType: "standard",
+    imageUrl: "/images/category/household-electronics.jpg",
     popularFilters: [
       { label: "Elektro-Großgeräte", href: "/elektro-großgeräte" },
       { label: "Haushaltsgeräte", href: "/haushaltsgeräte" },
@@ -192,6 +193,7 @@ const CATEGORY_MAP: Record<CategorySlug, Omit<Category, "slug">> = {
     icon: Laptop,
     parent: "elektroartikel",
     categoryType: "standard",
+    imageUrl: "/images/category/pc-case.jpg",
     popularFilters: [
       { label: "PC-Komponenten", href: "/pc-komponenten" },
       { label: "Notebooks", href: "/notebooks" },
@@ -210,6 +212,7 @@ const CATEGORY_MAP: Record<CategorySlug, Omit<Category, "slug">> = {
     icon: Phone,
     parent: "elektroartikel",
     categoryType: "standard",
+    imageUrl: "/images/category/smartphone.jpg",
     popularFilters: [
       { label: "Handys & Smartphones", href: "/smartphones" },
       { label: "Smartwatches", href: "/smartwatches" },
@@ -225,6 +228,7 @@ const CATEGORY_MAP: Record<CategorySlug, Omit<Category, "slug">> = {
     icon: Speaker,
     parent: "elektroartikel",
     categoryType: "standard",
+    imageUrl: "/images/category/headphone.jpg",
     popularFilters: [
       { label: "HiFi-Komponenten", href: "/hifi-komponenten" },
       { label: "Kopfhörer", href: "/headphones" },
@@ -240,6 +244,7 @@ const CATEGORY_MAP: Record<CategorySlug, Omit<Category, "slug">> = {
     icon: Tv,
     parent: "elektroartikel",
     categoryType: "standard",
+    imageUrl: "/images/category/tv.jpg",
     popularFilters: [
       { label: "Fernseher", href: "/tvs" },
       { label: "Heimkino", href: "/heimkino" },
@@ -255,6 +260,7 @@ const CATEGORY_MAP: Record<CategorySlug, Omit<Category, "slug">> = {
     icon: Camera,
     parent: "elektroartikel",
     categoryType: "standard",
+    imageUrl: "/images/category/camera.jpg",
     popularFilters: [
       { label: "Kamera-Zubehör", href: "/kamera-zubehör" },
       { label: "Digitalkameras", href: "/cameras" },
@@ -270,6 +276,7 @@ const CATEGORY_MAP: Record<CategorySlug, Omit<Category, "slug">> = {
     icon: Printer,
     parent: "elektroartikel",
     categoryType: "standard",
+    imageUrl: "/images/category/printer.jpg",
     popularFilters: [
       { label: "Druckerzubehör", href: "/druckerzubehör" },
       { label: "Multifunktionsdrucker", href: "/multifunktionsdrucker" },
@@ -285,6 +292,7 @@ const CATEGORY_MAP: Record<CategorySlug, Omit<Category, "slug">> = {
     icon: Gamepad2,
     parent: "elektroartikel",
     categoryType: "standard",
+    imageUrl: "/images/category/drone.jpg",
     popularFilters: [
       { label: "Spielekonsolen", href: "/consoles" },
       { label: "Drohnen", href: "/drones" },
@@ -318,6 +326,7 @@ const CATEGORY_MAP: Record<CategorySlug, Omit<Category, "slug">> = {
     icon: Tv,
     parent: "elektroartikel",
     categoryType: "standard",
+    imageUrl: "/images/category/tv.jpg",
     popularFilters: [
       { label: "55 Zoll", params: "size=55" },
       { label: "65 Zoll", params: "size=65" },
@@ -333,6 +342,7 @@ const CATEGORY_MAP: Record<CategorySlug, Omit<Category, "slug">> = {
     icon: Fan,
     parent: "elektroartikel",
     categoryType: "standard",
+    imageUrl: "/images/category/vacuum-cleaner.jpg",
     popularFilters: [
       { label: "Dyson", params: "brand=Dyson" },
       { label: "Saugroboter", params: "type=robot" },
@@ -347,6 +357,7 @@ const CATEGORY_MAP: Record<CategorySlug, Omit<Category, "slug">> = {
     icon: Headphones,
     parent: "elektroartikel",
     categoryType: "standard",
+    imageUrl: "/images/category/headphone.jpg",
     popularFilters: [
       { label: "Apple", params: "brand=Apple" },
       { label: "Bluetooth", params: "type=bluetooth" },
@@ -361,6 +372,7 @@ const CATEGORY_MAP: Record<CategorySlug, Omit<Category, "slug">> = {
     icon: Laptop,
     parent: "elektroartikel",
     categoryType: "standard",
+    imageUrl: "/images/category/notebook.jpg",
     popularFilters: [
       { label: "Apple MacBook", params: "brand=Apple" },
       { label: "Gaming Laptops", params: "type=gaming" },
@@ -375,6 +387,7 @@ const CATEGORY_MAP: Record<CategorySlug, Omit<Category, "slug">> = {
     icon: Tablet,
     parent: "elektroartikel",
     categoryType: "standard",
+    imageUrl: "/images/category/tablet.jpg",
     popularFilters: [
       { label: "Apple iPad", params: "brand=Apple" },
       { label: "Samsung Galaxy Tab", params: "brand=Samsung" },
@@ -389,6 +402,7 @@ const CATEGORY_MAP: Record<CategorySlug, Omit<Category, "slug">> = {
     icon: Zap,
     parent: "elektroartikel",
     categoryType: "standard",
+    imageUrl: "/images/category/espresso-machine.jpg",
     popularFilters: [
       { label: "Kaffeevollautomat", params: "type=fully-automatic" },
       { label: "Siebträgermaschine", params: "type=portafilter" },
@@ -403,6 +417,7 @@ const CATEGORY_MAP: Record<CategorySlug, Omit<Category, "slug">> = {
     icon: Monitor,
     parent: "elektroartikel",
     categoryType: "standard",
+    imageUrl: "/images/category/monitor.jpg",
     popularFilters: [
       { label: "27 Zoll", params: "size=27" },
       { label: "144 Hz", params: "refresh=144" },
@@ -417,6 +432,7 @@ const CATEGORY_MAP: Record<CategorySlug, Omit<Category, "slug">> = {
     icon: Speaker,
     parent: "elektroartikel",
     categoryType: "standard",
+    imageUrl: "/images/category/speakers.jpg",
     popularFilters: [
       { label: "JBL", params: "brand=jbl" },
       { label: "Sonos", params: "brand=sonos" },
@@ -431,6 +447,7 @@ const CATEGORY_MAP: Record<CategorySlug, Omit<Category, "slug">> = {
     icon: Thermometer,
     parent: "elektroartikel",
     categoryType: "standard",
+    imageUrl: "/images/category/refrigerator.jpg",
     popularFilters: [
       { label: "Bosch", params: "brand=bosch" },
       { label: "Liebherr", params: "brand=liebherr" },
@@ -445,6 +462,7 @@ const CATEGORY_MAP: Record<CategorySlug, Omit<Category, "slug">> = {
     icon: Zap,
     parent: "elektroartikel",
     categoryType: "standard",
+    imageUrl: "/images/category/electric-toothbrush.jpg",
     popularFilters: [
       { label: "Oral-B iO", params: "model=io" },
       { label: "Philips Sonicare", params: "model=sonicare" },
@@ -458,6 +476,7 @@ const CATEGORY_MAP: Record<CategorySlug, Omit<Category, "slug">> = {
     icon: Zap,
     parent: "elektroartikel",
     categoryType: "standard",
+    imageUrl: "/images/category/washing-machine.jpg",
     popularFilters: [
       { label: "Miele", params: "brand=miele" },
       { label: "Bosch", params: "brand=bosch" },
@@ -472,6 +491,7 @@ const CATEGORY_MAP: Record<CategorySlug, Omit<Category, "slug">> = {
     icon: Printer,
     parent: "elektroartikel",
     categoryType: "standard",
+    imageUrl: "/images/category/printer.jpg",
     popularFilters: [
       { label: "Canon", params: "brand=Canon" },
       { label: "HP", params: "brand=HP" },
@@ -485,6 +505,7 @@ const CATEGORY_MAP: Record<CategorySlug, Omit<Category, "slug">> = {
     icon: HardDrive,
     parent: "elektroartikel",
     categoryType: "standard",
+    imageUrl: "/images/category/dishwasher.jpg",
     popularFilters: [
       { label: "Bosch", params: "brand=Bosch" },
       { label: "Miele", params: "brand=Miele" },
@@ -498,6 +519,7 @@ const CATEGORY_MAP: Record<CategorySlug, Omit<Category, "slug">> = {
     icon: Router,
     parent: "elektroartikel",
     categoryType: "standard",
+    imageUrl: "/images/category/router.jpg",
     popularFilters: [
       { label: "AVM Fritz!Box", params: "brand=AVM" },
       { label: "WiFi 6", params: "standard=wifi-6" },
@@ -511,6 +533,7 @@ const CATEGORY_MAP: Record<CategorySlug, Omit<Category, "slug">> = {
     icon: Camera,
     parent: "elektroartikel",
     categoryType: "standard",
+    imageUrl: "/images/category/camera.jpg",
     popularFilters: [
       { label: "Sony Alpha", params: "series=alpha" },
       { label: "Canon EOS R", params: "series=eos-r" },
@@ -524,6 +547,7 @@ const CATEGORY_MAP: Record<CategorySlug, Omit<Category, "slug">> = {
     icon: Printer,
     parent: "elektroartikel",
     categoryType: "standard",
+    imageUrl: "/images/category/printer-cartrige.jpg",
     popularFilters: [
       { label: "HP", params: "brand=HP" },
       { label: "Canon", params: "brand=Canon" },
@@ -537,6 +561,7 @@ const CATEGORY_MAP: Record<CategorySlug, Omit<Category, "slug">> = {
     icon: Zap,
     parent: "elektroartikel",
     categoryType: "standard",
+    imageUrl: "/images/category/oven.jpg",
     popularFilters: [
       { label: "Bosch", params: "brand=Bosch" },
       { label: "Siemens", params: "brand=Siemens" },
@@ -550,6 +575,7 @@ const CATEGORY_MAP: Record<CategorySlug, Omit<Category, "slug">> = {
     icon: Zap,
     parent: "elektroartikel",
     categoryType: "standard",
+    imageUrl: "/images/category/cooktop.jpg",
     popularFilters: [
       { label: "Induktion", params: "type=induction" },
       { label: "Kochfeldabzug", params: "features=extractor" },
@@ -563,6 +589,7 @@ const CATEGORY_MAP: Record<CategorySlug, Omit<Category, "slug">> = {
     icon: Speaker,
     parent: "elektroartikel",
     categoryType: "standard",
+    imageUrl: "/images/category/soundbar.jpg",
     popularFilters: [
       { label: "Sonos", params: "brand=Sonos" },
       { label: "Samsung", params: "brand=Samsung" },
@@ -576,6 +603,7 @@ const CATEGORY_MAP: Record<CategorySlug, Omit<Category, "slug">> = {
     icon: Mic,
     parent: "elektroartikel",
     categoryType: "standard",
+    imageUrl: "/images/category/radio.jpg",
     popularFilters: [
       { label: "DAB+", params: "type=dab-plus" },
       { label: "Internetradio", params: "type=internet" },
@@ -641,6 +669,7 @@ const CATEGORY_MAP: Record<CategorySlug, Omit<Category, "slug">> = {
     icon: Zap,
     parent: "elektroartikel",
     categoryType: "standard",
+    imageUrl: "/images/category/microwave.jpg",
     popularFilters: [
       { label: "Einbau-Mikrowelle", params: "type=built-in" },
       { label: "Samsung", params: "brand=Samsung" },
@@ -665,6 +694,7 @@ const CATEGORY_MAP: Record<CategorySlug, Omit<Category, "slug">> = {
     icon: HardDrive,
     parent: "elektroartikel",
     categoryType: "analytical",
+    imageUrl: "/images/category/hdd.jpg",
     unitType: "TB",
     unitLabel: "pro TB",
     popularFilters: [
@@ -777,6 +807,7 @@ const CATEGORY_MAP: Record<CategorySlug, Omit<Category, "slug">> = {
     icon: Server,
     parent: "pc-komponenten",
     categoryType: "standard",
+    imageUrl: "/images/category/mainboard.jpg",
     popularFilters: [
       { label: "AM5 Mainboards", params: "socket=AM5" },
       { label: "LGA 1700", params: "socket=LGA1700" },
@@ -803,6 +834,7 @@ const CATEGORY_MAP: Record<CategorySlug, Omit<Category, "slug">> = {
     icon: Server,
     parent: "pc-komponenten",
     categoryType: "standard",
+    imageUrl: "/images/category/pc-case.jpg",
     popularFilters: [
       { label: "Midi-Tower", params: "type=midi-tower" },
       { label: "Big-Tower", params: "type=big-tower" },
@@ -815,6 +847,7 @@ const CATEGORY_MAP: Record<CategorySlug, Omit<Category, "slug">> = {
     icon: Zap,
     parent: "pc-komponenten",
     categoryType: "analytical",
+    imageUrl: "/images/category/power-supply.jpg",
     unitType: "W",
     unitLabel: "pro Watt",
     popularFilters: [
@@ -829,6 +862,7 @@ const CATEGORY_MAP: Record<CategorySlug, Omit<Category, "slug">> = {
     icon: Fan,
     parent: "pc-komponenten",
     categoryType: "standard",
+    imageUrl: "/images/category/cpu-cooler.jpg",
     popularFilters: [
       { label: "Luftkühler", params: "type=air" },
       { label: "Wasserkühlung (AiO)", params: "type=aio" },
@@ -840,6 +874,7 @@ const CATEGORY_MAP: Record<CategorySlug, Omit<Category, "slug">> = {
     icon: Fan,
     parent: "pc-komponenten",
     categoryType: "standard",
+    imageUrl: "/images/category/case-fan.jpg",
     popularFilters: [
       { label: "120mm Lüfter", params: "size=120" },
       { label: "140mm Lüfter", params: "size=140" },
@@ -852,6 +887,7 @@ const CATEGORY_MAP: Record<CategorySlug, Omit<Category, "slug">> = {
     icon: HardDrive,
     parent: "pc-komponenten",
     categoryType: "standard",
+    imageUrl: "images/category/ssd.jpg",
     popularFilters: [
       { label: "SSDs", href: "/ssds" },
       { label: "Festplatten (HDD)", params: "type=hdd" },
@@ -864,6 +900,7 @@ const CATEGORY_MAP: Record<CategorySlug, Omit<Category, "slug">> = {
     icon: HardDrive,
     parent: "storage",
     categoryType: "analytical",
+    imageUrl: "/images/category/ssd.jpg",
     unitType: "TB",
     unitLabel: "pro TB",
     popularFilters: [
@@ -890,6 +927,7 @@ const CATEGORY_MAP: Record<CategorySlug, Omit<Category, "slug">> = {
     icon: Watch,
     parent: "telekommunikation",
     categoryType: "standard",
+    imageUrl: "/images/category/smartwatch-accessories.jpg",
   },
 
   smartphones: {
@@ -898,6 +936,7 @@ const CATEGORY_MAP: Record<CategorySlug, Omit<Category, "slug">> = {
     icon: Smartphone,
     parent: "telekommunikation",
     categoryType: "standard",
+    imageUrl: "/images/category/smartphone.jpg",
     popularFilters: [
       { label: "iPhone", params: "brand=Apple" },
       { label: "Samsung Galaxy", params: "brand=Samsung" },
@@ -910,6 +949,7 @@ const CATEGORY_MAP: Record<CategorySlug, Omit<Category, "slug">> = {
     icon: Watch,
     parent: "telekommunikation",
     categoryType: "standard",
+    imageUrl: "/images/category/smartwatch.jpg",
   },
 
   consoles: {
@@ -918,6 +958,7 @@ const CATEGORY_MAP: Record<CategorySlug, Omit<Category, "slug">> = {
     icon: Gamepad2,
     parent: "elektroartikel",
     categoryType: "standard",
+    imageUrl: "/images/category/console.jpg",
   },
 
   cameras: {
@@ -926,6 +967,7 @@ const CATEGORY_MAP: Record<CategorySlug, Omit<Category, "slug">> = {
     icon: Camera,
     parent: "fotografie",
     categoryType: "standard",
+    imageUrl: "/images/category/camera.jpg",
   },
 
   keyboards: {
@@ -934,6 +976,7 @@ const CATEGORY_MAP: Record<CategorySlug, Omit<Category, "slug">> = {
     icon: Keyboard,
     parent: "computer",
     categoryType: "standard",
+    imageUrl: "/images/category/keyboard.jpg",
   },
 
   mice: {
@@ -942,6 +985,7 @@ const CATEGORY_MAP: Record<CategorySlug, Omit<Category, "slug">> = {
     icon: Mouse,
     parent: "computer",
     categoryType: "standard",
+    imageUrl: "/images/category/mouse.jpg",
   },
 
   "mouse-pads": {
@@ -950,6 +994,7 @@ const CATEGORY_MAP: Record<CategorySlug, Omit<Category, "slug">> = {
     icon: Mouse,
     parent: "computer",
     categoryType: "standard",
+    imageUrl: "/images/category/mouse-pad.jpg",
   },
 
   "external-storage": {
@@ -960,6 +1005,7 @@ const CATEGORY_MAP: Record<CategorySlug, Omit<Category, "slug">> = {
     categoryType: "analytical",
     unitType: "TB",
     unitLabel: "pro TB",
+    imageUrl: "/images/category/external-storage.jpg",
   },
 
   "usb-hubs": {
@@ -968,6 +1014,7 @@ const CATEGORY_MAP: Record<CategorySlug, Omit<Category, "slug">> = {
     icon: Usb,
     parent: "computer",
     categoryType: "standard",
+    imageUrl: "/images/category/usb-hub.jpg",
   },
 
   "docking-stations": {
@@ -976,6 +1023,7 @@ const CATEGORY_MAP: Record<CategorySlug, Omit<Category, "slug">> = {
     icon: Usb,
     parent: "computer",
     categoryType: "standard",
+    imageUrl: "/images/category/docking-station.jpg",
   },
 
   "network-switches": {
@@ -984,6 +1032,7 @@ const CATEGORY_MAP: Record<CategorySlug, Omit<Category, "slug">> = {
     icon: Network,
     parent: "computer",
     categoryType: "standard",
+    imageUrl: "/images/category/network-switch.jpg",
   },
 
   "network-cards": {

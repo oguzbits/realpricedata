@@ -9,7 +9,7 @@ export interface CategoryContent {
   }[];
 }
 
-export const categoryContent: Record<CategorySlug, CategoryContent> = {
+export const categoryContent: Partial<Record<CategorySlug, CategoryContent>> = {
   electronics: {
     title: "Electronics Price Tracker",
     intro:
@@ -266,7 +266,7 @@ export const categoryContent: Record<CategorySlug, CategoryContent> = {
     intro:
       "Compare 4K, OLED, and QLED TV prices. Find the best deals on televisions from LG, Samsung, Sony, and more for home theater and gaming.",
   },
-  laptops: {
+  notebooks: {
     title: "Best Laptops (Compare Prices)",
     intro:
       "Compare laptop prices from Apple, Dell, Lenovo, HP, and more. Find the best deals on MacBooks, gaming laptops, and ultrabooks.",

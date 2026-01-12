@@ -15,14 +15,14 @@ import { IdealoProductCarousel } from "@/components/IdealoProductCarousel";
 interface ParentCategoryViewProps {
   parentCategory: Omit<Category, "icon">;
   childCategories: (Omit<Category, "icon"> & {
-    popularFilters?: { label: string; params: string }[];
+    popularFilters?: { label: string; params?: string; href?: string }[];
   })[];
   /** Bestseller products for the grid section */
   bestsellers?: BestsellerProduct[];
   /** New products for the carousel section */
   newProducts?: BestsellerProduct[];
-  /** Deal products for the carousel section */
   deals?: BestsellerProduct[];
+  breadcrumbItems?: { name: string; href?: string }[];
 }
 
 export function ParentCategoryView({
@@ -31,15 +31,8 @@ export function ParentCategoryView({
   bestsellers = [],
   newProducts = [],
   deals = [],
+  breadcrumbItems = [],
 }: ParentCategoryViewProps) {
-  const [isExpanded, setIsExpanded] = React.useState(false);
-  const hasMore = childCategories.length > 8;
-
-  const breadcrumbItems = [
-    { name: "Startseite", href: "/" },
-    { name: parentCategory.name },
-  ];
-
   return (
     <div className="mx-auto max-w-[1280px] px-4 py-8">
       <Breadcrumbs items={breadcrumbItems} />
@@ -49,13 +42,8 @@ export function ParentCategoryView({
           {parentCategory.name}
         </h2>
         <div className="grid grid-cols-1 gap-x-8 gap-y-16 sm:grid-cols-2 lg:grid-cols-4">
-          {childCategories.map((category, index) => (
-            <div
-              key={category.slug}
-              className={index >= 8 && !isExpanded ? "hidden" : "block"}
-              // Always keep in DOM for SEO, but hide visually
-              style={{ display: index >= 8 && !isExpanded ? "none" : "block" }}
-            >
+          {childCategories.map((category) => (
+            <div key={category.slug}>
               <CategoryHubCard
                 category={category}
                 Icon={getCategoryIcon(category.slug)}
@@ -63,18 +51,6 @@ export function ParentCategoryView({
             </div>
           ))}
         </div>
-
-        {/* 'Alle Kategorien' Toggle Button */}
-        {hasMore && (
-          <div className="mt-20 flex justify-center">
-            <button
-              onClick={() => setIsExpanded(!isExpanded)}
-              className="flex items-center justify-center rounded-[2px] border border-[#0066cc] bg-white px-10 py-3 text-[16px] font-medium text-[#0066cc] transition-all hover:bg-[#e8f4fd]"
-            >
-              {isExpanded ? "Weniger Kategorien" : "Alle Kategorien"}
-            </button>
-          </div>
-        )}
       </section>
       {/* Bestseller Section - Internal Links to Products */}
       {bestsellers.length > 0 && (

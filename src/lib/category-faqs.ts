@@ -5,7 +5,7 @@ import type { FAQItem } from "@/components/category/FAQSchema";
  * Category FAQs for structured data (SEO)
  * These appear in Google search results as rich snippets
  */
-export const categoryFAQs: Record<CategorySlug, FAQItem[]> = {
+export const categoryFAQs: Partial<Record<CategorySlug, FAQItem[]>> = {
   // Parent category - no FAQs needed for parent categories
   electronics: [],
 
@@ -138,7 +138,7 @@ export const categoryFAQs: Record<CategorySlug, FAQItem[]> = {
   motherboards: [],
   smartphones: [],
   tvs: [],
-  laptops: [],
+  notebooks: [],
   consoles: [],
 };
 

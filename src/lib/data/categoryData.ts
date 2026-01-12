@@ -16,9 +16,8 @@ export function getCategoriesForDisplay(): CategoryData[] {
     .map((category) => ({
       title: category.name,
       slug: category.slug,
-      // No external images - use placeholder or category icon
-      imageUrl: undefined,
-      popularLinks: category.popularFilters?.slice(0, 4).map((filter) => ({
+      imageUrl: `/images/category/${category.slug}.jpg`,
+      popularLinks: category.popularFilters?.slice(0, 10).map((filter) => ({
         title: filter.label,
         href: `/${category.slug}?${filter.params}`,
       })),

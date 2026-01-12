@@ -10,7 +10,8 @@ interface CategoryHubCardProps {
     name: string;
     slug: string;
     description: string;
-    popularFilters?: { label: string; params: string }[];
+    imageUrl?: string;
+    popularFilters?: { label: string; params?: string; href?: string }[];
   };
   Icon: React.ComponentType<{ className?: string }>;
 }
@@ -21,7 +22,8 @@ interface CategoryHubCardProps {
  */
 export function CategoryHubCard({ category, Icon }: CategoryHubCardProps) {
   const categoryPath = getCategoryPath(category.slug as CategorySlug);
-  const imagePath = `/images/category/${category.slug}.jpg`;
+  const imagePath =
+    category.imageUrl || `/images/category/${category.slug}.jpg`;
 
   // State to handle image loading errors and fallback to Icon
   const [imageError, setImageError] = React.useState(false);
@@ -56,8 +58,13 @@ export function CategoryHubCard({ category, Icon }: CategoryHubCardProps) {
       <div className="flex flex-col gap-2">
         {(category.popularFilters || []).slice(0, 10).map((filter) => (
           <Link
-            key={`${category.slug}-${filter.params}`}
-            href={`${categoryPath}?${filter.params}`}
+            key={`${category.slug}-${filter.label}`}
+            href={
+              filter.href ||
+              (filter.params
+                ? `${categoryPath}?${filter.params}`
+                : categoryPath)
+            }
             className="text-[14px] leading-snug text-[#2d2d2d] no-underline hover:text-[#0066cc] hover:underline"
           >
             {filter.label}

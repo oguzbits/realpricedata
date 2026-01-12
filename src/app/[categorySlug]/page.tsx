@@ -3,6 +3,7 @@ import { ParentCategoryView } from "@/components/category/ParentCategoryView";
 import {
   getCategoryBySlug,
   getChildCategories,
+  getBreadcrumbs,
   stripCategoryIcon,
   allCategories,
   type CategorySlug,
@@ -79,8 +80,10 @@ export default async function DedicatedCategoryPage({
 
   if (!category) notFound();
 
-  // If it's a parent category (no parent slug), show the parent view with product sections
-  if (!category.parent) {
+  const childCategories = getChildCategories(categorySlug as CategorySlug);
+
+  // If it's a hub (has children), show the parent view with product sections
+  if (childCategories.length > 0) {
     const childCategories = getChildCategories(categorySlug as CategorySlug);
 
     // Fetch products for internal linking sections (in parallel)
@@ -108,6 +111,15 @@ export default async function DedicatedCategoryPage({
       offerCount: Object.keys(p.prices).length,
     });
 
+    // Build breadcrumbs for the parent view
+    const breadcrumbItems = [
+      { name: "Home", href: "/" },
+      ...getBreadcrumbs(categorySlug as CategorySlug).map((crumb) => ({
+        name: crumb.name,
+        href: crumb.slug === categorySlug ? undefined : `/${crumb.slug}`,
+      })),
+    ];
+
     return (
       <ParentCategoryView
         parentCategory={stripCategoryIcon(category)}
@@ -115,6 +127,7 @@ export default async function DedicatedCategoryPage({
         bestsellers={bestsellers.map(transformProduct)}
         newProducts={newProducts.map(transformProduct)}
         deals={deals.map(transformProduct)}
+        breadcrumbItems={breadcrumbItems}
       />
     );
   }

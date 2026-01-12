@@ -134,6 +134,7 @@ async function migrate() {
           set: {
             // Update all important fields
             title: sql`excluded.title`,
+            category: sql`excluded.category`,
             salesRank: sql`excluded.sales_rank`,
             monthlySold: sql`excluded.monthly_sold`,
             updatedAt: sql`excluded.updated_at`,

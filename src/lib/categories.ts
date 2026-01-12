@@ -14,10 +14,13 @@ import {
   MemoryStick,
   Mic,
   Monitor,
+  MonitorCheck,
   MonitorSpeaker,
   Mouse,
   Network,
   Package,
+  Phone,
+  Printer,
   Router,
   Server,
   Search,
@@ -30,6 +33,7 @@ import {
   Video,
   Watch,
   Zap,
+  Home,
   type LucideIcon,
 } from "lucide-react";
 import { BRAND_DOMAIN } from "./site-config";
@@ -44,21 +48,23 @@ export type UnitType = "TB" | "GB" | "W" | "core";
 export type CategoryType = "analytical" | "standard";
 
 export type CategorySlug =
+  | "pc-komponenten"
+  | "computer"
+  | "elektroartikel"
   | "electronics"
-  // Analytical categories (price-per-unit)
   | "hard-drives"
   | "ram"
   | "power-supplies"
   | "cpu"
   | "gpu"
+  | "storage"
+  | "ssds"
   | "external-storage"
-  // PC Components
   | "motherboards"
   | "pc-cases"
   | "cpu-coolers"
   | "case-fans"
   | "thermal-paste"
-  // Peripherals
   | "monitors"
   | "keyboards"
   | "mice"
@@ -67,39 +73,65 @@ export type CategorySlug =
   | "speakers"
   | "microphones"
   | "webcams"
-  // Networking
   | "routers"
   | "nas"
   | "usb-hubs"
   | "docking-stations"
   | "network-switches"
   | "network-cards"
-  // Accessories
   | "cables"
   | "laptop-stands"
   | "ups"
   | "cable-management"
   | "monitor-arms"
   | "desk-accessories"
-  // Furniture
   | "gaming-chairs"
   | "office-chairs"
   | "standing-desks"
-  // Mobile & Wearables
   | "tablets"
   | "smartwatches"
   | "tablet-accessories"
   | "phone-accessories"
-  // Gaming
   | "game-controllers"
   | "vr-headsets"
-  | "vr-headsets"
   | "capture-cards"
-  // High Priority Consumer Tech
   | "smartphones"
   | "tvs"
-  | "laptops"
-  | "consoles";
+  | "notebooks"
+  | "consoles"
+  | "soundbars"
+  | "drones"
+  | "cameras"
+  | "smartwatch-accessories"
+  | "haushaltselektronik"
+  | "telekommunikation"
+  | "hifi-audio"
+  | "tv-sat"
+  | "fotografie"
+  | "drucker-scanner"
+  | "staubsauger"
+  | "gaming-elektrospielzeug"
+  | "espressomaschinen"
+  | "kühlschränke"
+  | "elektrische-zahnbürsten"
+  | "waschmaschinen"
+  | "multifunktionsdrucker"
+  | "geschirrspüler"
+  | "systemkameras"
+  | "druckerpatronen"
+  | "backöfen"
+  | "kochfelder"
+  | "radios"
+  | "wäschetrockner"
+  | "küchenmaschinen"
+  | "bartschneider-haarschneider"
+  | "receiver"
+  | "mikrowellen"
+  | "dunstabzugshauben"
+  | "gefrierschränke"
+  | "herde"
+  | "kompaktkameras"
+  | "medien";
 
 export interface FilterGroup {
   label: string;
@@ -124,7 +156,8 @@ export interface Category {
   unitLabel?: string;
   hidden?: boolean;
   isFeatured?: boolean; // Show in popular categories on homepage
-  popularFilters?: { label: string; params: string }[];
+  popularFilters?: { label: string; params?: string; href?: string }[];
+  imageUrl?: string;
   aliases?: string[]; // SEO and URL aliases
   /** Tailwind filter groups for this category */
   filterGroups?: FilterGroup[];
@@ -138,861 +171,969 @@ export interface CategoryHierarchy {
 // Internal base categories object to derive slugs from
 const CATEGORY_MAP: Record<CategorySlug, Omit<Category, "slug">> = {
   // Parent Category
+  haushaltselektronik: {
+    name: "Haushaltselektronik",
+    description: "Kühlschränke, Waschmaschinen und Küchengeräte",
+    icon: Home,
+    parent: "elektroartikel",
+    categoryType: "standard",
+    popularFilters: [
+      { label: "Elektro-Großgeräte", href: "/elektro-großgeräte" },
+      { label: "Haushaltsgeräte", href: "/haushaltsgeräte" },
+      { label: "Küchengeräte", href: "/küchengeräte" },
+      { label: "Kaffeezubereitung", href: "/kaffeezubereitung" },
+      { label: "Pflege- & Wellnessgeräte", href: "/pflege-wellness" },
+    ],
+  },
+
+  computer: {
+    name: "Computer",
+    description: "Notebooks, Monitore, Tablets und Zubehör",
+    icon: Laptop,
+    parent: "elektroartikel",
+    categoryType: "standard",
+    popularFilters: [
+      { label: "PC-Komponenten", href: "/pc-komponenten" },
+      { label: "Notebooks", href: "/notebooks" },
+      { label: "Tablets", href: "/tablets" },
+      { label: "Eingabegeräte", href: "/eingabegeräte" },
+      { label: "Grafikkarten", href: "/gpu" },
+    ],
+    metaTitle: `Computer & Zubehör Preisvergleich | ${BRAND_DOMAIN}`,
+    metaDescription:
+      "Vergleichen Sie Preise für Laptops, Monitore und Computer-Zubehör.",
+  },
+
+  telekommunikation: {
+    name: "Telekommunikation",
+    description: "Smartphones, Smartwatches und Zubehör",
+    icon: Phone,
+    parent: "elektroartikel",
+    categoryType: "standard",
+    popularFilters: [
+      { label: "Handys & Smartphones", href: "/smartphones" },
+      { label: "Smartwatches", href: "/smartwatches" },
+      { label: "Handy-Zubehör", href: "/phone-accessories" },
+      { label: "Telefone", href: "/telefone" },
+      { label: "Smartwatch-Zubehör", href: "/smartwatch-accessories" },
+    ],
+  },
+
+  "hifi-audio": {
+    name: "HiFi & Audio",
+    description: "Kopfhörer, Lautsprecher und Soundbars",
+    icon: Speaker,
+    parent: "elektroartikel",
+    categoryType: "standard",
+    popularFilters: [
+      { label: "HiFi-Komponenten", href: "/hifi-komponenten" },
+      { label: "Kopfhörer", href: "/headphones" },
+      { label: "Studio- & Event-Technik", href: "/studio-technik" },
+      { label: "Musikinstrumente", href: "/musikinstrumente" },
+      { label: "Radios", href: "/radios" },
+    ],
+  },
+
+  "tv-sat": {
+    name: "TV & Sat",
+    description: "Fernseher, Heimkino und Zubehör",
+    icon: Tv,
+    parent: "elektroartikel",
+    categoryType: "standard",
+    popularFilters: [
+      { label: "Fernseher", href: "/tvs" },
+      { label: "Heimkino", href: "/heimkino" },
+      { label: "Netzwerkplayer", href: "/netzwerkplayer" },
+      { label: "TV-Zubehör", href: "/tv-zubehör" },
+      { label: "Blu-ray-Player", href: "/blu-ray-player" },
+    ],
+  },
+
+  fotografie: {
+    name: "Fotografie",
+    description: "Kameras, Objektive und Zubehör",
+    icon: Camera,
+    parent: "elektroartikel",
+    categoryType: "standard",
+    popularFilters: [
+      { label: "Kamera-Zubehör", href: "/kamera-zubehör" },
+      { label: "Digitalkameras", href: "/cameras" },
+      { label: "Systemkameras", href: "/systemkameras" },
+      { label: "Objektive", href: "/objektive" },
+      { label: "Action-Cams", href: "/action-cams" },
+    ],
+  },
+
+  "drucker-scanner": {
+    name: "Drucker & Scanner",
+    description: "Multifunktionsdrucker, Tinte und Toner",
+    icon: Printer,
+    parent: "elektroartikel",
+    categoryType: "standard",
+    popularFilters: [
+      { label: "Druckerzubehör", href: "/druckerzubehör" },
+      { label: "Multifunktionsdrucker", href: "/multifunktionsdrucker" },
+      { label: "3D-Drucker", href: "/3d-drucker" },
+      { label: "Laserdrucker", href: "/laserdrucker" },
+      { label: "Scanner", href: "/scanner" },
+    ],
+  },
+
+  "gaming-elektrospielzeug": {
+    name: "Gaming & Elektrospielzeug",
+    description: "Konsolen, Drohnen und E-Spielzeuge",
+    icon: Gamepad2,
+    parent: "elektroartikel",
+    categoryType: "standard",
+    popularFilters: [
+      { label: "Spielekonsolen", href: "/consoles" },
+      { label: "Drohnen", href: "/drones" },
+      { label: "Drohnenzubehör", href: "/drones-accessories" },
+      { label: "Elektronische Spielzeuge", href: "/gaming-toys" },
+      { label: "Kinderkameras", href: "/kids-cameras" },
+    ],
+  },
+
+  elektroartikel: {
+    name: "Elektroartikel",
+    description: "Smartphones, TVs, Kopfhörer und Wearables",
+    icon: Smartphone,
+    categoryType: "standard",
+    metaTitle: `Elektroartikel & Multimedia Preisvergleich | ${BRAND_DOMAIN}`,
+    metaDescription:
+      "Top-Angebote für Smartphones, Fernseher und Unterhaltungselektronik.",
+  },
+
   electronics: {
     name: "Elektronik",
-    description: "Digitale Speicherlösungen - Preis pro Terabyte vergleichen",
+    description: "Hardware, Computer & Multimedia",
     icon: HardDrive,
-    categoryType: "standard", // Parent categories are standard
-    metaTitle: `Festplatten & Speicher - Bester Preis pro TB | ${BRAND_DOMAIN}`,
-    metaDescription:
-      "Vergleichen Sie Festplatten- und SSD-Preise nach Kosten pro Terabyte. Finden Sie die besten Angebote für Speicher von Samsung, WD, Seagate und Crucial.",
-  },
-
-  // Electronics Children (ONLY monetized categories)
-  "hard-drives": {
-    name: "Festplatten & SSDs",
-    description: "HDD- und SSD-Speicherlösungen - Preis pro TB vergleichen",
-    icon: HardDrive,
-    parent: "electronics",
-    categoryType: "analytical",
-    unitType: "TB",
-    unitLabel: "pro TB",
-    isFeatured: true,
-    metaTitle: `Festplatten & SSDs - Preis pro TB vergleichen | ${BRAND_DOMAIN}`,
-    metaDescription:
-      "Finden Sie die besten Festplatten- und SSD-Angebote durch Preisvergleich pro Terabyte. Vergleichen Sie interne und externe Speicher von Top-Marken.",
-    popularFilters: [
-      { label: "SSDs", params: "technology=SSD" },
-      { label: "HDDs", params: "technology=HDD" },
-      { label: "NVMe SSDs", params: "formFactor=M.2+NVMe" },
-    ],
-    aliases: ["disks", "storage", "hdd", "ssd"],
-    filterGroups: [
-      { label: "Zustand", field: "condition", type: "checkbox" },
-      { label: "Technologie", field: "technology", type: "checkbox" },
-      { label: "Bauform", field: "formFactor", type: "checkbox" },
-    ],
-  },
-
-  ram: {
-    name: "Arbeitsspeicher",
-    description: "DDR4- und DDR5-RAM-Module - Preis pro GB vergleichen",
-    icon: MemoryStick,
-    parent: "electronics",
-    categoryType: "analytical",
-    unitType: "GB",
-    unitLabel: "pro GB",
-    metaTitle: `Arbeitsspeicher (RAM) - Preis pro GB vergleichen | ${BRAND_DOMAIN}`,
-    metaDescription:
-      "Finden Sie die besten RAM-Angebote durch Preisvergleich pro Gigabyte. Vergleichen Sie DDR4- und DDR5-Module von Crucial, Lexar und Patriot.",
-    popularFilters: [
-      { label: "DDR4 RAM", params: "technology=DDR4" },
-      { label: "DDR5 RAM", params: "technology=DDR5" },
-      { label: "Laptop RAM", params: "formFactor=SO-DIMM" },
-    ],
-    aliases: ["memory"],
-    filterGroups: [
-      { label: "Zustand", field: "condition", type: "checkbox" },
-      { label: "Typ", field: "technology", type: "checkbox" },
-      { label: "Bauform", field: "formFactor", type: "checkbox" },
-    ],
-  },
-
-  "power-supplies": {
-    name: "Netzteile",
-    description: "ATX- und SFX-Netzteile - Preis pro Watt vergleichen",
-    icon: Zap,
-    parent: "electronics",
-    categoryType: "analytical",
-    unitType: "W",
-    unitLabel: "pro Watt",
-    metaTitle: `Netzteile - Preis pro Watt vergleichen | ${BRAND_DOMAIN}`,
-    metaDescription:
-      "Finden Sie die besten Netzteil-Angebote durch Preisvergleich pro Watt. Vergleichen Sie 80+ Bronze, Gold and Platinum PSUs von Top-Marken.",
-    popularFilters: [{ label: "80+ Gold", params: "technology=80%2B+Gold" }],
-    aliases: ["psu"],
-    filterGroups: [
-      { label: "Zustand", field: "condition", type: "checkbox" },
-      { label: "Zertifizierung", field: "technology", type: "checkbox" },
-      { label: "Bauform", field: "formFactor", type: "checkbox" },
-    ],
-  },
-
-  cpu: {
-    name: "Prozessoren",
-    description: "Prozessoren nach Kernanzahl und Leistung vergleichen",
-    icon: HardDrive,
-    parent: "electronics",
-    categoryType: "analytical",
-    unitType: "core",
-    unitLabel: "pro Kern",
-    hidden: false, // Unhide when ready to launch
-    metaTitle: `Prozessoren (CPUs) - Preise vergleichen | ${BRAND_DOMAIN}`,
-    metaDescription:
-      "Finden Sie die besten Preise für Intel- und AMD-Prozessoren. Vergleichen Sie Kernanzahl, Taktfrequenzen und Benchmarks.",
-    popularFilters: [
-      { label: "Intel Core i7", params: "brand=Intel&series=Core+i7" },
-      { label: "AMD Ryzen 7", params: "brand=AMD&series=Ryzen+7" },
-    ],
-    aliases: ["processors", "chips"],
-    filterGroups: [
-      { label: "Zustand", field: "condition", type: "checkbox" },
-      { label: "Marke", field: "brand", type: "checkbox" },
-      { label: "Sockel", field: "socket", type: "checkbox" },
-      { label: "Kerne", field: "cores", type: "checkbox" },
-    ],
-  },
-
-  gpu: {
-    name: "Grafikkarten",
-    description: "GPUs nach VRAM und Leistung vergleichen",
-    icon: HardDrive,
-    parent: "electronics",
-    categoryType: "analytical",
-    unitType: "GB",
-    unitLabel: "pro GB VRAM",
-
-    hidden: false, // Unhide when ready to launch
-    isFeatured: true,
-    metaTitle: `Grafikkarten (GPUs) - Preise vergleichen | ${BRAND_DOMAIN}`,
-    metaDescription:
-      "Finden Sie die besten Grafikkarten-Angebote. Vergleichen Sie NVIDIA GeForce und AMD Radeon GPUs nach Preis und Leistung.",
-    popularFilters: [
-      { label: "NVIDIA RTX 4070", params: "brand=NVIDIA&model=RTX+4070" },
-      { label: "12GB+ VRAM", params: "min_memory=12" },
-    ],
-    aliases: ["video-cards", "vga"],
-    filterGroups: [
-      { label: "Zustand", field: "condition", type: "checkbox" },
-      { label: "Marke", field: "brand", type: "checkbox" },
-      { label: "Speicher", field: "capacity", type: "checkbox" },
-    ],
-  },
-
-  // ======================
-  // Standard Categories (no price-per-unit)
-  // ======================
-
-  monitors: {
-    name: "Monitore",
-    description:
-      "Monitore nach Größe, Auflösung und Bildwiederholrate vergleichen",
-    icon: Monitor,
-    parent: "electronics",
+    hidden: true,
     categoryType: "standard",
-
-    hidden: false, // Unhide when ready to launch
-    isFeatured: true,
-    metaTitle: `Monitore Preisvergleich » 144Hz, 4K & Ultrawide | ${BRAND_DOMAIN}`,
-    metaDescription:
-      "Gaming-Monitore & Office-Displays im Preisvergleich » 27 Zoll, 144Hz, 4K & OLED. Top-Modelle von LG, Samsung & Dell günstig kaufen.",
-    popularFilters: [
-      { label: "4K Monitore", params: "resolution=4K" },
-      { label: "Gaming 144Hz+", params: "refresh_rate=144" },
-      { label: "Ultrawide", params: "aspect_ratio=21:9" },
-    ],
-    aliases: ["displays", "screens"],
-  },
-
-  keyboards: {
-    name: "Tastaturen",
-    description: "Mechanische und Membran-Tastaturen für Gaming und Arbeit",
-    icon: Keyboard,
-    parent: "electronics",
-    categoryType: "standard",
-    hidden: false,
-    metaTitle: `Tastaturen - Preise vergleichen | ${BRAND_DOMAIN}`,
-    metaDescription:
-      "Finden Sie die besten Tastatur-Angebote. Vergleichen Sie mechanische, Membran- und kabellose Tastaturen von Logitech, Razer, Corsair und mehr.",
-    popularFilters: [
-      { label: "Mechanisch", params: "type=mechanical" },
-      { label: "Kabellos", params: "connectivity=wireless" },
-      { label: "RGB", params: "features=rgb" },
-    ],
-    aliases: ["tastaturen"],
-  },
-
-  mice: {
-    name: "Mäuse",
-    description: "Gaming- und Produktivitätsmäuse für Präzision und Komfort",
-    icon: Mouse,
-    parent: "electronics",
-    categoryType: "standard",
-    hidden: false,
-    metaTitle: `Computer-Mäuse - Preise vergleichen | ${BRAND_DOMAIN}`,
-    metaDescription:
-      "Finden Sie die besten Maus-Angebote. Vergleichen Sie Gaming-Mäuse, ergonomische Mäuse und kabellose Mäuse von Logitech, Razer und SteelSeries.",
-    popularFilters: [
-      { label: "Gaming-Mäuse", params: "type=gaming" },
-      { label: "Kabellos", params: "connectivity=wireless" },
-      { label: "Ergonomisch", params: "type=ergonomic" },
-    ],
-    aliases: ["mäuse", "maus"],
-  },
-
-  headphones: {
-    name: "Kopfhörer",
-    description: "Over-Ear-, In-Ear- und Gaming-Headsets",
-    icon: Headphones,
-    parent: "electronics",
-    categoryType: "standard",
-    hidden: false,
-    metaTitle: `Kopfhörer & Headsets - Preise vergleichen | ${BRAND_DOMAIN}`,
-    metaDescription:
-      "Finden Sie die besten Kopfhörer-Angebote. Vergleichen Sie Over-Ear-, In-Ear- und Gaming-Headsets von Sony, Bose, Sennheiser und mehr.",
-    popularFilters: [
-      { label: "Over-Ear", params: "type=over-ear" },
-      { label: "Kabellos", params: "connectivity=wireless" },
-      { label: "Gaming-Headsets", params: "type=gaming" },
-      { label: "Noise Cancelling", params: "features=anc" },
-    ],
-    aliases: ["kopfhörer", "headsets"],
-  },
-
-  webcams: {
-    name: "Webcams",
-    description: "HD- und 4K-Webcams für Streaming und Videokonferenzen",
-    icon: Camera,
-    parent: "electronics",
-    categoryType: "standard",
-    hidden: false,
-    metaTitle: `Webcams - Preise vergleichen | ${BRAND_DOMAIN}`,
-    metaDescription:
-      "Finden Sie die besten Webcam-Angebote. Vergleichen Sie HD- und 4K-Webcams für Streaming, Videokonferenzen und Content-Erstellung.",
-    popularFilters: [
-      { label: "4K Webcams", params: "resolution=4K" },
-      { label: "1080p", params: "resolution=1080p" },
-      { label: "Streaming", params: "type=streaming" },
-    ],
-    aliases: ["kameras", "webkameras"],
-  },
-
-  // ======================
-  // Additional Standard Categories
-  // ======================
-
-  "external-storage": {
-    name: "Externe Speicher",
-    description: "Externe Festplatten und tragbare SSDs",
-    icon: HardDrive,
-    parent: "electronics",
-    categoryType: "analytical",
-    unitType: "TB",
-    unitLabel: "pro TB",
-    hidden: false,
-    metaTitle: `Externe Speicher - Preis pro TB vergleichen | ${BRAND_DOMAIN}`,
-    metaDescription:
-      "Vergleichen Sie externe Festplatten und tragbare SSDs nach Preis pro TB. Finden Sie die besten Angebote von WD, Seagate, Samsung und SanDisk.",
-    popularFilters: [
-      { label: "Portable SSD", params: "type=ssd" },
-      { label: "USB-C", params: "interface=usb-c" },
-    ],
-    aliases: ["externe-festplatten", "portable-ssd"],
-  },
-
-  routers: {
-    name: "WLAN-Router",
-    description: "WiFi-Router und Mesh-Systeme",
-    icon: Router,
-    parent: "electronics",
-    categoryType: "standard",
-    hidden: false,
-    metaTitle: `WLAN-Router - Preise vergleichen | ${BRAND_DOMAIN}`,
-    metaDescription:
-      "Vergleichen Sie WiFi 6- und WiFi 7-Router von ASUS, TP-Link, Netgear und mehr. Finden Sie die besten Angebote für Mesh-Systeme.",
-    popularFilters: [
-      { label: "WiFi 6", params: "wifi=6" },
-      { label: "WiFi 7", params: "wifi=7" },
-      { label: "Mesh-Systeme", params: "type=mesh" },
-    ],
-    aliases: ["wlan-router", "mesh"],
-  },
-
-  nas: {
-    name: "NAS-Systeme",
-    description: "Netzwerkspeicher für Zuhause und Büro",
-    icon: Server,
-    parent: "electronics",
-    categoryType: "standard",
-    hidden: false,
-    metaTitle: `NAS-Systeme - Preise vergleichen | ${BRAND_DOMAIN}`,
-    metaDescription:
-      "Vergleichen Sie NAS-Geräte von Synology, QNAP und mehr. Finden Sie die besten Angebote für Home-Server und Medienspeicher.",
-    popularFilters: [
-      { label: "2-Bay", params: "bays=2" },
-      { label: "4-Bay", params: "bays=4" },
-      { label: "Synology", params: "brand=Synology" },
-    ],
-    aliases: ["netzwerkspeicher", "home-server"],
-  },
-
-  "usb-hubs": {
-    name: "USB-Hubs",
-    description: "USB-Hubs und Port-Erweiterungen",
-    icon: Usb,
-    parent: "electronics",
-    categoryType: "standard",
-    hidden: false,
-    metaTitle: `USB-Hubs - Preise vergleichen | ${BRAND_DOMAIN}`,
-    metaDescription:
-      "Vergleichen Sie USB-C- und USB-A-Hubs. Finden Sie Angebote für aktive Hubs und Docking-Lösungen.",
-    popularFilters: [
-      { label: "USB-C", params: "type=usb-c" },
-      { label: "Aktiv", params: "powered=true" },
-    ],
-    aliases: ["usb-verteiler"],
-  },
-
-  speakers: {
-    name: "Lautsprecher",
-    description: "PC-Lautsprecher und Audiosysteme",
-    icon: Speaker,
-    parent: "electronics",
-    categoryType: "standard",
-    hidden: false,
-    metaTitle: `PC-Lautsprecher - Preise vergleichen | ${BRAND_DOMAIN}`,
-    metaDescription:
-      "Vergleichen Sie PC-Lautsprecher, Soundbars und 2.1-Systeme. Finden Sie Angebote von Logitech, Creative und mehr.",
-    popularFilters: [
-      { label: "2.1-Systeme", params: "type=2.1" },
-      { label: "Bluetooth", params: "connectivity=bluetooth" },
-    ],
-    aliases: ["lautsprecher", "pc-lautsprecher"],
-  },
-
-  microphones: {
-    name: "Mikrofone",
-    description: "USB- und XLR-Mikrofone für Streaming und Podcasting",
-    icon: Mic,
-    parent: "electronics",
-    categoryType: "standard",
-    hidden: false,
-    metaTitle: `Mikrofone - Preise vergleichen | ${BRAND_DOMAIN}`,
-    metaDescription:
-      "Vergleichen Sie USB- und XLR-Mikrofone für Streaming, Gaming und Podcasting. Finden Sie Angebote von Blue, Rode und Shure.",
-    popularFilters: [
-      { label: "USB-Mikrofone", params: "type=usb" },
-      { label: "XLR", params: "type=xlr" },
-      { label: "Kondensator", params: "type=condenser" },
-    ],
-    aliases: ["mikrofone", "streaming-mikrofon"],
-  },
-
-  "gaming-chairs": {
-    name: "Gaming-Stühle",
-    description: "Ergonomische Gaming- und Bürostühle",
-    icon: Armchair,
-    parent: "electronics",
-    categoryType: "standard",
-    hidden: false,
-    metaTitle: `Gaming-Stühle - Preise vergleichen | ${BRAND_DOMAIN}`,
-    metaDescription:
-      "Vergleichen Sie Gaming-Stühle von Secretlab, Noblechairs und mehr. Finden Sie ergonomische Stühle für lange Gaming-Sessions.",
-    popularFilters: [
-      { label: "Secretlab", params: "brand=Secretlab" },
-      { label: "Ergonomisch", params: "features=ergonomic" },
-    ],
-    aliases: ["gaming-stühle", "bürostühle"],
-  },
-
-  tablets: {
-    name: "Tablets",
-    description: "iPads, Android-Tablets und Grafik-Tablets",
-    icon: Tablet,
-    parent: "electronics",
-    categoryType: "standard",
-    hidden: false,
-    metaTitle: `Tablets - Preise vergleichen | ${BRAND_DOMAIN}`,
-    metaDescription:
-      "Vergleichen Sie Tablets von Apple, Samsung und Lenovo. Finden Sie Angebote für iPads, Android-Tablets und Grafik-Tablets.",
-    popularFilters: [
-      { label: "iPad", params: "brand=Apple" },
-      { label: "Samsung Galaxy Tab", params: "brand=Samsung" },
-      { label: "Grafik-Tablets", params: "type=drawing" },
-    ],
-    aliases: ["tablet-pc"],
-  },
-
-  smartphones: {
-    name: "Smartphones",
-    description: "Android-Smartphones und iPhones",
-    icon: Smartphone,
-    parent: "electronics",
-    categoryType: "standard",
-
-    hidden: false,
-    isFeatured: true,
-    metaTitle: `Smartphones - Preise vergleichen | ${BRAND_DOMAIN}`,
-    metaDescription:
-      "Vergleichen Sie Smartphones von Samsung, Apple, Xiaomi und Google. Finden Sie die besten Preise für iPhones und Galaxy-Modelle.",
-    popularFilters: [
-      { label: "iPhone", params: "brand=Apple" },
-      { label: "Samsung Galaxy", params: "brand=Samsung" },
-      { label: "5G", params: "features=5g" },
-    ],
-    aliases: ["handys", "mobiles"],
-  },
-
-  laptops: {
-    name: "Laptops",
-    description: "Notebooks, Ultrabooks und Gaming-Laptops",
-    icon: Laptop,
-    parent: "electronics",
-    categoryType: "standard",
-
-    hidden: false,
-    isFeatured: true,
-    metaTitle: `Laptops & Notebooks - Preise vergleichen | ${BRAND_DOMAIN}`,
-    metaDescription:
-      "Vergleichen Sie Laptops von Apple, Lenovo, Dell und ASUS. Gaming-Notebooks, Business-Laptops und MacBooks.",
-    popularFilters: [
-      { label: "Gaming-Laptops", params: "type=gaming" },
-      { label: "MacBook", params: "brand=Apple" },
-      { label: "Ultrabooks", params: "type=ultrabook" },
-    ],
-    aliases: ["notebooks"],
   },
 
   tvs: {
     name: "Fernseher",
-    description: "4K, OLED und QLED Fernseher",
+    description: "OLED, QLED und Smart TVs",
     icon: Tv,
-    parent: "electronics",
+    parent: "elektroartikel",
     categoryType: "standard",
-
-    hidden: false,
-    isFeatured: true,
-    metaTitle: `Fernseher (TVs) - Preise vergleichen | ${BRAND_DOMAIN}`,
-    metaDescription:
-      "Vergleichen Sie 4K-, OLED- und QLED-Fernseher von LG, Samsung, Sony und Philips. Finden Sie die besten TV-Angebote.",
     popularFilters: [
       { label: "55 Zoll", params: "size=55" },
       { label: "65 Zoll", params: "size=65" },
-      { label: "OLED", params: "technology=oled" },
+      { label: "OLED", params: "panel=oled" },
+      { label: "Samsung", params: "brand=Samsung" },
+      { label: "LG", params: "brand=LG" },
     ],
-    aliases: ["tv", "fernseher"],
   },
 
-  consoles: {
-    name: "Spielekonsolen",
-    description: "PlayStation, Xbox und Nintendo Switch",
-    icon: Gamepad2,
-    parent: "electronics",
+  staubsauger: {
+    name: "Staubsauger",
+    description: "Akku-Staubsauger und Saugroboter",
+    icon: Fan,
+    parent: "elektroartikel",
     categoryType: "standard",
-
-    hidden: false,
-    isFeatured: true,
-    metaTitle: `Spielekonsolen - Preise vergleichen | ${BRAND_DOMAIN}`,
-    metaDescription:
-      "Vergleichen Sie Preise für PS5, Xbox Series X und Nintendo Switch. Konsolen-Bundles und Angebote.",
     popularFilters: [
-      { label: "PlayStation 5", params: "platform=ps5" },
-      { label: "Nintendo Switch", params: "platform=switch" },
-      { label: "Xbox Series X", params: "platform=xbox" },
+      { label: "Dyson", params: "brand=Dyson" },
+      { label: "Saugroboter", params: "type=robot" },
+      { label: "Akku-Staubsauger", params: "type=cordless" },
+      { label: "Miele", params: "brand=Miele" },
     ],
-    aliases: ["konsolen", "gaming-consoles"],
   },
 
-  smartwatches: {
-    name: "Smartwatches",
-    description: "Smartwatches und Fitness-Tracker",
-    icon: Watch,
-    parent: "electronics",
+  headphones: {
+    name: "Kopfhörer",
+    description: "In-Ear, Over-Ear und Bluetooth Kopfhörer",
+    icon: Headphones,
+    parent: "elektroartikel",
     categoryType: "standard",
-    hidden: false,
-    metaTitle: `Smartwatches - Preise vergleichen | ${BRAND_DOMAIN}`,
-    metaDescription:
-      "Vergleichen Sie Smartwatches von Apple, Samsung, Garmin und Fitbit. Finden Sie Angebote für Fitness-Tracker und Smart-Bänder.",
     popularFilters: [
-      { label: "Apple Watch", params: "brand=Apple" },
-      { label: "Garmin", params: "brand=Garmin" },
-      { label: "Fitness-Tracker", params: "type=fitness" },
+      { label: "Apple", params: "brand=Apple" },
+      { label: "Bluetooth", params: "type=bluetooth" },
+      { label: "Noise-Cancelling", params: "features=anc" },
+      { label: "In-Ear", params: "type=in-ear" },
     ],
-    aliases: ["fitness-tracker", "smart-uhren"],
   },
 
-  cables: {
-    name: "Kabel & Adapter",
-    description: "USB-, HDMI- und DisplayPort-Kabel und -Adapter",
-    icon: Cable,
-    parent: "electronics",
-    categoryType: "standard",
-    hidden: false,
-    metaTitle: `Kabel & Adapter - Preise vergleichen | ${BRAND_DOMAIN}`,
-    metaDescription:
-      "Vergleichen Sie USB-C-, HDMI- und DisplayPort-Kabel. Finden Sie Angebote für Adapter und Kabelzubehör.",
-    popularFilters: [
-      { label: "USB-C", params: "type=usb-c" },
-      { label: "HDMI 2.1", params: "type=hdmi-2.1" },
-      { label: "DisplayPort", params: "type=displayport" },
-    ],
-    aliases: ["kabel", "adapter"],
-  },
-
-  "laptop-stands": {
-    name: "Laptop-Ständer",
-    description: "Laptop-Ständer, Erhöhungen und Kühlpads",
+  notebooks: {
+    name: "Notebooks",
+    description: "Laptops, MacBooks und Convertibles",
     icon: Laptop,
-    parent: "electronics",
+    parent: "elektroartikel",
     categoryType: "standard",
-    hidden: false,
-    metaTitle: `Laptop-Ständer - Preise vergleichen | ${BRAND_DOMAIN}`,
-    metaDescription:
-      "Vergleichen Sie Laptop-Ständer, Erhöhungen und Kühlpads für ergonomische Setups.",
     popularFilters: [
-      { label: "Verstellbar", params: "type=adjustable" },
-      { label: "Mit Kühlung", params: "features=cooling" },
+      { label: "Apple MacBook", params: "brand=Apple" },
+      { label: "Gaming Laptops", params: "type=gaming" },
+      { label: "16 GB RAM", params: "ram=16" },
+      { label: "Intel Core Ultra", params: "cpu=intel-ultra" },
     ],
-    aliases: ["laptop-ständer", "notebook-halter"],
   },
 
-  "mouse-pads": {
-    name: "Mauspads",
-    description: "Gaming- und Schreibtisch-Mauspads",
-    icon: Mouse,
-    parent: "electronics",
+  tablets: {
+    name: "Tablets",
+    description: "iPads und Android Tablets",
+    icon: Tablet,
+    parent: "elektroartikel",
     categoryType: "standard",
-    hidden: false,
-    metaTitle: `Mauspads - Preise vergleichen | ${BRAND_DOMAIN}`,
-    metaDescription:
-      "Vergleichen Sie Gaming-Mauspads und Schreibtischunterlagen. Finden Sie Angebote für XXL-Pads und RGB-Mauspads.",
     popularFilters: [
-      { label: "Extended/XXL", params: "size=xxl" },
-      { label: "RGB", params: "features=rgb" },
+      { label: "Apple iPad", params: "brand=Apple" },
+      { label: "Samsung Galaxy Tab", params: "brand=Samsung" },
+      { label: "Android-Tablet", params: "os=android" },
+      { label: "5G-Tablet", params: "connectivity=5g" },
     ],
-    aliases: ["mauspads", "schreibtischunterlagen"],
   },
 
-  "docking-stations": {
-    name: "Docking-Stationen",
-    description: "USB-C- und Thunderbolt-Docking-Stationen",
-    icon: Usb,
-    parent: "electronics",
+  espressomaschinen: {
+    name: "Espressomaschinen",
+    description: "Kaffeevollautomaten und Siebträgermaschinen",
+    icon: Zap,
+    parent: "elektroartikel",
     categoryType: "standard",
-    hidden: false,
-    metaTitle: `Docking-Stationen - Preise vergleichen | ${BRAND_DOMAIN}`,
-    metaDescription:
-      "Vergleichen Sie USB-C- und Thunderbolt-Docking-Stationen. Finden Sie Angebote für Laptop-Docks mit mehreren Anschlüssen.",
     popularFilters: [
-      { label: "Thunderbolt 4", params: "type=thunderbolt-4" },
-      { label: "USB-C", params: "type=usb-c" },
+      { label: "Kaffeevollautomat", params: "type=fully-automatic" },
+      { label: "Siebträgermaschine", params: "type=portafilter" },
+      { label: "De'Longhi", params: "brand=delonghi" },
+      { label: "Siemens EQ.6", params: "model=eq6" },
     ],
-    aliases: ["dock", "laptop-dock"],
   },
 
-  ups: {
-    name: "USV / Notstromversorgung",
-    description: "Unterbrechungsfreie Stromversorgungen für PCs und NAS",
-    icon: Battery,
-    parent: "electronics",
+  monitors: {
+    name: "Monitore",
+    description: "Gaming und Office Monitore",
+    icon: Monitor,
+    parent: "elektroartikel",
     categoryType: "standard",
-    hidden: false,
-    metaTitle: `USV Notstromversorgung - Preise vergleichen | ${BRAND_DOMAIN}`,
-    metaDescription:
-      "Vergleichen Sie USV-Systeme von APC, CyberPower und Eaton. Schützen Sie Ihren PC und NAS vor Stromausfällen.",
     popularFilters: [
-      { label: "600VA+", params: "capacity=600" },
-      { label: "1000VA+", params: "capacity=1000" },
+      { label: "27 Zoll", params: "size=27" },
+      { label: "144 Hz", params: "refresh=144" },
+      { label: "4K Monitor", params: "resolution=4k" },
+      { label: "Gaming Monitor", params: "type=gaming" },
     ],
-    aliases: ["usv", "notstrom"],
   },
 
+  speakers: {
+    name: "Lautsprecher",
+    description: "Bluetooth, Regal und Standlautsprecher",
+    icon: Speaker,
+    parent: "elektroartikel",
+    categoryType: "standard",
+    popularFilters: [
+      { label: "JBL", params: "brand=jbl" },
+      { label: "Sonos", params: "brand=sonos" },
+      { label: "Bluetooth Lautsprecher", params: "type=bluetooth" },
+      { label: "Subwoofer", params: "type=subwoofer" },
+    ],
+  },
+
+  kühlschränke: {
+    name: "Kühlschränke",
+    description: "Kühl-Gefrierkombinationen und Side-by-Side",
+    icon: Thermometer,
+    parent: "elektroartikel",
+    categoryType: "standard",
+    popularFilters: [
+      { label: "Bosch", params: "brand=bosch" },
+      { label: "Liebherr", params: "brand=liebherr" },
+      { label: "Einbaukühlschrank", params: "type=built-in" },
+      { label: "Side-by-Side", params: "type=side-by-side" },
+    ],
+  },
+
+  "elektrische-zahnbürsten": {
+    name: "Elektrische Zahnbürsten",
+    description: "Schall- und oszillierende Zahnbürsten",
+    icon: Zap,
+    parent: "elektroartikel",
+    categoryType: "standard",
+    popularFilters: [
+      { label: "Oral-B iO", params: "model=io" },
+      { label: "Philips Sonicare", params: "model=sonicare" },
+      { label: "Schallzahnbürste", params: "type=sonic" },
+    ],
+  },
+
+  waschmaschinen: {
+    name: "Waschmaschinen",
+    description: "Frontlader und Toplader",
+    icon: Zap,
+    parent: "elektroartikel",
+    categoryType: "standard",
+    popularFilters: [
+      { label: "Miele", params: "brand=miele" },
+      { label: "Bosch", params: "brand=bosch" },
+      { label: "9 kg", params: "capacity=9" },
+      { label: "Frontlader", params: "type=front-loader" },
+    ],
+  },
+
+  multifunktionsdrucker: {
+    name: "Multifunktionsdrucker",
+    description: "Drucken, Scannen und Kopieren",
+    icon: Printer,
+    parent: "elektroartikel",
+    categoryType: "standard",
+    popularFilters: [
+      { label: "Canon", params: "brand=Canon" },
+      { label: "HP", params: "brand=HP" },
+      { label: "EcoTank", params: "series=ecotank" },
+    ],
+  },
+
+  geschirrspüler: {
+    name: "Geschirrspüler",
+    description: "Einbau- und Standgeschirrspüler",
+    icon: HardDrive,
+    parent: "elektroartikel",
+    categoryType: "standard",
+    popularFilters: [
+      { label: "Bosch", params: "brand=Bosch" },
+      { label: "Miele", params: "brand=Miele" },
+      { label: "Vollintegriert", params: "type=integrated" },
+    ],
+  },
+
+  routers: {
+    name: "Router",
+    description: "WLAN & Internet Router",
+    icon: Router,
+    parent: "elektroartikel",
+    categoryType: "standard",
+    popularFilters: [
+      { label: "AVM Fritz!Box", params: "brand=AVM" },
+      { label: "WiFi 6", params: "standard=wifi-6" },
+      { label: "TP-Link", params: "brand=TP-Link" },
+    ],
+  },
+
+  systemkameras: {
+    name: "Systemkameras",
+    description: "Spiegellose Profikameras",
+    icon: Camera,
+    parent: "elektroartikel",
+    categoryType: "standard",
+    popularFilters: [
+      { label: "Sony Alpha", params: "series=alpha" },
+      { label: "Canon EOS R", params: "series=eos-r" },
+      { label: "Fuji X", params: "series=x" },
+    ],
+  },
+
+  druckerpatronen: {
+    name: "Druckerpatronen",
+    description: "Tinten und Toner für alle Drucker",
+    icon: Printer,
+    parent: "elektroartikel",
+    categoryType: "standard",
+    popularFilters: [
+      { label: "HP", params: "brand=HP" },
+      { label: "Canon", params: "brand=Canon" },
+      { label: "Epson", params: "brand=Epson" },
+    ],
+  },
+
+  backöfen: {
+    name: "Backöfen",
+    description: "Einbaubacköfen und Sets",
+    icon: Zap,
+    parent: "elektroartikel",
+    categoryType: "standard",
+    popularFilters: [
+      { label: "Bosch", params: "brand=Bosch" },
+      { label: "Siemens", params: "brand=Siemens" },
+      { label: "Pyrolyse", params: "features=pyrolysis" },
+    ],
+  },
+
+  kochfelder: {
+    name: "Kochfelder",
+    description: "Induktion, Ceran und Gas",
+    icon: Zap,
+    parent: "elektroartikel",
+    categoryType: "standard",
+    popularFilters: [
+      { label: "Induktion", params: "type=induction" },
+      { label: "Kochfeldabzug", params: "features=extractor" },
+      { label: "80 cm breit", params: "width=80" },
+    ],
+  },
+
+  soundbars: {
+    name: "Soundbars",
+    description: "Heimkino-Soundsysteme",
+    icon: Speaker,
+    parent: "elektroartikel",
+    categoryType: "standard",
+    popularFilters: [
+      { label: "Sonos", params: "brand=Sonos" },
+      { label: "Samsung", params: "brand=Samsung" },
+      { label: "Dolby Atmos", params: "features=atmos" },
+    ],
+  },
+
+  radios: {
+    name: "Radios",
+    description: "DAB+, Internet- und Kurbelradios",
+    icon: Mic,
+    parent: "elektroartikel",
+    categoryType: "standard",
+    popularFilters: [
+      { label: "DAB+", params: "type=dab-plus" },
+      { label: "Internetradio", params: "type=internet" },
+      { label: "TechniSat", params: "brand=TechniSat" },
+    ],
+  },
+
+  wäschetrockner: {
+    name: "Wäschetrockner",
+    description: "Wärmepumpen- und Kondenstrockner",
+    icon: Fan,
+    parent: "elektroartikel",
+    categoryType: "standard",
+    popularFilters: [
+      { label: "Wärmepumpentrockner", params: "type=heat-pump" },
+      { label: "Miele", params: "brand=Miele" },
+      { label: "AEG", params: "brand=AEG" },
+    ],
+  },
+
+  küchenmaschinen: {
+    name: "Küchenmaschinen",
+    description: "Knet- und Multifunktionsmaschinen",
+    icon: Zap,
+    parent: "elektroartikel",
+    categoryType: "standard",
+    popularFilters: [
+      { label: "KitchenAid", params: "brand=KitchenAid" },
+      { label: "Bosch MUM", params: "series=mum" },
+      { label: "Thermomix", params: "brand=Vorwerk" },
+    ],
+  },
+
+  "bartschneider-haarschneider": {
+    name: "Bartschneider & Haarschneider",
+    description: "Haarpflege für Männer",
+    icon: Zap,
+    parent: "elektroartikel",
+    categoryType: "standard",
+    popularFilters: [
+      { label: "Philips OneBlade", params: "model=oneblade" },
+      { label: "Braun", params: "brand=Braun" },
+      { label: "Haarschneider", params: "type=hair" },
+    ],
+  },
+
+  receiver: {
+    name: "Receiver",
+    description: "AV-Receiver und Verstärker",
+    icon: Speaker,
+    parent: "elektroartikel",
+    categoryType: "standard",
+    popularFilters: [
+      { label: "AV-Receiver", params: "type=av" },
+      { label: "Denon", params: "brand=Denon" },
+      { label: "Yamaha", params: "brand=Yamaha" },
+    ],
+  },
+
+  mikrowellen: {
+    name: "Mikrowellen",
+    description: "Stand- und Einbaumikrowellen",
+    icon: Zap,
+    parent: "elektroartikel",
+    categoryType: "standard",
+    popularFilters: [
+      { label: "Einbau-Mikrowelle", params: "type=built-in" },
+      { label: "Samsung", params: "brand=Samsung" },
+    ],
+  },
+
+  dunstabzugshauben: {
+    name: "Dunstabzugshauben",
+    description: "Wand-, Insel- und Unterbauhauben",
+    icon: Fan,
+    parent: "elektroartikel",
+    categoryType: "standard",
+    popularFilters: [
+      { label: "Kopffreihaube", params: "type=angled" },
+      { label: "60 cm breit", params: "width=60" },
+    ],
+  },
+
+  "hard-drives": {
+    name: "Festplatten",
+    description: "HDD Speicherlösungen",
+    icon: HardDrive,
+    parent: "elektroartikel",
+    categoryType: "analytical",
+    unitType: "TB",
+    unitLabel: "pro TB",
+    popularFilters: [
+      { label: "4 TB", params: "capacity=4" },
+      { label: "NAS-Festplatte", params: "type=nas" },
+    ],
+  },
+
+  gefrierschränke: {
+    name: "Gefrierschränke",
+    description: "Gefrierschränke und Truhen",
+    icon: Thermometer,
+    parent: "elektroartikel",
+    categoryType: "standard",
+    popularFilters: [
+      { label: "Liebherr", params: "brand=Liebherr" },
+      { label: "NoFrost", params: "features=nofrost" },
+    ],
+  },
+
+  herde: {
+    name: "Herde",
+    description: "Stand- und Einbauherde",
+    icon: Zap,
+    parent: "elektroartikel",
+    categoryType: "standard",
+    popularFilters: [
+      { label: "Induktionsherd", params: "type=induction" },
+      { label: "Herd-Set", params: "type=set" },
+    ],
+  },
+
+  drones: {
+    name: "Drohnen",
+    description: "Kameradrohnen und Quadcopters",
+    icon: Camera,
+    parent: "elektroartikel",
+    categoryType: "standard",
+    popularFilters: [
+      { label: "DJI Mini", params: "series=mini" },
+      { label: "4K Kamera", params: "resolution=4k" },
+    ],
+  },
+
+  nas: {
+    name: "NAS-Server",
+    description: "Netzwerkspeicher für zuhause",
+    icon: Server,
+    parent: "elektroartikel",
+    categoryType: "standard",
+    popularFilters: [
+      { label: "Synology", params: "brand=Synology" },
+      { label: "4-Bay NAS", params: "bays=4" },
+    ],
+  },
+
+  kompaktkameras: {
+    name: "Kompaktkameras",
+    description: "Handliche Digitalkameras",
+    icon: Camera,
+    parent: "elektroartikel",
+    categoryType: "standard",
+    popularFilters: [
+      { label: "Vlog-Kamera", params: "use=vlog" },
+      { label: "Sony RX100", params: "series=rx100" },
+    ],
+  },
+
+  medien: {
+    name: "Medien",
+    description: "Musik, Filme und Games",
+    icon: Search,
+    parent: "elektroartikel",
+    categoryType: "standard",
+  },
+
+  // --- PC-KOMPONENTEN (Hardware focus) ---
+  "pc-komponenten": {
+    name: "PC-Komponenten",
+    description: "Hardware für Ihren PC",
+    icon: Cpu,
+    parent: "computer",
+    categoryType: "standard",
+    imageUrl: "/images/category/festplatten-&-ssds.jpg",
+    popularFilters: [
+      { label: "Grafikkarten", href: "/gpu" },
+      { label: "Laufwerke", href: "/storage" },
+      { label: "RAM", href: "/ram" },
+      { label: "CPU", href: "/cpu" },
+      { label: "PC-Gehäuse", href: "/pc-cases" },
+    ],
+  },
+  gpu: {
+    name: "Grafikkarten",
+    description: "NVIDIA, AMD & Intel GPUs vergleichen",
+    icon: Video,
+    parent: "pc-komponenten",
+    categoryType: "analytical",
+    unitType: "GB",
+    unitLabel: "pro GB VRAM",
+    popularFilters: [
+      { label: "RTX 4070", params: "model=RTX+4070" },
+      { label: "RTX 4080", params: "model=RTX+4080" },
+      { label: "RX 7800 XT", params: "model=RX+7800+XT" },
+    ],
+  },
   motherboards: {
     name: "Mainboards",
-    description: "ATX, Micro-ATX und Mini-ITX Mainboards für Intel und AMD",
-    icon: Server, // Ideally use a CircuitBoard icon if available, Server is fallback
-    parent: "electronics",
+    description: "Motherboards für Intel & AMD",
+    icon: Server,
+    parent: "pc-komponenten",
     categoryType: "standard",
-    hidden: false,
-    metaTitle: `Mainboards Preisvergleich » Z790, B650 & X670 Boards | ${BRAND_DOMAIN}`,
-    metaDescription:
-      "Mainboard Preisvergleich für Intel & AMD Prozessoren » Top-Modelle von ASUS, MSI & Gigabyte. Z790, B650, Gaming-Mainboards günstig kaufen & sparen.",
     popularFilters: [
-      { label: "Sockel 1700", params: "socket=lga1700" },
-      { label: "AM5", params: "socket=am5" },
-      { label: "Z790", params: "chipset=z790" },
+      { label: "AM5 Mainboards", params: "socket=AM5" },
+      { label: "LGA 1700", params: "socket=LGA1700" },
+      { label: "B650 Chipsatz", params: "chipset=B650" },
     ],
-    aliases: ["motherboards", "hauptplatine"],
   },
-
+  ram: {
+    name: "Arbeitsspeicher",
+    description: "DDR4 & DDR5 RAM Module",
+    icon: MemoryStick,
+    parent: "pc-komponenten",
+    categoryType: "analytical",
+    unitType: "GB",
+    unitLabel: "pro GB",
+    popularFilters: [
+      { label: "DDR5 RAM", params: "type=DDR5" },
+      { label: "32GB Kits", params: "capacity=32" },
+      { label: "6000 MHz", params: "speed=6000" },
+    ],
+  },
   "pc-cases": {
     name: "PC-Gehäuse",
-    description: "Computer-Gehäuse für Gaming- und Workstation-Builds",
+    description: "Computergehäuse für Ihren Build",
     icon: Server,
-    parent: "electronics",
+    parent: "pc-komponenten",
     categoryType: "standard",
-    hidden: false,
-    metaTitle: `PC-Gehäuse Preisvergleich » ATX, mATX & ITX Cases | ${BRAND_DOMAIN}`,
-    metaDescription:
-      "PC-Gehäuse für Gaming & Silent-PCs im Preisvergleich » Fractal Design, Corsair, NZXT & be quiet! günstig kaufen. Airflow & RGB Gehäuse Angebote.",
     popularFilters: [
-      { label: "ATX", params: "form-factor=atx" },
-      { label: "mATX", params: "form-factor=matx" },
-      { label: "ITX", params: "form-factor=itx" },
+      { label: "Midi-Tower", params: "type=midi-tower" },
+      { label: "Big-Tower", params: "type=big-tower" },
+      { label: "Mini-ITX Gehäuse", params: "type=mini-itx" },
     ],
-    aliases: ["gehäuse", "pc-gehäuse"],
   },
-
-  // ======================
-  // NEW: 15 Additional Categories
-  // ======================
-
+  "power-supplies": {
+    name: "Netzteile",
+    description: "Effiziente Stromversorgung",
+    icon: Zap,
+    parent: "pc-komponenten",
+    categoryType: "analytical",
+    unitType: "W",
+    unitLabel: "pro Watt",
+    popularFilters: [
+      { label: "80 PLUS Gold", params: "efficiency=gold" },
+      { label: "750 Watt", params: "wattage=750" },
+      { label: "Vollmodular", params: "modularity=full" },
+    ],
+  },
   "cpu-coolers": {
     name: "CPU-Kühler",
-    description: "Luft- und Flüssigkeits-CPU-Kühler für optimale Temperaturen",
+    description: "Luft- & Wasserkühlung",
     icon: Fan,
-    parent: "electronics",
+    parent: "pc-komponenten",
     categoryType: "standard",
-    hidden: false,
-    metaTitle: `CPU-Kühler - Preise vergleichen | ${BRAND_DOMAIN}`,
-    metaDescription:
-      "Vergleichen Sie Luft- und AIO-Flüssigkeits-CPU-Kühler. Finden Sie Angebote von Noctua, be quiet!, Corsair und mehr.",
     popularFilters: [
       { label: "Luftkühler", params: "type=air" },
-      { label: "AIO-Wasserkühlung", params: "type=aio" },
+      { label: "Wasserkühlung (AiO)", params: "type=aio" },
     ],
-    aliases: ["kühler", "cpu-kühler"],
   },
-
   "case-fans": {
     name: "Gehäuselüfter",
-    description: "PC-Gehäuselüfter und Lüftersteuerungen",
+    description: "Kühlung für Ihren PC",
     icon: Fan,
-    parent: "electronics",
+    parent: "pc-komponenten",
     categoryType: "standard",
-    hidden: false,
-    metaTitle: `Gehäuselüfter - Preise vergleichen | ${BRAND_DOMAIN}`,
-    metaDescription:
-      "Vergleichen Sie PC-Gehäuselüfter von Noctua, Arctic, Corsair und mehr. Finden Sie RGB- und High-Airflow-Optionen.",
     popularFilters: [
-      { label: "120mm", params: "size=120" },
-      { label: "140mm", params: "size=140" },
-      { label: "RGB", params: "features=rgb" },
+      { label: "120mm Lüfter", params: "size=120" },
+      { label: "140mm Lüfter", params: "size=140" },
+      { label: "RGB Lüfter", params: "features=rgb" },
     ],
-    aliases: ["lüfter", "gehäuselüfter"],
+  },
+  storage: {
+    name: "Laufwerke",
+    description: "Interne & externe Speicherlösungen",
+    icon: HardDrive,
+    parent: "pc-komponenten",
+    categoryType: "standard",
+    popularFilters: [
+      { label: "SSDs", href: "/ssds" },
+      { label: "Festplatten (HDD)", params: "type=hdd" },
+      { label: "Externe Festplatten", href: "/external-storage" },
+    ],
+  },
+  ssds: {
+    name: "SSDs",
+    description: "Schnelle Solid State Drives",
+    icon: HardDrive,
+    parent: "storage",
+    categoryType: "analytical",
+    unitType: "TB",
+    unitLabel: "pro TB",
+    popularFilters: [
+      { label: "M.2 SSDs (NVMe)", params: "interface=m2-nvme" },
+      { label: "SATA SSDs", params: "interface=sata" },
+      { label: "PS5 SSDs", params: "compatible=ps5" },
+    ],
   },
 
   "thermal-paste": {
     name: "Wärmeleitpaste",
-    description: "Thermische Verbindungen und Pads für CPU und GPU",
+    description: "Thermische Verbindung",
     icon: Thermometer,
-    parent: "electronics",
+    parent: "pc-komponenten",
     categoryType: "standard",
-    hidden: false,
-    metaTitle: `Wärmeleitpaste - Preise vergleichen | ${BRAND_DOMAIN}`,
-    metaDescription:
-      "Vergleichen Sie Wärmeleitpaste von Noctua, Thermal Grizzly und Arctic. Finden Sie die besten thermischen Verbindungen.",
     popularFilters: [
-      { label: "High Performance", params: "type=premium" },
-      { label: "Thermal Pads", params: "type=pad" },
+      { label: "Arctic MX-4", params: "brand=Arctic" },
+      { label: "Thermal Grizzly", params: "brand=Thermal+Grizzly" },
     ],
-    aliases: ["wärmeleitpaste"],
+  },
+  "smartwatch-accessories": {
+    name: "Smartwatch-Zubehör",
+    description: "Bänder & Ladestationen",
+    icon: Watch,
+    parent: "telekommunikation",
+    categoryType: "standard",
+  },
+
+  smartphones: {
+    name: "Smartphones",
+    description: "Handys & Smartphones",
+    icon: Smartphone,
+    parent: "telekommunikation",
+    categoryType: "standard",
+    popularFilters: [
+      { label: "iPhone", params: "brand=Apple" },
+      { label: "Samsung Galaxy", params: "brand=Samsung" },
+    ],
+  },
+
+  smartwatches: {
+    name: "Smartwatches",
+    description: "Wearables & Watches",
+    icon: Watch,
+    parent: "telekommunikation",
+    categoryType: "standard",
+  },
+
+  consoles: {
+    name: "Spielekonsolen",
+    description: "PS5, Xbox, Switch",
+    icon: Gamepad2,
+    parent: "elektroartikel",
+    categoryType: "standard",
+  },
+
+  cameras: {
+    name: "Digitalkameras",
+    description: "Kameras & Optik",
+    icon: Camera,
+    parent: "fotografie",
+    categoryType: "standard",
+  },
+
+  keyboards: {
+    name: "Tastaturen",
+    description: "Keyboards & Eingabegeräte",
+    icon: Keyboard,
+    parent: "computer",
+    categoryType: "standard",
+  },
+
+  mice: {
+    name: "Mäuse",
+    description: "Präzisionsmäuse",
+    icon: Mouse,
+    parent: "computer",
+    categoryType: "standard",
+  },
+
+  "mouse-pads": {
+    name: "Mauspads",
+    description: "Unterlagen",
+    icon: Mouse,
+    parent: "computer",
+    categoryType: "standard",
+  },
+
+  "external-storage": {
+    name: "Externe Speicher",
+    description: "Portable HDDs & SSDs",
+    icon: HardDrive,
+    parent: "storage",
+    categoryType: "analytical",
+    unitType: "TB",
+    unitLabel: "pro TB",
+  },
+
+  "usb-hubs": {
+    name: "USB-Hubs",
+    description: "Port-Erweiterungen",
+    icon: Usb,
+    parent: "computer",
+    categoryType: "standard",
+  },
+
+  "docking-stations": {
+    name: "Docking-Stationen",
+    description: "Laptop-Docks",
+    icon: Usb,
+    parent: "computer",
+    categoryType: "standard",
   },
 
   "network-switches": {
     name: "Netzwerk-Switches",
-    description: "Ethernet-Switches für Heim- und Büronetzwerke",
+    description: "Ethernet-Verteiler",
     icon: Network,
-    parent: "electronics",
+    parent: "computer",
     categoryType: "standard",
-    hidden: false,
-    metaTitle: `Netzwerk-Switches - Preise vergleichen | ${BRAND_DOMAIN}`,
-    metaDescription:
-      "Vergleichen Sie Netzwerk-Switches von TP-Link, Netgear und Ubiquiti. Managed- und Unmanaged-Optionen.",
-    popularFilters: [
-      { label: "8 Port", params: "ports=8" },
-      { label: "PoE", params: "features=poe" },
-      { label: "Managed", params: "type=managed" },
-    ],
-    aliases: ["netzwerk-switch"],
   },
 
   "network-cards": {
     name: "Netzwerkkarten",
-    description: "PCIe-WLAN- und Ethernet-Adapter",
+    description: "WLAN-Karten",
     icon: Network,
-    parent: "electronics",
+    parent: "computer",
     categoryType: "standard",
-    hidden: false,
-    metaTitle: `Netzwerkkarten - Preise vergleichen | ${BRAND_DOMAIN}`,
-    metaDescription:
-      "Vergleichen Sie WLAN- und Ethernet-Adapter. PCIe- und USB-Netzwerkkarten für Desktop und Laptop.",
-    popularFilters: [
-      { label: "WiFi 6", params: "wifi=6" },
-      { label: "2.5GbE", params: "speed=2.5gbe" },
-    ],
-    aliases: ["netzwerkkarten", "wlan-karten"],
+  },
+
+  cables: {
+    name: "Kabel & Adapter",
+    description: "Verbindungen",
+    icon: Cable,
+    parent: "computer",
+    categoryType: "standard",
+  },
+
+  "laptop-stands": {
+    name: "Laptop-Ständer",
+    description: "Halterungen",
+    icon: Laptop,
+    parent: "computer",
+    categoryType: "standard",
+  },
+
+  ups: {
+    name: "USV",
+    description: "Notstrom",
+    icon: Battery,
+    parent: "computer",
+    categoryType: "standard",
   },
 
   "cable-management": {
     name: "Kabelmanagement",
-    description: "Kabelbinder, Kabelkanäle und Organisationslösungen",
+    description: "Ordnung",
     icon: Cable,
-    parent: "electronics",
+    parent: "computer",
     categoryType: "standard",
-    hidden: false,
-    metaTitle: `Kabelmanagement - Preise vergleichen | ${BRAND_DOMAIN}`,
-    metaDescription:
-      "Vergleichen Sie Kabelmanagement-Lösungen. Kabelbinder, Kabelkanäle, Kabelwannen und Schreibtisch-Organizer.",
-    popularFilters: [
-      { label: "Kabelkanäle", params: "type=sleeve" },
-      { label: "Kabelbinder", params: "type=ties" },
-    ],
-    aliases: ["kabelmanagement"],
   },
 
   "monitor-arms": {
     name: "Monitorhalterungen",
-    description: "Monitorhalterungen und Schreibtisch-Arme",
-    icon: Monitor,
-    parent: "electronics",
+    description: "Arme & Halter",
+    icon: MonitorCheck,
+    parent: "computer",
     categoryType: "standard",
-    hidden: false,
-    metaTitle: `Monitorhalterungen - Preise vergleichen | ${BRAND_DOMAIN}`,
-    metaDescription:
-      "Vergleichen Sie Monitorhalterungen und -arme von Ergotron, AmazonBasics und mehr. Einzel- und Dual-Optionen.",
-    popularFilters: [
-      { label: "Einzelmonitor", params: "type=single" },
-      { label: "Dual-Monitor", params: "type=dual" },
-    ],
-    aliases: ["monitorhalterung", "monitor-arm"],
   },
 
   "desk-accessories": {
     name: "Schreibtisch-Zubehör",
-    description: "Schreibtisch-Organizer, Lampen und Zubehör",
+    description: "Ordnung am Tisch",
     icon: Package,
-    parent: "electronics",
+    parent: "computer",
     categoryType: "standard",
-    hidden: false,
-    metaTitle: `Schreibtisch-Zubehör - Preise vergleichen | ${BRAND_DOMAIN}`,
-    metaDescription:
-      "Vergleichen Sie Schreibtisch-Zubehör. Schreibtischlampen, Organizer und Arbeitsplatz-Essentials.",
-    popularFilters: [
-      { label: "Schreibtischlampen", params: "type=lamp" },
-      { label: "Organizer", params: "type=organizer" },
-    ],
-    aliases: ["schreibtisch-zubehör"],
   },
 
   "office-chairs": {
     name: "Bürostühle",
-    description: "Ergonomische Bürostühle für Produktivität",
+    description: "Ergonomie",
     icon: Armchair,
-    parent: "electronics",
+    parent: "computer",
     categoryType: "standard",
-    hidden: false,
-    metaTitle: `Bürostühle - Preise vergleichen | ${BRAND_DOMAIN}`,
-    metaDescription:
-      "Vergleichen Sie ergonomische Bürostühle von Herman Miller, Steelcase und günstigen Alternativen.",
-    popularFilters: [
-      { label: "Ergonomisch", params: "features=ergonomic" },
-      { label: "Mesh-Rücken", params: "type=mesh" },
-    ],
-    aliases: ["bürostühle"],
   },
 
   "standing-desks": {
     name: "Stehschreibtische",
-    description: "Höhenverstellbare Schreibtische und Stehpulte",
+    description: "Höhenverstellbar",
     icon: Monitor,
-    parent: "electronics",
+    parent: "computer",
     categoryType: "standard",
-    hidden: false,
-    metaTitle: `Stehschreibtische - Preise vergleichen | ${BRAND_DOMAIN}`,
-    metaDescription:
-      "Vergleichen Sie Stehschreibtische und Sitz-Steh-Tische. Elektrische und manuelle höhenverstellbare Optionen.",
-    popularFilters: [
-      { label: "Elektrisch", params: "type=electric" },
-      { label: "Manuell", params: "type=manual" },
-    ],
-    aliases: ["stehschreibtisch", "höhenverstellbar"],
   },
 
   "tablet-accessories": {
     name: "Tablet-Zubehör",
-    description: "Hüllen, Ständer und Zubehör für Tablets",
+    description: "Hüllen & Stifte",
     icon: Tablet,
-    parent: "electronics",
+    parent: "computer",
     categoryType: "standard",
-    hidden: false,
-    metaTitle: `Tablet-Zubehör - Preise vergleichen | ${BRAND_DOMAIN}`,
-    metaDescription:
-      "Vergleichen Sie Tablet-Hüllen, -Ständer und -Stifte. iPad- und Android-Tablet-Zubehör.",
-    popularFilters: [
-      { label: "iPad-Hüllen", params: "type=ipad-case" },
-      { label: "Stifte", params: "type=stylus" },
-    ],
-    aliases: ["tablet-zubehör"],
   },
 
   "phone-accessories": {
     name: "Handy-Zubehör",
-    description: "Handyhüllen, Ladegeräte und Zubehör",
+    description: "Schutz & Power",
     icon: Smartphone,
-    parent: "electronics",
+    parent: "telekommunikation",
     categoryType: "standard",
-    hidden: false,
-    metaTitle: `Handy-Zubehör - Preise vergleichen | ${BRAND_DOMAIN}`,
-    metaDescription:
-      "Vergleichen Sie Handyhüllen, kabellose Ladegeräte und Handy-Zubehör für iPhone und Android.",
-    popularFilters: [
-      { label: "Kabellose Ladegeräte", params: "type=wireless-charger" },
-      { label: "Handyhüllen", params: "type=case" },
-    ],
-    aliases: ["handy-zubehör"],
   },
 
   "game-controllers": {
     name: "Game-Controller",
-    description: "Gamepads, Controller und Joysticks",
+    description: "Gamepads",
     icon: Gamepad2,
-    parent: "electronics",
+    parent: "elektroartikel",
     categoryType: "standard",
-    hidden: false,
-    metaTitle: `Game-Controller - Preise vergleichen | ${BRAND_DOMAIN}`,
-    metaDescription:
-      "Vergleichen Sie Game-Controller und Gamepads von Xbox, PlayStation und Drittanbietern.",
-    popularFilters: [
-      { label: "Xbox Controller", params: "brand=Xbox" },
-      { label: "PlayStation", params: "brand=PlayStation" },
-    ],
-    aliases: ["controller", "gamepad"],
   },
 
   "vr-headsets": {
     name: "VR-Brillen",
-    description: "Virtual-Reality-Headsets und Zubehör",
+    description: "Virtual Reality",
     icon: Glasses,
-    parent: "electronics",
+    parent: "elektroartikel",
     categoryType: "standard",
-    hidden: false,
-    metaTitle: `VR-Brillen - Preise vergleichen | ${BRAND_DOMAIN}`,
-    metaDescription:
-      "Vergleichen Sie VR-Headsets von Meta Quest, HTC Vive und Valve Index. Standalone- und PC-VR-Optionen.",
-    popularFilters: [
-      { label: "Standalone", params: "type=standalone" },
-      { label: "PC VR", params: "type=pcvr" },
-    ],
-    aliases: ["vr-brille", "virtual-reality"],
+  },
+
+  microphones: {
+    name: "Mikrofone",
+    description: "Audio-Aufnahme",
+    icon: Mic,
+    parent: "hifi-audio",
+    categoryType: "standard",
+  },
+
+  "gaming-chairs": {
+    name: "Gaming-Stühle",
+    description: "Zocker-Sessel",
+    icon: Armchair,
+    parent: "elektroartikel",
+    categoryType: "standard",
+  },
+
+  webcams: {
+    name: "Webcams",
+    description: "Videokonferenz",
+    icon: Camera,
+    parent: "computer",
+    categoryType: "standard",
   },
 
   "capture-cards": {
     name: "Capture-Karten",
-    description: "Videoaufnahme-Karten für Streaming und Recording",
+    description: "Streaming-Hardware",
     icon: Video,
-    parent: "electronics",
+    parent: "computer",
     categoryType: "standard",
-    hidden: false,
-    metaTitle: `Capture-Karten - Preise vergleichen | ${BRAND_DOMAIN}`,
-    metaDescription:
-      "Vergleichen Sie Capture-Karten von Elgato, AVerMedia und mehr. USB- und PCIe-Optionen für Streaming.",
+  },
+
+  cpu: {
+    name: "Prozessoren",
+    description: "CPUs von Intel & AMD",
+    icon: Cpu,
+    parent: "pc-komponenten",
+    categoryType: "analytical",
+    unitType: "core",
+    unitLabel: "pro Kern",
     popularFilters: [
-      { label: "USB", params: "type=usb" },
-      { label: "PCIe", params: "type=pcie" },
-      { label: "4K", params: "resolution=4k" },
+      { label: "Sockel AM5", params: "socket=AM5" },
+      { label: "Sockel 1700", params: "socket=LGA1700" },
     ],
-    aliases: ["capture-karte", "game-capture"],
   },
 };
 
@@ -1054,16 +1195,17 @@ export function getChildCategories(parentSlug: CategorySlug): Category[] {
 // Get breadcrumb trail for a category
 export function getBreadcrumbs(categorySlug: CategorySlug): Category[] {
   const breadcrumbs: Category[] = [];
-  const category = allCategories[categorySlug];
+  let current: Category | undefined = allCategories[categorySlug];
 
-  if (!category) return breadcrumbs;
-
-  if (category.parent) {
-    const parent = allCategories[category.parent];
-    if (parent) breadcrumbs.push(parent);
+  while (current) {
+    breadcrumbs.unshift(current);
+    if (current.parent) {
+      current = allCategories[current.parent];
+    } else {
+      current = undefined;
+    }
   }
 
-  breadcrumbs.push(category);
   return breadcrumbs;
 }
 

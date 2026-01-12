@@ -1,5 +1,4 @@
 "use cache";
-
 import { allCategories, CategorySlug } from "@/lib/categories";
 import { Product, getProductsByCategory } from "@/lib/product-registry";
 import { filterProducts, sortProducts } from "@/lib/utils/category-utils";

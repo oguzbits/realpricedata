@@ -65,12 +65,12 @@ export function IdealoCategoryCard({
 
       {/* Popular links (brand/filter shortcuts) */}
       {popularLinks.length > 0 && (
-        <div className="_popularLinks mt-3 flex flex-wrap gap-x-3 gap-y-1">
+        <div className="_popularLinks mt-3 flex flex-col gap-1.5">
           {popularLinks.map((link) => (
             <Link
               key={link.href}
               href={link.href}
-              className="text-[13px] text-[#0066cc] hover:underline"
+              className="text-[13px] leading-tight text-[#2d2d2d] hover:text-[#0066cc] hover:underline"
               title={`${link.title} ${title}`}
             >
               {link.title}

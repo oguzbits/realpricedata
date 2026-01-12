@@ -85,7 +85,7 @@ export async function IdealoCategoryPage({
 
   // Related categories
   const relatedCategories = getChildCategories(
-    (category.parent as CategorySlug) || ("electronics" as CategorySlug),
+    (category.parent as CategorySlug) || ("elektroartikel" as CategorySlug),
   ).filter((c) => c.slug !== categorySlug);
 
   return (

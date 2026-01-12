@@ -25,87 +25,58 @@ export const KEEPA_DOMAINS: Record<string, number> = {
 // Amazon Browse Node IDs for our categories
 // These are Amazon's category identifiers for bestseller queries
 export const CATEGORY_BROWSE_NODES: Record<string, Record<string, string>> = {
-  // Hard Drives & SSDs
-  "hard-drives": {
-    us: "1292116011", // Internal SSDs
-    de: "430168031", // Interne Festplatten / SSDs
-  },
-  "external-storage": {
-    de: "430129031", // Externe Festplatten
-  },
-  ssd: {
-    us: "1292116011",
-    de: "430168031",
-  },
-  hdd: {
-    us: "1254762011",
-    de: "430498031",
-  },
-  // RAM
-  ram: {
-    us: "172500",
-    de: "430178031", // Arbeitsspeicher
-  },
-  // Power Supplies
-  "power-supplies": {
-    us: "1161760",
-    de: "430176031",
-  },
-  psu: {
-    us: "1161760",
-    de: "430176031",
-  },
-  // CPUs (future)
-  cpu: {
-    us: "229189",
-    de: "430177031", // Prozessoren (CPUs)
-  },
-  // GPUs (future)
-  gpu: {
-    us: "284822",
-    de: "430161031", // Grafikkarten
-  },
-  // Smartphones
-  smartphones: {
-    us: "7072561011",
-    de: "3468301",
-  },
-  // Laptops
-  laptops: {
-    us: "565108",
-    de: "427957031",
-  },
-  // Monitors
-  monitors: {
-    us: "1292115011",
-    de: "429868031",
-  },
-  // Keyboards & Mice
+  // --- Hub Leaf Categories (Idealo order) ---
+  tvs: { de: "1197292" },
+  staubsauger: { de: "3597097031" },
+  headphones: { de: "430254031" },
+  notebooks: { de: "427957031" },
+  tablets: { de: "427958031" },
+  espressomaschinen: { de: "340798031" },
+  monitors: { de: "429868031" },
+  speakers: { de: "429871031" },
+  kühlschränke: { de: "16075771" },
+  "elektrische-zahnbürsten": { de: "309873031" },
+  waschmaschinen: { de: "16075751" },
+  ssds: { de: "430168031" },
+  multifunktionsdrucker: { de: "430113031" },
+  geschirrspüler: { de: "16075761" },
+  routers: { de: "430154031" },
+  systemkameras: { de: "430121031" },
+  druckerpatronen: { de: "430126031" },
+  backöfen: { de: "340801031" },
+  kochfelder: { de: "3340578031" },
+  soundbars: { de: "1957268031" },
+  radios: { de: "571816" },
+  wäschetrockner: { de: "16075781" },
+  küchenmaschinen: { de: "340799031" },
+  "bartschneider-haarschneider": { de: "315488031" },
+  receiver: { de: "571830" },
+  mikrowellen: { de: "340795031" },
+  dunstabzugshauben: { de: "340804031" },
+  "hard-drives": { de: "430498031" },
+  gefrierschränke: { de: "16075791" },
+  herde: { de: "16075841" },
+  drones: { de: "2603417031" },
+  nas: { de: "430138031" },
+  "external-storage": { de: "430129031" },
+  kompaktkameras: { de: "430116031" },
+
+  // --- PC Components & Additional ---
+  smartphones: { de: "3468301" },
+  consoles: { de: "160279031" },
+  cpu: { de: "430177031" },
+  gpu: { de: "430161031" },
+  ram: { de: "430178031" },
+  motherboards: { de: "430172031" },
+  "pc-cases": { de: "430174031" },
+  "power-supplies": { de: "430176031" },
   keyboards: { de: "430221031" },
   mice: { de: "430218031" },
-  // Audio
-  headphones: { de: "430254031" },
-  speakers: { de: "429871031" },
-  microphones: { de: "430209031" },
-  // Networking
-  routers: { de: "430154031" },
-  nas: { de: "430138031" },
-  // Mobile
-  tablets: { de: "427958031" },
   smartwatches: { de: "403290031" },
-  // Home Tech
-  tvs: { de: "1197292" },
-  consoles: { de: "160279031" },
-  // PC Cases
-  "pc-cases": { de: "430174031" },
-  // Motherboards
-  motherboards: { de: "430172031" },
-  // PC Components
   "cpu-coolers": { de: "430204031" },
   "case-fans": { de: "430200031" },
   "thermal-paste": { de: "22217638031" },
   "gaming-chairs": { de: "52173584031" },
-  // Peripherals
   webcams: { de: "430292031" },
   "usb-hubs": { de: "430146031" },
 };
@@ -527,129 +498,58 @@ export async function discoverProducts(
  */
 function getCategoryKeywords(categorySlug: string): string[] {
   const keywordMap: Record<string, string[]> = {
-    "hard-drives": [
-      "NVMe SSD 2TB",
-      "NVMe SSD 1TB",
-      "SATA SSD 2TB",
-      "Internal HDD 8TB",
+    "hard-drives": ["4TB HDD", "NAS Festplatte", "WD Red", "Seagate IronWolf"],
+    ssds: [
       "Samsung 990 Pro",
+      "Crucial T705",
       "WD Black SN850X",
-      "Crucial P3 Plus",
+      "NVMe SSD 2TB",
     ],
-    ssd: [
-      "NVMe SSD",
-      "SATA SSD",
-      "Samsung SSD",
-      "WD SSD",
-      "Crucial SSD",
-      "Kingston SSD",
+    "external-storage": [
+      "External HDD 8TB",
+      "Portable Drive 2TB",
+      "Western Digital Elements",
     ],
-    hdd: [
-      "Internal HDD",
-      "External HDD",
-      "Seagate HDD",
-      "WD HDD",
-      "Toshiba HDD",
-    ],
-    ram: [
-      "DDR5 RAM 32GB",
-      "DDR4 RAM 32GB",
-      "DDR5 RAM 64GB",
-      "Corsair Vengeance DDR5",
-      "G.Skill Trident Z5",
-      "Kingston Fury Beast",
-    ],
+    ram: ["DDR5 RAM 32GB", "Corsair Vengeance DDR5", "G.Skill Trident Z5"],
     "power-supplies": [
-      "ATX power supply 850W",
-      "ATX power supply 1000W",
-      "Corsair PSU",
-      "Seasonic PSU",
-      "EVGA PSU",
+      "Corsair RM850x",
+      "Seasonic Focus",
+      "be quiet! Straight Power",
     ],
-    psu: ["80 Plus Gold PSU", "Modular power supply", "750W PSU", "850W PSU"],
-    cpu: [
-      "AMD Ryzen 9",
-      "AMD Ryzen 7",
-      "Intel Core i9",
-      "Intel Core i7",
-      "AMD Ryzen 5",
-    ],
-    gpu: [
-      "NVIDIA RTX 4090",
-      "NVIDIA RTX 4080",
-      "NVIDIA RTX 4070",
-      "AMD Radeon RX 7900",
-      "AMD Radeon RX 7800",
-    ],
+    cpu: ["AMD Ryzen 7 7800X3D", "Intel Core i7-14700K", "AMD Ryzen 5 7600"],
+    gpu: ["NVIDIA RTX 4080 Super", "AMD Radeon RX 7900 XTX", "RTX 4070 Super"],
     motherboards: [
-      "Z790 Mainboard",
-      "B650 Mainboard",
-      "X670 Mainboard",
-      "B760 Mainboard",
-      "ASUS ROG Strix",
-      "MSI MAG Tomahawk",
-      "Gigabyte Aorus",
+      "ASUS ROG Strix B650",
+      "MSI MAG Z790",
+      "Gigabyte Aorus X670",
     ],
-    // High Priority Consumer Tech
-    smartphones: [
-      "iPhone 15 Pro",
-      "Samsung Galaxy S24 Ultra",
-      "Google Pixel 8 Pro",
-      "iPhone 14",
-      "Samsung Galaxy A54",
-      "Xiaomi Redmi Note 13",
-    ],
-    laptops: [
-      "MacBook Air M2",
-      "MacBook Pro M3",
-      "Lenovo ThinkPad X1",
-      "ASUS ROG Zephyrus",
+    smartphones: ["iPhone 15 Pro", "Samsung Galaxy S24 Ultra", "Pixel 8 Pro"],
+    notebooks: [
+      "MacBook Air M3",
       "Dell XPS 13",
-      "Gaming Laptop RTX 4060",
+      "Lenovo Yoga",
+      "Gaming Laptop",
     ],
-    tvs: [
-      "LG OLED C3",
-      "Samsung Neo QLED",
-      "Sony Bravia XR",
-      "Philips Ambilight TV",
-      "4K TV 55 Zoll",
-      "OLED TV 65 Zoll",
+    tvs: ["LG OLED G3", "Samsung S95C OLED", "Sony A95L", "4K TV 55 Zoll"],
+    consoles: ["PlayStation 5 Slim", "Xbox Series X", "Nintendo Switch OLED"],
+    monitors: ["Gaming Monitor 240Hz", "4K IPS Monitor", "LG UltraGear"],
+    staubsauger: ["Dyson V15", "Roborock S8 Pro Ultra", "Miele Triflex"],
+    espressomaschinen: ["DeLonghi Primadonna", "Siemens EQ900", "Sage Barista"],
+    headphones: ["AirPods Pro 2", "Sony WH-1000XM5", "Bose QC Ultra"],
+    tablets: ["iPad Pro M4", "Galaxy Tab S9 Ultra", "iPad Air M2"],
+    speakers: ["JBL Authentics", "Sonos Era 300", "Bose Home Speaker"],
+    kühlschränke: ["Samsung Side-by-Side", "Bosch NoFrost", "LG GSXV91BSAE"],
+    "elektrische-zahnbürsten": [
+      "Oral-B iO Series 10",
+      "Philips Sonicare DiamondClean",
     ],
-    consoles: [
-      "PlayStation 5 Slim",
-      "Xbox Series X",
-      "Nintendo Switch OLED",
-      "Nintendo Switch Lite",
-      "PS5 Bundle",
-    ],
-    monitors: [
-      "Gaming Monitor 144Hz",
-      "4K Monitor 27 Zoll",
-      "Curved Monitor",
-      "LG UltraGear",
-      "Samsung Odyssey",
-      "Dell UltraSharp",
-    ],
-    headphones: [
-      "Sony WH-1000XM5",
-      "Bose QuietComfort Ultra",
-      "Apple AirPods Pro 2",
-      "Sennheiser Momentum 4",
-      "Beyerdynamic DT 770 Pro",
-    ],
-    keyboards: [
-      "Logitech MX Keys",
-      "Keychron K2",
-      "Razer BlackWidow",
-      "Mechanical Keyboard",
-      "Corsair K70",
-    ],
-    mice: [
-      "Logitech MX Master 3S",
-      "Razer DeathAdder V3",
-      "Logitech G502 X",
-      "Gaming Mouse Wireless",
-    ],
+    waschmaschinen: ["Miele W1", "Bosch Serie 8", "Samsung WW90"],
+    multifunktionsdrucker: ["HP OfficeJet Pro", "Epson EcoTank", "Brother MFC"],
+    geschirrspüler: ["Bosch Serie 6", "Miele G 7000", "Siemens iQ700"],
+    systemkameras: ["Sony A7 IV", "Canon R6 II", "Fujifilm X-T5"],
+    drones: ["DJI Mini 4 Pro", "DJI Air 3", "DJI Mavic 3 Pro"],
+    keyboards: ["Logitech MX Keys S", "Razer BlackWidow V4", "Keychron Q3"],
+    mice: ["Logitech MX Master 3S", "Razer Viper V3 Pro", "G502 X Plus"],
   };
 
   return keywordMap[categorySlug] || [categorySlug.replace(/-/g, " ")];

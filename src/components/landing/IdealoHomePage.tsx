@@ -14,18 +14,21 @@ interface Product {
 }
 
 interface IdealoHomePageProps {
+  popular: Product[];
   deals: Product[];
   bestsellers: Product[];
   newArrivals: Product[];
 }
 
 export function IdealoHomePage({
+  popular,
   deals,
   bestsellers,
   newArrivals,
 }: IdealoHomePageProps) {
   // Handle empty state if all lists are empty
   if (
+    popular.length === 0 &&
     deals.length === 0 &&
     bestsellers.length === 0 &&
     newArrivals.length === 0
@@ -49,28 +52,35 @@ export function IdealoHomePage({
   return (
     <div className="bg-[#f5f5f5]">
       {/* Hero Section - light blue bg */}
-      <IdealoSection variant="lightBlue" className="py-4">
-        {/* Pass bestsellers to Hero for now */}
-        <IdealoHero products={bestsellers} />
-      </IdealoSection>
+      {popular.length > 0 && (
+        <IdealoSection variant="lightBlue" className="py-4">
+          <IdealoHero products={popular} />
+        </IdealoSection>
+      )}
 
       {/* Bestseller Carousel - white bg */}
-      <IdealoSection variant="white">
-        <IdealoProductCarousel title="Bestseller" products={bestsellers} />
-      </IdealoSection>
+      {bestsellers.length > 0 && (
+        <IdealoSection variant="white">
+          <IdealoProductCarousel title="Bestseller" products={bestsellers} />
+        </IdealoSection>
+      )}
 
       {/* Top Deals - light blue bg (alternating) */}
-      <IdealoSection variant="lightBlue">
-        <IdealoProductCarousel
-          title="Aktuelle Deals für dich"
-          products={deals}
-        />
-      </IdealoSection>
+      {deals.length > 0 && (
+        <IdealoSection variant="lightBlue">
+          <IdealoProductCarousel
+            title="Aktuelle Deals für dich"
+            products={deals}
+          />
+        </IdealoSection>
+      )}
 
       {/* New Arrivals - white bg (alternating) */}
-      <IdealoSection variant="white">
-        <IdealoProductCarousel title="Neuheiten" products={newArrivals} />
-      </IdealoSection>
+      {newArrivals.length > 0 && (
+        <IdealoSection variant="white">
+          <IdealoProductCarousel title="Neuheiten" products={newArrivals} />
+        </IdealoSection>
+      )}
     </div>
   );
 }

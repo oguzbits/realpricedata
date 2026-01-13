@@ -21,7 +21,13 @@ export interface CarouselProduct {
   image?: string;
   rating?: number;
   ratingCount?: number;
+  testRating?: number;
+  testCount?: number;
   badgeText?: string;
+  categoryName?: string;
+  discountRate?: number;
+  isBestseller?: boolean;
+  energyLabel?: "A" | "B" | "C" | "D" | "E" | "F" | "G";
 }
 
 interface IdealoProductCarouselProps {
@@ -76,6 +82,9 @@ export function IdealoProductCarousel({
     );
   }
 
+  // Calculate if scrolling is needed (rough estimate: 5 cards fit on desktop)
+  const needsScrolling = products.length > 5;
+
   return (
     <div className={cn("cn-productCarousel", "mb-8", className)}>
       {/* Section Header */}
@@ -86,36 +95,40 @@ export function IdealoProductCarousel({
       {/* Product Carousel with Navigation */}
       <div className="group/carousel relative">
         {/* Left Navigation Button */}
-        <button
-          onClick={() => scroll("left")}
-          disabled={!canScrollLeft}
-          className={cn(
-            "absolute top-1/2 left-0 z-10 -translate-y-1/2",
-            "flex h-10 w-10 items-center justify-center rounded-full",
-            "bg-[#6b6b6b] text-white hover:bg-[#5a5a5a]",
-            "opacity-0 transition-opacity duration-200 group-hover/carousel:opacity-100",
-            !canScrollLeft && "pointer-events-none opacity-0!",
-          )}
-          aria-label="Scroll left"
-        >
-          <ChevronLeft className="h-6 w-6" />
-        </button>
+        {needsScrolling && (
+          <button
+            onClick={() => scroll("left")}
+            disabled={!canScrollLeft}
+            className={cn(
+              "absolute top-1/2 left-0 z-10 -translate-y-1/2",
+              "flex h-10 w-10 items-center justify-center rounded-full",
+              "bg-[#6b6b6b] text-white hover:bg-[#5a5a5a]",
+              "opacity-0 transition-opacity duration-200 group-hover/carousel:opacity-100",
+              !canScrollLeft && "pointer-events-none opacity-0!",
+            )}
+            aria-label="Scroll left"
+          >
+            <ChevronLeft className="h-6 w-6" />
+          </button>
+        )}
 
         {/* Right Navigation Button */}
-        <button
-          onClick={() => scroll("right")}
-          disabled={!canScrollRight}
-          className={cn(
-            "absolute top-1/2 right-0 z-10 -translate-y-1/2",
-            "flex h-10 w-10 items-center justify-center rounded-full",
-            "bg-[#6b6b6b] text-white hover:bg-[#5a5a5a]",
-            "opacity-0 transition-opacity duration-200 group-hover/carousel:opacity-100",
-            !canScrollRight && "pointer-events-none opacity-0!",
-          )}
-          aria-label="Scroll right"
-        >
-          <ChevronRight className="h-6 w-6" />
-        </button>
+        {needsScrolling && (
+          <button
+            onClick={() => scroll("right")}
+            disabled={!canScrollRight}
+            className={cn(
+              "absolute top-1/2 right-0 z-10 -translate-y-1/2",
+              "flex h-10 w-10 items-center justify-center rounded-full",
+              "bg-[#6b6b6b] text-white hover:bg-[#5a5a5a]",
+              "opacity-0 transition-opacity duration-200 group-hover/carousel:opacity-100",
+              !canScrollRight && "pointer-events-none opacity-0!",
+            )}
+            aria-label="Scroll right"
+          >
+            <ChevronRight className="h-6 w-6" />
+          </button>
+        )}
 
         {/* Scrollable Container */}
         <div
@@ -138,7 +151,13 @@ export function IdealoProductCarousel({
               image={product.image}
               rating={product.rating}
               ratingCount={product.ratingCount}
+              testRating={product.testRating}
+              testCount={product.testCount}
               badgeText={product.badgeText}
+              categoryName={product.categoryName}
+              discountRate={product.discountRate}
+              isBestseller={product.isBestseller}
+              energyLabel={product.energyLabel}
             />
           ))}
         </div>

@@ -16,11 +16,20 @@ import {
 } from "../src/lib/keepa/product-discovery";
 import type { CountryCode } from "../src/lib/countries";
 import { execSync } from "child_process";
+import { db, products } from "../src/db";
+import { eq, sql } from "drizzle-orm";
 
 // Configuration
 const REFILL_WAIT_MS = 60 * 1000; // 1 minute
 const TOKEN_SAFE_THRESHOLD = 200; // Minimum tokens before starting a category (Optimized)
 const BATCH_IMPORT_TIMEOUT = 1000 * 60 * 10; // 10 minutes max per category
+
+/**
+ * INITIAL_POPULATION_MODE
+ * - true: Focus on discovering new products first (Growth), then do compliance sync.
+ * - false: Focus on ToS compliance (Stale prices) first, then discover new products.
+ */
+const INITIAL_POPULATION_MODE = true;
 
 async function main() {
   const args = process.argv.slice(2);
@@ -46,44 +55,119 @@ async function main() {
   );
   console.log(`📋 Found ${categories.length} active categories to sync.`);
 
+  // Tier definitions (Dynamic caps)
+  const TIER_A = [
+    "smartphones",
+    "gpu",
+    "cpu",
+    "tvs",
+    "notebooks",
+    "headphones",
+    "monitors",
+    "systemkameras",
+    "tablets",
+    "hard-drives",
+    "ssds",
+    "ram",
+  ];
+  const TIER_B = [
+    "motherboards",
+    "speakers",
+    "routers",
+    "espressomaschinen",
+    "waschmaschinen",
+    "kuehlschraenke",
+    "power-supplies",
+    "pc-cases",
+    "keyboards",
+    "mice",
+    "smartwatches",
+    "game-controllers",
+    "soundbars",
+    "drones",
+  ];
+
+  const getTargetCount = (slug: string) => {
+    if (TIER_A.includes(slug)) return 1000;
+    if (TIER_B.includes(slug)) return 300;
+    return 100; // Tier C
+  };
+
   let cycleCount = 1;
 
   while (true) {
     console.log(`\n--- Starting Sync Cycle #${cycleCount} ---`);
+    if (INITIAL_POPULATION_MODE) {
+      console.log("⚡ MODE: Initial Population (Growth Priority)");
+    }
 
-    for (const category of categories) {
-      // 1. Check tokens
-      let tokens = await getTokenStatus();
-      console.log(
-        `[Tokens] Current: ${tokens.tokensLeft} (Need ${TOKEN_SAFE_THRESHOLD} to start ${category.slug})`,
-      );
-
-      // 2. Wait for refill if needed
-      while (tokens.tokensLeft < TOKEN_SAFE_THRESHOLD) {
-        const waitMinutes = Math.ceil(
-          (TOKEN_SAFE_THRESHOLD - tokens.tokensLeft) / tokens.refillRate,
-        );
-        console.log(
-          `⏳ Low tokens. Waiting ${waitMinutes} minute(s) for refill...`,
-        );
-        await new Promise((r) => setTimeout(r, REFILL_WAIT_MS));
-        tokens = await getTokenStatus();
-      }
-
-      // 3. Execute import for category
-      console.log(`🚀 Syncing category: ${category.name} (${category.slug})`);
+    const runCompliancePhase = async () => {
+      console.log("\n⚖️ Phase: Compliance Sync (Daily Price Updates)");
       try {
-        // We use the existing import script to ensure consistent logic
-        // Using execSync locally to run it as a separate process
-        execSync(
-          `bun run scripts/import-products.ts ${category.slug} ${country}`,
-          {
-            stdio: "inherit",
-          },
-        );
-      } catch (error) {
-        console.error(`❌ Error syncing category ${category.slug}:`, error);
+        execSync(`bun run scripts/update-prices.ts ${country} --stale`, {
+          stdio: "inherit",
+        });
+      } catch (e) {
+        console.error("❌ Compliance sync failed:", e);
       }
+    };
+
+    const runGrowthPhase = async () => {
+      console.log("\n🌱 Phase: Category Growth & Discovery");
+      for (const category of categories) {
+        // Get current count for this category
+        const results = await db
+          .select({ count: sql<number>`count(*)` })
+          .from(products)
+          .where(eq(products.category, category.slug));
+        const count = results[0]?.count || 0;
+        const target = getTargetCount(category.slug);
+
+        if (count >= target) {
+          console.log(
+            `[Skip] ${category.slug} already has ${count}/${target} products.`,
+          );
+          continue;
+        }
+
+        // Check tokens
+        let tokens = await getTokenStatus();
+        if (tokens.tokensLeft < TOKEN_SAFE_THRESHOLD) {
+          console.log(
+            `⏳ Low tokens (${tokens.tokensLeft}). Skipping discovery for ${category.slug} this pass.`,
+          );
+          continue;
+        }
+
+        console.log(`🚀 Filling ${category.name} (${count}/${target})...`);
+        try {
+          execSync(
+            `bun run scripts/import-products.ts ${category.slug} ${country} 50`,
+            { stdio: "inherit" },
+          );
+        } catch (error) {
+          console.error(`❌ Discovery failed for ${category.slug}:`, error);
+        }
+
+        // 3. Optional Enrichment
+        if (Math.random() > 0.8) {
+          console.log("🧪 Targeted Enrichment...");
+          try {
+            execSync(`bun run scripts/enrich-products.ts`, {
+              stdio: "inherit",
+            });
+          } catch (e) {}
+        }
+      }
+    };
+
+    // Execute phases in priority order
+    if (INITIAL_POPULATION_MODE) {
+      await runGrowthPhase();
+      await runCompliancePhase();
+    } else {
+      await runCompliancePhase();
+      await runGrowthPhase();
     }
 
     if (!isContinuous) {
@@ -92,9 +176,7 @@ async function main() {
     }
 
     cycleCount++;
-    console.log(
-      "\n💤 Cycle complete. Resting for 30 minutes before next pass...",
-    );
+    console.log(`\n💤 Cycle complete. Resting 30m...`);
     await new Promise((r) => setTimeout(r, 30 * 60 * 1000));
   }
 }

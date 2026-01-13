@@ -40,10 +40,203 @@ const KEEPA_PRICE_TYPES = {
   AMAZON: 0,
   NEW: 1,
   USED: 2,
+  SALES_RANK: 3,
   WAREHOUSE: 9,
   RATING: 16,
   REVIEW_COUNT: 17,
 };
+
+/**
+ * Quality filtering rules for different categories
+ */
+const QUALITY_RULES: Record<
+  string,
+  { minPrice?: number; excludeKeywords: string[] }
+> = {
+  gpu: {
+    minPrice: 80,
+    excludeKeywords: [
+      "halterung",
+      "stütze",
+      "riser",
+      "kabel",
+      "adapter",
+      "backplate",
+      "anti-sag",
+      "vertikal",
+      "bridge",
+      "bracket",
+    ],
+  },
+  cpu: {
+    minPrice: 50,
+    excludeKeywords: ["wärmeleitpaste", "kühler", "lüfter", "fan", "thermal"],
+  },
+  smartphones: {
+    minPrice: 60,
+    excludeKeywords: ["hülle", "panzerglas", "folie", "schutzfolie", "dummy"],
+  },
+  notebooks: {
+    minPrice: 150,
+    excludeKeywords: ["tastaturschutz", "folie", "aufkleber", "tasche"],
+  },
+  tablets: {
+    minPrice: 80,
+    excludeKeywords: ["hülle", "stilus", "stift", "pen", "folie"],
+  },
+  ssds: {
+    minPrice: 15,
+    excludeKeywords: ["gehäuse", "adapter", "kühler", "heatsink"],
+  },
+  ram: { minPrice: 15, excludeKeywords: ["kühler", "heatsink", "dummy"] },
+  motherboards: { minPrice: 50, excludeKeywords: ["blende", "kabel"] },
+  monitors: { minPrice: 70, excludeKeywords: ["arm", "halter", "adapter"] },
+  tvs: { minPrice: 150, excludeKeywords: ["halter", "wandhalterung"] },
+  staubsauger: {
+    minPrice: 50,
+    excludeKeywords: ["beutel", "filter", "ersatz"],
+  },
+  headphones: {
+    minPrice: 15,
+    excludeKeywords: ["ohrpolster", "case", "ständer"],
+  },
+  "hard-drives": {
+    minPrice: 30,
+    excludeKeywords: [
+      "ssd",
+      "gehäuse",
+      "adapter",
+      "kabel",
+      "rahmen",
+      "einbaurahmen",
+      "schutzhülle",
+      "case",
+    ],
+  },
+  "gaming-elektrospielzeug": {
+    minPrice: 30,
+    excludeKeywords: [
+      "uno",
+      "schminke",
+      "schmink",
+      "kartenspiel",
+      "makeup",
+      "bauplatte",
+    ],
+  },
+  speicherkarten: {
+    minPrice: 10,
+    excludeKeywords: [
+      "batterie",
+      "knopfzelle",
+      "battery",
+      "coin",
+      "akku",
+      "adapter",
+    ],
+  },
+  espressomaschinen: {
+    minPrice: 100,
+    excludeKeywords: ["ventil", "reiniger", "filter", "dichtung", "entkalker"],
+  },
+  elektrowerkzeuge: {
+    minPrice: 40,
+    excludeKeywords: [
+      "akku",
+      "bit",
+      "bohrer",
+      "klingen",
+      "scheibe",
+      "schleifpapier",
+    ],
+  },
+};
+
+const GLOBAL_EXCLUDE_KEYWORDS = [
+  "adapter",
+  "kabel",
+  "cable",
+  "stecker",
+  "tasse",
+  "poster",
+  "sticker",
+  "aufkleber",
+  "batterie",
+  "knopfzelle",
+  "battery",
+  "coin",
+  "ersatzteil",
+  "zubehör",
+  "reiniger",
+  "tasche",
+];
+
+/**
+ * Check if a product meets quality standards for its category
+ */
+function isQualityProduct(
+  title: string,
+  price: number,
+  category: string,
+): boolean {
+  const lowercaseTitle = title.toLowerCase();
+
+  // 1. Strong Accessory Terms (usually skip regardless of price, if they are the main subject)
+  // We use word boundaries simulation where possible
+  const strongAccessoryTerms = [
+    "halterung",
+    "stütze",
+    "riser",
+    "anti-sag",
+    "mount",
+    "bracket",
+    "dummy",
+    "wandhalterung",
+    "einbaurahmen",
+  ];
+
+  for (const kw of strongAccessoryTerms) {
+    if (lowercaseTitle.includes(kw)) return false;
+  }
+
+  // 2. High Price Protection: If it's a real expensive item, we are generally lenient.
+  if (price > 150) {
+    // We STILL respect category-specific exclusions for expensive items
+    // (e.g., a 200€ "SSD Docking Station" should not be in "hard-drives")
+    const rule = QUALITY_RULES[category];
+    if (rule?.excludeKeywords) {
+      for (const kw of rule.excludeKeywords) {
+        if (lowercaseTitle.includes(kw)) return false;
+      }
+    }
+
+    if (lowercaseTitle.includes("hülle") || lowercaseTitle.includes("dummy"))
+      return false;
+    return true;
+  }
+
+  // 3. Global Term Check (more restrictive for cheaper items)
+  for (const kw of GLOBAL_EXCLUDE_KEYWORDS) {
+    // Use word boundaries or specific checks to avoid matching "Ladekabel" or "Netzkabel"
+    // If it is JUST a "kabel" or "adapter" it usually has it as a primary word.
+    const regex = new RegExp(`\\b${kw}\\b`, "i");
+    if (regex.test(title)) return false;
+  }
+
+  // 4. Category specific rules
+  const rule = QUALITY_RULES[category];
+  if (rule) {
+    if (rule.minPrice && price < rule.minPrice) return false;
+    for (const kw of rule.excludeKeywords) {
+      if (lowercaseTitle.includes(kw)) return false;
+    }
+  }
+
+  // 5. Catch-all: very cheap items in tech categories are usually accessories
+  if (price < 5 && !["speicherkarten"].includes(category)) return false;
+
+  return true;
+}
 
 /**
  * Convert Keepa price (in cents) to decimal
@@ -76,6 +269,7 @@ function extractSpecs(product: KeepaProductRaw): {
   capacityUnit?: "GB" | "TB" | "W";
   technology?: string;
   formFactor?: string;
+  energyLabel?: "A" | "B" | "C" | "D" | "E" | "F" | "G";
 } {
   const title = product.title?.toLowerCase() || "";
   const features = (product.features || []).join(" ").toLowerCase();
@@ -122,7 +316,26 @@ function extractSpecs(product: KeepaProductRaw): {
     formFactor = "SO-DIMM";
   else if (text.includes("dimm")) formFactor = "DIMM";
 
-  return { capacity, capacityUnit, technology, formFactor };
+  // Energy label (A-G)
+  let energyLabel: "A" | "B" | "C" | "D" | "E" | "F" | "G" | undefined;
+  const energyMatch = text.match(/energieeffizienzklasse\s*([a-g])/i);
+  if (energyMatch) {
+    energyLabel = energyMatch[1].toUpperCase() as any;
+  } else if (text.includes("effizienzklasse a")) energyLabel = "A";
+  else if (text.includes("effizienzklasse b")) energyLabel = "B";
+  else if (text.includes("effizienzklasse c")) energyLabel = "C";
+  else if (text.includes("effizienzklasse d")) energyLabel = "D";
+  else if (text.includes("effizienzklasse e")) energyLabel = "E";
+  else if (text.includes("effizienzklasse f")) energyLabel = "F";
+  else if (text.includes("effizienzklasse g")) energyLabel = "G";
+
+  return {
+    capacity,
+    capacityUnit,
+    technology,
+    formFactor,
+    energyLabel,
+  };
 }
 
 /**
@@ -151,9 +364,20 @@ async function importProduct(
       currentPrices[KEEPA_PRICE_TYPES.WAREHOUSE],
     );
 
+    // Get 90-day average
+    const priceAvg90 = raw.stats?.avg90
+      ? keepaPriceToDecimal(raw.stats.avg90[KEEPA_PRICE_TYPES.NEW])
+      : null;
+
     const bestPrice = amazonPrice ?? newPrice;
     if (!bestPrice) {
       // console.log(`  [Skip] ${raw.asin}: No price available`);
+      return "skipped";
+    }
+
+    // Quality check: Filter out accessories and low-quality items
+    if (!isQualityProduct(raw.title || "", bestPrice, category)) {
+      // console.log(`  [Quality Skip] ${raw.asin}: ${raw.title}`);
       return "skipped";
     }
 
@@ -200,8 +424,18 @@ async function importProduct(
       formFactor: specs.formFactor,
       rating,
       reviewCount: reviewCount && reviewCount > 0 ? reviewCount : undefined,
+      energyLabel: specs.energyLabel,
       features: raw.features ? JSON.stringify(raw.features) : undefined,
       description: raw.description,
+      salesRank: ((raw.salesRanks &&
+      Object.values(raw.salesRanks)[0]?.length > 0
+        ? Object.values(raw.salesRanks)[0][
+            Object.values(raw.salesRanks)[0].length - 1
+          ]
+        : undefined) || raw.stats?.current?.[KEEPA_PRICE_TYPES.SALES_RANK]) as
+        | number
+        | undefined,
+      historySeeded: !!raw.stats,
     };
 
     // Upsert product
@@ -236,6 +470,7 @@ async function importProduct(
       newPrice,
       usedPrice,
       warehousePrice,
+      priceAvg90,
       pricePerUnit,
       currency,
       source: "keepa",

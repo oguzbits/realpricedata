@@ -60,15 +60,39 @@ async function updatePrices(country: CountryCode): Promise<void> {
 
   // Get all products
   const allProducts = await db.query.products.findMany();
-  console.log(`  Found ${allProducts.length} products in database`);
-
   if (allProducts.length === 0) {
-    console.log("  No products to update. Run import-products.ts first.");
+    console.log("  No products in database.");
+    return;
+  }
+
+  // Filter for stale products if requested
+  const isStaleOnly = process.argv.includes("--stale");
+  let targetProducts = allProducts;
+
+  if (isStaleOnly) {
+    const twentyHoursAgo = new Date(Date.now() - 20 * 60 * 60 * 1000);
+    // Join with prices to check lastUpdated
+    const currentPrices = await db
+      .select()
+      .from(prices)
+      .where(eq(prices.country, country));
+
+    targetProducts = allProducts.filter((p: any) => {
+      const price = currentPrices.find((pr) => pr.productId === p.id);
+      return !price || !price.lastUpdated || price.lastUpdated < twentyHoursAgo;
+    });
+    console.log(
+      `  Targeting ${targetProducts.length} stale products (< 20h) of ${allProducts.length} total.`,
+    );
+  }
+
+  if (targetProducts.length === 0) {
+    console.log("  No products needing an update right now.");
     return;
   }
 
   // Batch ASINs (100 at a time for Keepa)
-  const asins = allProducts.map((p) => p.asin);
+  const asins = targetProducts.map((p) => p.asin);
   const domain = KEEPA_DOMAINS[country];
   const currency = DOMAIN_CURRENCIES[domain] || "USD";
 
@@ -119,14 +143,16 @@ async function updatePrices(country: CountryCode): Promise<void> {
             and(eq(p.productId, product.id), eq(p.country, country)),
         });
 
-        // Save to history if price changed
-        if (existingPrice && existingPrice.amazonPrice !== amazonPrice) {
+        // Save to history if best price changed
+        const oldBestPrice =
+          existingPrice?.amazonPrice ?? existingPrice?.newPrice;
+        if (existingPrice && oldBestPrice !== bestPrice) {
           const historyRecord: NewPriceHistoryRecord = {
             productId: product.id,
             country,
             price: bestPrice,
             currency,
-            priceType: "amazon",
+            priceType: amazonPrice ? "amazon" : "new",
             recordedAt: new Date(),
           };
           await db.insert(priceHistory).values(historyRecord);

@@ -52,8 +52,10 @@ export const products = sqliteTable(
     tdp: integer("tdp"),
 
     // Ratings
-    rating: real("rating"),
+    rating: real("rating"), // Community rating (0-5)
     reviewCount: integer("review_count"),
+    testRating: real("test_rating"), // Professional "Note" (e.g. 1.0 - 6.0)
+    testCount: integer("test_count"), // Number of tests
 
     // Keepa data
     salesRank: integer("sales_rank"),
@@ -71,6 +73,9 @@ export const products = sqliteTable(
     variationCSV: text("variation_csv"), // ASINs of variations (Keepa format)
     eanList: text("ean_list"), // JSON array of all EANs
     energyLabel: text("energy_label"), // EU Energy Efficiency Class (A-G)
+    historySeeded: integer("history_seeded", { mode: "boolean" }).default(
+      false,
+    ), // Has fetched full history once?
 
     // Timestamps
     createdAt: integer("created_at", { mode: "timestamp" })
@@ -115,6 +120,7 @@ export const prices = sqliteTable(
     priceMin: real("price_min"), // All-time lowest
     priceMax: real("price_max"), // All-time highest
     priceAvg30: real("price_avg_30"), // 30-day average
+    priceAvg90: real("price_avg_90"), // 90-day average
 
     // Calculated
     pricePerUnit: real("price_per_unit"), // Price per GB/TB/W
@@ -204,7 +210,7 @@ export const affiliateLinks = sqliteTable(
       .default(sql`(unixepoch() * 1000)`),
   },
   (table) => [
-    index("idx_affiliate_product_country_source").on(
+    index("idx_affiliate_links_multi").on(
       table.productId,
       table.country,
       table.source,
@@ -295,6 +301,19 @@ export const productOffers = sqliteTable(
 // Type exports for use in application
 export type Product = typeof products.$inferSelect;
 export type NewProduct = typeof products.$inferInsert;
+import { relations } from "drizzle-orm";
+
+export const productsRelations = relations(products, ({ many }) => ({
+  prices: many(prices),
+}));
+
+export const pricesRelations = relations(prices, ({ one }) => ({
+  product: one(products, {
+    fields: [prices.productId],
+    references: [products.id],
+  }),
+}));
+
 export type Price = typeof prices.$inferSelect;
 export type NewPrice = typeof prices.$inferInsert;
 export type PriceHistoryRecord = typeof priceHistory.$inferSelect;

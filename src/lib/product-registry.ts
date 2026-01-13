@@ -46,6 +46,12 @@ export interface Product {
   priceHistory?: { date: string; price: number }[];
   rating?: number;
   reviewCount?: number;
+  testRating?: number;
+  testCount?: number;
+  energyLabel?: "A" | "B" | "C" | "D" | "E" | "F" | "G";
+  salesRank?: number;
+  priceAvg30?: Record<string, number>;
+  priceAvg90?: Record<string, number>;
 }
 
 // Helper to map DB to Interface
@@ -56,6 +62,8 @@ function mapDbProduct(
 ): Product {
   const pricesObj: Record<string, number> = {};
   const pricesLastUpdatedObj: Record<string, string> = {};
+  const avg30Obj: Record<string, number> = {};
+  const avg90Obj: Record<string, number> = {};
 
   if (pricesList) {
     pricesList.forEach((pr) => {
@@ -67,6 +75,8 @@ function mapDbProduct(
           if (pr.lastUpdated) {
             pricesLastUpdatedObj[pr.country] = pr.lastUpdated.toISOString();
           }
+          if (pr.priceAvg30) avg30Obj[pr.country] = pr.priceAvg30;
+          if (pr.priceAvg90) avg90Obj[pr.country] = pr.priceAvg90;
         }
       }
     });
@@ -101,6 +111,12 @@ function mapDbProduct(
     })),
     rating: p.rating || 0,
     reviewCount: p.reviewCount || 0,
+    testRating: p.testRating || undefined,
+    testCount: p.testCount || undefined,
+    energyLabel: p.energyLabel as any,
+    salesRank: p.salesRank || undefined,
+    priceAvg30: avg30Obj,
+    priceAvg90: avg90Obj,
   };
 
   return calculateProductMetrics(item) as Product;
@@ -267,7 +283,7 @@ export async function getBestDeals(
     .where(
       and(
         eq(prices.country, countryCode),
-        gt(prices.priceAvg30, 0),
+        gt(prices.priceAvg90, 0),
         // Ensure we have a valid current price
         or(gt(prices.amazonPrice, 0), gt(prices.newPrice, 0)),
       ),
@@ -275,8 +291,8 @@ export async function getBestDeals(
     .orderBy(
       // Sort by discount percentage descending
       sql`(
-        ${prices.priceAvg30} - COALESCE(${prices.amazonPrice}, ${prices.newPrice})
-      ) / ${prices.priceAvg30} DESC`,
+        ${prices.priceAvg90} - COALESCE(${prices.amazonPrice}, ${prices.newPrice})
+      ) / ${prices.priceAvg90} DESC`,
     )
     .limit(limit);
 
@@ -290,13 +306,15 @@ export async function getMostPopular(
   "use cache";
   cacheLife("prices");
 
-  // Use salesRank (lower is better).
-  // Filter out products with no sales rank (0 or null)
+  // Use salesRank primarily (lower is better), fallback to secondary signals
   const prods = await db
     .select()
     .from(products)
-    .where(gt(products.salesRank, 0))
-    .orderBy(asc(products.salesRank))
+    .orderBy(
+      asc(sql`COALESCE(${products.salesRank}, 10000000)`),
+      desc(products.reviewCount),
+      desc(products.rating),
+    )
     .limit(limit);
 
   if (prods.length === 0) return [];

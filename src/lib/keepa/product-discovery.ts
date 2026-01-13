@@ -53,7 +53,7 @@ export const CATEGORY_BROWSE_NODES: Record<string, Record<string, string>> = {
   receiver: { de: "571830" },
   mikrowellen: { de: "340795031" },
   dunstabzugshauben: { de: "340804031" },
-  "hard-drives": { de: "430498031" },
+  "hard-drives": { de: "430165031" },
   gefrierschraenke: { de: "16075791" },
   herde: { de: "16075841" },
   drones: { de: "2603417031" },
@@ -496,7 +496,7 @@ export async function discoverProducts(
   for (let i = 0; i < asinList.length; i += 100) {
     const batch = asinList.slice(i, i + 100);
     const batchProducts = await getProducts(batch, country, {
-      includeHistory: false,
+      includeHistory: false, // Set to false for high-volume scaling; flip to true for detail enrichment
     });
     products.push(...batchProducts);
 

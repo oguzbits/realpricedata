@@ -108,7 +108,7 @@ export const categoryFAQs: Partial<Record<CategorySlug, FAQItem[]>> = {
   "external-storage": [],
   routers: [],
   nas: [],
-  "usb-hubs": [],
+
   speakers: [],
   microphones: [],
   "gaming-chairs": [],
@@ -121,8 +121,7 @@ export const categoryFAQs: Partial<Record<CategorySlug, FAQItem[]>> = {
   ups: [],
   "pc-cases": [],
   "cpu-coolers": [],
-  "case-fans": [],
-  "thermal-paste": [],
+
   "network-switches": [],
   "network-cards": [],
   "cable-management": [],

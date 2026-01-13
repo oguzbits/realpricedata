@@ -75,10 +75,10 @@ export const products = sqliteTable(
     // Timestamps
     createdAt: integer("created_at", { mode: "timestamp" })
       .notNull()
-      .default(sql`(unixepoch())`),
+      .default(sql`(unixepoch() * 1000)`),
     updatedAt: integer("updated_at", { mode: "timestamp" })
       .notNull()
-      .default(sql`(unixepoch())`),
+      .default(sql`(unixepoch() * 1000)`),
   },
   (table) => [
     index("idx_products_category").on(table.category),
@@ -134,7 +134,7 @@ export const prices = sqliteTable(
     // Timestamps
     lastUpdated: integer("last_updated", { mode: "timestamp" })
       .notNull()
-      .default(sql`(unixepoch())`),
+      .default(sql`(unixepoch() * 1000)`),
   },
   (table) => [
     uniqueIndex("unique_price_product_country").on(
@@ -169,7 +169,7 @@ export const priceHistory = sqliteTable(
     // Timestamp
     recordedAt: integer("recorded_at", { mode: "timestamp" })
       .notNull()
-      .default(sql`(unixepoch())`),
+      .default(sql`(unixepoch() * 1000)`),
   },
   (table) => [
     index("idx_price_history_product_country").on(
@@ -201,7 +201,7 @@ export const affiliateLinks = sqliteTable(
     // Timestamps
     createdAt: integer("created_at", { mode: "timestamp" })
       .notNull()
-      .default(sql`(unixepoch())`),
+      .default(sql`(unixepoch() * 1000)`),
   },
   (table) => [
     index("idx_affiliate_product_country_source").on(
@@ -234,7 +234,7 @@ export const productIdentifiers = sqliteTable(
     // Timestamps
     createdAt: integer("created_at", { mode: "timestamp" })
       .notNull()
-      .default(sql`(unixepoch())`),
+      .default(sql`(unixepoch() * 1000)`),
   },
   (table) => [
     index("idx_identifiers_source_external").on(table.source, table.externalId),
@@ -282,7 +282,7 @@ export const productOffers = sqliteTable(
     // Timestamps
     lastUpdated: integer("last_updated", { mode: "timestamp" })
       .notNull()
-      .default(sql`(unixepoch())`),
+      .default(sql`(unixepoch() * 1000)`),
   },
   (table) => [
     index("idx_offers_product").on(table.productId),

@@ -116,11 +116,7 @@ export const categoryContent: Partial<Record<CategorySlug, CategoryContent>> = {
     intro:
       "Compare network attached storage from Synology, QNAP, and more. Find the best home server and media storage deals.",
   },
-  "usb-hubs": {
-    title: "USB Hubs (Compare Prices)",
-    intro:
-      "Compare USB-C and USB-A hubs with multiple ports. Find powered hubs and docking solutions.",
-  },
+
   speakers: {
     title: "Computer Speakers (Compare Prices)",
     intro:
@@ -181,16 +177,7 @@ export const categoryContent: Partial<Record<CategorySlug, CategoryContent>> = {
     intro:
       "Compare air and AIO liquid CPU coolers. Find deals on Noctua, be quiet!, Corsair, and more.",
   },
-  "case-fans": {
-    title: "Case Fans (Compare Prices)",
-    intro:
-      "Compare PC case fans from Noctua, Arctic, Corsair, and more. RGB and high-airflow options.",
-  },
-  "thermal-paste": {
-    title: "Thermal Paste (Compare Prices)",
-    intro:
-      "Compare thermal compounds from Noctua, Thermal Grizzly, and Arctic. Find the best thermal paste.",
-  },
+
   "network-switches": {
     title: "Network Switches (Compare Prices)",
     intro:

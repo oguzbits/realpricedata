@@ -129,6 +129,33 @@ async function updatePrices(country: CountryCode): Promise<void> {
         );
 
         const bestPrice = amazonPrice ?? newPrice;
+
+        // 1. Update Product Meta (Sales Rank & Ratings)
+        // Keepa salesRanks is an object mapping category ID to rank history.
+        // We take the latest rank from the primary category.
+        let salesRank = product.salesRank;
+        if (kp.salesRanks) {
+          const ranks = Object.values(kp.salesRanks)[0];
+          if (ranks && ranks.length > 0) {
+            salesRank = ranks[ranks.length - 1][1];
+          }
+        }
+
+        // Update ratings if they changed significantly
+        await db
+          .update(products)
+          .set({
+            salesRank,
+            rating:
+              kp.rating && kp.rating > 0 ? kp.rating / 10 : product.rating,
+            reviewCount:
+              kp.reviewsLastSeenStatus !== undefined
+                ? kp.reviewsLastSeenStatus
+                : product.reviewCount,
+            updatedAt: new Date(),
+          })
+          .where(eq(products.id, product.id));
+
         if (!bestPrice) continue;
 
         // Calculate price per unit

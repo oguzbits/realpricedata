@@ -119,6 +119,7 @@ export async function HomeContent({ country }: { country: CountryCode }) {
         isBestseller:
           (p.salesRank && p.salesRank > 0 && p.salesRank < 20000) ||
           (p.reviewCount && p.reviewCount > 100),
+        variationAttributes: p.variationAttributes,
       });
     }
     return result;

@@ -470,15 +470,10 @@ export async function upsertProductFromKeepa(
       reviewCount,
       salesRank,
       monthlySold,
-      offerCountNew,
-      offerCountUsed,
-      primeEligible,
       features: keepaProduct.features
         ? JSON.stringify(keepaProduct.features)
         : undefined,
       description: keepaProduct.description,
-      variationCSV: keepaProduct.variationCSV,
-      eanList: JSON.stringify(keepaProduct.eanList || []),
       energyLabel: null, // To be extracted from features if needed
       updatedAt: now,
     })
@@ -494,15 +489,10 @@ export async function upsertProductFromKeepa(
         reviewCount,
         salesRank,
         monthlySold,
-        offerCountNew,
-        offerCountUsed,
-        primeEligible,
         features: keepaProduct.features
           ? JSON.stringify(keepaProduct.features)
           : undefined,
         description: keepaProduct.description,
-        variationCSV: keepaProduct.variationCSV,
-        eanList: JSON.stringify(keepaProduct.eanList || []),
         updatedAt: now,
       },
     })

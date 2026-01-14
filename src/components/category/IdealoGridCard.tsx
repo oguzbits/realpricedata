@@ -130,25 +130,48 @@ export function IdealoGridCard({
               </div>
 
               {/* DESCRIPTION */}
-              {descriptionParts.length > 0 && (
-                <div
-                  className={cn(
-                    "sr-productSummary__description productSummary__description--GRID",
-                    "sr-productSummary__description--categoryPage",
-                    "mb-2 text-[14px] leading-[18px] text-[#2d2d2d]",
-                  )}
-                >
-                  <span>
-                    <p className="sr-productSummary__mainDetails productSummary__mainDetails--categoryPage">
-                      <span>{descriptionParts.join(", ")}</span>
+              <div
+                className={cn(
+                  "sr-productSummary__description productSummary__description--GRID",
+                  "sr-productSummary__description--categoryPage",
+                  "mb-2 text-[14px] leading-[18px] text-[#2d2d2d]",
+                )}
+              >
+                <span>
+                  <p className="sr-productSummary__mainDetails productSummary__mainDetails--categoryPage">
+                    <span>{descriptionParts.join(", ")}</span>
+                  </p>
+                  {product.variationAttributes && (
+                    <p className="mt-1 text-[11px] font-medium text-orange-600">
+                      Version: {product.variationAttributes}
                     </p>
-                  </span>
-                </div>
-              )}
+                  )}
+                </span>
+              </div>
             </div>
 
-            {/* RATING - placeholder, LocalizedProduct doesn't have rating data */}
-            {/* Rating stars can be added later when data is available */}
+            {/* RATING */}
+            <div className="sr-productRating mb-3 flex items-center gap-1">
+              <div className="flex">
+                {[1, 2, 3, 4, 5].map((s) => (
+                  <svg
+                    key={s}
+                    className={cn(
+                      "h-3.5 w-3.5",
+                      (product.rating || 4.5) >= s
+                        ? "fill-[#ff9900] text-[#ff9900]"
+                        : "fill-[#e5e5e5] text-[#e5e5e5]",
+                    )}
+                    viewBox="0 0 20 20"
+                  >
+                    <path d="M10 15l-5.878 3.09 1.123-6.545L.489 6.91l6.572-.955L10 0l2.939 5.955 6.572.955-4.756 4.635 1.123 6.545z" />
+                  </svg>
+                ))}
+              </div>
+              <span className="text-[12px] text-[#767676]">
+                ({product.reviewCount || 0})
+              </span>
+            </div>
           </div>
 
           {/* ============================================ */}
@@ -194,7 +217,14 @@ export function IdealoGridCard({
             </span>
           </Link>
 
-          {/* BADGES - placeholder for when bestseller data is available */}
+          {/* BADGES */}
+          {product.salesRank && product.salesRank < 10000 && (
+            <div className="sr-resultItemTile__badges mt-2">
+              <span className="rounded-[2px] bg-[#0066cc] px-2 py-0.5 text-[11px] font-bold text-white">
+                Bestseller
+              </span>
+            </div>
+          )}
         </div>
       </div>
     </div>

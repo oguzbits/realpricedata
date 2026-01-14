@@ -174,9 +174,11 @@ export async function ProductDetailView({
                         />
                       ))}
                     </div>
-                    <span className="font-bold text-zinc-900">4.8</span>
+                    <span className="font-bold text-zinc-900">
+                      {product.rating || "4.8"}
+                    </span>
                     <span className="cursor-pointer text-blue-600 hover:underline">
-                      (128 Bewertungen)
+                      ({product.reviewCount || "12"} Bewertungen)
                     </span>
                   </div>
                 </div>
@@ -206,38 +208,41 @@ export async function ProductDetailView({
                     </div>
 
                     <ul className="space-y-2 text-[13px] text-zinc-600">
-                      <li className="flex items-start gap-2">
-                        <Check className="mt-0.5 h-4 w-4 shrink-0 text-emerald-600" />
-                        <span>
-                          Kapazität:{" "}
-                          <b className="text-zinc-900">
-                            {product.capacity} {product.capacityUnit}
-                          </b>
-                        </span>
-                      </li>
-                      <li className="flex items-start gap-2">
-                        <Check className="mt-0.5 h-4 w-4 shrink-0 text-emerald-600" />
-                        <span>
-                          Bauform:{" "}
-                          <b className="text-zinc-900">{product.formFactor}</b>
-                        </span>
-                      </li>
-                      {product.technology && (
-                        <li className="flex items-start gap-2">
-                          <Check className="mt-0.5 h-4 w-4 shrink-0 text-emerald-600" />
-                          <span>
-                            Technik:{" "}
-                            <b className="text-zinc-900">
-                              {product.technology}
-                            </b>
-                          </span>
+                      {product.features && product.features.length > 0 ? (
+                        product.features.slice(0, 5).map((feature, idx) => (
+                          <li key={idx} className="flex items-start gap-2">
+                            <Check className="mt-0.5 h-4 w-4 shrink-0 text-emerald-600" />
+                            <span>{feature}</span>
+                          </li>
+                        ))
+                      ) : (
+                        <>
+                          <li className="flex items-start gap-2">
+                            <Check className="mt-0.5 h-4 w-4 shrink-0 text-emerald-600" />
+                            <span>
+                              Kapazität:{" "}
+                              <b className="text-zinc-900">
+                                {product.capacity} {product.capacityUnit}
+                              </b>
+                            </span>
+                          </li>
+                          <li className="flex items-start gap-2">
+                            <Check className="mt-0.5 h-4 w-4 shrink-0 text-emerald-600" />
+                            <span>
+                              Bauform:{" "}
+                              <b className="text-zinc-900">
+                                {product.formFactor}
+                              </b>
+                            </span>
+                          </li>
+                        </>
+                      )}
+                      {product.variationAttributes && (
+                        <li className="mt-2 flex items-start gap-2 rounded-sm bg-orange-50 p-2 text-[11px] font-bold text-orange-700">
+                          <Info className="h-4 w-4 shrink-0" />
+                          <span>Variante: {product.variationAttributes}</span>
                         </li>
                       )}
-                      <li className="flex items-start gap-2">
-                        <span className="cursor-pointer font-bold text-blue-600 hover:underline">
-                          + weitere Details
-                        </span>
-                      </li>
                     </ul>
                   </div>
                 </div>

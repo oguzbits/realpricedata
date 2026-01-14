@@ -81,6 +81,7 @@ async function enrich() {
                   Object.values(ep.salesRanks)[0]?.length - 1
                 ]?.[1]
               : localProduct.salesRank,
+            updatedAt: new Date(),
           })
           .where(eq(products.id, localProduct.id));
 

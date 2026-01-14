@@ -127,11 +127,6 @@ export function ProductSchema({
       name: "Form Factor",
       value: product.formFactor,
     },
-    {
-      "@type": "PropertyValue",
-      name: "Warranty",
-      value: product.warranty,
-    },
   ];
 
   if (product.technology) {

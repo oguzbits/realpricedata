@@ -113,62 +113,36 @@ async function main() {
     };
 
     const runGrowthPhase = async () => {
-      console.log("\n🌱 Phase: Category Growth & Discovery");
-      for (const category of categories) {
-        // Get current count for this category
-        const results = await db
-          .select({ count: sql<number>`count(*)` })
-          .from(products)
-          .where(eq(products.category, category.slug));
-        const count = results[0]?.count || 0;
-        const target = getTargetCount(category.slug);
+      console.log(
+        "\n🌱 Note: Category Growth (Discovery) is now handled via manual CSV imports.",
+      );
+      console.log(
+        "   To add new products, use: bun run scripts/import-from-csv.ts <file>",
+      );
+    };
 
-        if (count >= target) {
-          console.log(
-            `[Skip] ${category.slug} already has ${count}/${target} products.`,
-          );
-          continue;
-        }
-
-        // Check tokens
-        let tokens = await getTokenStatus();
-        if (tokens.tokensLeft < TOKEN_SAFE_THRESHOLD) {
-          console.log(
-            `⏳ Low tokens (${tokens.tokensLeft}). Skipping discovery for ${category.slug} this pass.`,
-          );
-          continue;
-        }
-
-        console.log(`🚀 Filling ${category.name} (${count}/${target})...`);
+    // enrichment logic (moved into main for better flow)
+    const runEnrichmentPhase = async () => {
+      const tokens = await getTokenStatus();
+      if (tokens.tokensLeft > 400) {
+        console.log("\n🧪 Phase: Targeted Enrichment (Seeding History)");
         try {
-          execSync(
-            `bun run scripts/import-products.ts ${category.slug} ${country} 50`,
-            { stdio: "inherit" },
-          );
-        } catch (error) {
-          console.error(`❌ Discovery failed for ${category.slug}:`, error);
+          execSync(`bun run scripts/enrich-products.ts`, {
+            stdio: "inherit",
+          });
+        } catch (e) {
+          console.error("❌ Enrichment failed:", e);
         }
-
-        // 3. Optional Enrichment
-        if (Math.random() > 0.8) {
-          console.log("🧪 Targeted Enrichment...");
-          try {
-            execSync(`bun run scripts/enrich-products.ts`, {
-              stdio: "inherit",
-            });
-          } catch (e) {}
-        }
+      } else {
+        console.log(
+          `\n⏭️ Skipping enrichment this cycle (Low tokens: ${tokens.tokensLeft})`,
+        );
       }
     };
 
-    // Execute phases in priority order
-    if (INITIAL_POPULATION_MODE) {
-      await runGrowthPhase();
-      await runCompliancePhase();
-    } else {
-      await runCompliancePhase();
-      await runGrowthPhase();
-    }
+    // Execute phases: Prices first, then history seeding
+    await runCompliancePhase();
+    await runEnrichmentPhase();
 
     if (!isContinuous) {
       console.log("\n✅ Single pass complete.");

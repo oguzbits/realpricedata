@@ -19,6 +19,7 @@ interface IdealoProductCardProps {
   categoryName?: string;
   discountRate?: number;
   isBestseller?: boolean;
+  variationAttributes?: string;
 }
 
 export function IdealoProductCard({
@@ -35,6 +36,7 @@ export function IdealoProductCard({
   categoryName,
   discountRate,
   isBestseller,
+  variationAttributes,
 }: IdealoProductCardProps) {
   return (
     <Link
@@ -97,7 +99,7 @@ export function IdealoProductCard({
         </div>
 
         {/* Title */}
-        <h3 className="mb-2 line-clamp-3 min-h-[54px] text-[16px] leading-tight font-semibold text-gray-900">
+        <h3 className="mb-1 line-clamp-2 max-h-[44px] text-[16px] leading-tight font-semibold text-gray-900 group-hover:text-[#0066cc]">
           {title}
         </h3>
 

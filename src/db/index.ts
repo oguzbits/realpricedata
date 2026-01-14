@@ -24,56 +24,43 @@ const isVercelProduction = process.env.VERCEL === "1";
 
 // Determine database URL
 function getDatabaseUrl(): string {
-  // Explicit local override? Use it
+  // Explicit path override? Use it (e.g. for migrations or scripts)
   if (process.env.DATABASE_PATH) {
     return process.env.DATABASE_PATH;
   }
 
-  // Has Turso config? Use it
-  if (process.env.TURSO_DATABASE_URL) {
+  // Production (Vercel): Always use Turso
+  if (isVercelProduction) {
+    if (!process.env.TURSO_DATABASE_URL) {
+      throw new Error("TURSO_DATABASE_URL is required in Vercel production");
+    }
     return process.env.TURSO_DATABASE_URL;
   }
 
-  // Production without Turso? Error
-  if (isVercelProduction) {
-    throw new Error("TURSO_DATABASE_URL is required in Vercel production");
-  }
-
-  // Local development/build: Use local file
-  return process.env.DATABASE_PATH || "file:./data/cleverprices.db";
+  // Development: Default to local SQLite file for speed and isolation
+  // Users can still force Turso by setting DATABASE_PATH to the Turso URL
+  return "file:./data/cleverprices.db";
 }
 
 // Create libSQL client
 function createDbClient(): Client {
   const url = getDatabaseUrl();
 
-  // Has Turso credentials? Use direct connection
-  if (
-    process.env.TURSO_DATABASE_URL &&
-    process.env.TURSO_AUTH_TOKEN &&
-    !process.env.DISABLE_TURSO_SYNC
-  ) {
-    // Check if we should use embedded replica (local dev with cloud sync)
-    // or direct connection (production)
-    if (!isVercelProduction && url.startsWith("file:")) {
-      // Development: Embedded replica that syncs from Turso cloud
-      console.log("[DB] Using embedded replica with Turso sync");
-      return createClient({
-        url, // Local file
-        syncUrl: process.env.TURSO_DATABASE_URL,
-        authToken: process.env.TURSO_AUTH_TOKEN,
-      });
+  // Production (Vercel) or explicit remote URL: Direct connection to Turso
+  if (isVercelProduction || !url.startsWith("file:")) {
+    if (!process.env.TURSO_DATABASE_URL || !process.env.TURSO_AUTH_TOKEN) {
+      throw new Error(
+        "TURSO_DATABASE_URL and TURSO_AUTH_TOKEN are required for remote connection",
+      );
     }
-
-    // Production or direct Turso URL: Direct connection
     return createClient({
       url,
       authToken: process.env.TURSO_AUTH_TOKEN,
     });
   }
 
-  // Local-only mode (no Turso config)
-  console.log("[DB] Using local SQLite (no Turso sync)");
+  // Local development: Plain local SQLite (no sync)
+  console.log("[DB] Using plain local SQLite (no Turso sync)");
   return createClient({ url });
 }
 

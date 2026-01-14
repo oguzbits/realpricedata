@@ -27,6 +27,7 @@ export interface CarouselProduct {
   categoryName?: string;
   discountRate?: number;
   isBestseller?: boolean;
+  variationAttributes?: string;
 }
 
 interface IdealoProductCarouselProps {
@@ -159,6 +160,7 @@ export function IdealoProductCarousel({
               categoryName={product.categoryName}
               discountRate={product.discountRate}
               isBestseller={product.isBestseller}
+              variationAttributes={product.variationAttributes}
             />
           ))}
         </div>

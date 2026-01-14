@@ -20,7 +20,7 @@
  */
 
 import type { CategorySlug } from "@/lib/categories";
-import type { CountryCode } from "@/lib/countries";
+import { countries, type CountryCode } from "@/lib/countries";
 import type { Currency } from "@/types";
 
 import type {
@@ -35,6 +35,18 @@ import type {
 
 // Environment variable
 const KEEPA_API_KEY = process.env.KEEPA_API_KEY || "";
+
+// Partner tags for link generation
+const PARTNER_TAGS: Record<string, string | undefined> = {
+  us: process.env.PAAPI_PARTNER_TAG_US,
+  uk: process.env.PAAPI_PARTNER_TAG_UK,
+  de: process.env.PAAPI_PARTNER_TAG_DE,
+  fr: process.env.PAAPI_PARTNER_TAG_FR,
+  es: process.env.PAAPI_PARTNER_TAG_ES,
+  it: process.env.PAAPI_PARTNER_TAG_IT,
+  ca: process.env.PAAPI_PARTNER_TAG_CA,
+};
+const DEFAULT_PARTNER_TAG = process.env.PAAPI_PARTNER_TAG || "";
 
 // Keepa domain codes (different from our country codes)
 const KEEPA_DOMAINS: Record<CountryCode, number> = {
@@ -364,15 +376,19 @@ export class KeepaDataSource implements DataSourceProvider {
     // Build offers array
     const offers = [];
 
+    // Link generation settings
+    const domain = countries[country]?.domain || "amazon.de";
+    const tag = PARTNER_TAGS[country] || DEFAULT_PARTNER_TAG;
+
     if (amazonPrice !== null) {
       offers.push({
         source: "keepa" as const,
         price: amazonPrice,
         currency,
         displayPrice: this.formatPrice(amazonPrice, currency),
-        affiliateLink: `https://www.amazon.com/dp/${product.asin}?tag=${process.env.PAAPI_PARTNER_TAG || ""}`,
+        affiliateLink: `https://www.${domain}/dp/${product.asin}?tag=${tag}`,
         condition: "new" as ProductCondition,
-        availability: "unknown" as const,
+        availability: "in_stock" as const, // Amazon price usually implies stock
         seller: "Amazon",
         lastUpdated: new Date(),
         country,
@@ -385,7 +401,7 @@ export class KeepaDataSource implements DataSourceProvider {
         price: usedPrice,
         currency,
         displayPrice: this.formatPrice(usedPrice, currency),
-        affiliateLink: `https://www.amazon.com/dp/${product.asin}?tag=${process.env.PAAPI_PARTNER_TAG || ""}`,
+        affiliateLink: `https://www.${domain}/dp/${product.asin}?tag=${tag}`,
         condition: "used" as ProductCondition,
         availability: "unknown" as const,
         lastUpdated: new Date(),
@@ -399,7 +415,7 @@ export class KeepaDataSource implements DataSourceProvider {
         price: warehousePrice,
         currency,
         displayPrice: this.formatPrice(warehousePrice, currency),
-        affiliateLink: `https://www.amazon.com/dp/${product.asin}?tag=${process.env.PAAPI_PARTNER_TAG || ""}`,
+        affiliateLink: `https://www.${domain}/dp/${product.asin}?tag=${tag}`,
         condition: "renewed" as ProductCondition,
         availability: "unknown" as const,
         seller: "Amazon Warehouse",

@@ -11,6 +11,7 @@
  * | (spans all rows)  | Meta Info + Details    | (spans all)     |
  */
 
+import React from "react";
 import { Breadcrumbs } from "@/components/breadcrumbs";
 import {
   BreadcrumbSchema,
@@ -249,54 +250,64 @@ export async function IdealoProductPage({
             <div className="oopStage-metaInfo mb-4 hidden flex-wrap items-center gap-4 lg:flex">
               {/* Ratings */}
               <a href="#reviews" className="group flex items-center gap-2">
-                <span className="text-sm text-[#333]">8 Produktmeinungen:</span>
+                <span className="text-sm text-[#333]">Produktbewertung:</span>
                 <div className="flex">
                   {[1, 2, 3, 4, 5].map((s) => (
                     <Star
                       key={s}
-                      className="h-4 w-4 fill-[#ff9900] text-[#ff9900]"
+                      className={cn(
+                        "h-4 w-4 fill-[#ff9900]",
+                        (product.rating || 4.5) >= s
+                          ? "text-[#ff9900]"
+                          : "fill-transparent text-[#e5e5e5]",
+                      )}
                     />
                   ))}
                 </div>
                 <span className="text-sm text-[#0066cc] group-hover:underline">
-                  (8)
+                  ({product.reviewCount || 0})
                 </span>
               </a>
-
-              {/* Test Reports */}
-              <div className="flex items-center gap-2">
-                <span className="text-sm text-[#333]">3 Testberichte:</span>
-                <span className="rounded bg-[#6eb400] px-2 py-0.5 text-sm font-semibold text-white">
-                  Note ∅ 1,5
-                </span>
-              </div>
             </div>
 
             {/* Product Info */}
             <div className="oopStage-productInfo mb-6">
               <div className="mb-4">
-                <b className="text-sm text-[#333]">Produktübersicht:</b>
+                <b className="text-sm text-[#333]">Highlights:</b>
                 <div className="mt-2 flex flex-wrap gap-2">
-                  <span className="text-sm text-[#666]">
-                    Kapazität: {product.capacity} {product.capacityUnit}
-                  </span>
-                  <span className="text-sm text-[#999]">•</span>
-                  <span className="text-sm text-[#666]">
-                    Bauform: {product.formFactor}
-                  </span>
-                  {product.technology && (
+                  {product.features && product.features.length > 0 ? (
+                    product.features.slice(0, 3).map((f, i) => (
+                      <React.Fragment key={i}>
+                        <span className="text-sm text-[#666]">{f}</span>
+                        {i < 2 && i < product.features!.length - 1 && (
+                          <span className="text-sm text-[#999]">•</span>
+                        )}
+                      </React.Fragment>
+                    ))
+                  ) : (
                     <>
+                      <span className="text-sm text-[#666]">
+                        Kapazität: {product.capacity} {product.capacityUnit}
+                      </span>
                       <span className="text-sm text-[#999]">•</span>
                       <span className="text-sm text-[#666]">
-                        {product.technology}
+                        Bauform: {product.formFactor}
+                      </span>
+                    </>
+                  )}
+                  {product.variationAttributes && (
+                    <>
+                      <span className="text-sm text-[#999]">•</span>
+                      <span className="text-sm font-bold text-orange-600">
+                        {product.variationAttributes}
                       </span>
                     </>
                   )}
                   <a
                     href="#datasheet"
-                    className="text-sm font-semibold text-[#0066cc] hover:underline"
+                    className="ml-2 text-sm font-semibold text-[#0066cc] hover:underline"
                   >
-                    Produktdetails
+                    Alle Details
                   </a>
                 </div>
               </div>

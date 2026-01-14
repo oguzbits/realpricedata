@@ -29,53 +29,40 @@ export const products = sqliteTable(
     brand: text("brand"),
     category: text("category").notNull(), // CategorySlug
     imageUrl: text("image_url"),
+    manufacturer: text("manufacturer"),
 
-    // Specifications
+    // Specifications (Core Filterable)
     capacity: real("capacity"), // Numeric capacity
     capacityUnit: text("capacity_unit"), // "GB", "TB", "W"
-    normalizedCapacity: real("normalized_capacity"), // Capacity in base unit (GB for storage, W for PSU)
+    normalizedCapacity: real("normalized_capacity"), // Base unit for math
     formFactor: text("form_factor"),
-    technology: text("technology"), // "SSD", "HDD", "DDR4", "DDR5", etc.
-    warranty: text("warranty"),
-    condition: text("condition").default("New"), // "New", "Renewed", "Used"
+    technology: text("technology"), // "SSD", "HDD", "DDR4", etc.
+    condition: text("condition").default("New"), // "New", "Used"
 
-    // PSU-specific
-    certification: text("certification"), // "80+ Gold", etc.
-    modularityType: text("modularity_type"),
-
-    // CPU/GPU-specific (for future)
-    socket: text("socket"),
-    cores: integer("cores"),
-    threads: integer("threads"),
-    baseClock: text("base_clock"),
-    boostClock: text("boost_clock"),
-    tdp: integer("tdp"),
-
-    // Ratings
-    rating: real("rating"), // Community rating (0-5)
+    // Ratings & Performance
+    rating: real("rating"),
     reviewCount: integer("review_count"),
-    testRating: real("test_rating"), // Professional "Note" (e.g. 1.0 - 6.0)
-    testCount: integer("test_count"), // Number of tests
-
-    // Keepa data
     salesRank: integer("sales_rank"),
-    salesRankReference: integer("sales_rank_reference"), // Category sales rank
-    monthlySold: integer("monthly_sold"), // Estimated monthly sales
-    offerCountNew: integer("offer_count_new"), // Number of new offers
-    offerCountUsed: integer("offer_count_used"), // Number of used offers
-    primeEligible: integer("prime_eligible", { mode: "boolean" }), // FBA available
+    salesRankReference: integer("sales_rank_reference"),
+    monthlySold: integer("monthly_sold"),
 
-    // Features/Description
-    features: text("features"), // JSON array
+    // Variants (New)
+    parentAsin: text("parent_asin"),
+    variationAttributes: text("variation_attributes"), // e.g. "Color: Black; Size: 256GB"
+
+    // JSON Buckets (New)
+    specifications: text("specifications"), // Key-value JSON of all specs
+    rawData: text("raw_data"), // Complete Keepa CSV row as JSON string
+
+    // UI Content
+    features: text("features"), // Extracted JSON array
     description: text("description"),
+    energyLabel: text("energy_label"),
 
-    // Variations
-    variationCSV: text("variation_csv"), // ASINs of variations (Keepa format)
-    eanList: text("ean_list"), // JSON array of all EANs
-    energyLabel: text("energy_label"), // EU Energy Efficiency Class (A-G)
+    // Status
     historySeeded: integer("history_seeded", { mode: "boolean" }).default(
       false,
-    ), // Has fetched full history once?
+    ),
 
     // Timestamps
     createdAt: integer("created_at", { mode: "timestamp" })

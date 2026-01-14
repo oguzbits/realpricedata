@@ -56,16 +56,12 @@ export function ProductTable({
             <th className="text-foreground h-10 min-w-[120px] px-2 text-left align-middle font-medium whitespace-nowrap sm:min-w-[200px]">
               Product
             </th>
-            <th className="text-foreground hidden h-10 px-2 text-left align-middle font-medium whitespace-nowrap md:table-cell">
-              Warranty
-            </th>
+
             <th className="text-foreground hidden h-10 px-2 text-left align-middle font-medium whitespace-nowrap sm:table-cell">
               Form Factor
             </th>
             <th className="text-foreground hidden h-10 px-2 text-left align-middle font-medium whitespace-nowrap sm:table-cell">
-              {categorySlug === "power-supplies"
-                ? "Certification"
-                : "Technology"}
+              Technology
             </th>
             <th className="text-foreground hidden h-10 px-2 text-left align-middle font-medium whitespace-nowrap sm:table-cell">
               Condition
@@ -116,16 +112,11 @@ export function ProductTable({
                 </div>
               </td>
 
-              <td className="text-muted-foreground hidden p-2 align-middle text-sm whitespace-nowrap md:table-cell">
-                {product.warranty}
-              </td>
               <td className="text-muted-foreground hidden p-2 align-middle text-sm whitespace-nowrap sm:table-cell">
                 {product.formFactor}
               </td>
               <td className="text-muted-foreground hidden p-2 align-middle text-sm whitespace-nowrap sm:table-cell">
-                {categorySlug === "power-supplies"
-                  ? product.certification || product.technology
-                  : product.technology}
+                {product.technology}
               </td>
               <td className="hidden p-2 align-middle whitespace-nowrap sm:table-cell">
                 <Badge

@@ -83,9 +83,9 @@ export async function getCategoryProducts(
       const { price, title, asin } = getLocalizedProductData(p, countryCode);
       if (price === null || price === 0) return null;
 
-      // Extract socket and cores from title as fallback for CPUs
-      let socket = (p as any).socket;
-      let cores = (p as any).cores;
+      // Extract socket and cores from specifications or title fallback
+      let socket = p.specifications?.Socket || p.specifications?.["Socket-Typ"];
+      let cores = p.specifications?.Cores || p.specifications?.Kerne;
 
       if (categorySlug === "cpu") {
         if (!socket) {

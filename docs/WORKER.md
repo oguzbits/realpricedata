@@ -16,11 +16,12 @@ If you haven't already, run this command once to automate everything (Daily Sync
 
 ## 🛠 Daily Usage: How to Run the Worker
 
-| Mode            | Command               | Best For...                                                                            |
-| :-------------- | :-------------------- | :------------------------------------------------------------------------------------- |
-| **Live Logs**   | `bun run worker:live` | **Development:** Seeing everything in real-time. Includes 12h cloud sync.              |
-| **Background**  | `bun run worker`      | **Production:** Set it and forget it. Auto-restarts on crash. Includes 12h cloud sync. |
-| **Manual Sync** | `bun run db:deploy`   | **On-demand:** Pushing local updates to the cloud immediately.                         |
+| Action          | Command                                     | Best For...                                                     |
+| :-------------- | :------------------------------------------ | :-------------------------------------------------------------- |
+| **Growth**      | `bun run scripts/import-from-csv.ts <file>` | **Adding New Products:** Export CSV from Keepa and import here. |
+| **Maintenance** | `bun run worker`                            | **Daily Updates:** Updates prices/ranks and seeds history.      |
+| **Live Logs**   | `bun run worker:live`                       | **Development:** Seeing everything in real-time.                |
+| **Manual Sync** | `bun run db:deploy`                         | **On-demand:** Pushing local updates to the cloud immediately.  |
 
 ---
 

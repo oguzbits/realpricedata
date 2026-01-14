@@ -95,7 +95,9 @@ export function filterProducts(
 
         const selected = filters[group.field];
         if (Array.isArray(selected) && selected.length > 0) {
-          const pVal = String((p as any)[group.field] || "");
+          const pVal = String(
+            (p as any)[group.field] || p.specifications?.[group.field] || "",
+          );
           if (!selected.includes(pVal)) return false;
         }
       }
@@ -163,7 +165,10 @@ export function getUniqueFieldValues(
   const values = new Set<string>();
 
   products.forEach((p) => {
-    const val = (p as any)[field];
+    let val = (p as any)[field];
+    if (val === undefined || val === null || val === "") {
+      val = p.specifications?.[field];
+    }
     if (val === undefined || val === null || val === "") return;
 
     if (Array.isArray(val)) {

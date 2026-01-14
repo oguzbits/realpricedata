@@ -84,6 +84,11 @@ export const CATEGORY_BROWSE_NODES: Record<string, Record<string, string>> = {
   kreissaegen: { de: "1939390031" },
 
   // --- New / Combined Categories ---
+  haushaltselektronik: { de: "3167641" }, // Kitchen & Home root
+  computer: { de: "340843031" }, // PC root
+  telekommunikation: { de: "562066" }, // Electronics root (broad)
+  "hifi-audio": { de: "571816" }, // Audio & Hifi
+  "tv-sat": { de: "571714" }, // Video & Home Cinematic
   "drucker-scanner": { de: "430113031" }, // Reuse Multifunction Printers
   "gaming-elektrospielzeug": { de: "12950651" }, // Generic Toys (Spielzeug)
 
@@ -139,6 +144,8 @@ export interface KeepaProductRaw {
   variationCSV?: string;
   categories?: number[];
   categoryTree?: { catId: number; name: string }[];
+  rating?: number; // Keepa 10-50 format
+  reviewsLastSeenStatus?: number; // Total review count
 }
 
 // Search results type

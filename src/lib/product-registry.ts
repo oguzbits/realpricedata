@@ -29,25 +29,26 @@ export interface Product {
    * Essential for Amazon compliance
    */
   pricesLastUpdated?: Record<string, string>;
+  parentAsin?: string;
+  variationAttributes?: string;
+  specifications?: Record<string, any>;
+  manufacturer?: string;
+  features?: string[]; // Parsed from JSON string
+
+  // Basic properties
   capacity: number;
-  capacityUnit: "GB" | "TB" | "W" | "core";
+  capacityUnit: string;
   normalizedCapacity?: number;
   pricePerUnit?: number;
-  warranty: string;
   formFactor: string;
   technology?: string;
   condition: "New" | "Used" | "Renewed";
   brand: string;
-  certification?: string;
-  modularityTyp?: string;
-  socket?: string;
-  cores?: number;
-  threads?: number;
+
+  // History & Metrics
   priceHistory?: { date: string; price: number }[];
   rating?: number;
   reviewCount?: number;
-  testRating?: number;
-  testCount?: number;
   energyLabel?: "A" | "B" | "C" | "D" | "E" | "F" | "G";
   salesRank?: number;
   priceAvg30?: Record<string, number>;
@@ -89,30 +90,27 @@ function mapDbProduct(
     title: p.title,
     category: p.category,
     image: p.imageUrl || "",
-    affiliateUrl: `https://www.amazon.de/dp/${p.asin}?tag=${process.env.PAAPI_PARTNER_TAG || "cleverprices-21"}`,
+    affiliateUrl: `https://www.amazon.de/dp/${p.asin}?tag=${process.env.PAAPI_PARTNER_TAG || "realpricedata-21"}`,
     prices: pricesObj,
     pricesLastUpdated: pricesLastUpdatedObj,
     capacity: p.capacity || 0,
-    capacityUnit: (p.capacityUnit as "TB" | "GB" | "W" | "core") || "TB",
+    capacityUnit: (p.capacityUnit as any) || "GB",
     normalizedCapacity: p.normalizedCapacity || 0,
-    warranty: p.warranty || "2 Years",
     formFactor: p.formFactor || "Standard",
     technology: p.technology || "",
-    condition: (p.condition as "New" | "Used" | "Renewed") || "New",
+    condition: (p.condition as any) || "New",
     brand: p.brand || "Generic",
-    certification: p.certification || undefined,
-    modularityTyp: p.modularityType || undefined,
-    socket: (p as any).socket || undefined,
-    cores: p.cores || undefined,
-    threads: p.threads || undefined,
+    manufacturer: p.manufacturer || undefined,
+    parentAsin: p.parentAsin || undefined,
+    variationAttributes: p.variationAttributes || undefined,
+    specifications: p.specifications ? JSON.parse(p.specifications) : {},
+    features: p.features ? JSON.parse(p.features) : [],
     priceHistory: historyList.map((h) => ({
       date: (h.recordedAt || new Date()).toISOString(),
       price: h.price,
     })),
     rating: p.rating || 0,
     reviewCount: p.reviewCount || 0,
-    testRating: p.testRating || undefined,
-    testCount: p.testCount || undefined,
     energyLabel: p.energyLabel as any,
     salesRank: p.salesRank || undefined,
     priceAvg30: avg30Obj,
@@ -269,34 +267,33 @@ export async function getBestDeals(
   "use cache";
   cacheLife("prices");
 
-  // Find products with significant price drop compared to 30-day average
-  // We use raw SQL for the calculation for efficiency
-  // Discount = (avg30 - current) / avg30
-  // We prioritize Amazon price, then New price.
-  const results = await db
-    .select({
-      product: products,
-      price: prices,
-    })
-    .from(products)
-    .innerJoin(prices, eq(products.id, prices.productId))
-    .where(
-      and(
-        eq(prices.country, countryCode),
-        gt(prices.priceAvg90, 0),
-        // Ensure we have a valid current price
-        or(gt(prices.amazonPrice, 0), gt(prices.newPrice, 0)),
-      ),
-    )
-    .orderBy(
-      // Sort by discount percentage descending
-      sql`(
-        ${prices.priceAvg90} - COALESCE(${prices.amazonPrice}, ${prices.newPrice})
-      ) / ${prices.priceAvg90} DESC`,
-    )
-    .limit(limit);
+  try {
+    const results = await db
+      .select({
+        product: products,
+        price: prices,
+      })
+      .from(products)
+      .innerJoin(prices, eq(products.id, prices.productId))
+      .where(
+        and(
+          eq(prices.country, countryCode),
+          gt(prices.priceAvg90, 0),
+          or(gt(prices.amazonPrice, 0), gt(prices.newPrice, 0)),
+        ),
+      )
+      .orderBy(
+        desc(
+          sql`(${prices.priceAvg90} - COALESCE(${prices.amazonPrice}, ${prices.newPrice})) / ${prices.priceAvg90}`,
+        ),
+      )
+      .limit(limit);
 
-  return results.map((r) => mapDbProduct(r.product, [r.price]));
+    return results.map((r) => mapDbProduct(r.product, [r.price]));
+  } catch (error) {
+    console.error("[Product Registry] Error in getBestDeals:", error);
+    return [];
+  }
 }
 
 export async function getMostPopular(
@@ -306,33 +303,38 @@ export async function getMostPopular(
   "use cache";
   cacheLife("prices");
 
-  // Use salesRank primarily (lower is better), fallback to secondary signals
-  const prods = await db
-    .select()
-    .from(products)
-    .orderBy(
-      asc(sql`COALESCE(${products.salesRank}, 10000000)`),
-      desc(products.reviewCount),
-      desc(products.rating),
-    )
-    .limit(limit);
+  try {
+    // Use salesRank primarily (lower is better), fallback to secondary signals
+    const prods = await db
+      .select()
+      .from(products)
+      .orderBy(
+        asc(sql`COALESCE(${products.salesRank}, 10000000)`),
+        desc(products.reviewCount),
+        desc(products.rating),
+      )
+      .limit(limit);
 
-  if (prods.length === 0) return [];
+    if (prods.length === 0) return [];
 
-  const ids = prods.map((p) => p.id);
-  const prs = await db
-    .select()
-    .from(prices)
-    .where(
-      and(inArray(prices.productId, ids), eq(prices.country, countryCode)),
+    const ids = prods.map((p) => p.id);
+    const prs = await db
+      .select()
+      .from(prices)
+      .where(
+        and(inArray(prices.productId, ids), eq(prices.country, countryCode)),
+      );
+
+    return prods.map((p) =>
+      mapDbProduct(
+        p,
+        prs.filter((pr) => pr.productId === p.id),
+      ),
     );
-
-  return prods.map((p) =>
-    mapDbProduct(
-      p,
-      prs.filter((pr) => pr.productId === p.id),
-    ),
-  );
+  } catch (error) {
+    console.error("[Product Registry] Error in getMostPopular:", error);
+    return [];
+  }
 }
 
 export async function getNewArrivals(

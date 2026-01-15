@@ -69,12 +69,12 @@ export function IdealoProductCard({
       {/* Badges Area - top left */}
       <div className="absolute top-3 left-3 z-10 flex flex-col gap-1">
         {discountRate && discountRate > 0 ? (
-          <div className="rounded-sm bg-[#ff6600] px-1.5 py-0.5 text-[11px] font-bold text-white shadow-sm">
+          <div className="rounded-sm bg-[#ff6600] px-2 py-1 text-[14px] font-extrabold tracking-tight text-white shadow-sm">
             -{discountRate}%
           </div>
         ) : null}
         {badgeText && (!discountRate || discountRate === 0) ? (
-          <div className="rounded-sm bg-[#ff6600] px-1.5 py-0.5 text-[11px] font-bold text-white shadow-sm">
+          <div className="rounded-sm bg-[#ff6600] px-2 py-1 text-[14px] font-extrabold tracking-tight text-white shadow-sm">
             {badgeText}
           </div>
         ) : null}

@@ -26,20 +26,23 @@ export async function getAllProducts(): Promise<Product[]> {
 export async function getBestDeals(
   limit: number = 8,
   countryCode: string = "de",
+  condition?: "New" | "Used" | "Renewed",
 ): Promise<Product[]> {
-  return getBestDealsSync(limit, countryCode);
+  return getBestDealsSync(limit, countryCode, condition);
 }
 
 export async function getMostPopular(
   limit: number = 8,
   countryCode: string = "de",
+  condition?: "New" | "Used" | "Renewed",
 ): Promise<Product[]> {
-  return getMostPopularSync(limit, countryCode);
+  return getMostPopularSync(limit, countryCode, condition);
 }
 
 export async function getNewArrivals(
   limit: number = 8,
   countryCode: string = "de",
+  condition?: "New" | "Used" | "Renewed",
 ): Promise<Product[]> {
-  return getNewArrivalsSync(limit, countryCode);
+  return getNewArrivalsSync(limit, countryCode, condition);
 }

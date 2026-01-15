@@ -131,6 +131,8 @@ export type CategorySlug =
   | "bohrmaschinen"
   | "kreissaegen"
   | "schleifmaschinen"
+  | "apple-iphone"
+  | "samsung-galaxy"
   | "fraesmaschinen";
 
 export interface FilterGroup {
@@ -220,6 +222,32 @@ const CATEGORY_MAP: Record<CategorySlug, Omit<Category, "slug">> = {
       { label: "Google Pixel", href: "/smartphones?brand=Google" },
       { label: "Xiaomi", href: "/smartphones?brand=Xiaomi" },
       { label: "Smartwatches", href: "/smartwatches" },
+    ],
+  },
+  "apple-iphone": {
+    name: "Apple iPhone",
+    description: "Alle iPhone Modelle im Preisvergleich",
+    icon: Smartphone,
+    parent: "telekommunikation",
+    categoryType: "standard",
+    imageUrl: "/images/category/iphone.jpg",
+    popularFilters: [
+      { label: "iPhone 15", params: "model=iphone-15" },
+      { label: "iPhone 15 Pro", params: "model=iphone-15-pro" },
+      { label: "iPhone 14", params: "model=iphone-14" },
+    ],
+  },
+  "samsung-galaxy": {
+    name: "Samsung Galaxy",
+    description: "Galaxy S, Z und A Serie",
+    icon: Smartphone,
+    parent: "telekommunikation",
+    categoryType: "standard",
+    imageUrl: "/images/category/galaxy.jpg",
+    popularFilters: [
+      { label: "Galaxy S24", params: "model=s24" },
+      { label: "Galaxy Z Fold", params: "series=z-fold" },
+      { label: "Galaxy A55", params: "model=a55" },
     ],
   },
 

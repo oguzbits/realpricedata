@@ -11,12 +11,13 @@
  * | (spans all rows)  | Meta Info + Details    | (spans all)     |
  */
 
-import React from "react";
 import { Breadcrumbs } from "@/components/breadcrumbs";
+import { IdealoProductCarousel } from "@/components/IdealoProductCarousel";
 import {
   BreadcrumbSchema,
   ProductSchema,
 } from "@/components/seo/ProductSchema";
+import { PaymentMethodIcon } from "@/components/ui/PaymentMethodIcon";
 import { getAffiliateRedirectPath } from "@/lib/affiliate-utils";
 import {
   getCategoryBySlug,
@@ -25,16 +26,15 @@ import {
 } from "@/lib/categories";
 import { getCountryByCode, type CountryCode } from "@/lib/countries";
 import type { ProductOffer, UnifiedProduct } from "@/lib/data-sources";
-import { Product, getSimilarProducts } from "@/lib/product-registry";
+import { Product } from "@/lib/product-registry";
 import { cn } from "@/lib/utils";
 import { formatCurrency, formatDisplayTitle } from "@/lib/utils/formatting";
-import { Check, ChevronRight, Heart, Package, Star } from "lucide-react";
+import { Package, Star } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
+import React from "react";
 import { IdealoPriceChart } from "./IdealoPriceChart";
-import { IdealoProductCarousel } from "@/components/IdealoProductCarousel";
 import { SpecificationsTable } from "./SpecificationsTable";
-import { PaymentMethodIcon } from "@/components/ui/PaymentMethodIcon";
 
 interface IdealoProductPageProps {
   product: Product;
@@ -58,6 +58,9 @@ export async function IdealoProductPage({
     product.title,
     product.specifications?.Model as string,
   );
+
+  const hasPriceHistory =
+    product.priceHistory && product.priceHistory.length > 0;
 
   // Build breadcrumbs
   const breadcrumbItems = [
@@ -187,16 +190,6 @@ export async function IdealoProductPage({
                 "lg:col-start-2 lg:col-end-3 lg:row-start-1 lg:row-end-2",
               )}
             >
-              {/* Favorites */}
-              <div className="mb-2 hidden justify-end lg:flex">
-                <button
-                  className="rounded-full p-2 transition-colors hover:bg-[#f5f5f5]"
-                  aria-label="Auf Merkzettel speichern"
-                >
-                  <Heart className="h-6 w-6 text-[#999] hover:text-[#e74c3c]" />
-                </button>
-              </div>
-
               {/* Title */}
               <h1
                 id="oopStage-title"
@@ -393,9 +386,11 @@ export async function IdealoProductPage({
                 "px-0",
               )}
             >
-              <div id="price-chart-wrapper" className="sticky top-4">
-                <IdealoPriceChart history={product.priceHistory} />
-              </div>
+              {hasPriceHistory && (
+                <div id="price-chart-wrapper" className="sticky top-4">
+                  <IdealoPriceChart history={product.priceHistory!} />
+                </div>
+              )}
             </div>
           </div>
 
@@ -492,22 +487,6 @@ export async function IdealoProductPage({
                 <h2 className="productOffers-headerTitle text-lg font-bold sm:text-xl">
                   Preisvergleich
                 </h2>
-                <div className="flex flex-wrap items-center gap-3 text-xs">
-                  <label className="flex cursor-pointer items-center gap-2">
-                    <input
-                      type="checkbox"
-                      className="h-4 w-4 rounded border-[#b4b4b4] bg-white accent-[#0771d0]"
-                    />
-                    <span className="text-[#2d2d2d]">Inkl. Versandkosten</span>
-                  </label>
-                  <label className="flex cursor-pointer items-center gap-2">
-                    <input
-                      type="checkbox"
-                      className="h-4 w-4 rounded border-[#b4b4b4] bg-white accent-[#0771d0]"
-                    />
-                    <span className="text-[#2d2d2d]">Sofort lieferbar</span>
-                  </label>
-                </div>
               </div>
 
               {/* Offer List Container */}

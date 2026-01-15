@@ -53,6 +53,8 @@ export interface Product {
   salesRank?: number;
   priceAvg30?: Record<string, number>;
   priceAvg90?: Record<string, number>;
+  listPrice?: Record<string, number>;
+  monthlySold?: number;
 }
 
 // Helper to map DB to Interface
@@ -65,6 +67,7 @@ function mapDbProduct(
   const pricesLastUpdatedObj: Record<string, string> = {};
   const avg30Obj: Record<string, number> = {};
   const avg90Obj: Record<string, number> = {};
+  const listPricesObj: Record<string, number> = {};
 
   if (pricesList) {
     pricesList.forEach((pr) => {
@@ -78,6 +81,7 @@ function mapDbProduct(
           }
           if (pr.priceAvg30) avg30Obj[pr.country] = pr.priceAvg30;
           if (pr.priceAvg90) avg90Obj[pr.country] = pr.priceAvg90;
+          if (pr.listPrice) listPricesObj[pr.country] = pr.listPrice;
         }
       }
     });
@@ -98,7 +102,12 @@ function mapDbProduct(
     normalizedCapacity: p.normalizedCapacity || 0,
     formFactor: p.formFactor || "Standard",
     technology: p.technology || "",
-    condition: (p.condition as any) || "New",
+    condition:
+      p.title.includes("(Generalüberholt)") ||
+      p.title.includes("erneuert") ||
+      p.title.includes("Renewed")
+        ? "Used"
+        : (p.condition as any) || "New",
     brand: p.brand || "Generic",
     manufacturer: p.manufacturer || undefined,
     parentAsin: p.parentAsin || undefined,
@@ -113,8 +122,10 @@ function mapDbProduct(
     reviewCount: p.reviewCount || 0,
     energyLabel: p.energyLabel as any,
     salesRank: p.salesRank || undefined,
+    monthlySold: p.monthlySold || 0,
     priceAvg30: avg30Obj,
     priceAvg90: avg90Obj,
+    listPrice: listPricesObj,
   };
 
   return calculateProductMetrics(item) as Product;
@@ -326,11 +337,33 @@ export async function getProductsByBrand(
 export async function getBestDeals(
   limit: number = 8,
   countryCode: string = "de",
+  condition?: "New" | "Used" | "Renewed",
 ): Promise<Product[]> {
   "use cache";
   cacheLife("prices");
 
   try {
+    const whereConditions = [
+      eq(prices.country, countryCode),
+      or(
+        gt(prices.priceAvg90, 0),
+        gt(prices.priceAvg30, 0),
+        gt(prices.listPrice, 0),
+      ),
+      or(gt(prices.amazonPrice, 0), gt(prices.newPrice, 0)),
+    ];
+
+    if (condition) {
+      whereConditions.push(eq(products.condition, condition));
+      if (condition === "New") {
+        whereConditions.push(
+          sql`${products.title} NOT LIKE '%Generalüberholt%'`,
+        );
+        whereConditions.push(sql`${products.title} NOT LIKE '%erneuert%'`);
+        whereConditions.push(sql`${products.title} NOT LIKE '%Renewed%'`);
+      }
+    }
+
     const results = await db
       .select({
         product: products,
@@ -338,16 +371,10 @@ export async function getBestDeals(
       })
       .from(products)
       .innerJoin(prices, eq(products.id, prices.productId))
-      .where(
-        and(
-          eq(prices.country, countryCode),
-          gt(prices.priceAvg90, 0),
-          or(gt(prices.amazonPrice, 0), gt(prices.newPrice, 0)),
-        ),
-      )
+      .where(and(...whereConditions))
       .orderBy(
         desc(
-          sql`(${prices.priceAvg90} - COALESCE(${prices.amazonPrice}, ${prices.newPrice})) / ${prices.priceAvg90}`,
+          sql`(COALESCE(${prices.priceAvg90}, ${prices.priceAvg30}, ${prices.listPrice}) - COALESCE(${prices.amazonPrice}, ${prices.newPrice})) / COALESCE(${prices.priceAvg90}, ${prices.priceAvg30}, ${prices.listPrice})`,
         ),
       )
       .limit(limit);
@@ -362,15 +389,29 @@ export async function getBestDeals(
 export async function getMostPopular(
   limit: number = 8,
   countryCode: string = "de",
+  condition?: "New" | "Used" | "Renewed",
 ): Promise<Product[]> {
   "use cache";
   cacheLife("prices");
 
   try {
+    const whereConditions = [];
+    if (condition) {
+      whereConditions.push(eq(products.condition, condition));
+      if (condition === "New") {
+        whereConditions.push(
+          sql`${products.title} NOT LIKE '%Generalüberholt%'`,
+        );
+        whereConditions.push(sql`${products.title} NOT LIKE '%erneuert%'`);
+        whereConditions.push(sql`${products.title} NOT LIKE '%Renewed%'`);
+      }
+    }
+
     // Use salesRank primarily (lower is better), fallback to secondary signals
     const prods = await db
       .select()
       .from(products)
+      .where(whereConditions.length > 0 ? and(...whereConditions) : undefined)
       .orderBy(
         asc(sql`COALESCE(${products.salesRank}, 10000000)`),
         desc(products.reviewCount),
@@ -403,13 +444,25 @@ export async function getMostPopular(
 export async function getNewArrivals(
   limit: number = 8,
   countryCode: string = "de",
+  condition?: "New" | "Used" | "Renewed",
 ): Promise<Product[]> {
   "use cache";
   cacheLife("prices");
 
+  const whereConditions = [];
+  if (condition) {
+    whereConditions.push(eq(products.condition, condition));
+    if (condition === "New") {
+      whereConditions.push(sql`${products.title} NOT LIKE '%Generalüberholt%'`);
+      whereConditions.push(sql`${products.title} NOT LIKE '%erneuert%'`);
+      whereConditions.push(sql`${products.title} NOT LIKE '%Renewed%'`);
+    }
+  }
+
   const prods = await db
     .select()
     .from(products)
+    .where(whereConditions.length > 0 ? and(...whereConditions) : undefined)
     .orderBy(desc(products.createdAt))
     .limit(limit);
 

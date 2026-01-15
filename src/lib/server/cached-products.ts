@@ -20,7 +20,6 @@ export async function getBestDeals(
   limit: number = 8,
   countryCode: string = "de",
 ): Promise<Product[]> {
-  "use cache";
   return getBestDealsSync(limit, countryCode);
 }
 
@@ -28,7 +27,6 @@ export async function getMostPopular(
   limit: number = 8,
   countryCode: string = "de",
 ): Promise<Product[]> {
-  "use cache";
   return getMostPopularSync(limit, countryCode);
 }
 
@@ -36,6 +34,5 @@ export async function getNewArrivals(
   limit: number = 8,
   countryCode: string = "de",
 ): Promise<Product[]> {
-  "use cache";
   return getNewArrivalsSync(limit, countryCode);
 }

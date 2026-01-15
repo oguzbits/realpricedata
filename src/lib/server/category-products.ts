@@ -1,4 +1,3 @@
-"use cache";
 import { allCategories, CategorySlug } from "@/lib/categories";
 import { Product, getProductsByCategory } from "@/lib/product-registry";
 import { filterProducts, sortProducts } from "@/lib/utils/category-utils";
@@ -69,9 +68,6 @@ export async function getCategoryProducts(
   countryCode: string,
   filterParams: FilterParams,
 ) {
-  // Apply 'prices' profile defined in next.config.ts
-  cacheLife("prices");
-
   // Load raw products for this category
   const rawProducts = await getProductsByCategory(categorySlug);
   const category = allCategories[categorySlug as CategorySlug];

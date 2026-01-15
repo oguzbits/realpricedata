@@ -141,8 +141,6 @@ export async function getAllProducts(): Promise<Product[]> {
 export async function getProductsByCategory(
   category: string,
 ): Promise<Product[]> {
-  "use cache";
-  cacheLife("prices");
   const prods = await db
     .select()
     .from(products)
@@ -166,9 +164,6 @@ export async function getProductsByCategory(
 export async function getProductBySlug(
   slug: string,
 ): Promise<Product | undefined> {
-  "use cache";
-  cacheLife("prices");
-
   const [p] = await db.select().from(products).where(eq(products.slug, slug));
   if (!p) return undefined;
 

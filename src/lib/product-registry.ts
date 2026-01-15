@@ -1,4 +1,4 @@
-import { db } from "@/db";
+import { db, client } from "@/db";
 import {
   priceHistory,
   prices,
@@ -223,39 +223,74 @@ export async function searchProducts(
   query: string,
   limit: number = 20,
 ): Promise<Product[]> {
-  "use cache";
-  cacheLife("prices");
+  const sanitized = query.trim().replace(/[^\w\s]/g, "");
+  if (!sanitized) return [];
 
-  const searchTerms = query.trim().split(/\s+/);
-  if (searchTerms.length === 0) return [];
+  // Transform "Samsung Galaxy" into "Samsung* Galaxy*" for prefix matching
+  const matchQuery = sanitized
+    .split(/\s+/)
+    .map((term) => `${term}*`)
+    .join(" ");
 
-  // Simple fuzzy search using LIKE
-  // For better results, we might want full-text search later
-  const whereClause = or(
-    ...searchTerms.map((term) => like(products.title, `%${term}%`)),
-    like(products.category, `%${query}%`),
-  );
+  try {
+    // 1. Get matching IDs from the FTS5 virtual table (Super Fast)
+    const result = await client.execute({
+      sql: "SELECT id FROM products_search WHERE products_search MATCH ? LIMIT ?",
+      args: [matchQuery, limit],
+    });
 
-  const prods = await db
-    .select()
-    .from(products)
-    .where(whereClause)
-    .limit(limit);
+    const ids = result.rows.map((r: any) => Number(r.id));
+    if (ids.length === 0) return [];
 
-  if (prods.length === 0) return [];
+    // 2. Fetch full product data and prices for those specific IDs
+    const prods = await db
+      .select()
+      .from(products)
+      .where(inArray(products.id, ids));
 
-  const ids = prods.map((p) => p.id);
-  const prs = await db
-    .select()
-    .from(prices)
-    .where(inArray(prices.productId, ids));
+    const prs = await db
+      .select()
+      .from(prices)
+      .where(inArray(prices.productId, ids));
 
-  return prods.map((p) =>
-    mapDbProduct(
-      p,
-      prs.filter((pr) => pr.productId === p.id),
-    ),
-  );
+    // Sort prods back into the order returned by FTS (relevance)
+    const idOrder = new Map<number, number>(
+      ids.map((id: number, index: number) => [id, index]),
+    );
+    const sortedProds = prods.sort(
+      (a, b) => (idOrder.get(a.id) ?? 0) - (idOrder.get(b.id) ?? 0),
+    );
+
+    return sortedProds.map((p) =>
+      mapDbProduct(
+        p,
+        prs.filter((pr) => pr.productId === p.id),
+      ),
+    );
+  } catch (error) {
+    console.error("FTS Search Error:", error);
+    // Fallback to basic search if FTS fails for some reason
+    const terms = query.trim().split(/\s+/);
+    const fallbackProds = await db
+      .select()
+      .from(products)
+      .where(or(...terms.map((t) => like(products.title, `%${t}%`))))
+      .limit(limit);
+
+    if (fallbackProds.length === 0) return [];
+    const fallbackIds = fallbackProds.map((p) => p.id);
+    const fallbackPrs = await db
+      .select()
+      .from(prices)
+      .where(inArray(prices.productId, fallbackIds));
+
+    return fallbackProds.map((p) =>
+      mapDbProduct(
+        p,
+        fallbackPrs.filter((pr) => pr.productId === p.id),
+      ),
+    );
+  }
 }
 
 export async function getProductsByBrand(

@@ -72,8 +72,10 @@
 
 ### 4. Search Functionality (`SearchModal.tsx`)
 
-- **Type**: Client-side modal with keyboard shortcuts (`Cmd+K`).
-- **Behavior**: Real-time filtering of categories and products.
+- **Type**: Real-time live search using TanStack Query and Server Actions.
+- **Engine**: SQLite FTS5 (Full-Text Search) with BM25 ranking for O(1) matching performance at scale.
+- **Behavior**: Prefix matching (typing "Sams" finds "Samsung"), product result previews with live prices, and category deep-links.
+- **Optimization**: Debounced input (300ms) and automated SQL triggers to keep the search index in sync with the `products` table.
 
 ### 5. Blog System
 

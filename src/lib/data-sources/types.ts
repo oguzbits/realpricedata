@@ -68,8 +68,23 @@ export interface ProductOffer {
   /** Is this a Prime/free shipping offer? */
   freeShipping?: boolean;
 
+  /** Shipping cost (null if free) */
+  shippingCost?: number | null;
+
+  /** Estimated delivery time (e.g., "1-2 days") */
+  deliveryTime?: string;
+
   /** Seller name (for marketplace items) */
   seller?: string;
+
+  /** Merchant rating (0-5) */
+  merchantRating?: number;
+
+  /** Number of merchant reviews */
+  merchantReviewCount?: number;
+
+  /** Available payment methods */
+  paymentMethods?: string[];
 
   /** When this price was last verified (optional for static data) */
   lastUpdated?: Date;

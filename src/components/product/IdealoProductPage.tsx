@@ -34,6 +34,7 @@ import Link from "next/link";
 import { IdealoPriceChart } from "./IdealoPriceChart";
 import { IdealoProductCarousel } from "@/components/IdealoProductCarousel";
 import { SpecificationsTable } from "./SpecificationsTable";
+import { PaymentMethodIcon } from "@/components/ui/PaymentMethodIcon";
 
 interface IdealoProductPageProps {
   product: Product;
@@ -90,8 +91,8 @@ export async function IdealoProductPage({
       <ProductSchema
         product={product}
         countryCode={countryCode}
-        rating={unifiedProduct?.rating}
-        reviewCount={unifiedProduct?.reviewCount}
+        rating={unifiedProduct?.rating ?? product.rating}
+        reviewCount={unifiedProduct?.reviewCount ?? product.reviewCount}
       />
       <BreadcrumbSchema items={breadcrumbItems} />
 
@@ -572,7 +573,7 @@ export async function IdealoProductPage({
                         href={offer.affiliateLink}
                         target="_blank"
                         rel="noopener nofollow"
-                        className="text-[12px] font-bold text-[#0771d0] underline decoration-[#dcdcdc] hover:no-underline"
+                        className="text-[12px] font-bold text-[#2d2d2d] underline decoration-[#dcdcdc] hover:no-underline"
                       >
                         {product.title}
                       </a>
@@ -591,7 +592,7 @@ export async function IdealoProductPage({
                         rel="noopener nofollow"
                         className={cn(
                           "productOffers-listItemTitleInner",
-                          "line-clamp-4 block max-h-[4.8em] overflow-hidden font-bold text-ellipsis text-[#0771d0] underline decoration-[#dcdcdc] transition-colors hover:no-underline",
+                          "line-clamp-4 block max-h-[4.8em] overflow-hidden font-bold text-ellipsis text-[#2d2d2d] underline decoration-[#dcdcdc] transition-colors hover:no-underline",
                           "text-[11px] leading-normal min-[840px]:text-[12px]",
                         )}
                       >
@@ -626,7 +627,10 @@ export async function IdealoProductPage({
                                 <div className="productOffers-listItemOfferShippingDetails relative z-1 mt-0.5 border-spacing-[0_4px] text-[9px] leading-[12px] text-[#2d2d2d] sm:text-[10px]">
                                   {offer.freeShipping
                                     ? `${offer.displayPrice || formatCurrency(offer.price, countryCode)} inkl. Versand`
-                                    : "zzgl. Versand"}
+                                    : offer.shippingCost !== undefined &&
+                                        offer.shippingCost !== null
+                                      ? `+ ${formatCurrency(offer.shippingCost, countryCode)} Versand`
+                                      : "zzgl. Versand"}
                                 </div>
                               </div>
                             </div>
@@ -635,13 +639,75 @@ export async function IdealoProductPage({
                             <div className="productOffers-listItemOfferShippingDetails mt-1 text-[11px] text-[#666]">
                               {offer.freeShipping
                                 ? "inkl. Versand"
-                                : "zzgl. Versand"}
+                                : offer.shippingCost !== undefined &&
+                                    offer.shippingCost !== null
+                                  ? `+ ${formatCurrency(offer.shippingCost, countryCode)} Versand`
+                                  : "zzgl. Versand"}
                             </div>
                           )}
                         </div>
                       </div>
 
-                      {/* Shop & Rating Column (Mobile: middle) */}
+                      {/* Payment Methods Column */}
+                      <div className="payment-column hidden min-w-0 flex-col p-0 min-[600px]:flex min-[600px]:w-[18%] min-[600px]:shrink-0 min-[600px]:self-start min-[600px]:px-[15px] min-[600px]:pt-4 min-[840px]:w-[14%]">
+                        <div className="flex flex-wrap gap-[2px]">
+                          {(
+                            offer.paymentMethods || [
+                              "Visa",
+                              "PayPal",
+                              "Rechnung",
+                            ]
+                          ).map((method) => (
+                            <PaymentMethodIcon key={method} method={method} />
+                          ))}
+                        </div>
+                      </div>
+
+                      {/* Delivery Column */}
+                      <div className="hidden min-w-0 shrink-0 min-[600px]:block min-[600px]:w-[18%] min-[600px]:self-center min-[600px]:px-[15px] min-[840px]:w-[16%]">
+                        <ul
+                          className="productOffers-listItemOfferDeliveryBlock list-none pl-[0.6em]"
+                          style={
+                            {
+                              "--list-spacing": "0.8rem",
+                              "--dot-size": "0.5em",
+                            } as React.CSSProperties
+                          }
+                        >
+                          <li className="relative mb-(--list-spacing) pl-(--list-spacing) leading-normal">
+                            <svg
+                              className="absolute top-[0.3em] left-0 h-(--dot-size) w-(--dot-size) fill-[#38bf84]"
+                              viewBox="0 0 4 4"
+                            >
+                              <circle cx="2" cy="2" r="2" />
+                            </svg>
+                            <div className="productOffers-listItemOfferDeliveryStatus line-clamp-3 cursor-pointer overflow-hidden text-xs leading-[1.2] text-[#2d2d2d]">
+                              <span className="productOffers-listItemOfferDeliveryStatusDates font-bold">
+                                {offer.availability === "in_stock"
+                                  ? "Auf Lager "
+                                  : "2-5 Tage "}
+                              </span>
+                              <span className="productOffers-listItemOfferDeliveryStatusDatesTitle block font-normal">
+                                {offer.deliveryTime ||
+                                  (offer.availability === "in_stock"
+                                    ? "Lieferung in 1-2 Werktagen"
+                                    : "Versandfertig in 2-4 Tagen")}
+                              </span>
+                            </div>
+                          </li>
+                          <li className="relative mb-(--list-spacing) pl-(--list-spacing)">
+                            <div className="productOffers-listItemOfferDeliveryProviderWrapper mb-[5px] text-[0px]">
+                              <div className="productOffers-listItemOfferDeliveryProvider mt-0 -mr-px mb-0 ml-0 inline-block border border-[#e6e6e6] bg-white">
+                                <span className="productOffers-listItemOfferGreyBadge inline-block cursor-pointer rounded-[2px] bg-[#f5f5f5] px-[6px] py-[0.5px] text-[9px] whitespace-nowrap">
+                                  DHL
+                                </span>
+                              </div>
+                            </div>
+                          </li>
+                        </ul>
+                      </div>
+
+                      {/* Shop & Rating Column */}
                       <div
                         className={cn(
                           "productOffers-listItemOfferShopV2Block",
@@ -667,9 +733,25 @@ export async function IdealoProductPage({
                               className="productOffers-listItemOfferShopV2StarsLink hover:underline"
                             >
                               <div className="starAndRatingWrapper flex items-center gap-1 text-[#2d2d2d]">
-                                <Star className="h-3 w-3 fill-[#96DC50] text-[#96DC50] min-[600px]:h-3.5 min-[600px]:w-3.5" />
+                                <Star
+                                  className="h-3 w-3 min-[600px]:h-3.5 min-[600px]:w-3.5"
+                                  style={{
+                                    fill:
+                                      (offer.merchantRating ?? 4.5) >= 4.0
+                                        ? "#38BF84"
+                                        : (offer.merchantRating ?? 4.5) >= 2.8
+                                          ? "#FEC002"
+                                          : "#FF6600",
+                                    color:
+                                      (offer.merchantRating ?? 4.5) >= 4.0
+                                        ? "#38BF84"
+                                        : (offer.merchantRating ?? 4.5) >= 2.8
+                                          ? "#FEC002"
+                                          : "#FF6600",
+                                  }}
+                                />
                                 <span className="text-[12px] font-bold">
-                                  3,8
+                                  {offer.merchantRating?.toFixed(1) || "4.5"}
                                 </span>
                               </div>
                             </a>
@@ -680,67 +762,7 @@ export async function IdealoProductPage({
                         </button>
                       </div>
 
-                      {/* Payment Methods - Hidden ONLY below 600px */}
-                      <div className="payment-column hidden min-w-0 flex-col p-0 min-[600px]:flex min-[600px]:w-[18%] min-[600px]:shrink-0 min-[600px]:self-start min-[600px]:px-[15px] min-[600px]:pt-4 min-[840px]:w-[14%]">
-                        <div className="flex flex-wrap gap-[-1px]">
-                          {["Visa", "PayPal", "Rechnung"].map((method) => (
-                            <div
-                              key={method}
-                              className={cn(
-                                "productOffers-listItemOfferShippingDetailsRightItem",
-                                "inline-block h-[17px] w-[52px] min-w-[52px] overflow-hidden text-ellipsis whitespace-nowrap",
-                                "border border-[#e6e6e6] bg-white p-px text-center text-[0.5625rem] leading-[13px]",
-                                "m-[0_-1px_-1px_0]",
-                              )}
-                            >
-                              <span className="text-inherit">{method}</span>
-                            </div>
-                          ))}
-                        </div>
-                      </div>
-
-                      {/* Delivery Column - Hidden ONLY below 600px */}
-                      <div className="hidden min-w-0 shrink-0 min-[600px]:block min-[600px]:w-[18%] min-[600px]:self-center min-[600px]:px-[15px] min-[840px]:w-[16%]">
-                        <ul
-                          className="productOffers-listItemOfferDeliveryBlock list-none pl-[0.6em]"
-                          style={
-                            {
-                              "--list-spacing": "0.8rem",
-                              "--dot-size": "0.5em",
-                            } as React.CSSProperties
-                          }
-                        >
-                          <li className="relative mb-(--list-spacing) pl-(--list-spacing) leading-normal">
-                            <svg
-                              className="absolute top-[0.3em] left-0 h-(--dot-size) w-(--dot-size) fill-[#38bf84]"
-                              viewBox="0 0 4 4"
-                            >
-                              <circle cx="2" cy="2" r="2" />
-                            </svg>
-                            <div className="productOffers-listItemOfferDeliveryStatus line-clamp-3 cursor-pointer overflow-hidden text-xs leading-[1.2] text-[#2d2d2d]">
-                              <span className="productOffers-listItemOfferDeliveryStatusDates font-bold">
-                                {offer.availability === "in_stock"
-                                  ? "Auf Lager "
-                                  : "2-5 Tage "}
-                              </span>
-                              <span className="productOffers-listItemOfferDeliveryStatusDatesTitle block font-normal">
-                                Lieferung bis morgen
-                              </span>
-                            </div>
-                          </li>
-                          <li className="relative mb-(--list-spacing) pl-(--list-spacing)">
-                            <div className="productOffers-listItemOfferDeliveryProviderWrapper mb-[5px] text-[0px]">
-                              <div className="productOffers-listItemOfferDeliveryProvider mt-0 -mr-px mb-0 ml-0 inline-block border border-[#e6e6e6] bg-white">
-                                <span className="productOffers-listItemOfferGreyBadge inline-block cursor-pointer rounded-[2px] bg-[#f5f5f5] px-[6px] py-[0.5px] text-[9px] whitespace-nowrap">
-                                  DHL
-                                </span>
-                              </div>
-                            </div>
-                          </li>
-                        </ul>
-                      </div>
-
-                      {/* CTA Button (Stay on right for mobile, far right for desktop) */}
+                      {/* CTA Button */}
                       <div className="flex min-w-0 shrink-0 justify-center min-[600px]:w-[22%] min-[600px]:px-[15px] min-[840px]:w-[18%]">
                         <a
                           href={offer.affiliateLink}

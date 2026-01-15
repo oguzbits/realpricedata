@@ -94,8 +94,8 @@ export async function ProductDetailView({
       <ProductSchema
         product={product}
         countryCode={countryCode}
-        rating={unifiedProduct?.rating}
-        reviewCount={unifiedProduct?.reviewCount}
+        rating={unifiedProduct?.rating ?? product.rating}
+        reviewCount={unifiedProduct?.reviewCount ?? product.reviewCount}
       />
       <BreadcrumbSchema items={breadcrumbItems} />
 

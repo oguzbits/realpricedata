@@ -67,7 +67,7 @@ export function ProductSchema({
   }
 
   // Add offers
-  if (currentPrice) {
+  if (currentPrice || allPrices.length > 0) {
     if (allPrices.length > 1 && lowestPrice && highestPrice) {
       // Multiple prices available - use AggregateOffer
       schema.offers = {
@@ -83,7 +83,7 @@ export function ProductSchema({
           name: "Amazon",
         },
       };
-    } else {
+    } else if (currentPrice) {
       // Single price - use Offer
       schema.offers = {
         "@type": "Offer",
@@ -97,11 +97,22 @@ export function ProductSchema({
         },
         priceValidUntil: "2027-12-31", // Static date - Cache Components don't allow Date.now()
       };
+    } else if (lowestPrice !== null && highestPrice !== null) {
+      // No current price but we have others - use AggregateOffer with available prices
+      schema.offers = {
+        "@type": "AggregateOffer",
+        priceCurrency: currency,
+        lowPrice: lowestPrice.toFixed(2),
+        highPrice: highestPrice.toFixed(2),
+        offerCount: allPrices.length,
+        availability: "https://schema.org/InStock",
+        url: `https://${BRAND_DOMAIN}/p/${product.slug}`,
+      };
     }
   }
 
   // Add aggregate rating if available
-  if (rating && reviewCount) {
+  if (rating && reviewCount && reviewCount > 0) {
     schema.aggregateRating = {
       "@type": "AggregateRating",
       ratingValue: rating.toFixed(1),
@@ -109,6 +120,11 @@ export function ProductSchema({
       bestRating: "5",
       worstRating: "1",
     };
+  }
+
+  // If we have neither offers nor rating, don't output the schema to avoid Google errors
+  if (!schema.offers && !schema.aggregateRating) {
+    return null;
   }
 
   // Add additional properties

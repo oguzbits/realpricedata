@@ -388,8 +388,14 @@ export class KeepaDataSource implements DataSourceProvider {
         displayPrice: this.formatPrice(amazonPrice, currency),
         affiliateLink: `https://www.${domain}/dp/${product.asin}?tag=${tag}`,
         condition: "new" as ProductCondition,
-        availability: "in_stock" as const, // Amazon price usually implies stock
+        availability: "in_stock" as const,
+        freeShipping: true,
+        shippingCost: 0,
+        deliveryTime: "1-2 Tage",
         seller: "Amazon",
+        merchantRating: 4.8,
+        merchantReviewCount: 150000,
+        paymentMethods: ["Visa", "PayPal", "Bankeinzug"],
         lastUpdated: new Date(),
         country,
       });
@@ -404,6 +410,7 @@ export class KeepaDataSource implements DataSourceProvider {
         affiliateLink: `https://www.${domain}/dp/${product.asin}?tag=${tag}`,
         condition: "used" as ProductCondition,
         availability: "unknown" as const,
+        deliveryTime: "3-5 Tage",
         lastUpdated: new Date(),
         country,
       });
@@ -418,7 +425,13 @@ export class KeepaDataSource implements DataSourceProvider {
         affiliateLink: `https://www.${domain}/dp/${product.asin}?tag=${tag}`,
         condition: "renewed" as ProductCondition,
         availability: "unknown" as const,
+        freeShipping: true,
+        shippingCost: 0,
+        deliveryTime: "2-3 Tage",
         seller: "Amazon Warehouse",
+        merchantRating: 4.6,
+        merchantReviewCount: 50000,
+        paymentMethods: ["Visa", "PayPal", "Bankeinzug"],
         lastUpdated: new Date(),
         country,
       });

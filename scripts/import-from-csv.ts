@@ -272,9 +272,31 @@ function mapCategory(root: string, sub: string): CategorySlug | null {
   if (s.includes("drucker")) return "multifunktionsdrucker";
   if (s.includes("handy") || s.includes("smartphone")) return "smartphones";
   if (s.includes("watch") || s.includes("uhr")) return "smartwatches";
+  if (s.includes("solid state drives") && !s.includes("extern")) return "ssds";
   if (s.includes("ssd") && !s.includes("extern")) return "ssds";
-  if (s.includes("speicher") && s.includes("extern")) return "external-storage";
+  if (s.includes("festplatten") && !s.includes("extern")) return "hard-drives";
+  if (s.includes("interner speicher") && s.includes("festplatten"))
+    return "hard-drives";
+  if (
+    s.includes("externe datenspeicher") ||
+    s.includes("externe festplatten") ||
+    s.includes("externe solid state drives") ||
+    s.includes("externer speicher")
+  )
+    return "external-storage";
   if (s.includes("headphones") || s.includes("kopfhörer")) return "headphones";
+  if (s.includes("arbeitsspeicher") || s.includes("ram")) return "ram";
+  if (s.includes("lautsprecher") || s.includes("speakers")) return "speakers";
+  if (s.includes("konsolen") || s.includes("consoles")) return "consoles";
+  if (root === "Games" || s.startsWith("games")) return "consoles"; // Fallback for games root
+  if (s.includes("netzteile") || s.includes("psu")) return "power-supplies";
+  if (s.includes("gehäuse") || s.includes("cases")) return "pc-cases";
+  if (s.includes("mainboards") || s.includes("motherboards"))
+    return "motherboards";
+  if (s.includes("lüfter") || s.includes("kühler") || s.includes("coolers"))
+    return "cpu-coolers";
+  if (s.includes("staubsauger")) return "staubsauger";
+  if (s.includes("küchenmaschinen")) return "kuechenmaschinen";
   if (root.includes("Computer") || s.includes("computer")) return "computer";
   return null;
 }

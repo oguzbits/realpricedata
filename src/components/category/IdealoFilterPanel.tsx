@@ -20,7 +20,7 @@ interface IdealoFilterBarProps {
   unitLabel: string;
   isMobile?: boolean;
   onFilterChange?: () => void;
-  products?: Product[];
+  filterOptions?: Record<string, string[]>;
 }
 
 // ============================================
@@ -151,7 +151,7 @@ export function IdealoFilterPanel({
   unitLabel,
   isMobile = false,
   onFilterChange,
-  products = [],
+  filterOptions = {},
 }: IdealoFilterBarProps) {
   const [filters, setFilters] = useFilters();
   const category = allCategories[categorySlug as CategorySlug];
@@ -161,20 +161,14 @@ export function IdealoFilterPanel({
   const [groupShowAll, setGroupShowAll] = useState<Record<string, boolean>>({});
 
   // Derive options for filter groups
-  const filterGroupOptions = useMemo(() => {
+  const optionsMap = useMemo(() => {
     if (!category?.filterGroups) return {};
     const options: Record<string, string[]> = {};
     category.filterGroups.forEach((group) => {
-      if (group.options) {
-        options[group.field] = group.options;
-      } else if (products.length > 0) {
-        options[group.field] = getUniqueFieldValues(products, group.field);
-      } else {
-        options[group.field] = [];
-      }
+      options[group.field] = group.options || filterOptions[group.field] || [];
     });
     return options;
-  }, [category, products]);
+  }, [category, filterOptions]);
 
   // Handle price update
   const handlePriceUpdate = (min: string, max: string) => {
@@ -315,7 +309,7 @@ export function IdealoFilterPanel({
 
         {/* DYNAMIC FILTER GROUPS */}
         {category?.filterGroups?.map((group) => {
-          const options = filterGroupOptions[group.field] || [];
+          const options = optionsMap[group.field] || [];
           if (options.length === 0) return null;
 
           const currentValues = (filters as any)[group.field] || [];

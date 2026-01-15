@@ -43,8 +43,9 @@ import { IdealoTopBar } from "./IdealoTopBar";
 // FAQ components for SEO
 import { FAQSchema } from "@/components/category/FAQSchema";
 import { FAQSection } from "@/components/category/FAQSection";
-import { MobileFilterDrawer } from "./MobileFilterDrawer";
+import { getUniqueFieldValues } from "@/lib/utils/category-utils";
 import { X } from "lucide-react";
+import { MobileFilterDrawer } from "./MobileFilterDrawer";
 
 interface Props {
   category: Omit<Category, "icon">;
@@ -69,13 +70,53 @@ export async function IdealoCategoryPage({
 
   // Get filtered products
   const {
-    products,
+    products: rawFilteredProducts,
     filteredCount,
     unitLabel,
     hasProducts,
     filters,
     lastUpdated,
   } = await getCategoryProducts(category.slug, countryCode, searchParams);
+
+  // Strip heavy data from products before passing to Client Components (especially features/specifications)
+  const products = rawFilteredProducts.map((p) => ({
+    id: p.id,
+    slug: p.slug,
+    title: p.title,
+    image: p.image,
+    price: p.price,
+    pricePerUnit: p.pricePerUnit,
+    capacity: p.capacity,
+    capacityUnit: p.capacityUnit,
+    formFactor: p.formFactor,
+    brand: p.brand,
+    rating: p.rating,
+    reviewCount: p.reviewCount,
+    salesRank: p.salesRank,
+    variationAttributes: p.variationAttributes,
+  }));
+
+  // Pre-calculate filter options on the server to avoid passing all products twice/thrice
+  const filterGroupOptions: Record<string, string[]> = {};
+  if (hasProducts && category.filterGroups) {
+    // We need the full list for filter calculation, not just current filtered list
+    const { products: allCategoryProducts } = await getCategoryProducts(
+      category.slug,
+      countryCode,
+      {},
+    );
+
+    category.filterGroups.forEach((group) => {
+      if (group.options) {
+        filterGroupOptions[group.field] = group.options;
+      } else {
+        filterGroupOptions[group.field] = getUniqueFieldValues(
+          allCategoryProducts,
+          group.field,
+        );
+      }
+    });
+  }
 
   // Breadcrumb items
   const breadcrumbItems = [
@@ -154,17 +195,7 @@ export async function IdealoCategoryPage({
                 <IdealoFilterPanel
                   categorySlug={categorySlug}
                   unitLabel={unitLabel}
-                  products={
-                    hasProducts
-                      ? (
-                          await getCategoryProducts(
-                            category.slug,
-                            countryCode,
-                            {},
-                          )
-                        ).products
-                      : []
-                  }
+                  filterOptions={filterGroupOptions}
                 />
               </aside>
 
@@ -187,17 +218,7 @@ export async function IdealoCategoryPage({
                   unitLabel={unitLabel}
                   categoryName={category.name}
                   productCount={filteredCount}
-                  products={
-                    hasProducts
-                      ? (
-                          await getCategoryProducts(
-                            category.slug,
-                            countryCode,
-                            {},
-                          )
-                        ).products
-                      : []
-                  }
+                  filterOptions={filterGroupOptions}
                 />
 
                 {/* ============================================ */}

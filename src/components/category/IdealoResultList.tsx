@@ -15,17 +15,16 @@
  *   <div class="sr-resultList__item_m6xdA">...</div>
  * </div>
  */
-
 import { type CountryCode } from "@/lib/countries";
 import { cn } from "@/lib/utils";
-
-import { type LocalizedProduct } from "@/lib/server/category-products";
+import { type LeanProduct } from "@/lib/types";
 
 import { IdealoGridCard } from "./IdealoGridCard";
 import { IdealoListCard } from "./IdealoListCard";
+import { type LocalizedProduct } from "@/lib/server/category-products";
 
 interface IdealoResultListProps {
-  products: LocalizedProduct[];
+  products: LeanProduct[];
   countryCode: CountryCode;
   viewMode: "grid" | "list";
   className?: string;

@@ -18,7 +18,7 @@ interface MobileFilterDrawerProps {
   unitLabel: string;
   categoryName: string;
   productCount: number;
-  products?: Product[];
+  filterOptions?: Record<string, string[]>;
 }
 
 export function MobileFilterDrawer({
@@ -26,7 +26,7 @@ export function MobileFilterDrawer({
   unitLabel,
   categoryName,
   productCount,
-  products = [],
+  filterOptions = {},
 }: MobileFilterDrawerProps) {
   const [open, setOpen] = React.useState(false);
   const [filters, setFilters] = useFilters();
@@ -117,7 +117,7 @@ export function MobileFilterDrawer({
               categorySlug={categorySlug}
               unitLabel={unitLabel}
               isMobile={true}
-              products={products}
+              filterOptions={filterOptions}
             />
           </div>
 

@@ -121,16 +121,20 @@ function mapDbProduct(
 }
 
 export async function getAllProducts(): Promise<Product[]> {
-  "use cache";
-  cacheLife("prices");
   const allProducts = await db.select().from(products);
   const allPrices = await db.select().from(prices);
 
+  // Group prices by productId for O(1) lookup
+  const pricesByProduct = new Map<number, Price[]>();
+  for (const pr of allPrices) {
+    if (!pricesByProduct.has(pr.productId)) {
+      pricesByProduct.set(pr.productId, []);
+    }
+    pricesByProduct.get(pr.productId)!.push(pr);
+  }
+
   return allProducts.map((p) =>
-    mapDbProduct(
-      p,
-      allPrices.filter((pr) => pr.productId === p.id),
-    ),
+    mapDbProduct(p, pricesByProduct.get(p.id!) || []),
   );
 }
 

@@ -1,5 +1,3 @@
-"use cache";
-
 import {
   getAllProducts as getAllProductsSync,
   getBestDeals as getBestDealsSync,
@@ -13,6 +11,7 @@ import {
  * These are used in Server Components to benefit from Next.js caching
  */
 
+// Bypass cache for large registry calls to avoid string limit issues during build
 export async function getAllProducts(): Promise<Product[]> {
   return getAllProductsSync();
 }
@@ -21,6 +20,7 @@ export async function getBestDeals(
   limit: number = 8,
   countryCode: string = "de",
 ): Promise<Product[]> {
+  "use cache";
   return getBestDealsSync(limit, countryCode);
 }
 
@@ -28,6 +28,7 @@ export async function getMostPopular(
   limit: number = 8,
   countryCode: string = "de",
 ): Promise<Product[]> {
+  "use cache";
   return getMostPopularSync(limit, countryCode);
 }
 
@@ -35,5 +36,6 @@ export async function getNewArrivals(
   limit: number = 8,
   countryCode: string = "de",
 ): Promise<Product[]> {
+  "use cache";
   return getNewArrivalsSync(limit, countryCode);
 }

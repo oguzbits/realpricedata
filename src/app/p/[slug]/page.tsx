@@ -4,7 +4,11 @@ import { DEFAULT_COUNTRY, getAllCountries } from "@/lib/countries";
 import { dataAggregator } from "@/lib/data-sources";
 import { getAlternateLanguages, getOpenGraph } from "@/lib/metadata";
 import { getAllProductSlugs } from "@/lib/server/cached-products";
-import { getProductBySlug } from "@/lib/product-registry";
+import {
+  getProductBySlug,
+  getSimilarProducts,
+  type Product,
+} from "@/lib/product-registry";
 import { BRAND_DOMAIN } from "@/lib/site-config";
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
@@ -24,7 +28,8 @@ export async function generateStaticParams() {
     return [{ slug: "[slug]" }];
   }
 
-  return products.map((product) => ({
+  // Limit to top 1000 products by updatedAt to keep deployment size manageable
+  return products.slice(0, 1000).map((product) => ({
     slug: product.slug,
   }));
 }
@@ -127,11 +132,21 @@ export default async function ProductPage({ params }: Props) {
     }
   }
 
+  // Strip heavy data from similar products to keep RSC payload light
+  const similarProducts = await getSimilarProducts(product, 12, countryCode);
+  const liteSimilarProducts = similarProducts.map((p) => ({
+    ...p,
+    specifications: {},
+    features: [],
+    priceHistory: [],
+  }));
+
   return (
     <IdealoProductPage
       product={product}
       countryCode={countryCode}
       unifiedProduct={unifiedProduct}
+      similarProducts={liteSimilarProducts}
     />
   );
 }

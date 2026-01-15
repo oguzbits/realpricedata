@@ -39,16 +39,17 @@ interface IdealoProductPageProps {
   product: Product;
   countryCode: CountryCode;
   unifiedProduct?: UnifiedProduct | null;
+  similarProducts?: Product[];
 }
 
 export async function IdealoProductPage({
   product,
   countryCode,
   unifiedProduct,
+  similarProducts = [],
 }: IdealoProductPageProps) {
   const countryConfig = getCountryByCode(countryCode);
   const category = getCategoryBySlug(product.category);
-  const similarProducts = await getSimilarProducts(product, 12, countryCode);
   const price = product.prices[countryCode];
 
   // Build breadcrumbs

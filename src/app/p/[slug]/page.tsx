@@ -3,11 +3,15 @@ import { allCategories, type CategorySlug } from "@/lib/categories";
 import { DEFAULT_COUNTRY, getAllCountries } from "@/lib/countries";
 import { dataAggregator } from "@/lib/data-sources";
 import { getAlternateLanguages, getOpenGraph } from "@/lib/metadata";
-import { getProductBySlug, getSimilarProducts } from "@/lib/product-registry";
+import {
+  findProductSlugByAsinSuffix,
+  getProductBySlug,
+  getSimilarProducts,
+} from "@/lib/product-registry";
 import { getAllProductSlugs } from "@/lib/server/cached-products";
 import { BRAND_DOMAIN } from "@/lib/site-config";
 import { Metadata } from "next";
-import { notFound } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 
 interface Props {
   params: Promise<{
@@ -107,6 +111,13 @@ export default async function ProductPage({ params }: Props) {
   const product = await getProductBySlug(slug);
 
   if (!product) {
+    // Try to find product by ASIN suffix for old URL redirects
+    // Old slugs contained ASIN like "samsung-990-pro-...-b0cbyz6dd1"
+    const newSlug = await findProductSlugByAsinSuffix(slug);
+    if (newSlug && newSlug !== slug) {
+      // 301 permanent redirect to preserve SEO
+      redirect(`/p/${newSlug}`);
+    }
     notFound();
   }
 

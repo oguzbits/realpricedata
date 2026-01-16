@@ -260,6 +260,33 @@ export const getProductBySlug = cache(async function getProductBySlug(
   )(slug);
 });
 
+/**
+ * Find a product by ASIN suffix (last 4 characters of ASIN).
+ * Used for redirecting old slugs that contain ASIN info to new short slugs.
+ *
+ * @param oldSlug - The old slug that might contain ASIN info
+ * @returns Product slug if found, undefined otherwise
+ */
+export async function findProductSlugByAsinSuffix(
+  oldSlug: string,
+): Promise<string | undefined> {
+  // Extract potential ASIN from old slug (typically at the end like "...-b0cbyz6dd1")
+  // ASINs are 10 characters, alphanumeric
+  const asinMatch = oldSlug.match(/([a-z0-9]{10})$/i);
+  if (!asinMatch) return undefined;
+
+  const potentialAsin = asinMatch[1].toUpperCase();
+
+  // Try to find product by ASIN
+  const [p] = await db
+    .select({ slug: products.slug })
+    .from(products)
+    .where(eq(products.asin, potentialAsin))
+    .limit(1);
+
+  return p?.slug;
+}
+
 const fetchSimilarProducts = async (
   category: string,
   excludedSlug: string,

@@ -11,6 +11,7 @@ import {
 } from "../src/db";
 import { eq, and } from "drizzle-orm";
 import type { CategorySlug } from "../src/lib/categories";
+import { generateProductSlug } from "../src/lib/utils/slug";
 
 /**
  * Keepa CSV Importer (Universal Version)
@@ -162,7 +163,13 @@ async function main() {
           specifications: JSON.stringify(specs),
           rawData: JSON.stringify(row), // Full backup
           category: categorySlug,
-          slug: slugify(`${brand} ${title}`.slice(0, 100) + ` ${asin}`),
+          slug: generateProductSlug(
+            title,
+            brand,
+            asin,
+            capacityValue,
+            capacityUnit,
+          ),
           capacity: capacityValue,
           capacityUnit,
           historySeeded: !!(priceAvg30 || priceAvg90), // Mark as seeded if we got averages from CSV
@@ -353,15 +360,4 @@ function parseCSVPrice(val: any): number | null {
   }
   return null;
 }
-
-function slugify(text: string): string {
-  return text
-    .toString()
-    .toLowerCase()
-    .trim()
-    .replace(/\s+/g, "-")
-    .replace(/[^\w-]+/g, "")
-    .replace(/--+/g, "-");
-}
-
 main().catch(console.error);

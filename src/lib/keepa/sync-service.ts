@@ -13,6 +13,7 @@ import { db } from "@/db";
 import { priceHistory, prices, products } from "@/db/schema";
 import type { CategorySlug } from "@/lib/categories";
 import { getChildCategories } from "@/lib/categories";
+import { generateProductSlug } from "@/lib/utils/slug";
 import { asc, eq, lt, sql } from "drizzle-orm";
 
 import {
@@ -442,8 +443,12 @@ export async function upsertProductFromKeepa(
   // Get brand (fallback to manufacturer)
   const brand = keepaProduct.brand || keepaProduct.manufacturer || null;
 
-  // Generate slug from title
-  const slug = generateSlug(keepaProduct.title || keepaProduct.asin, brand);
+  // Generate slug from title with uniqueness
+  const slug = generateProductSlug(
+    keepaProduct.title || keepaProduct.asin,
+    brand,
+    keepaProduct.asin,
+  );
 
   // Get first image URL
   let imageUrl: string | undefined;
@@ -557,37 +562,6 @@ export async function upsertProductFromKeepa(
 function keepaPriceToDecimal(price: number | null | undefined): number | null {
   if (price === null || price === undefined || price < 0) return null;
   return price / 100;
-}
-
-/**
- * Generate URL-safe slug from title, favoring "Brand Model Specs" format
- */
-function generateSlug(title: string, brand?: string | null): string {
-  let slug = title.toLowerCase();
-
-  // If brand is known, ensure it starts with brand
-  if (brand) {
-    const cleanBrand = brand.toLowerCase();
-    if (!slug.startsWith(cleanBrand)) {
-      slug = `${cleanBrand}-${slug}`;
-    }
-  }
-
-  // Sanitize
-  slug = slug.replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
-
-  // Truncate intelligently
-  // If > 100 chars, try to cut at the last dash before 80 chars
-  if (slug.length > 80) {
-    const cutoff = slug.substring(0, 80).lastIndexOf("-");
-    if (cutoff > 30) {
-      slug = slug.substring(0, cutoff);
-    } else {
-      slug = slug.substring(0, 80);
-    }
-  }
-
-  return slug;
 }
 
 /**

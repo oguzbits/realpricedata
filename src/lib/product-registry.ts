@@ -99,7 +99,7 @@ function mapDbProduct(
     image: p.imageUrl || "",
     affiliateUrl: stripHeavyData
       ? ""
-      : `https://www.amazon.de/dp/${p.asin}?tag=${process.env.PAAPI_PARTNER_TAG || "realpricedata-21"}`,
+      : `https://www.amazon.de/dp/${p.asin}?tag=${process.env.PAAPI_PARTNER_TAG || "cleverprices-21"}`,
     prices: pricesObj,
     pricesLastUpdated: stripHeavyData ? {} : pricesLastUpdatedObj,
     capacity: p.capacity || 0,

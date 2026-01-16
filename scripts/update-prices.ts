@@ -70,7 +70,7 @@ async function updatePrices(country: CountryCode): Promise<void> {
   let targetProducts = allProducts;
 
   if (isStaleOnly) {
-    const twentyHoursAgo = new Date(Date.now() - 20 * 60 * 60 * 1000);
+    const elevenHoursAgo = new Date(Date.now() - 11 * 60 * 60 * 1000);
     // Join with prices to check lastUpdated
     const currentPrices = await db
       .select()
@@ -79,10 +79,10 @@ async function updatePrices(country: CountryCode): Promise<void> {
 
     targetProducts = allProducts.filter((p: any) => {
       const price = currentPrices.find((pr) => pr.productId === p.id);
-      return !price || !price.lastUpdated || price.lastUpdated < twentyHoursAgo;
+      return !price || !price.lastUpdated || price.lastUpdated < elevenHoursAgo;
     });
     console.log(
-      `  Targeting ${targetProducts.length} stale products (< 20h) of ${allProducts.length} total.`,
+      `  Targeting ${targetProducts.length} stale products (< 11h) of ${allProducts.length} total.`,
     );
   }
 

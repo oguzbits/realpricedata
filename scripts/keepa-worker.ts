@@ -12,6 +12,8 @@
 import { getTokenStatus } from "../src/lib/keepa/product-discovery";
 import type { CountryCode } from "../src/lib/countries";
 import { execSync } from "child_process";
+import { db, products } from "../src/db";
+import { sql } from "drizzle-orm";
 
 async function main() {
   const args = process.argv.slice(2);
@@ -35,8 +37,25 @@ async function main() {
   let cycleCount = 1;
   let lastSyncTime = 0; // Initialize to 0 to trigger sync on first run
 
+  // Twice-daily target: 12,000 - 14,000 products
+  const PRODUCT_TARGET_MAX = 14000;
+
   while (true) {
+    // 0. Database Status Check
+    const productStats = await db
+      .select({ count: sql<number>`count(*)` })
+      .from(products);
+    const count = productStats[0]?.count || 0;
+
     console.log(`\n--- Starting Maintenance Cycle #${cycleCount} ---`);
+    console.log(
+      `📊 Current Catalog Size: ${count} / ${PRODUCT_TARGET_MAX} products`,
+    );
+    if (count > PRODUCT_TARGET_MAX) {
+      console.log(
+        "⚠️  Warning: Catalog size exceeds twice-daily update budget (14k). Consider pruning.",
+      );
+    }
 
     const runCompliancePhase = async () => {
       console.log("\n⚖️ Phase 1: Compliance Sync (Daily Price Updates)");

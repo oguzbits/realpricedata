@@ -110,8 +110,8 @@ export const LOGO = {
  * while accounting for build/caching delays.
  */
 export const AMAZON_TOS_LIMIT_SECONDS = 86400; // 24 hours
-export const PRICE_REVALIDATE_SECONDS = 82800; // 23 hours
-export const PRICE_CACHE_STALE_SECONDS = 82800; // 23 hours
+export const PRICE_REVALIDATE_SECONDS = 39600; // 11 hours (twice-daily sync)
+export const PRICE_CACHE_STALE_SECONDS = 39600; // 11 hours
 
 // =============================================================================
 // HELPER FUNCTIONS

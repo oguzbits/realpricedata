@@ -226,12 +226,52 @@ export function SearchModal({ open, onOpenChange }: SearchModalProps) {
 
         {search && (
           <>
-            {/* Direct Product Results */}
+            {/* Category Filters - shown first */}
+            <CommandGroup heading="Kategorie-Filter">
+              {filteredCategories.slice(0, 5).map((cat) => (
+                <CommandItem
+                  key={cat.slug}
+                  value={`filter-${cat.slug}`}
+                  onSelect={() =>
+                    handleSelect(
+                      `${getCategoryPath(cat.slug)}?search=${encodeURIComponent(search)}`,
+                    )
+                  }
+                  className={cn("cursor-pointer py-3")}
+                >
+                  <Search className={cn("mr-2 h-4 w-4")} />
+                  <div className={cn("flex items-center gap-1.5")}>
+                    <span className={cn("font-semibold")}>{search}</span>
+                    <span className={cn("text-muted-foreground")}>in</span>
+                    <span>{cat.name}</span>
+                  </div>
+                </CommandItem>
+              ))}
+            </CommandGroup>
+
+            {filteredCategories.length > 0 && (
+              <CommandGroup heading="Zur Kategorie wechseln">
+                {filteredCategories.slice(0, 3).map((cat) => (
+                  <CommandItem
+                    key={`jump-${cat.slug}`}
+                    value={`jump-${cat.slug}`}
+                    onSelect={() => handleSelect(getCategoryPath(cat.slug))}
+                    className="cursor-pointer"
+                  >
+                    <LayoutGrid className={cn("mr-2 h-4 w-4")} />
+                    {cat.name}
+                  </CommandItem>
+                ))}
+              </CommandGroup>
+            )}
+
+            {/* Product Results - shown below categories */}
             {products && products.length > 0 && (
               <CommandGroup heading="Produkte">
                 {products.map((product) => (
                   <CommandItem
                     key={product.asin}
+                    value={`product-${product.asin}`}
                     onSelect={() => handleSelect(`/p/${product.slug}`)}
                     className="flex cursor-pointer items-center gap-3 py-3"
                   >
@@ -264,42 +304,6 @@ export function SearchModal({ open, onOpenChange }: SearchModalProps) {
                         </span>
                       </div>
                     </div>
-                  </CommandItem>
-                ))}
-              </CommandGroup>
-            )}
-
-            <CommandGroup heading="Kategorie-Filter">
-              {filteredCategories.slice(0, 5).map((cat) => (
-                <CommandItem
-                  key={cat.slug}
-                  onSelect={() =>
-                    handleSelect(
-                      `${getCategoryPath(cat.slug)}?search=${encodeURIComponent(search)}`,
-                    )
-                  }
-                  className={cn("cursor-pointer py-3")}
-                >
-                  <Search className={cn("mr-2 h-4 w-4")} />
-                  <div className={cn("flex items-center gap-1.5")}>
-                    <span className={cn("font-semibold")}>{search}</span>
-                    <span className={cn("text-muted-foreground")}>in</span>
-                    <span>{cat.name}</span>
-                  </div>
-                </CommandItem>
-              ))}
-            </CommandGroup>
-
-            {filteredCategories.length > 0 && (
-              <CommandGroup heading="Zur Kategorie wechseln">
-                {filteredCategories.slice(0, 3).map((cat) => (
-                  <CommandItem
-                    key={`jump-${cat.slug}`}
-                    onSelect={() => handleSelect(getCategoryPath(cat.slug))}
-                    className="cursor-pointer"
-                  >
-                    <LayoutGrid className={cn("mr-2 h-4 w-4")} />
-                    {cat.name}
                   </CommandItem>
                 ))}
               </CommandGroup>

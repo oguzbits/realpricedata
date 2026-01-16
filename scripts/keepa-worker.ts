@@ -15,41 +15,7 @@ import { db, products } from "../src/db";
 import type { CountryCode } from "../src/lib/countries";
 import { getTokenStatus } from "../src/lib/keepa/product-discovery";
 
-import { existsSync, mkdirSync, readFileSync, writeFileSync } from "fs";
-
-const STATE_FILE = "logs/worker-state.json";
-
-interface WorkerState {
-  lastRun: number;
-  lastRunHuman?: string;
-  lastCloudSync: number;
-  lastCloudSyncHuman?: string;
-}
-
-function loadInitialState(): WorkerState {
-  try {
-    if (existsSync(STATE_FILE)) {
-      return JSON.parse(readFileSync(STATE_FILE, "utf-8"));
-    }
-  } catch (e) {
-    console.warn("⚠️ Could not load state file, starting fresh:", e);
-  }
-  return { lastRun: 0, lastCloudSync: 0 };
-}
-
-function saveStateToDisk(state: WorkerState) {
-  try {
-    if (!existsSync("logs")) {
-      mkdirSync("logs");
-    }
-    writeFileSync(STATE_FILE, JSON.stringify(state, null, 2));
-  } catch (e) {
-    console.error(
-      "⚠️ Failed to save worker state to disk (continuing with in-memory state):",
-      e,
-    );
-  }
-}
+import { loadWorkerState, saveWorkerState } from "../src/lib/worker-state";
 
 async function main() {
   const args = process.argv.slice(2);
@@ -110,7 +76,7 @@ async function main() {
   );
 
   let cycleCount = 1;
-  const state = loadInitialState();
+  const state = loadWorkerState();
 
   // Twice-daily target: 12,000 - 14,000 products
   const PRODUCT_TARGET_MAX = 14000;
@@ -186,13 +152,10 @@ async function main() {
         await runCompliancePhase();
         await runEnrichmentPhase();
 
-        // Update Memory
+        // Update Memory & Persist
         state.lastRun = Date.now();
-        state.lastRunHuman = new Date(state.lastRun).toLocaleString();
+        saveWorkerState({ lastRun: state.lastRun });
         workPerformed = true;
-
-        // Persist
-        saveStateToDisk(state);
       } catch (e) {
         console.error("❌ Phase execution failed:", e);
       }
@@ -206,14 +169,9 @@ async function main() {
           stdio: "inherit",
         });
 
-        // Update Memory
+        // Update Memory & Persist
         state.lastCloudSync = Date.now();
-        state.lastCloudSyncHuman = new Date(
-          state.lastCloudSync,
-        ).toLocaleString();
-
-        // Persist
-        saveStateToDisk(state);
+        saveWorkerState({ lastCloudSync: state.lastCloudSync });
 
         console.log("✅ Cloud sync successful.");
       } catch (e) {

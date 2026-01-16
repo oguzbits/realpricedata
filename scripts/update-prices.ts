@@ -13,21 +13,22 @@
  *   bun run scripts/update-prices.ts de
  */
 
-import { eq, and } from "drizzle-orm";
+import { eq } from "drizzle-orm";
 import {
   db,
-  products,
-  prices,
-  priceHistory,
   NewPriceHistoryRecord,
+  priceHistory,
+  prices,
+  products,
 } from "../src/db";
+import type { CountryCode } from "../src/lib/countries";
 import {
   getProducts,
   getTokenStatus,
   isKeepaConfigured,
   KEEPA_DOMAINS,
 } from "../src/lib/keepa/product-discovery";
-import type { CountryCode } from "../src/lib/countries";
+import { updateLastRun } from "../src/lib/worker-state";
 
 // Constants
 const KEEPA_PRICE_TYPES = {
@@ -260,6 +261,9 @@ async function main() {
   console.log(
     `\n✅ Update complete! Tokens remaining: ${finalTokens.tokensLeft}`,
   );
+
+  // Update worker state so the orchestrator knows a price update just ran
+  updateLastRun();
 }
 
 main().catch(console.error);

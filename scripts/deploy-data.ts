@@ -1,13 +1,14 @@
-import { Database } from "bun:sqlite";
 import { createClient } from "@libsql/client";
+import { Database } from "bun:sqlite";
+import { sql } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/libsql";
 import {
-  products,
+  priceHistory,
   prices,
   productOffers,
-  priceHistory,
+  products,
 } from "../src/db/schema";
-import { sql } from "drizzle-orm";
+import { updateLastCloudSync } from "../src/lib/worker-state";
 
 async function migrate() {
   console.log("🚀 Starting fresh migration...");
@@ -273,6 +274,9 @@ async function migrate() {
     products: finalProdCount[0].count,
     prices: finalPriceCount[0].count,
   });
+
+  // Update worker state so the orchestrator knows sync just happened
+  updateLastCloudSync();
 
   process.exit(0);
 }

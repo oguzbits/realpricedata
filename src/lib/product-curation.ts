@@ -4,6 +4,7 @@ import {
   calculateProductMetrics,
 } from "./utils/products";
 import { allCategories, type CategorySlug } from "./categories";
+import { calculateDesirabilityScore } from "./server/scoring";
 
 export interface DashboardProduct {
   title: string;
@@ -20,6 +21,7 @@ export interface DashboardProduct {
   variationAttributes?: any;
   badgeText?: string;
   parentAsin?: string;
+  brand: string;
 }
 
 interface CurationOptions {
@@ -85,34 +87,16 @@ export function curateProductList(
 
       if (requireDiscount && discountRate <= 0) return null;
 
-      // 3. Data-Driven Scoring
-      const monthlySold = p.monthlySold || 0;
-      const reviewCount = p.reviewCount || 0;
+      // --- Core Desirability Scoring (Shared) ---
+      const { popularityScore, revenue } = calculateDesirabilityScore(
+        p,
+        price,
+        title,
+        "landing",
+      );
+      let score = popularityScore;
 
-      // A. Revenue Score (The "Flagship" Detector)
-      // IMPROVED: Weigh price exponentially to strictly favor high-end gear
-      // (Price^1.5 * Volume)
-      // This ensures 1000€ * 2000 (63M) >> 300€ * 5000 (26M)
-      const revenue = Math.pow(price, 1.5) * monthlySold;
-
-      // B. Quality/Popularity Score
-      let score = 0;
-
-      // Revenue Weight
-      score += revenue / 10000;
-
-      // Sales Rank Weight (Lower is better)
-      if (p.salesRank && p.salesRank > 0) {
-        if (p.salesRank < 100) score += 500;
-        else if (p.salesRank < 1000) score += 200;
-        else if (p.salesRank < 5000) score += 50;
-      }
-
-      // Review Credibility
-      if (reviewCount > 1000) score += 50;
-      if (p.rating && p.rating >= 4.5) score += 50;
-
-      // Discount Bonus
+      // Discount Bonus (Specific to curation view)
       if (discountRate >= 20) score += discountRate * 2;
 
       // 4. Quality Gates
@@ -139,6 +123,7 @@ export function curateProductList(
             p.salesRank > 0 &&
             p.salesRank < 5000
           ),
+          brand: p.brand || "Generic",
           variationAttributes: p.variationAttributes,
           parentAsin: p.parentAsin,
         },

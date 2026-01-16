@@ -62,6 +62,7 @@ function mapDbProduct(
   p: DbProduct,
   pricesList: Price[],
   historyList: { recordedAt: Date | null; price: number }[] = [],
+  stripHeavyData: boolean = false,
 ): Product {
   const pricesObj: Record<string, number> = {};
   const pricesLastUpdatedObj: Record<string, string> = {};
@@ -94,13 +95,15 @@ function mapDbProduct(
     title: p.title,
     category: p.category,
     image: p.imageUrl || "",
-    affiliateUrl: `https://www.amazon.de/dp/${p.asin}?tag=${process.env.PAAPI_PARTNER_TAG || "realpricedata-21"}`,
+    affiliateUrl: stripHeavyData
+      ? ""
+      : `https://www.amazon.de/dp/${p.asin}?tag=${process.env.PAAPI_PARTNER_TAG || "realpricedata-21"}`,
     prices: pricesObj,
-    pricesLastUpdated: pricesLastUpdatedObj,
+    pricesLastUpdated: stripHeavyData ? {} : pricesLastUpdatedObj,
     capacity: p.capacity || 0,
     capacityUnit: (p.capacityUnit as any) || "GB",
     normalizedCapacity: p.normalizedCapacity || 0,
-    formFactor: p.formFactor || "Standard",
+    formFactor: stripHeavyData ? "" : p.formFactor || "Standard",
     technology: p.technology || "",
     condition:
       p.title.includes("(Generalüberholt)") ||
@@ -109,23 +112,26 @@ function mapDbProduct(
         ? "Used"
         : (p.condition as any) || "New",
     brand: p.brand || "Generic",
-    manufacturer: p.manufacturer || undefined,
+    manufacturer: stripHeavyData ? undefined : p.manufacturer || undefined,
     parentAsin: p.parentAsin || undefined,
     variationAttributes: p.variationAttributes || undefined,
-    specifications: p.specifications ? JSON.parse(p.specifications) : {},
-    features: p.features ? JSON.parse(p.features) : [],
-    priceHistory: historyList.map((h) => ({
-      date: (h.recordedAt || new Date()).toISOString(),
-      price: h.price,
-    })),
+    specifications:
+      !stripHeavyData && p.specifications ? JSON.parse(p.specifications) : {},
+    features: !stripHeavyData && p.features ? JSON.parse(p.features) : [],
+    priceHistory: stripHeavyData
+      ? []
+      : historyList.map((h) => ({
+          date: (h.recordedAt || new Date()).toISOString(),
+          price: h.price,
+        })),
     rating: p.rating || 0,
     reviewCount: p.reviewCount || 0,
-    energyLabel: p.energyLabel as any,
+    energyLabel: stripHeavyData ? undefined : (p.energyLabel as any),
     salesRank: p.salesRank || undefined,
     monthlySold: p.monthlySold || 0,
-    priceAvg30: avg30Obj,
-    priceAvg90: avg90Obj,
-    listPrice: listPricesObj,
+    priceAvg30: stripHeavyData ? {} : avg30Obj,
+    priceAvg90: stripHeavyData ? {} : avg90Obj,
+    listPrice: stripHeavyData ? {} : listPricesObj,
   };
 
   return calculateProductMetrics(item) as Product;
@@ -167,32 +173,42 @@ import { cache } from "react";
 export const getProductsByCategory = cache(async function getProductsByCategory(
   category: string,
 ): Promise<Product[]> {
+  const fetchProducts = async () => {
+    const prods = await db
+      .select()
+      .from(products)
+      .where(eq(products.category, category));
+    if (prods.length === 0) return [];
+
+    const ids = prods.map((p) => p.id);
+    const prs = await db
+      .select()
+      .from(prices)
+      .where(inArray(prices.productId, ids));
+
+    return prods.map((p) => {
+      const mapped = mapDbProduct(
+        p,
+        prs.filter((pr) => pr.productId === p.id),
+      );
+      // OPTIMIZATION: Strip heavy data not needed for category listing
+      mapped.features = [];
+      return mapped;
+    });
+  };
+
+  // Skip cache if we're not in a Next.js environment (e.g. running scripts)
+  const isScript =
+    typeof globalThis === "undefined" ||
+    (!(globalThis as any).__incrementalCache && !process.env.NEXT_RUNTIME);
+
+  if (isScript) {
+    return fetchProducts();
+  }
+
   // Use Next.js Data Cache to persist results across requests/users
   const getCachedProducts = unstable_cache(
-    async () => {
-      const prods = await db
-        .select()
-        .from(products)
-        .where(eq(products.category, category));
-      if (prods.length === 0) return [];
-
-      const ids = prods.map((p) => p.id);
-      const prs = await db
-        .select()
-        .from(prices)
-        .where(inArray(prices.productId, ids));
-
-      return prods.map((p) => {
-        const mapped = mapDbProduct(
-          p,
-          prs.filter((pr) => pr.productId === p.id),
-        );
-        // OPTIMIZATION: Strip heavy data not needed for category listing
-        // This keeps the cache entry size low (<2MB) for Vercel Free Tier
-        mapped.features = [];
-        return mapped;
-      });
-    },
+    fetchProducts,
     [`category-products-${category}`],
     {
       revalidate: 3600, // Cache for 1 hour
@@ -351,15 +367,8 @@ export async function getProductsByBrand(
   );
 }
 
-export async function getBestDeals(
-  limit: number = 8,
-  countryCode: string = "de",
-  condition?: "New" | "Used" | "Renewed",
-): Promise<Product[]> {
-  "use cache";
-  cacheLife("prices");
-
-  try {
+const getCachedDeals = unstable_cache(
+  async (limit: number, countryCode: string, condition?: string) => {
     const whereConditions = [
       eq(prices.country, countryCode),
       or(
@@ -371,7 +380,7 @@ export async function getBestDeals(
     ];
 
     if (condition) {
-      whereConditions.push(eq(products.condition, condition));
+      whereConditions.push(eq(products.condition, condition as any));
       if (condition === "New") {
         whereConditions.push(
           sql`${products.title} NOT LIKE '%Generalüberholt%'`,
@@ -396,25 +405,45 @@ export async function getBestDeals(
       )
       .limit(limit);
 
-    return results.map((r) => mapDbProduct(r.product, [r.price]));
-  } catch (error) {
-    console.error("[Product Registry] Error in getBestDeals:", error);
-    return [];
-  }
-}
+    return results.map((r) => mapDbProduct(r.product, [r.price], [], true));
+  },
+  ["best-deals-v8"],
+  {
+    revalidate: 3600,
+    tags: ["products", "deals", "v8"],
+  },
+);
 
-export async function getMostPopular(
+export async function getBestDeals(
   limit: number = 8,
   countryCode: string = "de",
   condition?: "New" | "Used" | "Renewed",
 ): Promise<Product[]> {
-  "use cache";
-  cacheLife("prices");
+  const isScript =
+    typeof globalThis === "undefined" || !process.env.NEXT_RUNTIME;
+  if (isScript) {
+    // Fallback for scripts where unstable_cache might not be available or needed
+    const results = await db
+      .select({ product: products, price: prices })
+      .from(products)
+      .innerJoin(prices, eq(products.id, prices.productId))
+      .where(
+        and(
+          eq(prices.country, countryCode),
+          condition ? eq(products.condition, condition) : undefined,
+        ),
+      )
+      .limit(limit);
+    return results.map((r) => mapDbProduct(r.product, [r.price], [], true));
+  }
+  return getCachedDeals(limit, countryCode, condition);
+}
 
-  try {
+const getCachedPopular = unstable_cache(
+  async (limit: number, countryCode: string, condition?: string) => {
     const whereConditions = [];
     if (condition) {
-      whereConditions.push(eq(products.condition, condition));
+      whereConditions.push(eq(products.condition, condition as any));
       if (condition === "New") {
         whereConditions.push(
           sql`${products.title} NOT LIKE '%Generalüberholt%'`,
@@ -424,7 +453,6 @@ export async function getMostPopular(
       }
     }
 
-    // Use salesRank primarily (lower is better), fallback to secondary signals
     const prods = await db
       .select()
       .from(products)
@@ -450,53 +478,133 @@ export async function getMostPopular(
       mapDbProduct(
         p,
         prs.filter((pr) => pr.productId === p.id),
+        [],
+        true,
       ),
     );
-  } catch (error) {
-    console.error("[Product Registry] Error in getMostPopular:", error);
-    return [];
+  },
+  ["popular-deals-v8"],
+  {
+    revalidate: 3600,
+    tags: ["products", "popular", "v8"],
+  },
+);
+
+export async function getMostPopular(
+  limit: number = 8,
+  countryCode: string = "de",
+  condition?: "New" | "Used" | "Renewed",
+): Promise<Product[]> {
+  const isScript =
+    typeof globalThis === "undefined" || !process.env.NEXT_RUNTIME;
+  if (isScript) {
+    const prods = await db
+      .select()
+      .from(products)
+      .where(condition ? eq(products.condition, condition) : undefined)
+      .orderBy(asc(sql`COALESCE(${products.salesRank}, 10000000)`))
+      .limit(limit);
+    if (prods.length === 0) return [];
+
+    const ids = prods.map((p) => p.id);
+    const prs = await db
+      .select()
+      .from(prices)
+      .where(
+        and(inArray(prices.productId, ids), eq(prices.country, countryCode)),
+      );
+
+    return prods.map((p) =>
+      mapDbProduct(
+        p,
+        prs.filter((pr) => pr.productId === p.id),
+        [],
+        true,
+      ),
+    );
   }
+  return getCachedPopular(limit, countryCode, condition);
 }
+
+const getCachedNew = unstable_cache(
+  async (limit: number, countryCode: string, condition?: string) => {
+    const whereConditions = [];
+    if (condition) {
+      whereConditions.push(eq(products.condition, condition as any));
+      if (condition === "New") {
+        whereConditions.push(
+          sql`${products.title} NOT LIKE '%Generalüberholt%'`,
+        );
+        whereConditions.push(sql`${products.title} NOT LIKE '%erneuert%'`);
+        whereConditions.push(sql`${products.title} NOT LIKE '%Renewed%'`);
+      }
+    }
+
+    const prods = await db
+      .select()
+      .from(products)
+      .where(whereConditions.length > 0 ? and(...whereConditions) : undefined)
+      .orderBy(desc(products.createdAt))
+      .limit(limit);
+
+    if (prods.length === 0) return [];
+
+    const ids = prods.map((p) => p.id);
+    const prs = await db
+      .select()
+      .from(prices)
+      .where(
+        and(inArray(prices.productId, ids), eq(prices.country, countryCode)),
+      );
+
+    return prods.map((p) =>
+      mapDbProduct(
+        p,
+        prs.filter((pr) => pr.productId === p.id),
+        [],
+        true,
+      ),
+    );
+  },
+  ["new-arrivals-v8"],
+  {
+    revalidate: 3600,
+    tags: ["products", "new", "v8"],
+  },
+);
 
 export async function getNewArrivals(
   limit: number = 8,
   countryCode: string = "de",
   condition?: "New" | "Used" | "Renewed",
 ): Promise<Product[]> {
-  "use cache";
-  cacheLife("prices");
+  const isScript =
+    typeof globalThis === "undefined" || !process.env.NEXT_RUNTIME;
+  if (isScript) {
+    const prods = await db
+      .select()
+      .from(products)
+      .where(condition ? eq(products.condition, condition) : undefined)
+      .orderBy(desc(products.createdAt))
+      .limit(limit);
+    if (prods.length === 0) return [];
 
-  const whereConditions = [];
-  if (condition) {
-    whereConditions.push(eq(products.condition, condition));
-    if (condition === "New") {
-      whereConditions.push(sql`${products.title} NOT LIKE '%Generalüberholt%'`);
-      whereConditions.push(sql`${products.title} NOT LIKE '%erneuert%'`);
-      whereConditions.push(sql`${products.title} NOT LIKE '%Renewed%'`);
-    }
-  }
+    const ids = prods.map((p) => p.id);
+    const prs = await db
+      .select()
+      .from(prices)
+      .where(
+        and(inArray(prices.productId, ids), eq(prices.country, countryCode)),
+      );
 
-  const prods = await db
-    .select()
-    .from(products)
-    .where(whereConditions.length > 0 ? and(...whereConditions) : undefined)
-    .orderBy(desc(products.createdAt))
-    .limit(limit);
-
-  if (prods.length === 0) return [];
-
-  const ids = prods.map((p) => p.id);
-  const prs = await db
-    .select()
-    .from(prices)
-    .where(
-      and(inArray(prices.productId, ids), eq(prices.country, countryCode)),
+    return prods.map((p) =>
+      mapDbProduct(
+        p,
+        prs.filter((pr) => pr.productId === p.id),
+        [],
+        true,
+      ),
     );
-
-  return prods.map((p) =>
-    mapDbProduct(
-      p,
-      prs.filter((pr) => pr.productId === p.id),
-    ),
-  );
+  }
+  return getCachedNew(limit, countryCode, condition);
 }

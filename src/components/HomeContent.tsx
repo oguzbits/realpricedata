@@ -16,8 +16,8 @@ export async function HomeContent({ country }: { country: CountryCode }) {
   // Fetch ample data to allow for strict filtering
   const [rawDeals, rawPopular, rawNew] = await Promise.all([
     getBestDeals(200, countryCode, "New"),
-    getMostPopular(300, countryCode, "New"),
-    getNewArrivals(150, countryCode, "New"),
+    getMostPopular(2000, countryCode, "New"),
+    getNewArrivals(250, countryCode, "New"),
   ]);
 
   // Global duplicate tracker across ALL sections

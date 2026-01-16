@@ -5,6 +5,7 @@ import {
   calculateProductMetrics,
   getLocalizedProductData,
 } from "@/lib/utils/products";
+import { calculateDesirabilityScore } from "./scoring";
 
 export interface LocalizedProduct extends Omit<
   Product,
@@ -14,6 +15,7 @@ export interface LocalizedProduct extends Omit<
   title: string;
   price: number;
   pricePerUnit: number;
+  popularityScore: number;
 }
 
 export interface FilterParams {
@@ -55,8 +57,8 @@ function mapSortParam(sort?: string): { sortBy: string; sortOrder: string } {
       return { sortBy: "pricePerUnit", sortOrder: "asc" };
     case "popular":
     default:
-      // Default: sort by price per unit (best value)
-      return { sortBy: "pricePerUnit", sortOrder: "asc" };
+      // Default: sort by popularity score
+      return { sortBy: "popularityScore", sortOrder: "desc" };
   }
 }
 
@@ -102,6 +104,15 @@ export async function getCategoryProducts(
       }
 
       const enhanced = calculateProductMetrics(p, price || 0);
+
+      // --- Popularity Scoring (Shared Logic) ---
+      const { popularityScore } = calculateDesirabilityScore(
+        p,
+        price,
+        title,
+        "category",
+      );
+
       return {
         ...p,
         socket,
@@ -110,6 +121,7 @@ export async function getCategoryProducts(
         title,
         asin,
         pricePerUnit: enhanced.pricePerUnit,
+        popularityScore,
       } as LocalizedProduct;
     })
     .filter((p): p is LocalizedProduct => p !== null);
@@ -122,8 +134,8 @@ export async function getCategoryProducts(
   // Parse filter params into FilterState format (generic)
   const filters: any = {
     search: filterParams.search || "",
-    sortBy: mappedSort.sortBy || "pricePerUnit",
-    sortOrder: mappedSort.sortOrder || "asc",
+    sortBy: mappedSort.sortBy || "popularityScore",
+    sortOrder: mappedSort.sortOrder || "desc",
     minPrice: filterParams.minPrice ? parseFloat(filterParams.minPrice) : null,
     maxPrice: filterParams.maxPrice ? parseFloat(filterParams.maxPrice) : null,
     minCapacity: filterParams.minCapacity

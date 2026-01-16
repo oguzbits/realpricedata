@@ -120,9 +120,9 @@ export function sortProducts(
   return [...products].sort((a, b) => {
     let key = sortBy as string;
 
-    // Default to price if key is missing
+    // Default to popularity if key is missing or 'popular'
     if (!key || key === "popular") {
-      key = "pricePerUnit";
+      key = "popularityScore";
     }
 
     // Map 'price' sort request

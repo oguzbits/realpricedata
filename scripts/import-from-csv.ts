@@ -284,7 +284,15 @@ function mapCategory(root: string, sub: string): CategorySlug | null {
     s.includes("externer speicher")
   )
     return "external-storage";
-  if (s.includes("headphones") || s.includes("kopfhörer")) return "headphones";
+  if (
+    s.includes("headphones") ||
+    s.includes("kopfhörer") ||
+    s.includes("ohrhörer") ||
+    s.includes("headset")
+  )
+    return "headphones";
+  if (s.includes("fernseher") || s.includes("tvs") || s.includes("tv-geräte"))
+    return "tvs";
   if (s.includes("arbeitsspeicher") || s.includes("ram")) return "ram";
   if (s.includes("lautsprecher") || s.includes("speakers")) return "speakers";
   if (s.includes("konsolen") || s.includes("consoles")) return "consoles";

@@ -49,6 +49,7 @@ next-env.d.ts
 
 # worker logs
 /logs/
+logs/worker-state.json
 
 # planning/documentation
 /.planning/

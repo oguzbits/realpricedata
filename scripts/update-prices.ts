@@ -101,6 +101,16 @@ async function updatePrices(country: CountryCode): Promise<void> {
 
   for (let i = 0; i < asins.length; i += 100) {
     const batch = asins.slice(i, i + 100);
+
+    // Check tokens before batch
+    const status = await getTokenStatus();
+    if (status.tokensLeft < 20) {
+      console.log(
+        `\n🛑 Low tokens detected (${status.tokensLeft}). Aborting remaining batches.`,
+      );
+      break;
+    }
+
     console.log(
       `  Fetching batch ${Math.floor(i / 100) + 1}/${Math.ceil(asins.length / 100)}...`,
     );

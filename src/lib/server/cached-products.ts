@@ -34,7 +34,7 @@ export async function getBestDeals(
   countryCode: string = "de",
   condition?: "New" | "Used" | "Renewed",
 ): Promise<Product[]> {
-  cacheLife("prices");
+  cacheLife("category" as any);
   return getBestDealsSync(limit, countryCode, condition);
 }
 
@@ -43,7 +43,7 @@ export async function getMostPopular(
   countryCode: string = "de",
   condition?: "New" | "Used" | "Renewed",
 ): Promise<Product[]> {
-  cacheLife("prices");
+  cacheLife("category" as any);
   return getMostPopularSync(limit, countryCode, condition);
 }
 
@@ -52,7 +52,7 @@ export async function getNewArrivals(
   countryCode: string = "de",
   condition?: "New" | "Used" | "Renewed",
 ): Promise<Product[]> {
-  cacheLife("prices");
+  cacheLife("category" as any);
   return getNewArrivalsSync(limit, countryCode, condition);
 }
 
@@ -60,14 +60,14 @@ export async function getDiverseMostPopular(
   itemsPerCategory: number = 10,
   countryCode: string = "de",
 ): Promise<Product[]> {
-  cacheLife("prices");
+  cacheLife("category" as any);
   return getDiverseMostPopularSync(itemsPerCategory, countryCode);
 }
 
 export async function getProductBySlug(
   slug: string,
 ): Promise<Product | undefined> {
-  cacheLife("prices");
+  cacheLife("product" as any);
   return getProductBySlugSync(slug);
 }
 
@@ -76,6 +76,6 @@ export async function getSimilarProducts(
   limit: number = 4,
   countryCode: string = "de",
 ): Promise<Product[]> {
-  cacheLife("prices");
+  cacheLife("product" as any);
   return getSimilarProductsSync(product, limit, countryCode);
 }

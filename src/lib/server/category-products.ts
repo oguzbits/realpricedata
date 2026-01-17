@@ -1,15 +1,11 @@
 "use cache";
 
 import { allCategories, CategorySlug } from "@/lib/categories";
-import { getProductsByCategory, Product } from "@/lib/product-registry";
+import { getProductsByCategory } from "@/lib/product-registry";
 import { filterProducts, sortProducts } from "@/lib/utils/category-utils";
-import {
-  calculateProductMetrics,
-  getLocalizedProductData,
-} from "@/lib/utils/products";
-import { calculateDesirabilityScore } from "./scoring";
+import { getLocalizedProductData } from "@/lib/utils/products";
 import { cacheLife } from "next/cache";
-import { PRICE_REVALIDATE_SECONDS } from "../site-config";
+import { calculateDesirabilityScore } from "./scoring";
 
 export interface LocalizedProduct {
   id: number;
@@ -53,8 +49,8 @@ export interface FilterParams {
   maxPrice?: string;
   sortBy?: string;
   sortOrder?: string;
-  sort?: string; // Combined sort param from TopBar (e.g., "price", "price-desc", "popular")
-  view?: string; // grid or list
+  sort?: string;
+  view?: string;
   page?: string;
   fetchAll?: boolean;
 }
@@ -75,27 +71,25 @@ function mapSortParam(sort?: string): { sortBy: string; sortOrder: string } {
       return { sortBy: "createdAt", sortOrder: "desc" };
     case "deal":
     case "savings":
-      // Sort by highest discount/savings
       return { sortBy: "savings", sortOrder: "desc" };
     case "popular":
     default:
-      // Default: sort by popularity score
       return { sortBy: "popularityScore", sortOrder: "desc" };
   }
 }
 
 /**
- * RE-USABLE CACHED LAYER: Localizes and scores all products in a category.
- * This is expensive (scoring, JSON parsing, mapping), so we cache it for 11h.
+ * RE-USABLE CACHED LAYER: Localizes, scores, and PRUNES products in a category.
+ * Pruning is essential to stay under Vercel's 2MB cache limit.
  */
 async function getCachedLocalizedCategoryProducts(
   categorySlug: string,
   countryCode: string,
 ): Promise<LocalizedProduct[]> {
-  cacheLife("prices");
+  cacheLife("category" as any); // 11h revalidation
   const rawProducts = await getProductsByCategory(categorySlug);
 
-  const mapped = rawProducts
+  return rawProducts
     .map((p) => {
       const { price, title, asin, lastUpdated } = getLocalizedProductData(
         p,
@@ -103,28 +97,25 @@ async function getCachedLocalizedCategoryProducts(
       );
       if (price === null || price === 0) return null;
 
-      // Extract socket and cores from specifications or title fallback
+      // 1. Extract static attributes (pruning raw specifications)
       let socket = p.specifications?.Socket || p.specifications?.["Socket-Typ"];
       let cores = p.specifications?.Cores || p.specifications?.Kerne;
 
       if (categorySlug === "cpu") {
         if (!socket) {
-          const socketMatch = title.match(
+          const socketMatch = (title || "").match(
             /(AM[45]|LGA\s?(\d{4})|sTRX4|sWRX8|Socket\s?[A-Z0-9]+|TR4|FM[12]|LGA\s?115[0156])/i,
           );
-          if (socketMatch) {
+          if (socketMatch)
             socket = socketMatch[0].toUpperCase().replace(/\s+/, "");
-          }
         }
         if (!cores) {
-          const coreMatch = title.match(/(\d+)\s?-?\s?(Core|Kerne)/i);
-          if (coreMatch) {
-            cores = parseInt(coreMatch[1]).toString();
-          }
+          const coreMatch = (title || "").match(/(\d+)\s?-?\s?(Core|Kerne)/i);
+          if (coreMatch) cores = parseInt(coreMatch[1]).toString();
         }
       }
 
-      const enhanced = calculateProductMetrics(p, price || 0);
+      // 2. Metrics & Desirability
       const { popularityScore } = calculateDesirabilityScore(
         p,
         price,
@@ -141,14 +132,23 @@ async function getCachedLocalizedCategoryProducts(
       const displayListPrice =
         refPrice && refPrice > price ? refPrice : undefined;
 
-      // Stripping heavy DB data here to save cache size
+      // 3. Price per Unit (MB for calculation, normalized back to GB/TB in UI)
+      const capacityMB =
+        p.capacityUnit === "TB"
+          ? p.capacity * 1024 * 1024
+          : p.capacityUnit === "GB"
+            ? p.capacity * 1024
+            : p.capacity;
+      const pricePerUnit = capacityMB > 0 ? (price / capacityMB) * 1024 : 0;
+
+      // 4. Return PRUNED object
       return {
         id: p.id || 0,
         slug: p.slug,
         asin,
         title,
         price,
-        pricePerUnit: enhanced.pricePerUnit || 0,
+        pricePerUnit,
         popularityScore,
         savings,
         listPrice: displayListPrice,
@@ -170,33 +170,28 @@ async function getCachedLocalizedCategoryProducts(
       } as LocalizedProduct;
     })
     .filter((p): p is LocalizedProduct => p !== null);
-
-  return mapped;
 }
 
 /**
  * Server-side function to get and filter products for a category
- * This replaces the client-side useCategoryProducts hook
  */
 export async function getCategoryProducts(
   categorySlug: string,
   countryCode: string,
   filterParams: FilterParams,
 ) {
-  // Load pre-localized and scored products from CACHE (Super Fast)
+  // Super fast cached access to pruned product list
   const localizedProducts = await getCachedLocalizedCategoryProducts(
     categorySlug,
     countryCode,
   );
+
   const category = allCategories[categorySlug as CategorySlug];
   const unitLabel = category?.unitType || "TB";
-
-  // Map the sort parameter from TopBar to sortBy/sortOrder
   const mappedSort = filterParams.sort
     ? mapSortParam(filterParams.sort)
     : { sortBy: filterParams.sortBy, sortOrder: filterParams.sortOrder };
 
-  // Parse filter params into FilterState format (generic)
   const filters: any = {
     search: filterParams.search || "",
     sortBy: mappedSort.sortBy || "popularityScore",
@@ -214,7 +209,7 @@ export async function getCategoryProducts(
     capacity: filterParams.capacity || [],
   };
 
-  // Dynamically add all other filter params (handled as arrays/comma-separated strings)
+  // Dynamically parse filters
   Object.keys(filterParams).forEach((key) => {
     if (
       [
@@ -232,12 +227,10 @@ export async function getCategoryProducts(
         "page",
         "fetchAll",
       ].includes(key)
-    ) {
+    )
       return;
-    }
     const value = filterParams[key as keyof FilterParams];
     if (value === true || value === false) return;
-
     if (value) {
       filters[key] = Array.isArray(value)
         ? value
@@ -247,22 +240,18 @@ export async function getCategoryProducts(
     }
   });
 
-  // Apply filtering
   const filtered = filterProducts(
     localizedProducts,
     filters,
     categorySlug,
     unitLabel,
   );
-
-  // Apply sorting
   const sorted = sortProducts(
     filtered,
     filters.sortBy,
     filters.sortOrder,
   ) as LocalizedProduct[];
 
-  // Apply pagination
   let paginatedProducts = sorted;
   let pagination = null;
 
@@ -285,12 +274,12 @@ export async function getCategoryProducts(
 
   return {
     products: paginatedProducts,
-    allSortedProducts: sorted, // Return the full sorted list for filter calculation
+    allSortedProducts: sorted,
     totalCount: localizedProducts.length,
     filteredCount: sorted.length,
     unitLabel,
     hasProducts: localizedProducts.length > 0,
-    filters, // Return parsed filters for UI
+    filters,
     lastUpdated:
       localizedProducts.length > 0
         ? localizedProducts

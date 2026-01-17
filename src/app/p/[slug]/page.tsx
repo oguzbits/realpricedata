@@ -11,6 +11,7 @@ import {
 } from "@/lib/server/cached-products";
 import { BRAND_DOMAIN } from "@/lib/site-config";
 import { Metadata } from "next";
+
 import { notFound, redirect } from "next/navigation";
 
 interface Props {

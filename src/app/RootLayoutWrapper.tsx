@@ -35,6 +35,11 @@ export default function RootLayoutWrapper({
       <head>
         <link rel="preconnect" href="https://m.media-amazon.com" />
         <link rel="dns-prefetch" href="https://m.media-amazon.com" />
+        <link rel="preconnect" href="https://images-na.ssl-images-amazon.com" />
+        <link
+          rel="dns-prefetch"
+          href="https://images-na.ssl-images-amazon.com"
+        />
       </head>
       <body
         className={cn(

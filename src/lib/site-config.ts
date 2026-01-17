@@ -110,8 +110,13 @@ export const LOGO = {
  * while accounting for build/caching delays.
  */
 export const AMAZON_TOS_LIMIT_SECONDS = 86400; // 24 hours
-export const PRICE_REVALIDATE_SECONDS = 39600; // 11 hours (twice-daily sync)
-export const PRICE_CACHE_STALE_SECONDS = 39600; // 11 hours
+export const CATEGORY_REVALIDATE_SECONDS = 39600; // 11 hours (Global category lists)
+export const PRODUCT_REVALIDATE_SECONDS = 21600; // 6 hours (Deep product details)
+export const STATIC_REVALIDATE_SECONDS = 86400; // 24 hours (Legal, Blog lists, Static pages)
+
+// Legacy alias for compatibility during migration
+export const PRICE_REVALIDATE_SECONDS = CATEGORY_REVALIDATE_SECONDS;
+export const PRICE_CACHE_STALE_SECONDS = CATEGORY_REVALIDATE_SECONDS;
 
 // =============================================================================
 // HELPER FUNCTIONS

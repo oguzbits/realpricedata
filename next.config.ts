@@ -33,10 +33,26 @@ const nextConfig: NextConfig = {
   },
   // Cache Life Profiles for Next.js 16 "use cache"
   cacheLife: {
+    category: {
+      stale: 39600, // 11 hours
+      revalidate: 39600,
+      expire: 604800,
+    },
+    product: {
+      stale: 21600, // 6 hours
+      revalidate: 21600,
+      expire: 604800,
+    },
+    static: {
+      stale: 86400, // 24 hours
+      revalidate: 86400,
+      expire: 2592000, // 30 days
+    },
+    // Keep legacy name for backward compatibility during migration
     prices: {
-      stale: PRICE_CACHE_STALE_SECONDS, // Amazon ToS compliance
-      revalidate: PRICE_REVALIDATE_SECONDS,
-      expire: 604800, // 7 days (unchanged)
+      stale: 39600,
+      revalidate: 39600,
+      expire: 604800,
     },
   },
   // Optimize images

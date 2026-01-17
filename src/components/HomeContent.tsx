@@ -1,3 +1,5 @@
+"use cache";
+
 import { IdealoHomePage } from "@/components/landing/IdealoHomePage";
 import { type CountryCode } from "@/lib/countries";
 import { curateProductList } from "@/lib/product-curation";
@@ -9,8 +11,10 @@ import {
   getDiverseMostPopular,
 } from "@/lib/server/cached-products";
 import Script from "next/script";
+import { cacheLife } from "next/cache";
 
 export async function HomeContent({ country }: { country: CountryCode }) {
+  cacheLife("static" as any);
   const countryConfig = await getCountryByCode(country);
   const countryCode = countryConfig?.code || country;
 

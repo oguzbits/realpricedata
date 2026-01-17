@@ -53,13 +53,14 @@ export function CarouselContainer({ children }: { children: React.ReactNode }) {
         ref={scrollContainerRef}
         onScroll={checkScroll}
         className={cn(
-          "scrollbar-hide flex gap-4 overflow-x-auto scroll-smooth",
+          "scrollbar-hide flex gap-4 overflow-x-auto overflow-y-hidden scroll-smooth",
           "snap-x snap-mandatory",
         )}
         style={{
           scrollbarWidth: "none",
           msOverflowStyle: "none",
           WebkitOverflowScrolling: "touch",
+          touchAction: "pan-y",
         }}
       >
         {children}

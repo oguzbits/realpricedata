@@ -100,7 +100,7 @@ export function CategoryNav({ country }: { country: string }) {
           style={{
             scrollbarWidth: "none",
             msOverflowStyle: "none",
-            touchAction: "pan-x",
+            touchAction: "pan-y",
             overscrollBehavior: "none",
             overflowY: "hidden",
             WebkitOverflowScrolling: "touch",

@@ -5,8 +5,45 @@ import {
   PRICE_REVALIDATE_SECONDS,
 } from "./src/lib/site-config";
 
+// Countries that were previously supported and need redirects
+const DEPRECATED_COUNTRIES = [
+  "fr", // France
+  "it", // Italy
+  "ca", // Canada
+  "de", // Germany
+  "es", // Spain
+  "nl", // Netherlands
+  "at", // Austria
+  "uk", // United Kingdom
+  "us", // United States
+  "au", // Australia
+];
+
 const nextConfig: NextConfig = {
   reactCompiler: true,
+  // Redirect old country-specific URLs to the main site
+  async redirects() {
+    return DEPRECATED_COUNTRIES.flatMap((country) => [
+      // Redirect /{country}/p/{slug} to /p/{slug}
+      {
+        source: `/${country}/p/:slug*`,
+        destination: "/p/:slug*",
+        permanent: true, // 301 redirect for SEO
+      },
+      // Redirect /{country}/blog/{slug} to /blog/{slug}
+      {
+        source: `/${country}/blog/:slug*`,
+        destination: "/blog/:slug*",
+        permanent: true,
+      },
+      // Redirect /{country}/{category} to /{category} (for category pages)
+      {
+        source: `/${country}/:path*`,
+        destination: "/:path*",
+        permanent: true,
+      },
+    ]);
+  },
   cacheComponents: true, // Enable "use cache" directive for caching
   // Configure MDX file extensions
   pageExtensions: ["js", "jsx", "md", "mdx", "ts", "tsx"],

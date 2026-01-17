@@ -133,6 +133,7 @@ async function migrate() {
         .onConflictDoUpdate({
           target: products.asin,
           set: {
+            slug: sql`excluded.slug`, // Important: sync slug format changes
             title: sql`excluded.title`,
             category: sql`excluded.category`,
             imageUrl: sql`excluded.image_url`,
@@ -157,17 +158,24 @@ async function migrate() {
     }
   }
 
-  // 4. MAP IDS
-  console.log("🗺️  Mapping Cloud IDs...");
+  // 4. MAP IDS by ASIN (slugs may differ between local/cloud due to format changes)
+  console.log("🗺️  Mapping Cloud IDs by ASIN...");
   const cloudProducts = await db
-    .select({ id: products.id, slug: products.slug })
+    .select({ id: products.id, asin: products.asin })
     .from(products);
-  const slugToCloudId = new Map(cloudProducts.map((p) => [p.slug, p.id]));
+  const asinToCloudId = new Map(cloudProducts.map((p) => [p.asin, p.id]));
 
   // 5. PUSH PRICES
   console.log(`💰 Pushing ${localPrices.length} prices...`);
   let priceSuccess = 0;
+  let priceSkippedNoProduct = 0;
+  let priceSkippedNoCloudId = 0;
   const priceBatchSize = 100;
+
+  // Debug: Check a sample of the cloud ID mapping
+  console.log(`   📊 ASIN->CloudID map size: ${asinToCloudId.size}`);
+  const sampleAsins = Array.from(asinToCloudId.keys()).slice(0, 3);
+  console.log(`   📊 Sample ASINs: ${sampleAsins.join(", ")}`);
 
   for (let i = 0; i < localPrices.length; i += priceBatchSize) {
     const batch = localPrices.slice(i, i + priceBatchSize);
@@ -175,10 +183,28 @@ async function migrate() {
 
     for (const pr of batch) {
       const localProd = localProducts.find((p) => p.id === pr.product_id);
-      if (!localProd) continue;
+      if (!localProd) {
+        priceSkippedNoProduct++;
+        continue;
+      }
 
-      const cloudId = slugToCloudId.get(localProd.slug);
-      if (!cloudId) continue;
+      // Use ASIN to find cloud ID instead of slug
+      const cloudId = asinToCloudId.get(localProd.asin);
+      if (!cloudId) {
+        priceSkippedNoCloudId++;
+        continue;
+      }
+
+      // Convert UNIX timestamp (seconds) to Date (handles both formats)
+      let lastUpdatedDate: Date;
+      if (typeof pr.last_updated === "number") {
+        // UNIX timestamp in seconds
+        lastUpdatedDate = new Date(pr.last_updated * 1000);
+      } else if (typeof pr.last_updated === "string") {
+        lastUpdatedDate = new Date(pr.last_updated);
+      } else {
+        lastUpdatedDate = new Date();
+      }
 
       records.push({
         productId: cloudId,
@@ -200,9 +226,7 @@ async function migrate() {
         deliveryTime: pr.delivery_time,
         deliveryCost: pr.delivery_cost,
         deliveryFree: pr.delivery_free === 1,
-        lastUpdated: pr.last_updated
-          ? new Date(pr.last_updated) // localDb might store ISO or unix
-          : new Date(),
+        lastUpdated: lastUpdatedDate,
       });
     }
 
@@ -210,12 +234,27 @@ async function migrate() {
       try {
         await db.insert(prices).values(records);
         priceSuccess += records.length;
+        // Progress indicator
+        if ((i / priceBatchSize) % 10 === 0) {
+          process.stdout.write(
+            `\r   📦 Progress: ${priceSuccess}/${localPrices.length}...`,
+          );
+        }
       } catch (e: any) {
-        console.error(`❌ Price batch failure:`, e.message);
+        console.error(`\n❌ Price batch failure at ${i}:`, e.message);
+        // Log a sample record on first failure
+        if (priceSuccess === 0 && records.length > 0) {
+          console.error("   Sample record:", JSON.stringify(records[0]));
+        }
       }
     }
   }
-  console.log(`✅ Prices: ${priceSuccess}/${localPrices.length}`);
+  console.log(`\n✅ Prices: ${priceSuccess}/${localPrices.length}`);
+  if (priceSkippedNoProduct > 0 || priceSkippedNoCloudId > 0) {
+    console.log(
+      `   ⏭️  Skipped: ${priceSkippedNoProduct} (no local product), ${priceSkippedNoCloudId} (no cloud ID)`,
+    );
+  }
 
   // 6. PUSH OFFERS
   console.log(`🏷️  Pushing ${localOffers.length} offers...`);
@@ -230,7 +269,8 @@ async function migrate() {
       const localProd = localProducts.find((p) => p.id === off.product_id);
       if (!localProd) continue;
 
-      const cloudId = slugToCloudId.get(localProd.slug);
+      // Use ASIN to find cloud ID instead of slug
+      const cloudId = asinToCloudId.get(localProd.asin);
       if (!cloudId) continue;
 
       records.push({

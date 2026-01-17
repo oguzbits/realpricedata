@@ -123,7 +123,7 @@ export function ProductCard({
 
           {/* Produktdetails link at bottom - blue link like Idealo */}
           <div className="mt-2 flex items-center gap-0.5 text-[11px] font-semibold text-[#0066cc]">
-            <span className="hover:underline">Produktdetails</span>
+            <span>Produktdetails</span>
           </div>
         </div>
       </div>

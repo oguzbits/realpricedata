@@ -52,39 +52,38 @@ export function IdealoListCard({
 
   return (
     <div className={cn("sr-resultList__item", "-mb-px", className)}>
-      <div
+      <PrefetchLink
+        href={`/p/${product.slug}`}
         className={cn(
           "sr-resultItemTile sr-resultItemTile--LIST",
           "relative flex flex-row items-stretch",
-          "border border-[#b4b4b4] bg-white",
+          "border border-[#b4b4b4] bg-white text-inherit no-underline hover:no-underline",
         )}
       >
         {/* ============================================ */}
         {/* IMAGE SECTION - sr-resultItemTile__imageSection--LIST */}
         {/* ============================================ */}
-        <PrefetchLink href={`/p/${product.slug}`} className="block shrink-0">
-          <div
-            className={cn(
-              "sr-resultItemTile__imageSection sr-resultItemTile__imageSection--LIST",
-              "relative flex h-[140px] w-[168px] items-center justify-center bg-white",
-            )}
-          >
-            {product.image ? (
-              <Image
-                src={product.image}
-                alt={product.title}
-                fill
-                className="object-contain p-2"
-                sizes="168px"
-                style={{ objectFit: "contain" }}
-              />
-            ) : (
-              <div className="flex h-full w-full items-center justify-center bg-[#f5f5f5] text-sm text-[#767676]">
-                Kein Bild
-              </div>
-            )}
-          </div>
-        </PrefetchLink>
+        <div
+          className={cn(
+            "sr-resultItemTile__imageSection sr-resultItemTile__imageSection--LIST",
+            "relative flex h-[140px] w-[168px] items-center justify-center bg-white",
+          )}
+        >
+          {product.image ? (
+            <Image
+              src={product.image}
+              alt={product.title}
+              fill
+              className="object-contain p-2"
+              sizes="168px"
+              style={{ objectFit: "contain" }}
+            />
+          ) : (
+            <div className="flex h-full w-full items-center justify-center bg-[#f5f5f5] text-sm text-[#767676]">
+              Kein Bild
+            </div>
+          )}
+        </div>
 
         {/* Efficiency Labels placeholder (empty in most cases) */}
         <div className="sr-resultItemTile__efficiencyLabels sr-resultItemTile__efficiencyLabels--LIST" />
@@ -96,21 +95,16 @@ export function IdealoListCard({
           {/* SUMMARY SECTION */}
           <div className="sr-resultItemTile__summary">
             <div className="sr-productSummary">
-              {/* TITLE LINK */}
+              {/* TITLE */}
               <div className="sr-resultItemLink">
-                <PrefetchLink
-                  href={`/p/${product.slug}`}
-                  className="no-underline hover:no-underline"
+                <div
+                  className={cn(
+                    "sr-productSummary__title sr-productSummary__title--LIST productSummary__title--categoryPage",
+                    "mb-1 text-[14px] leading-[18px] font-bold text-[#2d2d2d]",
+                  )}
                 >
-                  <div
-                    className={cn(
-                      "sr-productSummary__title sr-productSummary__title--LIST productSummary__title--categoryPage",
-                      "mb-1 text-[14px] leading-[18px] font-bold text-[#2d2d2d]",
-                    )}
-                  >
-                    {formatDisplayTitle(product.title)}
-                  </div>
-                </PrefetchLink>
+                  {formatDisplayTitle(product.title)}
+                </div>
               </div>
 
               {/* DESCRIPTION */}
@@ -162,10 +156,7 @@ export function IdealoListCard({
           {/* PRODUCT DETAILS TRIGGER (LIST-specific wrapper) */}
           {/* ============================================ */}
           <div className="sr-resultItemTile__pioTrigger">
-            <PrefetchLink
-              href={`/p/${product.slug}`}
-              className="sr-productInformationTrigger flex items-center gap-0.5 text-[13px] font-bold text-[#0771d0] no-underline hover:no-underline"
-            >
+            <div className="sr-productInformationTrigger flex items-center gap-0.5 text-[13px] font-bold text-[#0771d0]">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width="24"
@@ -178,7 +169,7 @@ export function IdealoListCard({
               <span className="sr-productInformationTrigger__text">
                 Produktdetails
               </span>
-            </PrefetchLink>
+            </div>
           </div>
         </div>
 
@@ -218,7 +209,7 @@ export function IdealoListCard({
             </span>
           )}
         </div>
-      </div>
+      </PrefetchLink>
     </div>
   );
 }

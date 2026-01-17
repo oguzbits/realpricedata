@@ -46,7 +46,7 @@ export function ProductGrid({ products, countryCode }: ProductGridProps) {
           {/* Content - flex-1 to push price to bottom */}
           <div className="flex flex-1 flex-col p-4">
             {/* Title - 14px for readability */}
-            <h3 className="mb-1.5 line-clamp-2 text-[14px] leading-snug font-normal text-[#0066cc] group-hover:underline">
+            <h3 className="mb-1.5 line-clamp-2 text-[14px] leading-snug font-normal text-[#0066cc]">
               {product.title}
             </h3>
 
@@ -77,7 +77,7 @@ export function ProductGrid({ products, countryCode }: ProductGridProps) {
             </div>
 
             {/* Produktdetails link - 13px */}
-            <div className="mt-2 text-[13px] text-[#0066cc] group-hover:underline">
+            <div className="mt-2 text-[13px] text-[#0066cc]">
               Produktdetails
             </div>
           </div>

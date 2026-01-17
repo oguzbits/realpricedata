@@ -59,40 +59,39 @@ export function IdealoGridCard({
         className,
       )}
     >
-      <div
+      <PrefetchLink
+        href={`/p/${product.slug}`}
         className={cn(
           "sr-resultItemTile sr-resultItemTile--GRID",
           "relative flex h-full flex-col",
-          "border border-[#b4b4b4] bg-white",
+          "border border-[#b4b4b4] bg-white text-inherit no-underline hover:no-underline",
         )}
       >
         {/* ============================================ */}
         {/* IMAGE SECTION - sr-resultItemTile__imageSection */}
         {/* Idealo: height:140px, width:168px */}
         {/* ============================================ */}
-        <PrefetchLink href={`/p/${product.slug}`} className="block">
-          <div
-            className={cn(
-              "sr-resultItemTile__imageSection resultItemTile__imageSection--GRID",
-              "relative flex h-[140px] items-center justify-center bg-white",
-            )}
-          >
-            {product.image ? (
-              <Image
-                src={product.image}
-                alt={product.title}
-                fill
-                className="object-contain p-2"
-                sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 168px"
-                style={{ objectFit: "contain" }}
-              />
-            ) : (
-              <div className="flex h-full w-full items-center justify-center bg-[#f5f5f5] text-sm text-[#767676]">
-                Kein Bild
-              </div>
-            )}
-          </div>
-        </PrefetchLink>
+        <div
+          className={cn(
+            "sr-resultItemTile__imageSection resultItemTile__imageSection--GRID",
+            "relative flex h-[140px] items-center justify-center bg-white",
+          )}
+        >
+          {product.image ? (
+            <Image
+              src={product.image}
+              alt={product.title}
+              fill
+              className="object-contain p-2"
+              sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 168px"
+              style={{ objectFit: "contain" }}
+            />
+          ) : (
+            <div className="flex h-full w-full items-center justify-center bg-[#f5f5f5] text-sm text-[#767676]">
+              Kein Bild
+            </div>
+          )}
+        </div>
 
         {/* Efficiency Labels placeholder (empty in most cases) */}
         <div className="sr-resultItemTile__efficiencyLabels sr-resultItemTile__efficiencyLabels--GRID" />
@@ -104,21 +103,16 @@ export function IdealoGridCard({
           {/* SUMMARY SECTION */}
           <div className="sr-resultItemTile__summary flex-1">
             <div className="sr-productSummary">
-              {/* TITLE LINK */}
+              {/* TITLE */}
               <div className="sr-resultItemLink">
-                <PrefetchLink
-                  href={`/p/${product.slug}`}
-                  className="no-underline hover:no-underline"
+                <div
+                  className={cn(
+                    "sr-productSummary__title productSummary__title--GRID productSummary__title--categoryPage",
+                    "mb-1 line-clamp-3 text-[14px] leading-[18px] font-bold hyphens-auto text-[#2d2d2d]",
+                  )}
                 >
-                  <div
-                    className={cn(
-                      "sr-productSummary__title productSummary__title--GRID productSummary__title--categoryPage",
-                      "mb-1 line-clamp-3 text-[14px] leading-[18px] font-bold hyphens-auto text-[#2d2d2d]",
-                    )}
-                  >
-                    {formatDisplayTitle(product.title)}
-                  </div>
-                </PrefetchLink>
+                  {formatDisplayTitle(product.title)}
+                </div>
               </div>
 
               {/* DESCRIPTION */}
@@ -185,10 +179,7 @@ export function IdealoGridCard({
           {/* ============================================ */}
           {/* PRODUCT DETAILS TRIGGER */}
           {/* ============================================ */}
-          <PrefetchLink
-            href={`/p/${product.slug}`}
-            className="sr-productInformationTrigger mt-2 flex items-center gap-0.5 text-[13px] font-bold text-[#0771d0] no-underline hover:no-underline"
-          >
+          <div className="sr-productInformationTrigger mt-2 flex items-center gap-0.5 text-[13px] font-bold text-[#0771d0]">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               width="24"
@@ -201,7 +192,7 @@ export function IdealoGridCard({
             <span className="sr-productInformationTrigger__text">
               Produktdetails
             </span>
-          </PrefetchLink>
+          </div>
 
           {/* BADGES */}
           <div className="sr-resultItemTile__badges mt-2 flex flex-wrap gap-1">
@@ -217,7 +208,7 @@ export function IdealoGridCard({
             )}
           </div>
         </div>
-      </div>
+      </PrefetchLink>
     </div>
   );
 }

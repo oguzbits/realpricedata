@@ -1,7 +1,5 @@
 "use client";
 
-import * as React from "react";
-import { Filter, X } from "lucide-react";
 import {
   Sheet,
   SheetContent,
@@ -9,9 +7,11 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
-import { IdealoFilterPanel } from "./IdealoFilterPanel";
-import { Product } from "@/lib/product-registry";
 import { useFilters } from "@/lib/hooks/use-filters";
+import type { FilterCounts } from "@/lib/server/category-products";
+import { Filter, X } from "lucide-react";
+import * as React from "react";
+import { IdealoFilterPanel } from "./IdealoFilterPanel";
 
 interface MobileFilterDrawerProps {
   categorySlug: string;
@@ -19,6 +19,8 @@ interface MobileFilterDrawerProps {
   categoryName: string;
   productCount: number;
   filterOptions?: Record<string, string[]>;
+  filterCounts?: FilterCounts;
+  maxPriceInCategory?: number;
 }
 
 export function MobileFilterDrawer({
@@ -27,6 +29,8 @@ export function MobileFilterDrawer({
   categoryName,
   productCount,
   filterOptions = {},
+  filterCounts = {},
+  maxPriceInCategory = 1000,
 }: MobileFilterDrawerProps) {
   const [open, setOpen] = React.useState(false);
   const [filters, setFilters] = useFilters();
@@ -118,6 +122,8 @@ export function MobileFilterDrawer({
               unitLabel={unitLabel}
               isMobile={true}
               filterOptions={filterOptions}
+              filterCounts={filterCounts}
+              maxPriceInCategory={maxPriceInCategory}
             />
           </div>
 

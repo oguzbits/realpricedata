@@ -85,6 +85,8 @@ export async function IdealoCategoryPage({
     unitLabel,
     hasProducts,
     filters,
+    filterCounts,
+    maxPriceInCategory,
     lastUpdated,
     pagination,
   } = filteredData;
@@ -187,6 +189,8 @@ export async function IdealoCategoryPage({
                   categorySlug={categorySlug}
                   unitLabel={unitLabel}
                   filterOptions={filterGroupOptions}
+                  filterCounts={filterCounts}
+                  maxPriceInCategory={maxPriceInCategory}
                 />
               </aside>
 
@@ -210,6 +214,8 @@ export async function IdealoCategoryPage({
                   categoryName={category.name}
                   productCount={filteredCount}
                   filterOptions={filterGroupOptions}
+                  filterCounts={filterCounts}
+                  maxPriceInCategory={maxPriceInCategory}
                 />
 
                 {/* ============================================ */}

@@ -2,8 +2,8 @@
 
 import {
   parseAsArrayOf,
-  parseAsInteger,
   parseAsFloat,
+  parseAsInteger,
   parseAsString,
   useQueryStates,
 } from "nuqs";
@@ -21,6 +21,7 @@ export const useFilters = () => {
       brand: parseAsArrayOf(parseAsString).withDefault([]),
       cores: parseAsArrayOf(parseAsString).withDefault([]),
       socket: parseAsArrayOf(parseAsString).withDefault([]),
+      capacity: parseAsArrayOf(parseAsString).withDefault([]),
       minCapacity: parseAsFloat,
       maxCapacity: parseAsFloat,
       minPrice: parseAsInteger,

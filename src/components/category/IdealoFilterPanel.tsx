@@ -7,13 +7,12 @@
 "use client";
 
 import { Checkbox } from "@/components/ui/checkbox";
-import { cn } from "@/lib/utils";
-import { getUniqueFieldValues } from "@/lib/utils/category-utils";
-import { useState, useMemo } from "react";
+import { PriceRangeSlider } from "@/components/ui/PriceRangeSlider";
 import { allCategories, CategorySlug } from "@/lib/categories";
-import { Product } from "@/lib/product-registry";
 import { useFilters } from "@/lib/hooks/use-filters";
-import { X } from "lucide-react";
+import type { FilterCounts } from "@/lib/server/category-products";
+import { cn } from "@/lib/utils";
+import { useMemo, useState } from "react";
 
 interface IdealoFilterBarProps {
   categorySlug: string;
@@ -21,6 +20,8 @@ interface IdealoFilterBarProps {
   isMobile?: boolean;
   onFilterChange?: () => void;
   filterOptions?: Record<string, string[]>;
+  filterCounts?: FilterCounts;
+  maxPriceInCategory?: number;
 }
 
 // ============================================
@@ -66,6 +67,62 @@ const ArrowRightIcon = () => (
 // ============================================
 // SUB-COMPONENTS
 // ============================================
+
+// Primary filters that should be expanded by default (like idealo)
+// All other filters (technical specs) will be collapsed
+const PRIMARY_FILTERS = [
+  "brand",
+  "capacity",
+  "formFactor",
+  "technology",
+  "condition",
+  "socket",
+  "cores",
+];
+
+/**
+ * Format capacity values with smart GB/TB detection
+ * - Values stored as fractions of TB (e.g., 0.128, 0.256, 0.5) are shown as GB
+ * - Values >= 1 are shown in TB
+ */
+function formatCapacity(value: string, unitLabel: string): string {
+  const numValue = parseFloat(value);
+  if (isNaN(numValue) || numValue <= 0) return "";
+
+  // Input value is normalized capacity in GB (e.g. 500, 1000, 2000)
+
+  if (numValue >= 1000) {
+    // >= 1000 GB -> Display as TB
+    const tbValue = Math.round(numValue / 1000);
+    return `${tbValue} TB`;
+  } else {
+    // < 1000 GB -> Display as GB
+    return `${Math.round(numValue)} GB`;
+  }
+  // (Logic handled in main block now)
+}
+
+/**
+ * Check if a capacity value is valid and should be shown
+ */
+function isValidCapacity(value: string): boolean {
+  const numValue = parseFloat(value);
+  return !isNaN(numValue) && numValue > 0;
+}
+
+/**
+ * Format option label based on field type
+ */
+function formatOptionLabel(
+  option: string,
+  field: string,
+  unitLabel: string,
+): string {
+  if (field === "capacity") {
+    return formatCapacity(option, unitLabel);
+  }
+  return option;
+}
 
 interface FilterBoxProps {
   title: string;
@@ -146,12 +203,37 @@ function FilterBox({
   );
 }
 
+const PREMIUM_BRANDS = [
+  "Samsung",
+  "Western Digital",
+  "Apple",
+  "Crucial",
+  "SanDisk",
+  "Kingston",
+  "Seagate",
+  "Toshiba",
+  "ASUS",
+  "Gigabyte",
+  "MSI",
+  "Corsair",
+  "HP",
+  "Intel",
+  "Dell",
+  "Lenovo",
+  "Acer",
+  "Logitech",
+  "LG",
+  "Sony",
+];
+
 export function IdealoFilterPanel({
   categorySlug,
   unitLabel,
   isMobile = false,
   onFilterChange,
   filterOptions = {},
+  filterCounts = {},
+  maxPriceInCategory = 1000,
 }: IdealoFilterBarProps) {
   const [filters, setFilters] = useFilters();
   const category = allCategories[categorySlug as CategorySlug];
@@ -165,10 +247,32 @@ export function IdealoFilterPanel({
     if (!category?.filterGroups) return {};
     const options: Record<string, string[]> = {};
     category.filterGroups.forEach((group) => {
-      options[group.field] = group.options || filterOptions[group.field] || [];
+      const rawOptions = group.options || filterOptions[group.field] || [];
+
+      // Sort options by count descending
+      const sorted = [...rawOptions].sort((a, b) => {
+        const countA = filterCounts[group.field]?.[a] || 0;
+        const countB = filterCounts[group.field]?.[b] || 0;
+
+        // Primary sort: Count descending
+        if (countB !== countA) return countB - countA;
+
+        // Secondary sort: Alphanumeric
+        return a.localeCompare(b, undefined, { numeric: true });
+      });
+
+      // Filter out options with 0 count (unless selected)
+      options[group.field] = sorted.filter((opt) => {
+        const count = filterCounts[group.field]?.[opt] || 0;
+        // Keep if count > 0 OR if currently selected
+        const currentSelected = (filters as any)[group.field] || [];
+        const isSelected =
+          Array.isArray(currentSelected) && currentSelected.includes(opt);
+        return count > 0 || isSelected;
+      });
     });
     return options;
-  }, [category, filterOptions]);
+  }, [category, filterOptions, filterCounts, filters]);
 
   // Handle price update
   const handlePriceUpdate = (min: string, max: string) => {
@@ -265,6 +369,25 @@ export function IdealoFilterPanel({
               </button>
             </div>
 
+            {/* Price Slider */}
+            <div className="px-1 py-2">
+              <PriceRangeSlider
+                min={0}
+                max={maxPriceInCategory}
+                value={[
+                  filters.minPrice ?? 0,
+                  filters.maxPrice ?? maxPriceInCategory,
+                ]}
+                onChange={([min, max]) => {
+                  setFilters({
+                    minPrice: min === 0 ? null : min,
+                    maxPrice: max === maxPriceInCategory ? null : max,
+                  });
+                  if (onFilterChange) onFilterChange();
+                }}
+              />
+            </div>
+
             {/* Price Ranges Wrapper */}
             <div className="sr-priceBox__rangesWrapper_fhTcS mt-3 space-y-1">
               {[
@@ -309,8 +432,45 @@ export function IdealoFilterPanel({
 
         {/* DYNAMIC FILTER GROUPS */}
         {category?.filterGroups?.map((group) => {
-          const options = optionsMap[group.field] || [];
-          if (options.length === 0) return null;
+          let options = optionsMap[group.field] || [];
+
+          // SPECIAL SORTING FOR BRANDS
+          if (group.field === "brand") {
+            const isExpanded = groupShowAll[group.field] || false; // Re-fetch isExpanded for this scope
+            if (isExpanded) {
+              // Alphanumeric sort when expanded
+              options = [...options].sort((a, b) =>
+                a.toLowerCase().localeCompare(b.toLowerCase()),
+              );
+            } else {
+              // Priority sort when collapsed
+              options = [...options].sort((a, b) => {
+                const aIndex = PREMIUM_BRANDS.indexOf(a);
+                const bIndex = PREMIUM_BRANDS.indexOf(b);
+
+                // Both premium? Sort by priority in list
+                if (aIndex !== -1 && bIndex !== -1) return aIndex - bIndex;
+                // One premium? Keep it at top
+                if (aIndex !== -1) return -1;
+                if (bIndex !== -1) return 1;
+
+                // Neither premium? Sort by count (desc) then alpha
+                const aCount = filterCounts?.[group.field]?.[a] || 0;
+                const bCount = filterCounts?.[group.field]?.[b] || 0;
+                if (aCount !== bCount) return bCount - aCount;
+
+                return a.toLowerCase().localeCompare(b.toLowerCase());
+              });
+            }
+          }
+
+          // For capacity field, filter out invalid values (0, empty, etc.)
+          if (group.field === "capacity") {
+            options = options.filter(isValidCapacity);
+          }
+
+          // Skip if no options OR only 1 option (no point showing a filter with no choice)
+          if (options.length <= 1) return null;
 
           const currentValues = (filters as any)[group.field] || [];
           const query = groupSearch[group.field] || "";
@@ -325,6 +485,7 @@ export function IdealoFilterPanel({
               key={group.field}
               title={group.label}
               activeCount={currentValues.length}
+              defaultOpen={PRIMARY_FILTERS.includes(group.field)}
               isMobile={isMobile}
               onReset={() => setFilters({ [group.field]: [] })}
             >
@@ -353,26 +514,38 @@ export function IdealoFilterPanel({
                 <div className="sr-filterList_qktgT space-y-1">
                   {filteredOptions
                     .slice(0, isExpanded ? undefined : 6)
-                    .map((option) => (
-                      <label
-                        key={option}
-                        className="group/item flex cursor-pointer items-center justify-between py-1"
-                      >
-                        <div className="flex items-center gap-3">
-                          <Checkbox
-                            id={`${group.field}-${option}`}
-                            checked={currentValues.includes(option)}
-                            onCheckedChange={() =>
-                              toggleCheckbox(group.field, option)
-                            }
-                            className="h-[18px] w-[18px] rounded-[3px] border-[#B4B4B4] bg-white data-[state=checked]:border-[#0771D0] data-[state=checked]:bg-[#0771D0]"
-                          />
-                          <span className="text-[13px] text-[#2d2d2d] group-hover/item:text-[#0771D0]">
-                            {option}
-                          </span>
-                        </div>
-                      </label>
-                    ))}
+                    .map((option) => {
+                      const count = filterCounts?.[group.field]?.[option];
+                      return (
+                        <label
+                          key={option}
+                          className="group/item flex cursor-pointer items-center justify-between py-1"
+                        >
+                          <div className="flex items-center gap-3">
+                            <Checkbox
+                              id={`${group.field}-${option}`}
+                              checked={currentValues.includes(option)}
+                              onCheckedChange={() =>
+                                toggleCheckbox(group.field, option)
+                              }
+                              className="h-[18px] w-[18px] rounded-[3px] border-[#B4B4B4] bg-white data-[state=checked]:border-[#0771D0] data-[state=checked]:bg-[#0771D0]"
+                            />
+                            <span className="text-[13px] text-[#2d2d2d] group-hover/item:text-[#0771D0]">
+                              {formatOptionLabel(
+                                option,
+                                group.field,
+                                unitLabel,
+                              )}
+                            </span>
+                          </div>
+                          {count !== undefined && count > 0 && (
+                            <span className="text-[13px] text-[#767676]">
+                              {count}
+                            </span>
+                          )}
+                        </label>
+                      );
+                    })}
                 </div>
 
                 {!isExpanded && filteredOptions.length > 6 && (

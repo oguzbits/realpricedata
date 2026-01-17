@@ -220,10 +220,10 @@ export const getProductsByCategory = cache(async function getProductsByCategory(
   // Use Next.js Data Cache to persist results across requests/users
   const getCachedProducts = unstable_cache(
     fetchProducts,
-    [`category-products-v14-${category}`],
+    [`category-products-v21-${category}`],
     {
       revalidate: CATEGORY_REVALIDATE_SECONDS,
-      tags: [`category-v14-${category}`],
+      tags: [`category-v21-${category}`],
     },
   );
 
@@ -312,7 +312,7 @@ const fetchSimilarProducts = async (
       p.prices[countryCode] > 0,
   );
 
-  const sorted = valid.sort((a, b) => {
+  const sorted = valid.sort((a: any, b: any) => {
     const priceA = a.prices[countryCode] || 0;
     const priceB = b.prices[countryCode] || 0;
     return Math.abs(priceA - targetPrice) - Math.abs(priceB - targetPrice);
@@ -343,10 +343,10 @@ export const getSimilarProducts = cache(async function getSimilarProducts(
 
   return unstable_cache(
     fetchSimilarProducts,
-    [`similar-products-v4`], // Key parts (args are hashed automatically)
+    [`similar-products-v20-${product.category}-${countryCode}`], // Key parts (args are hashed automatically)
     {
       revalidate: PRODUCT_REVALIDATE_SECONDS,
-      tags: [`similar-v4-${product.category}`],
+      tags: [`similar-v20-${product.category}`],
     },
   )(product.category, product.slug, currentPrice, limit, countryCode);
 });

@@ -2,7 +2,11 @@
 
 import { allCategories, CategorySlug } from "@/lib/categories";
 import { getProductsByCategory } from "@/lib/product-registry";
-import { filterProducts, sortProducts } from "@/lib/utils/category-utils";
+import {
+  filterProducts,
+  normalizeBrand,
+  sortProducts,
+} from "@/lib/utils/category-utils";
 import { getLocalizedProductData } from "@/lib/utils/products";
 import { cacheLife } from "next/cache";
 import { calculateDesirabilityScore } from "./scoring";
@@ -26,6 +30,7 @@ export interface LocalizedProduct {
   condition: string;
   capacity: number;
   capacityUnit: string;
+  normalizedCapacity: number;
   formFactor: string;
   technology: string;
   socket?: string;
@@ -85,6 +90,7 @@ function mapSortParam(sort?: string): { sortBy: string; sortOrder: string } {
 async function getCachedLocalizedCategoryProducts(
   categorySlug: string,
   countryCode: string,
+  version: string = "v1", // Cache buster
 ): Promise<LocalizedProduct[]> {
   cacheLife("category" as any); // 11h revalidation
   const rawProducts = await getProductsByCategory(categorySlug);
@@ -141,6 +147,28 @@ async function getCachedLocalizedCategoryProducts(
             : p.capacity;
       const pricePerUnit = capacityMB > 0 ? (price / capacityMB) * 1024 : 0;
 
+      // --- CAPACITY NORMALIZATION & SNAP ---
+      let normCap = p.normalizedCapacity || 0;
+
+      // 1. Thresholding: Filter out low-capacity trash/accessories from SSDs/HDDs
+      if (
+        (categorySlug === "ssds" || categorySlug === "hard-drives") &&
+        normCap > 0 &&
+        normCap < 60
+      ) {
+        normCap = 0;
+      }
+
+      // 2. Snapping: Map 1024 -> 1000, 2048 -> 2000, etc. for cleaner filters
+      if (normCap >= 900) {
+        // Find nearest TB multiple
+        const tbCount = Math.round(normCap / 1000);
+        // Only snap if within 10% of a TB boundary (e.g. 1024)
+        if (Math.abs(normCap - tbCount * 1000) < 100) {
+          normCap = tbCount * 1000;
+        }
+      }
+
       // 4. Return PRUNED object
       return {
         id: p.id || 0,
@@ -154,13 +182,14 @@ async function getCachedLocalizedCategoryProducts(
         listPrice: displayListPrice,
         category: p.category,
         image: p.image || "",
-        brand: p.brand,
+        brand: normalizeBrand(p.brand || ""),
         rating: p.rating || 0,
         reviewCount: p.reviewCount || 0,
         salesRank: p.salesRank,
         condition: p.condition,
         capacity: p.capacity,
         capacityUnit: p.capacityUnit,
+        normalizedCapacity: normCap,
         formFactor: p.formFactor,
         technology: p.technology || "",
         socket,
@@ -170,6 +199,61 @@ async function getCachedLocalizedCategoryProducts(
       } as LocalizedProduct;
     })
     .filter((p): p is LocalizedProduct => p !== null);
+}
+
+/**
+ * Type for filter option counts: { brand: { Samsung: 213, SanDisk: 138 }, ... }
+ */
+export type FilterCounts = Record<string, Record<string, number>>;
+
+/**
+ * Calculate how many products match each filter option value.
+ * This enables showing counts like "(213)" next to each filter checkbox.
+ */
+function calculateFilterCounts(
+  products: LocalizedProduct[],
+  filterGroups: { field: string }[],
+): FilterCounts {
+  const counts: FilterCounts = {};
+
+  // Initialize all filter fields
+  filterGroups.forEach((group) => {
+    counts[group.field] = {};
+  });
+
+  // Also count brands always (common filter)
+  counts["brand"] = {};
+
+  // Count occurrences for each product
+  products.forEach((p) => {
+    // Brand counts
+    if (p.brand) {
+      counts["brand"][p.brand] = (counts["brand"][p.brand] || 0) + 1;
+    }
+
+    // Dynamic filter group counts
+    filterGroups.forEach((group) => {
+      let value;
+      if (group.field === "capacity") {
+        value = p.normalizedCapacity;
+      } else {
+        value = (p as any)[group.field];
+      }
+
+      if (
+        value !== undefined &&
+        value !== null &&
+        value !== "" &&
+        value !== 0
+      ) {
+        const strValue = String(value);
+        counts[group.field][strValue] =
+          (counts[group.field][strValue] || 0) + 1;
+      }
+    });
+  });
+
+  return counts;
 }
 
 /**
@@ -184,6 +268,7 @@ export async function getCategoryProducts(
   const localizedProducts = await getCachedLocalizedCategoryProducts(
     categorySlug,
     countryCode,
+    "v21",
   );
 
   const category = allCategories[categorySlug as CategorySlug];
@@ -280,6 +365,13 @@ export async function getCategoryProducts(
     unitLabel,
     hasProducts: localizedProducts.length > 0,
     filters,
+    filterCounts: category?.filterGroups
+      ? calculateFilterCounts(localizedProducts, category.filterGroups)
+      : {},
+    maxPriceInCategory:
+      localizedProducts.length > 0
+        ? Math.ceil(Math.max(...localizedProducts.map((p) => p.price)))
+        : 1000,
     lastUpdated:
       localizedProducts.length > 0
         ? localizedProducts

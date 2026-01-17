@@ -9,13 +9,13 @@ import {
   Glasses,
   HardDrive,
   Headphones,
+  Home,
   Keyboard,
   Laptop,
   MemoryStick,
   Mic,
   Monitor,
   MonitorCheck,
-  MonitorSpeaker,
   Mouse,
   Network,
   Package,
@@ -23,7 +23,6 @@ import {
   Printer,
   Router,
   Server,
-  Search,
   Smartphone,
   Speaker,
   Tablet,
@@ -33,7 +32,6 @@ import {
   Video,
   Watch,
   Zap,
-  Home,
   type LucideIcon,
 } from "lucide-react";
 import { BRAND_DOMAIN } from "./site-config";
@@ -821,6 +819,11 @@ const CATEGORY_MAP: Record<CategorySlug, Omit<Category, "slug">> = {
       { label: "RTX 4080", params: "model=RTX+4080" },
       { label: "RX 7800 XT", params: "model=RX+7800+XT" },
     ],
+    filterGroups: [
+      { label: "Hersteller", field: "brand", type: "checkbox" },
+      { label: "VRAM", field: "capacity", type: "checkbox" },
+      { label: "Zustand", field: "condition", type: "checkbox" },
+    ],
   },
   motherboards: {
     name: "Mainboards",
@@ -915,6 +918,13 @@ const CATEGORY_MAP: Record<CategorySlug, Omit<Category, "slug">> = {
       { label: "M.2 SSDs (NVMe)", params: "interface=m2-nvme" },
       { label: "SATA SSDs", params: "interface=sata" },
       { label: "PS5 SSDs", params: "compatible=ps5" },
+    ],
+    filterGroups: [
+      { label: "Hersteller", field: "brand", type: "checkbox" },
+      { label: "Kapazität", field: "capacity", type: "checkbox" },
+      { label: "Formfaktor", field: "formFactor", type: "checkbox" },
+      { label: "Technologie", field: "technology", type: "checkbox" },
+      { label: "Zustand", field: "condition", type: "checkbox" },
     ],
   },
 

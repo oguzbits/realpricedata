@@ -15,6 +15,45 @@ export interface FilterState {
 }
 
 /**
+ * Normalizes brand names to group sub-brands and fix casing/naming inconsistencies.
+ */
+export function normalizeBrand(brand: string): string {
+  if (!brand) return "Generic";
+  const b = brand.trim();
+
+  // Mapping of common aliases and sub-brands to parent brand
+  const mapping: Record<string, string> = {
+    WD_BLACK: "Western Digital",
+    WD: "Western Digital",
+    "WD Red": "Western Digital",
+    "WD Blue": "Western Digital",
+    "WD Green": "Western Digital",
+    "WD Gold": "Western Digital",
+    "Sandisk Technologies, Inc.": "SanDisk",
+    "SanDisk Professional": "SanDisk",
+    "SP Silicon Power": "Silicon Power",
+    "Patriot Memory": "Patriot",
+    TOSHIBA: "Toshiba",
+    SABRENT: "Sabrent",
+    KIOXIA: "Kioxia",
+    acer: "Acer",
+    fanxiang: "Fanxiang",
+    "PNY Technologies": "PNY",
+    ASUS: "Asus",
+    MSI: "MSI", // Keep MSI caps
+    EVGA: "EVGA",
+  };
+
+  if (mapping[b]) return mapping[b];
+
+  // Handle common case issues or specific starts
+  if (b.toLowerCase().startsWith("western digital")) return "Western Digital";
+  if (b.toLowerCase().startsWith("sandisk")) return "SanDisk";
+
+  return b;
+}
+
+/**
  * Utility to filter products based on the current filter state
  */
 export function filterProducts(
@@ -59,10 +98,12 @@ export function filterProducts(
       return false;
     }
 
-    // Capacity (as exact choice, e.g. for GPU)
+    // Capacity (as exact choice, e.g. for GPU, or SSDs now)
     if (
       filters.capacity?.length > 0 &&
-      !filters.capacity.includes((p.capacity || "").toString())
+      !filters.capacity.includes(
+        (p.normalizedCapacity || p.capacity || "").toString(),
+      )
     ) {
       return false;
     }
@@ -161,10 +202,18 @@ export function getUniqueFieldValues(
   field: string,
 ): string[] {
   const values = new Set<string>();
+  const isNumericField = field === "capacity";
 
   products.forEach((p) => {
-    let val = (p as any)[field];
-    if (val === undefined || val === null || val === "") return;
+    // For capacity, find normalizedCapacity to ensure we are using GB base
+    let val;
+    if (field === "capacity") {
+      val = p.normalizedCapacity;
+    } else {
+      val = (p as any)[field];
+    }
+
+    if (val === undefined || val === null || val === "" || val === 0) return;
 
     if (Array.isArray(val)) {
       val.forEach((v) => v && values.add(v.toString()));
@@ -178,5 +227,11 @@ export function getUniqueFieldValues(
     }
   });
 
-  return Array.from(values).sort();
+  const arr = Array.from(values);
+
+  if (isNumericField) {
+    return arr.sort((a, b) => parseFloat(a) - parseFloat(b));
+  }
+
+  return arr.sort();
 }

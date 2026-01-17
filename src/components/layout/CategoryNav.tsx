@@ -14,7 +14,7 @@ import {
   Wifi,
   Zap,
 } from "lucide-react";
-import Link from "next/link";
+import { PrefetchLink } from "@/components/ui/PrefetchLink";
 import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 
@@ -105,14 +105,13 @@ export function CategoryNav({ country }: { country: string }) {
           }}
         >
           {/* All Categories Button */}
-          <Link
+          <PrefetchLink
             href="/elektroartikel"
             className="flex shrink-0 flex-col items-center gap-2 rounded-xl px-4 py-2 text-[12px] font-medium text-white/80 no-underline transition-all hover:bg-white/10 hover:text-(--ccc-orange)"
-            prefetch={true}
           >
             <Grid3X3 className="h-6 w-6" />
             <span>Elektroartikel</span>
-          </Link>
+          </PrefetchLink>
 
           {/* Category Pills - Icons on top */}
           {categories
@@ -120,15 +119,14 @@ export function CategoryNav({ country }: { country: string }) {
             .map((cat) => {
               const Icon = cat.icon;
               return (
-                <Link
+                <PrefetchLink
                   key={cat.slug}
                   href={getCategoryPath(cat.slug!)}
                   className="flex shrink-0 flex-col items-center gap-2 rounded-xl px-4 py-2 text-[12px] font-medium text-white/80 no-underline transition-all hover:bg-white/10 hover:text-(--ccc-orange)"
-                  prefetch={true}
                 >
                   <Icon className="h-6 w-6" />
                   <span className="whitespace-nowrap">{cat.label}</span>
-                </Link>
+                </PrefetchLink>
               );
             })}
         </div>

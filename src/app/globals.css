@@ -136,3 +136,25 @@
     text-decoration: underline;
   }
 }
+
+/* === PERFORMANCE OPTIMIZATIONS === */
+/* (Vercel Best Practices: rendering-content-visibility) */
+
+/* Defer rendering of off-screen product list items */
+.productOffers-listItem:nth-child(n + 4),
+.sr-resultList__item:nth-child(n + 7) {
+  content-visibility: auto;
+  contain-intrinsic-size: auto 200px;
+}
+
+/* Defer rendering of below-the-fold carousels */
+.cn-productCarousel:nth-of-type(n + 2) {
+  content-visibility: auto;
+  contain-intrinsic-size: auto 350px;
+}
+
+/* Optimize sidebar similar products rendering */
+#recommendedProducts li:nth-child(n + 3) {
+  content-visibility: auto;
+  contain-intrinsic-size: auto 80px;
+}

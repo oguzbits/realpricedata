@@ -22,7 +22,7 @@
 import { getCountryByCode, type CountryCode } from "@/lib/countries";
 import { cn } from "@/lib/utils";
 import Image from "next/image";
-import Link from "next/link";
+import { PrefetchLink } from "@/components/ui/PrefetchLink";
 
 import { type LeanProduct } from "@/lib/types";
 import { formatCurrency, formatDisplayTitle } from "@/lib/utils/formatting";
@@ -70,7 +70,7 @@ export function IdealoGridCard({
         {/* IMAGE SECTION - sr-resultItemTile__imageSection */}
         {/* Idealo: height:140px, width:168px */}
         {/* ============================================ */}
-        <Link href={`/p/${product.slug}`} className="block">
+        <PrefetchLink href={`/p/${product.slug}`} className="block">
           <div
             className={cn(
               "sr-resultItemTile__imageSection resultItemTile__imageSection--GRID",
@@ -92,7 +92,7 @@ export function IdealoGridCard({
               </div>
             )}
           </div>
-        </Link>
+        </PrefetchLink>
 
         {/* Efficiency Labels placeholder (empty in most cases) */}
         <div className="sr-resultItemTile__efficiencyLabels sr-resultItemTile__efficiencyLabels--GRID" />
@@ -106,7 +106,7 @@ export function IdealoGridCard({
             <div className="sr-productSummary">
               {/* TITLE LINK */}
               <div className="sr-resultItemLink">
-                <Link
+                <PrefetchLink
                   href={`/p/${product.slug}`}
                   className="no-underline hover:no-underline"
                 >
@@ -118,7 +118,7 @@ export function IdealoGridCard({
                   >
                     {formatDisplayTitle(product.title)}
                   </div>
-                </Link>
+                </PrefetchLink>
               </div>
 
               {/* DESCRIPTION */}
@@ -191,7 +191,7 @@ export function IdealoGridCard({
           {/* ============================================ */}
           {/* PRODUCT DETAILS TRIGGER */}
           {/* ============================================ */}
-          <Link
+          <PrefetchLink
             href={`/p/${product.slug}`}
             className="sr-productInformationTrigger mt-2 flex items-center gap-0.5 text-[13px] font-bold text-[#0771d0] no-underline hover:no-underline"
           >
@@ -207,7 +207,7 @@ export function IdealoGridCard({
             <span className="sr-productInformationTrigger__text">
               Produktdetails
             </span>
-          </Link>
+          </PrefetchLink>
 
           {/* BADGES */}
           <div className="sr-resultItemTile__badges mt-2 flex flex-wrap gap-1">

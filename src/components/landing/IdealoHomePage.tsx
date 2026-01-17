@@ -76,7 +76,11 @@ export function IdealoHomePage({
       {/* Bestseller Carousel - Below hero, can be dynamic or static depending on fold */}
       {bestsellers.length > 0 ? (
         <IdealoSection variant="white">
-          <IdealoProductCarousel title="Bestseller" products={bestsellers} />
+          <IdealoProductCarousel
+            title="Bestseller"
+            products={bestsellers}
+            priorityImages
+          />
         </IdealoSection>
       ) : null}
 

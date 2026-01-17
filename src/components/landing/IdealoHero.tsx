@@ -1,7 +1,7 @@
 "use client";
 
 import { IdealoProductCarousel } from "@/components/IdealoProductCarousel";
-import Link from "next/link";
+import { PrefetchLink } from "@/components/ui/PrefetchLink";
 
 interface Product {
   title: string;
@@ -27,6 +27,7 @@ export function IdealoHero({ products }: IdealoHeroProps) {
           <IdealoProductCarousel
             title="Beliebte Produkte"
             products={heroProducts}
+            priorityImages
           />
         </div>
       ) : (
@@ -48,12 +49,12 @@ export function IdealoHero({ products }: IdealoHeroProps) {
           <p className="mb-6 text-sm opacity-70">
             Die besten Deals für Technik &amp; Hardware
           </p>
-          <Link
+          <PrefetchLink
             href="/elektroartikel"
             className="rounded bg-white px-5 py-2 text-sm font-bold text-[#0066cc] no-underline transition-transform hover:scale-105"
           >
             Elektroartikel
-          </Link>
+          </PrefetchLink>
         </div>
       </div>
     </div>

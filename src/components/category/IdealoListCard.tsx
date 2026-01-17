@@ -22,7 +22,7 @@
 import { getCountryByCode, type CountryCode } from "@/lib/countries";
 import { cn } from "@/lib/utils";
 import Image from "next/image";
-import Link from "next/link";
+import { PrefetchLink } from "@/components/ui/PrefetchLink";
 
 import { type LeanProduct } from "@/lib/types";
 import { formatCurrency, formatDisplayTitle } from "@/lib/utils/formatting";
@@ -62,7 +62,7 @@ export function IdealoListCard({
         {/* ============================================ */}
         {/* IMAGE SECTION - sr-resultItemTile__imageSection--LIST */}
         {/* ============================================ */}
-        <Link href={`/p/${product.slug}`} className="block shrink-0">
+        <PrefetchLink href={`/p/${product.slug}`} className="block shrink-0">
           <div
             className={cn(
               "sr-resultItemTile__imageSection sr-resultItemTile__imageSection--LIST",
@@ -84,7 +84,7 @@ export function IdealoListCard({
               </div>
             )}
           </div>
-        </Link>
+        </PrefetchLink>
 
         {/* Efficiency Labels placeholder (empty in most cases) */}
         <div className="sr-resultItemTile__efficiencyLabels sr-resultItemTile__efficiencyLabels--LIST" />
@@ -98,7 +98,7 @@ export function IdealoListCard({
             <div className="sr-productSummary">
               {/* TITLE LINK */}
               <div className="sr-resultItemLink">
-                <Link
+                <PrefetchLink
                   href={`/p/${product.slug}`}
                   className="no-underline hover:no-underline"
                 >
@@ -110,7 +110,7 @@ export function IdealoListCard({
                   >
                     {formatDisplayTitle(product.title)}
                   </div>
-                </Link>
+                </PrefetchLink>
               </div>
 
               {/* DESCRIPTION */}
@@ -162,7 +162,7 @@ export function IdealoListCard({
           {/* PRODUCT DETAILS TRIGGER (LIST-specific wrapper) */}
           {/* ============================================ */}
           <div className="sr-resultItemTile__pioTrigger">
-            <Link
+            <PrefetchLink
               href={`/p/${product.slug}`}
               className="sr-productInformationTrigger flex items-center gap-0.5 text-[13px] font-bold text-[#0771d0] no-underline hover:no-underline"
             >
@@ -178,7 +178,7 @@ export function IdealoListCard({
               <span className="sr-productInformationTrigger__text">
                 Produktdetails
               </span>
-            </Link>
+            </PrefetchLink>
           </div>
         </div>
 

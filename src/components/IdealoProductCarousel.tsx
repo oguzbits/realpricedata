@@ -9,10 +9,10 @@
 
 "use client";
 
+import { IdealoProductCard } from "@/components/landing/IdealoProductCard";
 import { cn } from "@/lib/utils";
 import { ChevronLeft, ChevronRight } from "lucide-react";
-import { useRef, useState, useEffect } from "react";
-import { IdealoProductCard } from "@/components/landing/IdealoProductCard";
+import { useEffect, useRef, useState } from "react";
 
 export interface CarouselProduct {
   title: string;
@@ -34,12 +34,15 @@ interface IdealoProductCarouselProps {
   title: string;
   products: CarouselProduct[];
   className?: string;
+  /** Enable priority loading for first 4 images (for above-the-fold carousels) */
+  priorityImages?: boolean;
 }
 
 export function IdealoProductCarousel({
   title,
   products,
   className,
+  priorityImages = false,
 }: IdealoProductCarouselProps) {
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   const [canScrollLeft, setCanScrollLeft] = useState(false);
@@ -149,7 +152,7 @@ export function IdealoProductCarousel({
             overscrollBehavior: "none",
           }}
         >
-          {products.map((product) => (
+          {products.map((product, index) => (
             <IdealoProductCard
               key={product.slug}
               title={product.title}
@@ -163,7 +166,9 @@ export function IdealoProductCarousel({
               badgeText={product.badgeText}
               categoryName={product.categoryName}
               discountRate={product.discountRate}
-              isBestseller={product.isBestseller}
+              isBestseller={
+                product.isBestseller || (priorityImages && index < 4)
+              }
               variationAttributes={product.variationAttributes}
             />
           ))}

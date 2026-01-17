@@ -1,10 +1,10 @@
 "use client";
 
 import { LegalPrice } from "@/components/ui/LegalPrice";
+import { PrefetchLink } from "@/components/ui/PrefetchLink";
 import { cn } from "@/lib/utils";
-import { formatCurrency, formatDisplayTitle } from "@/lib/utils/formatting";
+import { formatDisplayTitle } from "@/lib/utils/formatting";
 import Image from "next/image";
-import Link from "next/link";
 import React from "react";
 
 interface IdealoProductCardProps {
@@ -62,10 +62,9 @@ export function IdealoProductCard({
   variationAttributes,
 }: IdealoProductCardProps) {
   return (
-    <Link
+    <PrefetchLink
       href={`/p/${slug}`}
       className="group relative flex h-[272px] w-[164px] shrink-0 flex-col bg-white no-underline transition-shadow hover:shadow-lg sm:h-[327px] sm:w-[240px]"
-      style={{ border: "1px solid rgb(220, 220, 220)" }}
     >
       {/* Badges Area - top left */}
       <div className="absolute top-3 left-3 z-10 flex flex-col gap-1">
@@ -171,6 +170,6 @@ export function IdealoProductCard({
           />
         </div>
       </div>
-    </Link>
+    </PrefetchLink>
   );
 }

@@ -87,7 +87,7 @@ export const Carousel = React.forwardRef<CarouselRef, CarouselProps>(
         <div
           ref={scrollContainerRef}
           className={cn(
-            "scrollbar-hide -mb-4 flex snap-x snap-mandatory items-stretch gap-2 overflow-x-auto px-4 pb-8 sm:px-0",
+            "scrollbar-hide -mb-4 flex items-stretch gap-2 overflow-x-auto px-4 pb-8 sm:px-0",
             className,
           )}
           style={{
@@ -101,12 +101,7 @@ export const Carousel = React.forwardRef<CarouselRef, CarouselProps>(
           }}
         >
           {React.Children.map(children, (child) => (
-            <div
-              className={cn(
-                "flex-none shrink-0 snap-start snap-always",
-                itemClassName,
-              )}
-            >
+            <div className={cn("flex-none shrink-0", itemClassName)}>
               {child}
             </div>
           ))}

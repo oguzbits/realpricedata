@@ -141,7 +141,6 @@ export function IdealoProductCarousel({
           className={cn(
             "cn-productCarousel__container",
             "scrollbar-hide flex gap-4 overflow-x-auto",
-            "scroll-smooth",
           )}
           style={{
             scrollbarWidth: "none",

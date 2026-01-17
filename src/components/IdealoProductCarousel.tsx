@@ -143,7 +143,11 @@ export function IdealoProductCarousel({
             "scrollbar-hide flex gap-4 overflow-x-auto",
             "scroll-smooth",
           )}
-          style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
+          style={{
+            scrollbarWidth: "none",
+            msOverflowStyle: "none",
+            touchAction: "pan-x",
+          }}
         >
           {products.map((product) => (
             <IdealoProductCard

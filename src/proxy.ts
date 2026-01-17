@@ -1,7 +1,7 @@
-import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
-import { DEFAULT_COUNTRY, isValidCountryCode } from "./lib/countries";
+import { NextResponse } from "next/server";
 import { allCategories } from "./lib/categories";
+import { isValidCountryCode } from "./lib/countries";
 
 /**
  * Next.js 16 Proxy

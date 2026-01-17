@@ -95,6 +95,7 @@ export const Carousel = React.forwardRef<CarouselRef, CarouselProps>(
             msOverflowStyle: "none",
             scrollPaddingLeft: "1rem",
             scrollPaddingRight: "1rem",
+            touchAction: "pan-x",
           }}
         >
           {React.Children.map(children, (child) => (

@@ -134,8 +134,9 @@ export function getLocalizedProductData(
   const price = p.prices[code];
   const title = p.title;
   const asin = p.asin;
+  const lastUpdated = p.pricesLastUpdated?.[code];
 
-  return { price, title, asin };
+  return { price, title, asin, lastUpdated };
 }
 
 /**

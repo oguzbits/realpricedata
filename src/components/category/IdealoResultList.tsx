@@ -1,5 +1,3 @@
-"use client";
-
 /**
  * Idealo Result List Component
  *

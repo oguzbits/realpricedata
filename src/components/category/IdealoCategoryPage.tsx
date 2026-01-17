@@ -37,6 +37,7 @@ import Link from "next/link";
 
 // Sub-components
 import { IdealoFilterPanel } from "./IdealoFilterPanel";
+import { ClientDate } from "@/components/ui/ClientDate";
 import { IdealoResultList } from "./IdealoResultList";
 import { IdealoTopBar } from "./IdealoTopBar";
 
@@ -333,14 +334,7 @@ export async function IdealoCategoryPage({
                   Verfügbarkeit können sich ändern.
                   {lastUpdated ? (
                     <span className="mt-1 block">
-                      Zuletzt aktualisiert:{" "}
-                      {new Date(lastUpdated).toLocaleString("de-DE", {
-                        day: "2-digit",
-                        month: "2-digit",
-                        year: "numeric",
-                        hour: "2-digit",
-                        minute: "2-digit",
-                      })}
+                      Zuletzt aktualisiert: <ClientDate date={lastUpdated} />
                     </span>
                   ) : null}
                 </div>

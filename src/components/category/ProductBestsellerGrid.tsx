@@ -8,8 +8,6 @@
  * for consistent styling across the application.
  */
 
-"use client";
-
 import { cn } from "@/lib/utils";
 import Link from "next/link";
 import { type LeanProduct } from "@/lib/types";

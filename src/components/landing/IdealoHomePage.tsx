@@ -1,5 +1,3 @@
-"use client";
-
 import { IdealoProductCarousel } from "@/components/IdealoProductCarousel";
 import { EmptyState } from "@/components/ui/EmptyState";
 import dynamic from "next/dynamic";

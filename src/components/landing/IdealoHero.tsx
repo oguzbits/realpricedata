@@ -1,5 +1,3 @@
-"use client";
-
 import { IdealoProductCarousel } from "@/components/IdealoProductCarousel";
 import { PrefetchLink } from "@/components/ui/PrefetchLink";
 

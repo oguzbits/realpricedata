@@ -1,5 +1,3 @@
-"use client";
-
 import { Category } from "@/lib/categories";
 import { getCategoryIcon } from "@/lib/category-icons";
 import * as React from "react";

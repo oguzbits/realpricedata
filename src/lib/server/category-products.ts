@@ -34,7 +34,7 @@ export interface LocalizedProduct {
   technology: string;
   socket?: string;
   cores?: string;
-  pricesLastUpdated?: Record<string, string>;
+  lastUpdated?: string;
   variationAttributes?: string;
 }
 
@@ -97,7 +97,10 @@ async function getCachedLocalizedCategoryProducts(
 
   const mapped = rawProducts
     .map((p) => {
-      const { price, title, asin } = getLocalizedProductData(p, countryCode);
+      const { price, title, asin, lastUpdated } = getLocalizedProductData(
+        p,
+        countryCode,
+      );
       if (price === null || price === 0) return null;
 
       // Extract socket and cores from specifications or title fallback
@@ -162,7 +165,7 @@ async function getCachedLocalizedCategoryProducts(
         technology: p.technology || "",
         socket,
         cores,
-        pricesLastUpdated: p.pricesLastUpdated,
+        lastUpdated,
         variationAttributes: p.variationAttributes,
       } as LocalizedProduct;
     })
@@ -291,7 +294,7 @@ export async function getCategoryProducts(
     lastUpdated:
       localizedProducts.length > 0
         ? localizedProducts
-            .map((p) => p.pricesLastUpdated?.[countryCode])
+            .map((p) => p.lastUpdated)
             .filter((d): d is string => !!d)
             .sort()[0] || null
         : null,

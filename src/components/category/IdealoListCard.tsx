@@ -17,8 +17,6 @@
  * └── sr-resultItemTile__badges_eYrH1
  */
 
-"use client";
-
 import { getCountryByCode, type CountryCode } from "@/lib/countries";
 import { cn } from "@/lib/utils";
 import Image from "next/image";
@@ -27,7 +25,6 @@ import { PrefetchLink } from "@/components/ui/PrefetchLink";
 import { type LeanProduct } from "@/lib/types";
 import { formatCurrency, formatDisplayTitle } from "@/lib/utils/formatting";
 import { LegalPrice } from "@/components/ui/LegalPrice";
-import { IdealoWishlistHeart } from "./IdealoWishlistHeart";
 
 interface IdealoListCardProps {
   product: LeanProduct;

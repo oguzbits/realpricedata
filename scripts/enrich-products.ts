@@ -5,6 +5,38 @@ import {
   getTokenStatus,
 } from "../src/lib/keepa/product-discovery";
 
+/**
+ * Retry wrapper for database operations.
+ * Handles SQLITE_BUSY errors with exponential backoff.
+ */
+async function withRetry<T>(
+  operation: () => Promise<T>,
+  maxRetries = 3,
+  baseDelayMs = 100,
+): Promise<T> {
+  let lastError: unknown;
+  for (let attempt = 0; attempt < maxRetries; attempt++) {
+    try {
+      return await operation();
+    } catch (error: unknown) {
+      lastError = error;
+      const isSqliteBusy =
+        error instanceof Error &&
+        (error.message.includes("SQLITE_BUSY") ||
+          (error as any).code === "SQLITE_BUSY");
+      if (!isSqliteBusy || attempt === maxRetries - 1) {
+        throw error;
+      }
+      const delay = baseDelayMs * Math.pow(2, attempt);
+      console.log(
+        `  ⏳ Retry ${attempt + 1}/${maxRetries} after ${delay}ms (SQLITE_BUSY)`,
+      );
+      await new Promise((r) => setTimeout(r, delay));
+    }
+  }
+  throw lastError;
+}
+
 async function enrich() {
   console.log("💎 CleverPrices Product Enrichment");
   console.log("Seeding historical data for existing products...\n");
@@ -54,38 +86,48 @@ async function enrich() {
         const localProduct = candidates.find((p) => p.asin === ep.asin);
         if (!localProduct) continue;
 
-        // Update avg90 in prices table
-        const avg90Raw = ep.stats?.avg90?.[1]; // 1 = New price
-        const priceAvg90 = avg90Raw && avg90Raw > 0 ? avg90Raw / 100 : null;
+        // Wrap all DB operations in retry for SQLITE_BUSY
+        try {
+          await withRetry(async () => {
+            // Update avg90 in prices table
+            const avg90Raw = ep.stats?.avg90?.[1]; // 1 = New price
+            const priceAvg90 = avg90Raw && avg90Raw > 0 ? avg90Raw / 100 : null;
 
-        if (priceAvg90) {
-          await db
-            .update(prices)
-            .set({ priceAvg90 })
-            .where(
-              and(
-                eq(prices.productId, localProduct.id),
-                eq(prices.country, "de"),
-              ),
-            );
+            if (priceAvg90) {
+              await db
+                .update(prices)
+                .set({ priceAvg90 })
+                .where(
+                  and(
+                    eq(prices.productId, localProduct.id),
+                    eq(prices.country, "de"),
+                  ),
+                );
+            }
+
+            // Mark as seeded
+            await db
+              .update(products)
+              .set({
+                historySeeded: true,
+                // Update sales rank while we are at it
+                salesRank: ep.salesRanks
+                  ? Object.values(ep.salesRanks)[0]?.[
+                      Object.values(ep.salesRanks)[0]?.length - 1
+                    ]?.[1]
+                  : localProduct.salesRank,
+                updatedAt: new Date(),
+              })
+              .where(eq(products.id, localProduct.id));
+          });
+
+          seeded++;
+        } catch (productError) {
+          console.error(
+            `  Failed to enrich ${localProduct.asin}:`,
+            productError,
+          );
         }
-
-        // Mark as seeded
-        await db
-          .update(products)
-          .set({
-            historySeeded: true,
-            // Update sales rank while we are at it
-            salesRank: ep.salesRanks
-              ? Object.values(ep.salesRanks)[0]?.[
-                  Object.values(ep.salesRanks)[0]?.length - 1
-                ]?.[1]
-              : localProduct.salesRank,
-            updatedAt: new Date(),
-          })
-          .where(eq(products.id, localProduct.id));
-
-        seeded++;
       }
     } catch (e: any) {
       console.error("  Error in batch:", e.message);

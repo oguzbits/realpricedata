@@ -54,6 +54,38 @@ function keepaPriceToDecimal(price: number | null | undefined): number | null {
 }
 
 /**
+ * Retry wrapper for database operations.
+ * Handles SQLITE_BUSY errors with exponential backoff.
+ */
+async function withRetry<T>(
+  operation: () => Promise<T>,
+  maxRetries = 3,
+  baseDelayMs = 100,
+): Promise<T> {
+  let lastError: unknown;
+  for (let attempt = 0; attempt < maxRetries; attempt++) {
+    try {
+      return await operation();
+    } catch (error: unknown) {
+      lastError = error;
+      const isSqliteBusy =
+        error instanceof Error &&
+        (error.message.includes("SQLITE_BUSY") ||
+          (error as any).code === "SQLITE_BUSY");
+      if (!isSqliteBusy || attempt === maxRetries - 1) {
+        throw error;
+      }
+      const delay = baseDelayMs * Math.pow(2, attempt);
+      console.log(
+        `  ⏳ Retry ${attempt + 1}/${maxRetries} after ${delay}ms (SQLITE_BUSY)`,
+      );
+      await new Promise((r) => setTimeout(r, delay));
+    }
+  }
+  throw lastError;
+}
+
+/**
  * Update prices for all products
  */
 async function updatePrices(country: CountryCode): Promise<void> {
@@ -152,79 +184,90 @@ async function updatePrices(country: CountryCode): Promise<void> {
           }
         }
 
-        // Update ratings if they changed significantly
-        await db
-          .update(products)
-          .set({
-            salesRank,
-            rating:
-              kp.rating && kp.rating > 0 ? kp.rating / 10 : product.rating,
-            reviewCount:
-              kp.reviewsLastSeenStatus !== undefined
-                ? kp.reviewsLastSeenStatus
-                : product.reviewCount,
-            updatedAt: new Date(),
-          })
-          .where(eq(products.id, product.id));
+        // Wrap all DB operations in a transaction with retry for SQLITE_BUSY
+        try {
+          await withRetry(async () => {
+            // Update product meta
+            await db
+              .update(products)
+              .set({
+                salesRank,
+                rating:
+                  kp.rating && kp.rating > 0 ? kp.rating / 10 : product.rating,
+                reviewCount:
+                  kp.reviewsLastSeenStatus !== undefined
+                    ? kp.reviewsLastSeenStatus
+                    : product.reviewCount,
+                updatedAt: new Date(),
+              })
+              .where(eq(products.id, product.id));
 
-        if (!bestPrice) continue;
+            if (!bestPrice) return;
 
-        // Calculate price per unit
-        let pricePerUnit: number | null = null;
-        if (product.normalizedCapacity && product.normalizedCapacity > 0) {
-          pricePerUnit = bestPrice / product.normalizedCapacity;
-        }
+            // Calculate price per unit
+            let pricePerUnit: number | null = null;
+            if (product.normalizedCapacity && product.normalizedCapacity > 0) {
+              pricePerUnit = bestPrice / product.normalizedCapacity;
+            }
 
-        // Get existing price record
-        const existingPrice = await db.query.prices.findFirst({
-          where: (p, { and, eq }) =>
-            and(eq(p.productId, product.id), eq(p.country, country)),
-        });
+            // Get existing price record
+            const existingPrice = await db.query.prices.findFirst({
+              where: (p, { and, eq }) =>
+                and(eq(p.productId, product.id), eq(p.country, country)),
+            });
 
-        // Save to history if best price changed
-        const oldBestPrice =
-          existingPrice?.amazonPrice ?? existingPrice?.newPrice;
-        if (existingPrice && oldBestPrice !== bestPrice) {
-          const historyRecord: NewPriceHistoryRecord = {
-            productId: product.id,
-            country,
-            price: bestPrice,
-            currency,
-            priceType: amazonPrice ? "amazon" : "new",
-            recordedAt: new Date(),
-          };
-          await db.insert(priceHistory).values(historyRecord);
-        }
+            // Save to history if best price changed
+            const oldBestPrice =
+              existingPrice?.amazonPrice ?? existingPrice?.newPrice;
+            if (existingPrice && oldBestPrice !== bestPrice) {
+              const historyRecord: NewPriceHistoryRecord = {
+                productId: product.id,
+                country,
+                price: bestPrice,
+                currency,
+                priceType: amazonPrice ? "amazon" : "new",
+                recordedAt: new Date(),
+              };
+              await db.insert(priceHistory).values(historyRecord);
+            }
 
-        // Update or insert current price
-        if (existingPrice) {
-          await db
-            .update(prices)
-            .set({
-              amazonPrice,
-              newPrice,
-              usedPrice,
-              warehousePrice,
-              pricePerUnit,
-              lastUpdated: new Date(),
-            })
-            .where(eq(prices.id, existingPrice.id));
-        } else {
-          await db.insert(prices).values({
-            productId: product.id,
-            country,
-            amazonPrice,
-            newPrice,
-            usedPrice,
-            warehousePrice,
-            pricePerUnit,
-            currency,
-            source: "keepa",
-            lastUpdated: new Date(),
+            // Update or insert current price
+            if (existingPrice) {
+              await db
+                .update(prices)
+                .set({
+                  amazonPrice,
+                  newPrice,
+                  usedPrice,
+                  warehousePrice,
+                  pricePerUnit,
+                  lastUpdated: new Date(),
+                })
+                .where(eq(prices.id, existingPrice.id));
+            } else {
+              await db.insert(prices).values({
+                productId: product.id,
+                country,
+                amazonPrice,
+                newPrice,
+                usedPrice,
+                warehousePrice,
+                pricePerUnit,
+                currency,
+                source: "keepa",
+                lastUpdated: new Date(),
+              });
+            }
           });
-        }
 
-        updated++;
+          updated++;
+        } catch (productError) {
+          console.error(
+            `  Failed to update product ${product.asin}:`,
+            productError,
+          );
+          failed++;
+        }
       }
     } catch (error) {
       console.error(`  Error fetching batch:`, error);

@@ -1,3 +1,5 @@
+"use cache";
+
 import { allCategories, CategorySlug } from "@/lib/categories";
 import { getProductsByCategory, Product } from "@/lib/product-registry";
 import { filterProducts, sortProducts } from "@/lib/utils/category-utils";
@@ -6,7 +8,7 @@ import {
   getLocalizedProductData,
 } from "@/lib/utils/products";
 import { calculateDesirabilityScore } from "./scoring";
-import { unstable_cache } from "next/cache";
+import { cacheLife } from "next/cache";
 import { PRICE_REVALIDATE_SECONDS } from "../site-config";
 
 export interface LocalizedProduct {
@@ -86,95 +88,88 @@ function mapSortParam(sort?: string): { sortBy: string; sortOrder: string } {
  * RE-USABLE CACHED LAYER: Localizes and scores all products in a category.
  * This is expensive (scoring, JSON parsing, mapping), so we cache it for 11h.
  */
-const getCachedLocalizedCategoryProducts = unstable_cache(
-  async (
-    categorySlug: string,
-    countryCode: string,
-  ): Promise<LocalizedProduct[]> => {
-    const rawProducts = await getProductsByCategory(categorySlug);
+async function getCachedLocalizedCategoryProducts(
+  categorySlug: string,
+  countryCode: string,
+): Promise<LocalizedProduct[]> {
+  cacheLife("prices");
+  const rawProducts = await getProductsByCategory(categorySlug);
 
-    const mapped = rawProducts
-      .map((p) => {
-        const { price, title, asin } = getLocalizedProductData(p, countryCode);
-        if (price === null || price === 0) return null;
+  const mapped = rawProducts
+    .map((p) => {
+      const { price, title, asin } = getLocalizedProductData(p, countryCode);
+      if (price === null || price === 0) return null;
 
-        // Extract socket and cores from specifications or title fallback
-        let socket =
-          p.specifications?.Socket || p.specifications?.["Socket-Typ"];
-        let cores = p.specifications?.Cores || p.specifications?.Kerne;
+      // Extract socket and cores from specifications or title fallback
+      let socket = p.specifications?.Socket || p.specifications?.["Socket-Typ"];
+      let cores = p.specifications?.Cores || p.specifications?.Kerne;
 
-        if (categorySlug === "cpu") {
-          if (!socket) {
-            const socketMatch = title.match(
-              /(AM[45]|LGA\s?(\d{4})|sTRX4|sWRX8|Socket\s?[A-Z0-9]+|TR4|FM[12]|LGA\s?115[0156])/i,
-            );
-            if (socketMatch) {
-              socket = socketMatch[0].toUpperCase().replace(/\s+/, "");
-            }
-          }
-          if (!cores) {
-            const coreMatch = title.match(/(\d+)\s?-?\s?(Core|Kerne)/i);
-            if (coreMatch) {
-              cores = parseInt(coreMatch[1]).toString();
-            }
+      if (categorySlug === "cpu") {
+        if (!socket) {
+          const socketMatch = title.match(
+            /(AM[45]|LGA\s?(\d{4})|sTRX4|sWRX8|Socket\s?[A-Z0-9]+|TR4|FM[12]|LGA\s?115[0156])/i,
+          );
+          if (socketMatch) {
+            socket = socketMatch[0].toUpperCase().replace(/\s+/, "");
           }
         }
+        if (!cores) {
+          const coreMatch = title.match(/(\d+)\s?-?\s?(Core|Kerne)/i);
+          if (coreMatch) {
+            cores = parseInt(coreMatch[1]).toString();
+          }
+        }
+      }
 
-        const enhanced = calculateProductMetrics(p, price || 0);
-        const { popularityScore } = calculateDesirabilityScore(
-          p,
-          price,
-          title,
-          "category",
-        );
+      const enhanced = calculateProductMetrics(p, price || 0);
+      const { popularityScore } = calculateDesirabilityScore(
+        p,
+        price,
+        title,
+        "category",
+      );
 
-        const avg90 = p.priceAvg90?.[countryCode] || 0;
-        const avg30 = p.priceAvg30?.[countryCode] || 0;
-        const refPrice = avg90 || avg30;
+      const avg90 = p.priceAvg90?.[countryCode] || 0;
+      const avg30 = p.priceAvg30?.[countryCode] || 0;
+      const refPrice = avg90 || avg30;
 
-        const savings =
-          refPrice && refPrice > price ? (refPrice - price) / refPrice : 0;
-        const displayListPrice =
-          refPrice && refPrice > price ? refPrice : undefined;
+      const savings =
+        refPrice && refPrice > price ? (refPrice - price) / refPrice : 0;
+      const displayListPrice =
+        refPrice && refPrice > price ? refPrice : undefined;
 
-        // Stripping heavy DB data here to save cache size
-        return {
-          id: p.id || 0,
-          slug: p.slug,
-          asin,
-          title,
-          price,
-          pricePerUnit: enhanced.pricePerUnit || 0,
-          popularityScore,
-          savings,
-          listPrice: displayListPrice,
-          category: p.category,
-          image: p.image || "",
-          brand: p.brand,
-          rating: p.rating || 0,
-          reviewCount: p.reviewCount || 0,
-          salesRank: p.salesRank,
-          condition: p.condition,
-          capacity: p.capacity,
-          capacityUnit: p.capacityUnit,
-          formFactor: p.formFactor,
-          technology: p.technology || "",
-          socket,
-          cores,
-          pricesLastUpdated: p.pricesLastUpdated,
-          variationAttributes: p.variationAttributes,
-        } as LocalizedProduct;
-      })
-      .filter((p): p is LocalizedProduct => p !== null);
+      // Stripping heavy DB data here to save cache size
+      return {
+        id: p.id || 0,
+        slug: p.slug,
+        asin,
+        title,
+        price,
+        pricePerUnit: enhanced.pricePerUnit || 0,
+        popularityScore,
+        savings,
+        listPrice: displayListPrice,
+        category: p.category,
+        image: p.image || "",
+        brand: p.brand,
+        rating: p.rating || 0,
+        reviewCount: p.reviewCount || 0,
+        salesRank: p.salesRank,
+        condition: p.condition,
+        capacity: p.capacity,
+        capacityUnit: p.capacityUnit,
+        formFactor: p.formFactor,
+        technology: p.technology || "",
+        socket,
+        cores,
+        pricesLastUpdated: p.pricesLastUpdated,
+        variationAttributes: p.variationAttributes,
+      } as LocalizedProduct;
+    })
+    .filter((p): p is LocalizedProduct => p !== null);
 
-    return mapped;
-  },
-  ["localized-category-v3"],
-  {
-    revalidate: PRICE_REVALIDATE_SECONDS,
-    tags: ["category-products"],
-  },
-);
+  return mapped;
+}
 
 /**
  * Server-side function to get and filter products for a category

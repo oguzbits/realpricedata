@@ -197,8 +197,10 @@ export const getProductsByCategory = cache(async function getProductsByCategory(
         [],
         stripHeavyData,
       );
-      // Explicitly clear features if not already stripped by mapDbProduct
-      if (!stripHeavyData) mapped.features = [];
+      if (stripHeavyData) {
+        mapped.features = [];
+        mapped.specifications = {};
+      }
       return mapped;
     });
   };

@@ -1,3 +1,5 @@
+"use cache";
+
 import {
   getAllProductSlugs as getAllProductSlugsSync,
   getAllProducts as getAllProductsSync,
@@ -7,10 +9,11 @@ import {
   getNewArrivals as getNewArrivalsSync,
   type Product,
 } from "../product-registry";
+import { cacheLife } from "next/cache";
 
 /**
  * Cached server-side wrappers for product registry functions
- * These are used in Server Components to benefit from Next.js caching
+ * These are used in Server Components to benefit from Next.js 16 caching
  */
 
 export async function getAllProductSlugs(): Promise<
@@ -29,6 +32,7 @@ export async function getBestDeals(
   countryCode: string = "de",
   condition?: "New" | "Used" | "Renewed",
 ): Promise<Product[]> {
+  cacheLife("prices");
   return getBestDealsSync(limit, countryCode, condition);
 }
 
@@ -37,6 +41,7 @@ export async function getMostPopular(
   countryCode: string = "de",
   condition?: "New" | "Used" | "Renewed",
 ): Promise<Product[]> {
+  cacheLife("prices");
   return getMostPopularSync(limit, countryCode, condition);
 }
 
@@ -45,6 +50,7 @@ export async function getNewArrivals(
   countryCode: string = "de",
   condition?: "New" | "Used" | "Renewed",
 ): Promise<Product[]> {
+  cacheLife("prices");
   return getNewArrivalsSync(limit, countryCode, condition);
 }
 
@@ -52,5 +58,6 @@ export async function getDiverseMostPopular(
   itemsPerCategory: number = 10,
   countryCode: string = "de",
 ): Promise<Product[]> {
+  cacheLife("prices");
   return getDiverseMostPopularSync(itemsPerCategory, countryCode);
 }

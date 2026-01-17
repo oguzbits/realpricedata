@@ -7,6 +7,9 @@ import { isValidCountryCode } from "./lib/countries";
  * Next.js 16 Proxy
  * Handles SEO redirects, country enforcement, and path interception.
  */
+const LEGACY_COUNTRIES = ["us", "uk", "ca", "fr", "es", "it", "de"];
+
+// Handles SEO redirects, country enforcement, and path interception.
 export function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
@@ -22,10 +25,11 @@ export function proxy(request: NextRequest) {
   }
 
   const segments = pathname.split("/").filter(Boolean);
-  // Removed early return for root path to allow cookie enforcement
-
   const firstSegment = segments.length > 0 ? segments[0].toLowerCase() : "";
-  const isExplicitCountryPath = isValidCountryCode(firstSegment);
+
+  // Check for both current supported countries and legacy codes that need redirecting
+  const isExplicitCountryPath =
+    isValidCountryCode(firstSegment) || LEGACY_COUNTRIES.includes(firstSegment);
 
   // NEW: Redirect country code paths to root
   // Since we only support German market, paths like /de, /de/categories, /us, etc.

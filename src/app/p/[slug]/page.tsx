@@ -3,12 +3,12 @@ import { allCategories, type CategorySlug } from "@/lib/categories";
 import { DEFAULT_COUNTRY, getAllCountries } from "@/lib/countries";
 import { dataAggregator } from "@/lib/data-sources";
 import { getAlternateLanguages, getOpenGraph } from "@/lib/metadata";
+import { findProductSlugByAsinSuffix } from "@/lib/product-registry";
 import {
-  findProductSlugByAsinSuffix,
+  getAllProductSlugs,
   getProductBySlug,
   getSimilarProducts,
-} from "@/lib/product-registry";
-import { getAllProductSlugs } from "@/lib/server/cached-products";
+} from "@/lib/server/cached-products";
 import { BRAND_DOMAIN } from "@/lib/site-config";
 import { Metadata } from "next";
 import { notFound, redirect } from "next/navigation";

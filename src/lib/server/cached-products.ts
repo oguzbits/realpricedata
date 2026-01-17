@@ -5,8 +5,10 @@ import {
   getAllProducts as getAllProductsSync,
   getBestDeals as getBestDealsSync,
   getDiverseMostPopular as getDiverseMostPopularSync,
+  getProductBySlug as getProductBySlugSync,
   getMostPopular as getMostPopularSync,
   getNewArrivals as getNewArrivalsSync,
+  getSimilarProducts as getSimilarProductsSync,
   type Product,
 } from "../product-registry";
 import { cacheLife } from "next/cache";
@@ -60,4 +62,20 @@ export async function getDiverseMostPopular(
 ): Promise<Product[]> {
   cacheLife("prices");
   return getDiverseMostPopularSync(itemsPerCategory, countryCode);
+}
+
+export async function getProductBySlug(
+  slug: string,
+): Promise<Product | undefined> {
+  cacheLife("prices");
+  return getProductBySlugSync(slug);
+}
+
+export async function getSimilarProducts(
+  product: Product,
+  limit: number = 4,
+  countryCode: string = "de",
+): Promise<Product[]> {
+  cacheLife("prices");
+  return getSimilarProductsSync(product, limit, countryCode);
 }

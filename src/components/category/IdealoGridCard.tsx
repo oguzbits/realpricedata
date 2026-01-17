@@ -180,12 +180,6 @@ export function IdealoGridCard({
               showAb
               priceClassName="text-[20px] text-[#f97316]"
             />
-            {product.pricePerUnit && (
-              <div className="mt-1 text-right text-[12px] text-[#767676]">
-                ({formatCurrency(product.pricePerUnit, countryCode)} /{" "}
-                {product.capacityUnit || "Einheit"})
-              </div>
-            )}
           </div>
 
           {/* ============================================ */}

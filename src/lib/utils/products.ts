@@ -55,17 +55,40 @@ export function calculateProductMetrics(
   overridePrice?: number,
 ): Partial<Product> {
   const price = overridePrice !== undefined ? overridePrice : 0;
-  const { capacity, capacityUnit, category } = p;
-
-  if (price === undefined || !capacity || !capacityUnit || !category) return p;
-
+  let { capacity, capacityUnit, category, title } = p;
   const categoryConfig = allCategories[category as CategorySlug];
-  const comparisonUnit = categoryConfig?.unitType || capacityUnit; // Fallback to capacityUnit if category not found
 
-  const fromFactor = UNIT_CONVERSION[capacityUnit] || 1;
+  // Try to extract capacity/cores from title if missing
+  if (!capacity && title) {
+    if (categoryConfig?.unitType === "core") {
+      const coreMatch = title.match(/(\d+)\s?-?\s?(Core|Kerne)/i);
+      if (coreMatch) capacity = parseInt(coreMatch[1]);
+    } else if (
+      category === "ssd" ||
+      category === "ssds" ||
+      category === "hard-drives"
+    ) {
+      const capMatch = title.match(/(\d+)\s?(GB|TB)/i);
+      if (capMatch) {
+        capacity = parseInt(capMatch[1]);
+        capacityUnit = capMatch[2].toUpperCase();
+      }
+    }
+  }
+
+  // For CPUs, capacity might be stored in 'cores' field (from DB/API)
+  const actualCapacity =
+    capacity ||
+    (categoryConfig?.unitType === "core" ? Number((p as any).cores) : 0);
+
+  if (price === undefined || !actualCapacity || !category) return p;
+
+  const comparisonUnit = categoryConfig?.unitType || capacityUnit || "GB";
+
+  const fromFactor = UNIT_CONVERSION[capacityUnit || "GB"] || 1;
   const toFactor = UNIT_CONVERSION[comparisonUnit] || 1;
 
-  const normalizedCapacity = capacity * fromFactor;
+  const normalizedCapacity = actualCapacity * fromFactor;
   const capacityInComparisonUnit = normalizedCapacity / toFactor;
   const pricePerUnit = Number((price / capacityInComparisonUnit).toFixed(2));
 

@@ -1,0 +1,11 @@
+{
+  "functions": {
+    "src/app/p/[slug]/page.tsx": {
+      "regions": ["fra1"]
+    },
+    "src/app/api/**/*": {
+      "regions": ["fra1"]
+    }
+  },
+  "regions": ["fra1"]
+}

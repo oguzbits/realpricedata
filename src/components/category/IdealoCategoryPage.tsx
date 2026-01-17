@@ -383,13 +383,43 @@ export async function IdealoCategoryPage({
             </>
           ) : (
             <div className="flex flex-1 flex-col items-center justify-center py-24 text-center">
-              <h2 className="mb-3 text-2xl font-bold text-[#2d2d2d]">
-                Daten folgen
-              </h2>
-              <p className="text-[14px] text-[#767676]">
-                Wir aggregieren derzeit Preisdaten für{" "}
-                <span className="font-medium">{category.name}</span>.
-              </p>
+              {filters.search ? (
+                <>
+                  <h2 className="mb-3 text-2xl font-bold text-[#2d2d2d]">
+                    Keine Treffer in dieser Kategorie
+                  </h2>
+                  <p className="mb-6 text-[14px] text-[#767676]">
+                    Wir konnten in{" "}
+                    <span className="font-medium">{category.name}</span> keine
+                    Ergebnisse für
+                    <span className="mx-1 font-bold">
+                      &quot;{filters.search}&quot;
+                    </span>{" "}
+                    finden.
+                  </p>
+                  <button
+                    onClick={() => {
+                      // Trigger the global search modal
+                      if (typeof window !== "undefined") {
+                        window.triggerSearch?.();
+                      }
+                    }}
+                    className="flex items-center gap-2 rounded-[4px] bg-[#0771D0] px-6 py-2.5 text-[15px] font-bold text-white hover:bg-[#0050a0]"
+                  >
+                    Global suchen
+                  </button>
+                </>
+              ) : (
+                <>
+                  <h2 className="mb-3 text-2xl font-bold text-[#2d2d2d]">
+                    Daten folgen
+                  </h2>
+                  <p className="text-[14px] text-[#767676]">
+                    Wir aggregieren derzeit Preisdaten für{" "}
+                    <span className="font-medium">{category.name}</span>.
+                  </p>
+                </>
+              )}
             </div>
           )}
         </div>

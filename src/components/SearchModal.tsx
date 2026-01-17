@@ -55,7 +55,7 @@ const POPULAR_SEARCH_CONFIG = [
   },
   {
     label: "2TB NVMe SSD",
-    category: "hard-drives",
+    category: "ssds",
     params: {
       technology: "SSD",
       formFactor: "M.2 NVMe",
@@ -65,12 +65,12 @@ const POPULAR_SEARCH_CONFIG = [
   },
   {
     label: "Samsung 990 Pro",
-    category: "hard-drives",
+    category: "ssds",
     params: { search: "990 Pro" },
   },
   {
     label: "Crucial P310",
-    category: "hard-drives",
+    category: "ssds",
     params: { search: "P310" },
   },
   {

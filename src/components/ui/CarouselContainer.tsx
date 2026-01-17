@@ -60,7 +60,7 @@ export function CarouselContainer({ children }: { children: React.ReactNode }) {
           scrollbarWidth: "none",
           msOverflowStyle: "none",
           WebkitOverflowScrolling: "touch",
-          touchAction: "pan-y",
+          touchAction: "pan-x",
         }}
       >
         {children}

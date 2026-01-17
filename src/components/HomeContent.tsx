@@ -6,14 +6,17 @@ import { curateProductList } from "@/lib/product-curation";
 import { getCountryByCode } from "@/lib/server/cached-countries";
 import {
   getBestDeals,
-  getMostPopular,
-  getNewArrivals,
   getDiverseMostPopular,
+  getNewArrivals,
 } from "@/lib/server/cached-products";
-import Script from "next/script";
 import { cacheLife } from "next/cache";
+import Script from "next/script";
 
-export async function HomeContent({ country }: { country: CountryCode }) {
+export default async function HomeContent({
+  country,
+}: {
+  country: CountryCode;
+}) {
   cacheLife("static" as any);
   const countryConfig = await getCountryByCode(country);
   const countryCode = countryConfig?.code || country;
@@ -109,5 +112,3 @@ export async function HomeContent({ country }: { country: CountryCode }) {
     </>
   );
 }
-
-export default HomeContent;

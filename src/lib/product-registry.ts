@@ -8,7 +8,10 @@ import {
 } from "@/db/schema";
 import { and, asc, desc, eq, gt, inArray, like, or, sql } from "drizzle-orm";
 import { unstable_cache } from "next/cache";
-import { PRICE_REVALIDATE_SECONDS } from "./site-config";
+import {
+  CATEGORY_REVALIDATE_SECONDS,
+  PRODUCT_REVALIDATE_SECONDS,
+} from "./site-config";
 import { calculateProductMetrics } from "./utils/products";
 
 /**
@@ -219,7 +222,7 @@ export const getProductsByCategory = cache(async function getProductsByCategory(
     fetchProducts,
     [`category-products-v14-${category}`],
     {
-      revalidate: PRICE_REVALIDATE_SECONDS,
+      revalidate: CATEGORY_REVALIDATE_SECONDS,
       tags: [`category-v14-${category}`],
     },
   );
@@ -259,7 +262,7 @@ export const getProductBySlug = cache(async function getProductBySlug(
     fetchProductBySlug,
     [`product-slug-v2-${slug}`], // Include slug in key for uniqueness
     {
-      revalidate: PRICE_REVALIDATE_SECONDS,
+      revalidate: PRODUCT_REVALIDATE_SECONDS,
       tags: [`product-v2-${slug}`],
     },
   )(slug);
@@ -342,7 +345,7 @@ export const getSimilarProducts = cache(async function getSimilarProducts(
     fetchSimilarProducts,
     [`similar-products-v4`], // Key parts (args are hashed automatically)
     {
-      revalidate: PRICE_REVALIDATE_SECONDS,
+      revalidate: PRODUCT_REVALIDATE_SECONDS,
       tags: [`similar-v4-${product.category}`],
     },
   )(product.category, product.slug, currentPrice, limit, countryCode);
@@ -494,7 +497,7 @@ const getCachedDeals = unstable_cache(
   },
   ["best-deals-v11"],
   {
-    revalidate: PRICE_REVALIDATE_SECONDS,
+    revalidate: CATEGORY_REVALIDATE_SECONDS,
     tags: ["products", "deals", "v11"],
   },
 );
@@ -570,7 +573,7 @@ const getCachedPopular = unstable_cache(
   },
   ["popular-deals-v10"],
   {
-    revalidate: PRICE_REVALIDATE_SECONDS,
+    revalidate: CATEGORY_REVALIDATE_SECONDS,
     tags: ["products", "popular", "v10"],
   },
 );
@@ -706,7 +709,7 @@ const getCachedNew = unstable_cache(
   },
   ["new-arrivals-v10"],
   {
-    revalidate: PRICE_REVALIDATE_SECONDS,
+    revalidate: CATEGORY_REVALIDATE_SECONDS,
     tags: ["products", "new", "v10"],
   },
 );

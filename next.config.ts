@@ -1,9 +1,5 @@
 import createMDX from "@next/mdx";
 import type { NextConfig } from "next";
-import {
-  PRICE_CACHE_STALE_SECONDS,
-  PRICE_REVALIDATE_SECONDS,
-} from "./src/lib/site-config";
 
 const nextConfig: NextConfig = {
   reactCompiler: true,

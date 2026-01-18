@@ -18,7 +18,7 @@ export function CategoryCard({ category, Icon, country }: CategoryCardProps) {
       aria-label={`Browse ${category.name}: ${category.description}`}
       prefetch={true}
     >
-      <div className="hover:border-primary/30 flex items-center rounded-lg border border-gray-200 bg-white p-3 transition-all hover:bg-gray-50">
+      <div className="hover:border-primary/30 flex items-center overflow-hidden rounded-[6px] border border-gray-200 bg-white p-3 transition-all hover:bg-gray-50">
         <div className="group-hover:text-primary flex h-10 w-10 shrink-0 items-center justify-center rounded-md bg-gray-100 text-gray-500 transition-colors">
           <Icon className="h-5 w-5" aria-hidden="true" />
         </div>

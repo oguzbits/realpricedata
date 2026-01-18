@@ -275,7 +275,7 @@ export function SearchModal({ open, onOpenChange }: SearchModalProps) {
                     onSelect={() => handleSelect(`/p/${product.slug}`)}
                     className="flex cursor-pointer items-center gap-3 py-3"
                   >
-                    <div className="relative h-12 w-12 shrink-0 overflow-hidden rounded-md border bg-white p-1">
+                    <div className="relative h-12 w-12 shrink-0 overflow-hidden rounded-[6px] border bg-white p-1">
                       {product.image ? (
                         <Image
                           src={product.image}

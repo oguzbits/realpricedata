@@ -9,6 +9,7 @@ import {
   HardDrive,
   MemoryStick,
   Monitor,
+  Percent,
   Printer,
   Video,
   Wifi,
@@ -20,11 +21,11 @@ import { useEffect, useRef, useState } from "react";
 
 // Core PC component categories - prioritized for focus
 const categories: {
-  slug: CategorySlug | null;
+  slug: CategorySlug | null | "deals";
   label: string;
   icon: React.ComponentType<{ className?: string }>;
 }[] = [
-  { slug: null, label: "Elektroartikel", icon: Grid3X3 },
+  { slug: "elektroartikel", label: "Elektroartikel", icon: Grid3X3 },
   { slug: "cpu", label: "Prozessoren", icon: Cpu },
   { slug: "gpu", label: "Grafikkarten", icon: Video },
   { slug: "ram", label: "Arbeitsspeicher", icon: MemoryStick },
@@ -107,13 +108,13 @@ export function CategoryNav({ country }: { country: string }) {
             height: "100%",
           }}
         >
-          {/* All Categories Button */}
+          {/* Deals Button (First) */}
           <PrefetchLink
-            href="/elektroartikel"
+            href="/deals"
             className="flex shrink-0 flex-col items-center gap-2 rounded-xl px-4 py-2 text-[12px] font-medium text-white/80 no-underline transition-all hover:bg-white/10 hover:text-(--ccc-orange)"
           >
-            <Grid3X3 className="h-6 w-6" />
-            <span>Elektroartikel</span>
+            <Percent className="h-6 w-6" />
+            <span>Deals</span>
           </PrefetchLink>
 
           {/* Category Pills - Icons on top */}
@@ -124,7 +125,7 @@ export function CategoryNav({ country }: { country: string }) {
               return (
                 <PrefetchLink
                   key={cat.slug}
-                  href={getCategoryPath(cat.slug!)}
+                  href={getCategoryPath(cat.slug as CategorySlug)}
                   className="flex shrink-0 flex-col items-center gap-2 rounded-xl px-4 py-2 text-[12px] font-medium text-white/80 no-underline transition-all hover:bg-white/10 hover:text-(--ccc-orange)"
                 >
                   <Icon className="h-6 w-6" />

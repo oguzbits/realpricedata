@@ -1,6 +1,7 @@
 "use cache";
 
 import { allCategories, CategorySlug } from "@/lib/categories";
+import { getAllDeals } from "@/lib/data/dealsData";
 import { getProductsByCategory } from "@/lib/product-registry";
 import {
   filterProducts,
@@ -93,7 +94,14 @@ async function getCachedLocalizedCategoryProducts(
   version: string = "v1", // Cache buster
 ): Promise<LocalizedProduct[]> {
   cacheLife("category" as any); // 11h revalidation
-  const rawProducts = await getProductsByCategory(categorySlug);
+
+  let rawProducts;
+  if (categorySlug === "deals") {
+    // Fetch a large number of deals to allow for filtering
+    rawProducts = await getAllDeals(100, countryCode);
+  } else {
+    rawProducts = await getProductsByCategory(categorySlug);
+  }
 
   return rawProducts
     .map((p) => {

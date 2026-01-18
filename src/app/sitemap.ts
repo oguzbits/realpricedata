@@ -37,6 +37,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       hidden: true,
     },
     { path: "/impressum", priority: 0.5, customTrans: { de: "/impressum" } },
+    { path: "/deals", priority: 0.9 },
   ]
     .filter((route) => !(route as any).hidden)
     .map(({ path, priority, customTrans }) => {

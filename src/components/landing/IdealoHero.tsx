@@ -48,10 +48,10 @@ export function IdealoHero({ products }: IdealoHeroProps) {
             Die besten Deals für Technik &amp; Hardware
           </p>
           <PrefetchLink
-            href="/elektroartikel"
+            href="/deals"
             className="rounded bg-white px-5 py-2 text-sm font-bold text-[#0066cc] no-underline transition-transform hover:scale-105"
           >
-            Elektroartikel
+            Zu den Deals
           </PrefetchLink>
         </div>
       </div>

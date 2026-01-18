@@ -19,6 +19,7 @@ import {
   Mouse,
   Network,
   Package,
+  Percent,
   Phone,
   Printer,
   Router,
@@ -50,6 +51,7 @@ export type CategorySlug =
   | "computer"
   | "elektroartikel"
   | "electronics"
+  | "deals"
   | "hard-drives"
   | "ram"
   | "power-supplies"
@@ -173,7 +175,7 @@ export interface CategoryHierarchy {
 }
 
 // Internal base categories object to derive slugs from
-const CATEGORY_MAP: Record<CategorySlug, Omit<Category, "slug">> = {
+export const CATEGORY_MAP: Record<CategorySlug, Omit<Category, "slug">> = {
   // Parent Category
   haushaltselektronik: {
     name: "Haushaltselektronik",
@@ -336,6 +338,15 @@ const CATEGORY_MAP: Record<CategorySlug, Omit<Category, "slug">> = {
     metaTitle: `Elektroartikel & Multimedia Preisvergleich | ${BRAND_DOMAIN}`,
     metaDescription:
       "Top-Angebote für Smartphones, Fernseher und Unterhaltungselektronik.",
+  },
+
+  deals: {
+    name: "Deals",
+    description: "Die besten Angebote und Schnäppchen",
+    icon: Percent,
+    categoryType: "standard",
+    metaTitle: `Deals & Angebote | ${BRAND_DOMAIN}`,
+    metaDescription: "Täglich neue Deals und Angebote aus allen Kategorien.",
   },
 
   electronics: {

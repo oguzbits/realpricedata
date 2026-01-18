@@ -66,7 +66,7 @@ export function IdealoHomePage({
     <div className="bg-[#f5f5f5]">
       {/* Hero Section - light blue bg - Critical, so we keep regular import or direct usage */}
       {popular.length > 0 ? (
-        <IdealoSection variant="lightBlue" className="py-4">
+        <IdealoSection variant="lightBlue">
           <IdealoHero products={popular} />
         </IdealoSection>
       ) : null}

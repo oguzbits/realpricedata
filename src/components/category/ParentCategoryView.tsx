@@ -59,7 +59,7 @@ export function ParentCategoryView({
         )}
         {/* New Products Carousel - Internal Links to Products */}
         {newProducts.length > 0 && (
-          <section className="mb-10 rounded-lg bg-[#e8f4fd] px-6 py-3">
+          <section className="mb-10 rounded-lg bg-[#e8f4fd] px-6 py-6">
             <IdealoProductCarousel
               title={`Neu in ${parentCategory.name}`}
               products={newProducts.map((p) => ({
@@ -81,7 +81,7 @@ export function ParentCategoryView({
         )}
         {/* Deals Carousel - Internal Links to Products */}
         {deals.length > 0 && (
-          <section className="mb-10 rounded-lg bg-white px-6 py-3 shadow-sm">
+          <section className="mb-10 rounded-lg bg-white px-6 py-6 shadow-sm">
             <IdealoProductCarousel
               title={`Deals in "${parentCategory.name}"`}
               products={deals.map((p) => ({

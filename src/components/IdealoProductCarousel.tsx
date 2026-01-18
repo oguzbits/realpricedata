@@ -44,7 +44,7 @@ export function IdealoProductCarousel({
 }: IdealoProductCarouselProps) {
   if (products.length === 0) {
     return (
-      <div className={cn("cn-productCarousel", "mb-8", className)}>
+      <div className={cn("cn-productCarousel", className)}>
         {title && (
           <div className="cn-productCarousel__header mb-4">
             <h2 className="text-[20px] font-bold text-[#2d2d2d]">{title}</h2>
@@ -58,7 +58,7 @@ export function IdealoProductCarousel({
   }
 
   return (
-    <div className={cn("cn-productCarousel", "mb-8", className)}>
+    <div className={cn("cn-productCarousel", className)}>
       {/* Section Header */}
       {title && (
         <div className="cn-productCarousel__header mb-4">

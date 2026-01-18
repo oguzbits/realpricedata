@@ -21,7 +21,7 @@ export function IdealoHero({ products }: IdealoHeroProps) {
     <div className="flex gap-4">
       {/* Left side - Featured products carousel (only if products exist) */}
       {heroProducts.length > 0 ? (
-        <div className="min-w-0 flex-1 overflow-hidden rounded-[6px] p-4">
+        <div className="min-w-0 flex-1 overflow-hidden rounded-[6px]">
           <IdealoProductCarousel
             title="Beliebte Produkte"
             products={heroProducts}

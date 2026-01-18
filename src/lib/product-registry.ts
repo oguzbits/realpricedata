@@ -463,7 +463,7 @@ const getCachedDeals = unstable_cache(
   async (limit: number, countryCode: string, condition?: string) => {
     const whereConditions = [
       eq(prices.country, countryCode),
-      or(gt(prices.priceAvg90, 0), gt(prices.priceAvg30, 0)),
+      gt(prices.priceAvg90, 0),
       or(gt(prices.amazonPrice, 0), gt(prices.newPrice, 0)),
     ];
 
@@ -488,7 +488,7 @@ const getCachedDeals = unstable_cache(
       .where(and(...whereConditions))
       .orderBy(
         desc(
-          sql`(COALESCE(${prices.priceAvg90}, ${prices.priceAvg30}) - COALESCE(${prices.amazonPrice}, ${prices.newPrice})) / COALESCE(${prices.priceAvg90}, ${prices.priceAvg30})`,
+          sql`(${prices.priceAvg90} - COALESCE(${prices.amazonPrice}, ${prices.newPrice})) / ${prices.priceAvg90}`,
         ),
       )
       .limit(limit);

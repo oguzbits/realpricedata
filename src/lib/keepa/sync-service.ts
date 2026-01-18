@@ -412,6 +412,7 @@ export async function upsertProductFromKeepa(
   const priceMin = keepaPriceToDecimal(getMinMaxPrice(minStats, 0)); // All-time lowest Amazon price
   const priceMax = keepaPriceToDecimal(getMinMaxPrice(maxStats, 0)); // All-time highest Amazon price
   const priceAvg30 = keepaPriceToDecimal(avg30Stats[0]); // 30-day average
+  const priceAvg90 = keepaPriceToDecimal(avg90Stats[0]); // 90-day average
 
   // Refined Price Logic:
   // 1. Try Current Amazon
@@ -523,6 +524,7 @@ export async function upsertProductFromKeepa(
           priceMin,
           priceMax,
           priceAvg30,
+          priceAvg90,
           currency: "EUR",
           source: "keepa",
           lastUpdated: now,
@@ -537,6 +539,7 @@ export async function upsertProductFromKeepa(
             priceMin,
             priceMax,
             priceAvg30,
+            priceAvg90,
             lastUpdated: now,
           },
         });

@@ -129,10 +129,7 @@ async function getCachedLocalizedCategoryProducts(
         "category",
       );
 
-      const avg90 = p.priceAvg90?.[countryCode] || 0;
-      const avg30 = p.priceAvg30?.[countryCode] || 0;
-      const refPrice = avg90 || avg30;
-
+      const refPrice = p.priceAvg90?.[countryCode] || 0;
       const savings =
         refPrice && refPrice > price ? (refPrice - price) / refPrice : 0;
       const displayListPrice =

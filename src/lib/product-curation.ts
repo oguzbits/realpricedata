@@ -78,7 +78,7 @@ export function curateProductList(
 
       // 2. Discount Calculation (Safe)
       // No fallback to listPrice to avoid fake discounts
-      const avg90 = p.priceAvg90?.[countryCode] || p.priceAvg30?.[countryCode];
+      const avg90 = p.priceAvg90?.[countryCode];
       let discountRate = 0;
       if (avg90 && avg90 > price) {
         discountRate = Math.round(((avg90 - price) / avg90) * 100);

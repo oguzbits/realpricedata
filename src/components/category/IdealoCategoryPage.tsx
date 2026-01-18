@@ -201,22 +201,24 @@ export async function IdealoCategoryPage({
               <div
                 className={cn(
                   "sr-searchResult__resultPanel",
-                  "relative w-full pr-0 pl-[15px]",
+                  "relative w-full pr-0 pl-0 min-[840px]:pl-[15px]",
                   // Width at breakpoints
                   "min-[840px]:max-w-[66.66667%] min-[840px]:basis-[66.66667%]",
                   "min-[960px]:max-w-[75%] min-[960px]:basis-[75%]",
                 )}
               >
                 {/* Mobile Filter Button */}
-                <MobileFilterDrawer
-                  categorySlug={categorySlug}
-                  unitLabel={unitLabel}
-                  categoryName={category.name}
-                  productCount={filteredCount}
-                  filterOptions={filterGroupOptions}
-                  filterCounts={filterCounts}
-                  maxPriceInCategory={maxPriceInCategory}
-                />
+                <div className="px-4 min-[840px]:px-0">
+                  <MobileFilterDrawer
+                    categorySlug={categorySlug}
+                    unitLabel={unitLabel}
+                    categoryName={category.name}
+                    productCount={filteredCount}
+                    filterOptions={filterGroupOptions}
+                    filterCounts={filterCounts}
+                    maxPriceInCategory={maxPriceInCategory}
+                  />
+                </div>
 
                 {/* ============================================ */}
                 {/* PRODUCT GRID/LIST - sr-resultList */}
@@ -226,7 +228,7 @@ export async function IdealoCategoryPage({
                 {/* ACTIVE FILTER TAGS */}
                 {/* ============================================ */}
                 {filteredCount < products.length && (
-                  <div className="mb-4 flex flex-wrap items-center gap-2">
+                  <div className="mb-4 flex flex-wrap items-center gap-2 px-4 min-[840px]:px-0">
                     {Object.entries(filters).map(([field, value]) => {
                       if (
                         !value ||
@@ -323,6 +325,9 @@ export async function IdealoCategoryPage({
                 {/* ============================================ */}
                 {/* PAGINATION */}
                 {/* ============================================ */}
+                {/* ============================================ */}
+                {/* PAGINATION */}
+                {/* ============================================ */}
                 {pagination && (
                   <Pagination
                     currentPage={pagination.currentPage}
@@ -332,53 +337,55 @@ export async function IdealoCategoryPage({
                   />
                 )}
 
-                {/* ============================================ */}
-                {/* DISCLAIMER */}
-                {/* ============================================ */}
-                <div className="mt-4 text-center text-[12px] text-[#767676]">
-                  * Preise inkl. MwSt., ggf. zzgl. Versand. Preise und
-                  Verfügbarkeit können sich ändern.
-                  {lastUpdated ? (
-                    <span className="mt-1 block">
-                      Zuletzt aktualisiert: <ClientDate date={lastUpdated} />
-                    </span>
-                  ) : null}
-                </div>
-
-                {/* ============================================ */}
-                {/* RELATED CATEGORIES - sr-relatedCategories */}
-                {/* ============================================ */}
-                <div className="sr-relatedCategories mt-8 border-t border-[#b4b4b4] pt-4">
-                  <h3 className="mb-3 text-[16px] font-bold text-[#2d2d2d]">
-                    Ähnliche Kategorien
-                  </h3>
-                  <div className="grid grid-cols-1 gap-1 sm:grid-cols-2">
-                    {relatedCategories.map((related) => {
-                      const Icon = getCategoryIcon(related.slug);
-                      return (
-                        <Link
-                          key={related.slug}
-                          href={`/${related.slug}`}
-                          className="flex items-center gap-2 py-1.5 text-[14px] text-[#0771d0] hover:underline"
-                        >
-                          <Icon className="h-4 w-4 text-[#767676]" />
-                          <span>{related.name}</span>
-                        </Link>
-                      );
-                    })}
+                <div className="px-4 min-[840px]:px-0">
+                  {/* ============================================ */}
+                  {/* DISCLAIMER */}
+                  {/* ============================================ */}
+                  <div className="mt-4 text-center text-[12px] text-[#767676]">
+                    * Preise inkl. MwSt., ggf. zzgl. Versand. Preise und
+                    Verfügbarkeit können sich ändern.
+                    {lastUpdated ? (
+                      <span className="mt-1 block">
+                        Zuletzt aktualisiert: <ClientDate date={lastUpdated} />
+                      </span>
+                    ) : null}
                   </div>
-                </div>
 
-                {/* FAQ Section */}
-                {getCategoryFAQs(categorySlug).length > 0 && (
-                  <>
-                    <FAQSchema faqs={getCategoryFAQs(categorySlug)} />
-                    <FAQSection
-                      faqs={getCategoryFAQs(categorySlug)}
-                      categoryName={category.name}
-                    />
-                  </>
-                )}
+                  {/* ============================================ */}
+                  {/* RELATED CATEGORIES - sr-relatedCategories */}
+                  {/* ============================================ */}
+                  <div className="sr-relatedCategories mt-8 border-t border-[#b4b4b4] pt-4">
+                    <h3 className="mb-3 text-[16px] font-bold text-[#2d2d2d]">
+                      Ähnliche Kategorien
+                    </h3>
+                    <div className="grid grid-cols-1 gap-1 sm:grid-cols-2">
+                      {relatedCategories.map((related) => {
+                        const Icon = getCategoryIcon(related.slug);
+                        return (
+                          <Link
+                            key={related.slug}
+                            href={`/${related.slug}`}
+                            className="flex items-center gap-2 py-1.5 text-[14px] text-[#0771d0] hover:underline"
+                          >
+                            <Icon className="h-4 w-4 text-[#767676]" />
+                            <span>{related.name}</span>
+                          </Link>
+                        );
+                      })}
+                    </div>
+                  </div>
+
+                  {/* FAQ Section */}
+                  {getCategoryFAQs(categorySlug).length > 0 && (
+                    <div className="mt-8">
+                      <FAQSchema faqs={getCategoryFAQs(categorySlug)} />
+                      <FAQSection
+                        faqs={getCategoryFAQs(categorySlug)}
+                        categoryName={category.name}
+                      />
+                    </div>
+                  )}
+                </div>
               </div>
             </>
           ) : (

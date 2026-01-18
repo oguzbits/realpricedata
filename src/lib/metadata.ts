@@ -110,7 +110,7 @@ export const siteMetadata: Metadata = {
   },
 };
 
-import { getAllCountries } from "./countries";
+import { DEFAULT_COUNTRY, getAllCountries } from "./countries";
 
 export function getAlternateLanguages(
   path: string = "",
@@ -133,6 +133,9 @@ export function getAlternateLanguages(
 
   if (includeRegions) {
     liveCountries.forEach((country) => {
+      // Skip the default country - it's already represented by the root version (en/x-default)
+      if (country.code === DEFAULT_COUNTRY) return;
+
       // Correct ISO 3166-1 alpha-2 for United Kingdom is GB
       let region = country.code.toUpperCase();
       if (region === "UK") region = "GB";
@@ -140,12 +143,9 @@ export function getAlternateLanguages(
       // For our site, we use English UI across all markets: 'en-REGION'
       const hreflang = `en-${region}`;
 
-      // For US, we use the root domain for all pages
-      if (country.code === "us") {
-        alternates[hreflang] = `${SITE_URL}${cleanPath}`;
-      } else {
-        alternates[hreflang] = `${SITE_URL}/${country.code}${cleanPath}`;
-      }
+      // Non-default countries are served from /[countryCode] which would need src/app/[country]
+      // Currently, since we don't have [country] root folder, we should skip this to avoid 404s
+      // alternates[hreflang] = `${SITE_URL}/${country.code}${cleanPath}`;
     });
   }
 

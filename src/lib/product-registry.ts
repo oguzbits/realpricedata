@@ -59,6 +59,8 @@ export interface Product {
   priceAvg90?: Record<string, number>;
   listPrice?: Record<string, number>;
   monthlySold?: number;
+  description?: string;
+  mpn?: string;
   createdAt?: string; // ISO string
 }
 
@@ -134,6 +136,8 @@ function mapDbProduct(
     energyLabel: stripHeavyData ? undefined : (p.energyLabel as any),
     salesRank: p.salesRank || undefined,
     monthlySold: p.monthlySold || 0,
+    description: p.description || undefined,
+    mpn: p.mpn || undefined,
     priceAvg30: avg30Obj,
     priceAvg90: avg90Obj,
     listPrice: listPricesObj,

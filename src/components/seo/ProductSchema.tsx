@@ -51,13 +51,18 @@ export function ProductSchema({
     "@type": "Product",
     name: product.title,
     description:
-      `${product.title} - ${product.capacity} ${product.capacityUnit} ${product.technology || ""} ${product.formFactor || ""}`.trim(),
+      product.description ||
+      `${product.title} - ${product.brand} ${product.category} mit ${product.capacity} ${product.capacityUnit} Kapazität. ${product.technology || ""} ${product.formFactor || ""}`.trim(),
     brand: {
       "@type": "Brand",
       name: product.brand,
     },
+    manufacturer: {
+      "@type": "Organization",
+      name: product.manufacturer || product.brand,
+    },
     sku: product.asin,
-    mpn: product.asin,
+    mpn: product.mpn || product.asin,
     category: product.category,
   };
 

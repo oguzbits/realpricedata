@@ -80,14 +80,14 @@ export function IdealoProductCard({
       </div>
 
       {/* Image Container */}
-      <div className="p-[4px_8px] sm:p-[4px_12px]">
-        <div className="relative mb-3 h-[115px] w-full overflow-hidden sm:h-[158px]">
+      <div className="mb-3 bg-gray-100 p-[4px_8px] sm:p-[4px_12px]">
+        <div className="relative h-[115px] w-full overflow-hidden sm:h-[158px]">
           {image ? (
             <Image
               src={image}
               alt={title}
               fill
-              className="object-contain transition-transform duration-300 group-hover:scale-105"
+              className="object-contain mix-blend-multiply transition-transform duration-300 group-hover:scale-105"
               sizes="(max-width: 600px) 164px, 240px"
               priority={isBestseller}
             />

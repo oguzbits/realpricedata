@@ -11,8 +11,7 @@
 
 import { db } from "@/db";
 import { priceHistory, prices, products } from "@/db/schema";
-import type { CategorySlug } from "@/lib/categories";
-import { getChildCategories } from "@/lib/categories";
+import { allCategories, type CategorySlug } from "@/lib/categories";
 import { generateProductSlug } from "@/lib/utils/slug";
 import { asc, eq, lt, sql } from "drizzle-orm";
 
@@ -23,8 +22,8 @@ import {
   type KeepaProductRaw,
 } from "./product-discovery";
 import {
-  getMaxProductsToday,
   checkBudget,
+  getMaxProductsToday,
   recordTokenUsage,
 } from "./token-tracker";
 
@@ -55,9 +54,9 @@ export function getDynamicRefreshInterval(productCount: number): number {
  * Get all active (non-hidden) categories
  */
 export function getActiveCategories(): CategorySlug[] {
-  const parentSlug = "electronics" as CategorySlug;
-  const children = getChildCategories(parentSlug);
-  return children.filter((cat) => !cat.hidden).map((cat) => cat.slug);
+  return Object.values(allCategories)
+    .filter((cat) => !cat.hidden)
+    .map((cat) => cat.slug);
 }
 
 /**

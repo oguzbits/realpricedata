@@ -13,7 +13,7 @@
  *   bun run scripts/update-prices.ts de
  */
 
-import { eq } from "drizzle-orm";
+import { and, asc, eq, isNull, lt, or } from "drizzle-orm";
 import {
   db,
   NewPriceHistoryRecord,
@@ -91,38 +91,44 @@ async function withRetry<T>(
 async function updatePrices(country: CountryCode): Promise<void> {
   console.log(`\n💰 Updating prices for ${country.toUpperCase()}...`);
 
-  // Get all products
-  const allProducts = await db.query.products.findMany();
-  if (allProducts.length === 0) {
-    console.log("  No products in database.");
-    return;
-  }
-
-  // Filter for stale products if requested
   const isStaleOnly = process.argv.includes("--stale");
-  let targetProducts = allProducts;
+  const elevenHoursAgo = new Date(Date.now() - 11 * 60 * 60 * 1000);
 
-  if (isStaleOnly) {
-    const elevenHoursAgo = new Date(Date.now() - 11 * 60 * 60 * 1000);
-    // Join with prices to check lastUpdated
-    const currentPrices = await db
-      .select()
-      .from(prices)
-      .where(eq(prices.country, country));
-
-    targetProducts = allProducts.filter((p: any) => {
-      const price = currentPrices.find((pr) => pr.productId === p.id);
-      return !price || !price.lastUpdated || price.lastUpdated < elevenHoursAgo;
-    });
-    console.log(
-      `  Targeting ${targetProducts.length} stale products (< 11h) of ${allProducts.length} total.`,
-    );
-  }
+  // Strict Rotation Logic:
+  // We select products and their price metadata for the target country,
+  // ordering by the LATEST price update (oldest first).
+  // This ensures a "FIFO" queue where every product eventually gets updated.
+  const targetProducts = await db
+    .select({
+      id: products.id,
+      asin: products.asin,
+      normalizedCapacity: products.normalizedCapacity,
+      salesRank: products.salesRank,
+      rating: products.rating,
+      reviewCount: products.reviewCount,
+      lastUpdated: prices.lastUpdated,
+    })
+    .from(products)
+    .leftJoin(
+      prices,
+      and(eq(prices.productId, products.id), eq(prices.country, country)),
+    )
+    .where(
+      isStaleOnly
+        ? or(isNull(prices.lastUpdated), lt(prices.lastUpdated, elevenHoursAgo))
+        : undefined,
+    )
+    .orderBy(asc(prices.lastUpdated));
 
   if (targetProducts.length === 0) {
-    console.log("  No products needing an update right now.");
+    console.log("  No products in database or all products are fresh.");
     return;
   }
+
+  console.log(`  Queue size: ${targetProducts.length} products.`);
+
+  // Use a map for O(1) lookups during processing
+  const productMap = new Map(targetProducts.map((p) => [p.asin, p]));
 
   // Batch ASINs (100 at a time for Keepa)
   const asins = targetProducts.map((p) => p.asin);
@@ -154,7 +160,7 @@ async function updatePrices(country: CountryCode): Promise<void> {
       });
 
       for (const kp of keepaProducts) {
-        const product = allProducts.find((p) => p.asin === kp.asin);
+        const product = productMap.get(kp.asin);
         if (!product) continue;
 
         const currentPrices = kp.stats?.current || [];

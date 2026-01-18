@@ -374,7 +374,8 @@ export async function getCategoryProducts(
         ? localizedProducts
             .map((p) => p.lastUpdated)
             .filter((d): d is string => !!d)
-            .sort()[0] || null
+            .sort()
+            .reverse()[0] || null
         : null,
     pagination,
   };

@@ -735,6 +735,13 @@ const CATEGORY_MAP: Record<CategorySlug, Omit<Category, "slug">> = {
       { label: "4 TB", params: "capacity=4" },
       { label: "NAS-Festplatte", params: "type=nas" },
     ],
+    filterGroups: [
+      { label: "Hersteller", field: "brand", type: "checkbox" },
+      { label: "Kapazität", field: "capacity", type: "checkbox" },
+      { label: "Formfaktor", field: "formFactor", type: "checkbox" },
+      { label: "Technologie", field: "technology", type: "checkbox" },
+      { label: "Zustand", field: "condition", type: "checkbox" },
+    ],
   },
 
   gefrierschraenke: {

@@ -108,7 +108,7 @@ function mapDbProduct(
     capacity: p.capacity || 0,
     capacityUnit: (p.capacityUnit as any) || "GB",
     normalizedCapacity: p.normalizedCapacity || 0,
-    formFactor: stripHeavyData ? "" : p.formFactor || "Standard",
+    formFactor: stripHeavyData ? "" : p.formFactor || "",
     technology: p.technology || "",
     condition:
       p.title.includes("(Generalüberholt)") ||
@@ -220,10 +220,10 @@ export const getProductsByCategory = cache(async function getProductsByCategory(
   // Use Next.js Data Cache to persist results across requests/users
   const getCachedProducts = unstable_cache(
     fetchProducts,
-    [`category-products-v21-${category}`],
+    [`category-products-v24-${category}`],
     {
       revalidate: CATEGORY_REVALIDATE_SECONDS,
-      tags: [`category-v21-${category}`],
+      tags: [`category-v24-${category}`],
     },
   );
 

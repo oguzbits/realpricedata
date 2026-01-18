@@ -59,19 +59,19 @@ async function main() {
           continue;
         }
 
-        // 1. Map Category
-        const subCategory = row["Categories: Sub"] || "";
-        const rootCategory = row["Categories: Root"] || "";
-        const categorySlug = mapCategory(rootCategory, subCategory);
-
-        if (!categorySlug) {
+        // 2. Extract Info
+        const title = row["Title"] || "";
+        if (!title) {
           skipCount++;
           continue;
         }
 
-        // 2. Extract Info
-        const title = row["Title"] || "";
-        if (!title) {
+        // 1. Map Category (now using title for better accuracy)
+        const subCategory = row["Categories: Sub"] || "";
+        const rootCategory = row["Categories: Root"] || "";
+        const categorySlug = mapCategory(title, rootCategory, subCategory);
+
+        if (!categorySlug) {
           skipCount++;
           continue;
         }
@@ -261,85 +261,81 @@ async function main() {
   );
 }
 
-function mapCategory(root: string, sub: string): CategorySlug | null {
+function mapCategory(
+  title: string,
+  root: string,
+  sub: string,
+): CategorySlug | null {
   const s = sub.toLowerCase();
+  const t = title.toLowerCase();
+
+  // 1. High Priority: Specific Storage Types (often mislabeled in CSVs)
   if (
-    s.includes("normale laptops") ||
-    s.includes("notebooks") ||
-    s.includes("macbooks")
-  )
-    return "notebooks";
+    t.includes("microsd") ||
+    t.includes("sdxc") ||
+    t.includes("sdhc") ||
+    t.includes("speicherkarte") ||
+    t.includes("memory card") ||
+    s.includes("micro sd") ||
+    s.includes("speicherkarten")
+  ) {
+    return "speicherkarten";
+  }
+
+  if (
+    (t.includes("ssd") || t.includes("nvme") || t.includes("m.2")) &&
+    !t.includes("extern") &&
+    !s.includes("extern")
+  ) {
+    return "ssds";
+  }
+
+  // 2. External Storage
+  if (
+    t.includes("extern") ||
+    s.includes("externe") ||
+    s.includes("externer speicher") ||
+    s.includes("externe datenspeicher")
+  ) {
+    return "external-storage";
+  }
+
+  // 3. Regular Hard Drives (HDDs) - Low priority if it matched SSD above
+  if (s.includes("festplatten") || s.includes("interner speicher")) {
+    return "hard-drives";
+  }
+
+  // 4. Other Components
   if (s.includes("grafikkarten")) return "gpu";
-  if (s.includes("prozessoren") || s.includes("cpus")) return "cpu";
+  if (
+    s.includes("prozessoren") ||
+    s.includes("cpus") ||
+    t.includes("intel core") ||
+    t.includes("ryzen")
+  )
+    return "cpu";
   if (s.includes("monitore")) return "monitors";
   if (s.includes("tastaturen")) return "keyboards";
   if (s.includes("mäuse") || s.includes("mice")) return "mice";
-  if (s.includes("tablets")) return "tablets";
-  if (s.includes("router")) return "routers";
-  if (s.includes("3d-drucker") || s.includes("3d-druck")) return "3d-drucker";
-  if (s.includes("laser")) return "laserdrucker";
-  if (
-    s.includes("drucker") ||
-    s.includes("inkjet") ||
-    s.includes("tintenstrahl") ||
-    s.includes("multifunktions") ||
-    s.includes("all-in-one")
-  )
-    return "multifunktionsdrucker";
-  if (s.includes("systemkamera")) return "systemkameras";
-  if (s.includes("kompaktkamera")) return "kompaktkameras";
-  if (s.includes("spiegelreflex")) return "cameras";
-  if (s.includes("kamera") || s.includes("camera") || s.includes("photo"))
-    return "cameras";
-  if (s.includes("handy") || s.includes("smartphone")) return "smartphones";
-  if (s.includes("watch") || s.includes("uhr")) return "smartwatches";
-  if (s.includes("solid state drives") && !s.includes("extern")) return "ssds";
-  if (s.includes("ssd") && !s.includes("extern")) return "ssds";
-  if (s.includes("festplatten") && !s.includes("extern")) return "hard-drives";
-  if (s.includes("interner speicher") && s.includes("festplatten"))
-    return "hard-drives";
-  if (
-    s.includes("externe datenspeicher") ||
-    s.includes("externe festplatten") ||
-    s.includes("externe solid state drives") ||
-    s.includes("externer speicher")
-  )
-    return "external-storage";
-  if (
-    s.includes("headphones") ||
-    s.includes("kopfhörer") ||
-    s.includes("ohrhörer") ||
-    s.includes("headset")
-  )
-    return "headphones";
-  if (s.includes("fernseher") || s.includes("tvs") || s.includes("tv-geräte"))
-    return "tvs";
   if (s.includes("arbeitsspeicher") || s.includes("ram")) return "ram";
-  if (s.includes("lautsprecher") || s.includes("speakers")) return "speakers";
-  if (s.includes("konsolen") || s.includes("consoles")) return "consoles";
-  if (root === "Games" || s.startsWith("games")) return "consoles"; // Fallback for games root
   if (s.includes("netzteile") || s.includes("psu")) return "power-supplies";
   if (s.includes("gehäuse") || s.includes("cases")) return "pc-cases";
   if (s.includes("mainboards") || s.includes("motherboards"))
     return "motherboards";
   if (s.includes("lüfter") || s.includes("kühler") || s.includes("coolers"))
     return "cpu-coolers";
-  if (s.includes("staubsauger")) return "staubsauger";
-  if (s.includes("küchenmaschinen")) return "kuechenmaschinen";
-  if (
-    s.includes("speicherkarten") ||
-    s.includes("micro sd") ||
-    s.includes("sdhc") ||
-    s.includes("sdxc") ||
-    s.includes("memory card") ||
-    s.includes("cfexpress") ||
-    s.includes("compactflash") ||
-    s.includes("compact flash") ||
-    s.includes("securedigital") ||
-    s.includes("sd card") ||
-    s.includes("sd-karte")
-  )
-    return "speicherkarten";
+
+  // 5. Electronics & Systems
+  if (s.includes("notebooks") || s.includes("macbooks") || t.includes("laptop"))
+    return "notebooks";
+  if (s.includes("tablets")) return "tablets";
+  if (s.includes("handy") || s.includes("smartphone")) return "smartphones";
+  if (s.includes("watch") || s.includes("uhr")) return "smartwatches";
+  if (s.includes("fernseher") || s.includes("tvs")) return "tvs";
+  if (s.includes("konsolen") || s.includes("consoles") || root === "Games")
+    return "consoles";
+  if (s.includes("router")) return "routers";
+
   if (root.includes("Computer") || s.includes("computer")) return "computer";
   return null;
 }
